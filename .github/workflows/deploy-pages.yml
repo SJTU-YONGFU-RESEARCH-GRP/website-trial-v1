@@ -1,4 +1,4 @@
-# GitHub Pages: build Vite app in chart-eval/ and deploy dist/
+# GitHub Pages: build Vite app at repo root and deploy dist/
 # Repo: https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1
 #
 # Site URL: https://sjtu-yongfu-research-grp.github.io/website-trial-v1/
@@ -24,27 +24,25 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: chart-eval
     steps:
       - uses: actions/checkout@v4
 
-      # No npm cache: optional once chart-eval/package-lock.json is committed again:
-      #   cache: npm
-      #   cache-dependency-path: chart-eval/package-lock.json
+      # Optional: add npm cache after package-lock.json is stable in git:
+      #   with:
+      #     cache: npm
+      #     cache-dependency-path: package-lock.json
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Install and build
         run: |
-          npm install
+          npm ci
           npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: chart-eval/dist
+          path: dist
 
   deploy:
     needs: build
