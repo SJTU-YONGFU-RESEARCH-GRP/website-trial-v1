@@ -356,6 +356,17 @@ export function PlotlyPage(): JSX.Element {
 
       const barLine = { width: CHART_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB };
 
+      /** In-bar value copy: short numeric string, then wrapped with Plotly HTML bold. */
+      const formatBarInsideValue = (v: number): string => {
+        if (!Number.isFinite(v)) return "—";
+        if (paretoYMetric === "bitWidth" || paretoYMetric === "architecture") {
+          return String(Math.round(v));
+        }
+        return Number.parseFloat(v.toPrecision(3)).toString();
+      };
+
+      const barInsideTextFont = { ...plotAxisFont("#ffffff", narrow), weight: "bold" as const };
+
       let barDataInner: Data[];
       let barXTitle: string;
       let barTitleNarrow: string;
@@ -372,9 +383,10 @@ export function PlotlyPage(): JSX.Element {
             y: barYArch,
             ...(barCdArch ? { customdata: barCdArch } : {}),
             text: rowsAtBw.map((r) =>
-              String(scatterAxisValue(paretoYMetric, r, categoryArchOrder)),
+              plotlyBold(formatBarInsideValue(scatterAxisValue(paretoYMetric, r, categoryArchOrder))),
             ),
             textposition: "auto",
+            textfont: barInsideTextFont,
             marker: {
               color: rowsAtBw.map((r) => architectureColor(r.architecture)),
               line: barLine,
@@ -398,6 +410,9 @@ export function PlotlyPage(): JSX.Element {
             x: xCat,
             y: yPlot,
             ...(cd ? { customdata: cd } : {}),
+            text: rawY.map((v) => plotlyBold(formatBarInsideValue(v))),
+            textposition: "auto",
+            textfont: barInsideTextFont,
             marker: {
               color: architectureColor(arch),
               line: barLine,
@@ -423,6 +438,9 @@ export function PlotlyPage(): JSX.Element {
             x: xCat,
             y: yPlot,
             ...(cd ? { customdata: cd } : {}),
+            text: rawY.map((v) => plotlyBold(formatBarInsideValue(v))),
+            textposition: "auto",
+            textfont: barInsideTextFont,
             marker: {
               color: architectureColor(arch),
               line: barLine,
