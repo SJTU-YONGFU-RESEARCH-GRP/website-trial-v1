@@ -690,7 +690,6 @@ export function PlotlyPage(): JSX.Element {
         <p className="hint">
           Pinch/drag or mode-bar zoom; larger markers = wider bit width (bubble-style). Uses{" "}
           <strong>X</strong> × <strong>Y</strong> from above — hover points for details.{" "}
-          <code>plotly.js-dist-min</code> browser bundle.
         </p>
         <div className="plot-host">
           <div ref={paretoRef} style={{ width: "100%", height: "100%" }} />
@@ -743,12 +742,6 @@ export function PlotlyPage(): JSX.Element {
           <div ref={barRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
-      <p className="note">
-        This page loads the official <strong>plotly.js-dist-min</strong> bundle (3D WebGL,
-        treemap, geo-capable, etc.) — large download, but avoids bundling
-        raw <code>plotly.js</code> source through Vite (fewer Node-polyfill runtime bugs).
-        For a smaller first paint elsewhere, lazy-load this route only (already done).
-      </p>
     </div>
   );
 }

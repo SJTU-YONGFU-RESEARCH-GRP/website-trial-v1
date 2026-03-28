@@ -14,7 +14,6 @@ export default function App(): ReactElement {
       <header className="app-header">
         <div className="app-header__titles">
           <h1>Design Analytics</h1>
-          <p>Vite + React · analytics gallery · touch-friendly defaults</p>
         </div>
         <ThemeToggle />
       </header>
