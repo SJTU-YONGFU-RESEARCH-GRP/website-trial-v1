@@ -142,8 +142,10 @@ export type ChartPalette = {
   gridStrong: string;
   /** Axis titles, chart chrome (explicit RGB). */
   rgbAxisTitle: string;
-  /** Tick / legend item labels (explicit RGB). */
+  /** Legend, dataZoom, and other non-axis chrome (muted). */
   rgbAxisTick: string;
+  /** X/Y (and colorbar) tick value labels — black on light theme. */
+  axisValueLabelRgb: string;
   /** Plot outer border + tick marks (black on light theme). */
   axisBorderRgb: string;
   /** Gridlines for one axis direction (grey). */
@@ -164,6 +166,7 @@ const light: ChartPalette = {
   gridStrong: "#d2d2d7",
   rgbAxisTitle: "rgb(29, 29, 31)",
   rgbAxisTick: "rgb(110, 110, 115)",
+  axisValueLabelRgb: "rgb(0, 0, 0)",
   axisBorderRgb: "rgb(0, 0, 0)",
   axisGridGreyRgb: "rgb(180, 180, 180)",
   axisGridBlackRgb: "rgb(0, 0, 0)",
@@ -181,6 +184,7 @@ const dark: ChartPalette = {
   gridStrong: "#3d4f66",
   rgbAxisTitle: "rgb(231, 236, 243)",
   rgbAxisTick: "rgb(139, 155, 180)",
+  axisValueLabelRgb: "rgb(255, 255, 255)",
   axisBorderRgb: "rgb(220, 225, 235)",
   axisGridGreyRgb: "rgb(90, 98, 115)",
   axisGridBlackRgb: "rgb(160, 170, 190)",
