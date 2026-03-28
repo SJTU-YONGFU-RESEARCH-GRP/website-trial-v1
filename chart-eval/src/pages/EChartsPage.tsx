@@ -14,7 +14,13 @@ import {
   rowsByBitWidthOrdered,
   syntheticPowerBoxByArch64,
 } from "../data/samplePpa";
-import { getChartPalette, type ChartPalette, type ThemeMode } from "../theme/chartPalette";
+import {
+  CHART_LINE_WIDTH,
+  echartsTextStyle,
+  getChartPalette,
+  type ChartPalette,
+  type ThemeMode,
+} from "../theme/chartPalette";
 import { useTheme } from "../theme/ThemeContext";
 
 function echartsToolbox(
@@ -31,8 +37,8 @@ function echartsToolbox(
   return {
     right: narrow ? 4 : 8,
     top: narrow ? 4 : 8,
-    iconStyle: { borderColor: palette.textMuted },
-    emphasis: { iconStyle: { borderColor: palette.text } },
+    iconStyle: { borderColor: palette.rgbAxisTick },
+    emphasis: { iconStyle: { borderColor: palette.rgbAxisTitle } },
     feature: {
       ...(opts?.dataZoom
         ? {
@@ -106,11 +112,11 @@ export function EChartsPage(): JSX.Element {
 
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Fmax vs power (demo)" : "Pareto-style: Fmax vs power (demo data)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       grid: narrow
         ? { left: "14%", right: "8%", top: "20%", bottom: "44%", containLabel: true }
@@ -123,7 +129,7 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
         formatter: (params: unknown) => {
           const p = params as {
             seriesName?: string;
@@ -138,7 +144,7 @@ export function EChartsPage(): JSX.Element {
       legend: {
         bottom: 0,
         type: "scroll",
-        textStyle: { color: palette.textMuted },
+        textStyle: echartsTextStyle(palette.rgbAxisTick),
       },
       xAxis: {
         type: "value",
@@ -146,10 +152,18 @@ export function EChartsPage(): JSX.Element {
         nameLocation: "middle",
         nameGap: narrow ? 22 : 28,
         scale: true,
-        axisLabel: { fontSize: narrow ? 9 : 11, color: palette.textMuted },
-        nameTextStyle: { fontSize: narrow ? 10 : 12, color: palette.text },
-        axisLine: { lineStyle: { color: palette.gridStrong } },
-        splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLine: {
+          lineStyle: { color: palette.rgbAxisGridStrong, width: CHART_LINE_WIDTH },
+        },
+        splitLine: {
+          lineStyle: {
+            color: palette.rgbAxisGrid,
+            width: CHART_LINE_WIDTH,
+            type: "dashed",
+          },
+        },
       },
       yAxis: {
         type: "value",
@@ -157,10 +171,18 @@ export function EChartsPage(): JSX.Element {
         nameLocation: "middle",
         nameGap: narrow ? 32 : 40,
         scale: true,
-        axisLabel: { fontSize: narrow ? 9 : 11, color: palette.textMuted },
-        nameTextStyle: { fontSize: narrow ? 10 : 12, color: palette.text },
-        axisLine: { lineStyle: { color: palette.gridStrong } },
-        splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLine: {
+          lineStyle: { color: palette.rgbAxisGridStrong, width: CHART_LINE_WIDTH },
+        },
+        splitLine: {
+          lineStyle: {
+            color: palette.rgbAxisGrid,
+            width: CHART_LINE_WIDTH,
+            type: "dashed",
+          },
+        },
       },
       series,
       dataZoom: [
@@ -172,7 +194,7 @@ export function EChartsPage(): JSX.Element {
           height: narrow ? 32 : 22,
           bottom: narrow ? 8 : 36,
           moveHandleSize: narrow ? 10 : 7,
-          textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+          textStyle: echartsTextStyle(palette.rgbAxisTick),
         },
       ],
       media: [
@@ -185,7 +207,7 @@ export function EChartsPage(): JSX.Element {
               type: "scroll",
               itemWidth: 12,
               itemHeight: 10,
-              textStyle: { fontSize: 9, color: palette.textMuted },
+              textStyle: echartsTextStyle(palette.rgbAxisTick),
             },
           },
         },
@@ -202,11 +224,11 @@ export function EChartsPage(): JSX.Element {
 
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Kogge-Stone scaling" : "Scaling: Kogge-Stone vs bit width",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       grid: narrow
         ? { left: "16%", right: "18%", top: "20%", bottom: "42%", containLabel: true }
@@ -219,39 +241,56 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       legend: {
         bottom: narrow ? 52 : 0,
         data: ["Fmax (MHz)", "Area (µm²)"],
-        textStyle: { color: palette.textMuted, fontSize: narrow ? 10 : 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTick),
         itemGap: narrow ? 12 : 16,
       },
       xAxis: {
         type: "category",
         data: bw,
         name: "Bit width",
-        nameTextStyle: { color: palette.text },
-        axisLabel: { color: palette.textMuted },
-        axisLine: { lineStyle: { color: palette.gridStrong } },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
+        axisLine: {
+          lineStyle: { color: palette.rgbAxisGridStrong, width: CHART_LINE_WIDTH },
+        },
       },
       yAxis: [
         {
           type: "value",
           name: "Fmax (MHz)",
           position: "left",
-          nameTextStyle: { color: palette.text },
-          axisLabel: { color: palette.textMuted },
-          axisLine: { show: true, lineStyle: { color: architectureColor("kogge_stone") } },
-          splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
+          nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+          axisLabel: echartsTextStyle(palette.rgbAxisTick),
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: architectureColor("kogge_stone"),
+              width: CHART_LINE_WIDTH,
+            },
+          },
+          splitLine: {
+            lineStyle: {
+              color: palette.rgbAxisGrid,
+              width: CHART_LINE_WIDTH,
+              type: "dashed",
+            },
+          },
         },
         {
           type: "value",
           name: "Area (µm²)",
           position: "right",
-          nameTextStyle: { color: palette.text },
-          axisLabel: { color: palette.textMuted },
-          axisLine: { show: true, lineStyle: { color: palette.accentOrange } },
+          nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+          axisLabel: echartsTextStyle(palette.rgbAxisTick),
+          axisLine: {
+            show: true,
+            lineStyle: { color: "rgb(139, 69, 19)", width: CHART_LINE_WIDTH },
+          },
           splitLine: { show: false },
         },
       ],
@@ -264,7 +303,7 @@ export function EChartsPage(): JSX.Element {
           smooth: true,
           symbol: "circle",
           symbolSize: narrow ? 11 : 8,
-          lineStyle: { width: narrow ? 2.5 : 2, color: architectureColor("kogge_stone") },
+          lineStyle: { width: CHART_LINE_WIDTH, color: architectureColor("kogge_stone") },
         },
         {
           name: "Area (µm²)",
@@ -274,7 +313,11 @@ export function EChartsPage(): JSX.Element {
           smooth: true,
           symbol: "diamond",
           symbolSize: narrow ? 11 : 8,
-          lineStyle: { width: 2, type: "dashed", color: palette.accentOrange },
+          lineStyle: {
+            width: CHART_LINE_WIDTH,
+            type: "dashed",
+            color: "rgb(139, 69, 19)",
+          },
         },
       ],
       dataZoom: [
@@ -285,7 +328,7 @@ export function EChartsPage(): JSX.Element {
           height: narrow ? 32 : 22,
           bottom: narrow ? 8 : 36,
           moveHandleSize: narrow ? 10 : 7,
-          textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+          textStyle: echartsTextStyle(palette.rgbAxisTick),
         },
       ],
       media: [
@@ -314,11 +357,11 @@ export function EChartsPage(): JSX.Element {
     const rows64 = rowsByBitWidthOrdered(64);
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Power @ 64b (bar)" : "Power at 64-bit width (by architecture)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       grid: narrow
         ? { left: "14%", right: "10%", top: "22%", bottom: "32%", containLabel: true }
@@ -332,23 +375,34 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
         axisPointer: { type: "shadow" },
       },
       xAxis: {
         type: "category",
         data: rows64.map((r) => formatArchLabel(r.architecture)),
         name: "Architecture",
-        nameTextStyle: { color: palette.text },
-        axisLabel: { rotate: narrow ? 28 : 16, color: palette.textMuted },
-        axisLine: { lineStyle: { color: palette.gridStrong } },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: {
+          ...echartsTextStyle(palette.rgbAxisTick),
+          rotate: narrow ? 28 : 16,
+        },
+        axisLine: {
+          lineStyle: { color: palette.rgbAxisGridStrong, width: CHART_LINE_WIDTH },
+        },
       },
       yAxis: {
         type: "value",
         name: "Power (mW)",
-        nameTextStyle: { color: palette.text },
-        axisLabel: { color: palette.textMuted },
-        splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
+        splitLine: {
+          lineStyle: {
+            color: palette.rgbAxisGrid,
+            width: CHART_LINE_WIDTH,
+            type: "dashed",
+          },
+        },
       },
       series: [
         {
@@ -362,8 +416,7 @@ export function EChartsPage(): JSX.Element {
           label: {
             show: true,
             position: "top",
-            color: palette.textMuted,
-            fontSize: narrow ? 9 : 10,
+            ...echartsTextStyle(palette.rgbAxisTick),
             formatter: (p) => {
               const v = (p as { value?: number }).value;
               return v != null ? `${v} mW` : "";
@@ -380,7 +433,7 @@ export function EChartsPage(): JSX.Element {
           height: narrow ? 26 : 20,
           bottom: narrow ? 6 : 10,
           moveHandleSize: narrow ? 10 : 7,
-          textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+          textStyle: echartsTextStyle(palette.rgbAxisTick),
         },
       ],
     };
@@ -401,11 +454,11 @@ export function EChartsPage(): JSX.Element {
 
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Fmax heatmap" : "Fmax (MHz) — architecture × bit width",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       grid: narrow
         ? { left: "12%", right: "18%", top: "22%", bottom: "28%", containLabel: true }
@@ -418,7 +471,7 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
         formatter: (params: unknown) => {
           const p = params as { value?: [number, number, number]; data?: [number, number, number] };
           const v = p.value ?? p.data;
@@ -435,16 +488,16 @@ export function EChartsPage(): JSX.Element {
         name: "Bit width",
         nameLocation: "middle",
         nameGap: narrow ? 24 : 28,
-        nameTextStyle: { color: palette.text },
-        axisLabel: { color: palette.textMuted },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
         splitArea: { show: true },
       },
       yAxis: {
         type: "category",
         data: rowLabels,
         name: "Architecture",
-        nameTextStyle: { color: palette.text },
-        axisLabel: { color: palette.textMuted },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
         splitArea: { show: true },
       },
       visualMap: {
@@ -455,7 +508,7 @@ export function EChartsPage(): JSX.Element {
         right: narrow ? 2 : 8,
         top: "middle",
         itemHeight: narrow ? 120 : 160,
-        textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+        textStyle: echartsTextStyle(palette.rgbAxisTick),
         inRange: {
           color: ["#313695", "#4575b4", "#abd9e9", "#fee090", "#d73027", "#a50026"],
         },
@@ -466,8 +519,7 @@ export function EChartsPage(): JSX.Element {
           data: cells,
           label: {
             show: true,
-            color: palette.text,
-            fontSize: narrow ? 9 : 11,
+            ...echartsTextStyle(palette.rgbAxisTitle),
             formatter: (p) => {
               const raw = (p as { value?: unknown; data?: unknown }).value ?? (p as { data?: unknown }).data;
               const triple = Array.isArray(raw) ? (raw as [number, number, number]) : undefined;
@@ -487,7 +539,7 @@ export function EChartsPage(): JSX.Element {
           filterMode: "none",
           height: narrow ? 22 : 18,
           bottom: narrow ? 4 : 8,
-          textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+          textStyle: echartsTextStyle(palette.rgbAxisTick),
         },
       ],
     };
@@ -498,11 +550,11 @@ export function EChartsPage(): JSX.Element {
     const rows64 = rowsByBitWidthOrdered(64);
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Power share @ 64b" : "Power share at 64-bit width (donut)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       toolbox: echartsToolbox(palette, theme, narrow, "echarts-pie-64"),
       tooltip: {
@@ -510,13 +562,13 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
         formatter: "{b}<br/>{c} mW ({d}%)",
       },
       legend: {
         bottom: 4,
         type: "scroll",
-        textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+        textStyle: echartsTextStyle(palette.rgbAxisTick),
       },
       series: [
         {
@@ -529,7 +581,7 @@ export function EChartsPage(): JSX.Element {
             value: r.powerMw,
             itemStyle: { color: architectureColor(r.architecture) },
           })),
-          label: { color: palette.text, fontSize: narrow ? 9 : 11 },
+          label: echartsTextStyle(palette.rgbAxisTitle),
           emphasis: {
             itemStyle: {
               shadowBlur: 12,
@@ -547,11 +599,11 @@ export function EChartsPage(): JSX.Element {
     const tree = ppaHierarchyTree("areaUm2");
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Sunburst (area)" : "Hierarchy: die area (µm²)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       toolbox: echartsToolbox(palette, theme, narrow, "echarts-sunburst"),
       series: [
@@ -559,10 +611,10 @@ export function EChartsPage(): JSX.Element {
           type: "sunburst",
           data: [tree],
           radius: [0, "92%"],
-          label: { color: palette.text, fontSize: narrow ? 9 : 10 },
+          label: echartsTextStyle(palette.rgbAxisTitle),
           itemStyle: {
             borderRadius: 6,
-            borderWidth: 1,
+            borderWidth: CHART_LINE_WIDTH,
             borderColor: palette.plotBg,
           },
           emphasis: { focus: "ancestor" },
@@ -576,23 +628,23 @@ export function EChartsPage(): JSX.Element {
     const tree = ppaHierarchyTree("powerMw");
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Treemap (power)" : "Treemap: power (mW) by arch × width",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       toolbox: echartsToolbox(palette, theme, narrow, "echarts-treemap"),
       series: [
         {
           type: "treemap",
           roam: true,
-          breadcrumb: { itemStyle: { color: palette.textMuted } },
-          label: { show: true, color: palette.text, fontSize: narrow ? 9 : 10 },
-          upperLabel: { show: true, color: palette.textMuted, fontSize: 10 },
+          breadcrumb: { itemStyle: { color: palette.rgbAxisTick } },
+          label: { show: true, ...echartsTextStyle(palette.rgbAxisTitle) },
+          upperLabel: { show: true, ...echartsTextStyle(palette.rgbAxisTick) },
           itemStyle: {
-            borderColor: palette.gridStrong,
-            borderWidth: 1,
+            borderColor: palette.rgbAxisGridStrong,
+            borderWidth: CHART_LINE_WIDTH,
             gapWidth: 2,
           },
           data: [tree],
@@ -606,25 +658,27 @@ export function EChartsPage(): JSX.Element {
     const { indicators, series: radarSeries } = radarMetrics64Normalized();
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Radar @ 64b" : "Multi-metric profile @ 64b (normalized %)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       toolbox: echartsToolbox(palette, theme, narrow, "echarts-radar"),
       legend: {
         bottom: 0,
         type: "scroll",
-        textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 10 },
+        textStyle: echartsTextStyle(palette.rgbAxisTick),
       },
       radar: {
         indicator: indicators,
         radius: narrow ? "58%" : "62%",
         center: ["50%", "46%"],
-        splitLine: { lineStyle: { color: palette.grid } },
+        splitLine: {
+          lineStyle: { color: palette.rgbAxisGrid, width: CHART_LINE_WIDTH },
+        },
         splitArea: { show: true },
-        axisName: { color: palette.textMuted, fontSize: narrow ? 9 : 10 },
+        axisName: echartsTextStyle(palette.rgbAxisTick),
       },
       series: [
         {
@@ -633,7 +687,7 @@ export function EChartsPage(): JSX.Element {
             name: s.name,
             value: s.value,
             areaStyle: { opacity: 0.15, color: s.color },
-            lineStyle: { width: 2, color: s.color },
+            lineStyle: { width: CHART_LINE_WIDTH, color: s.color },
             itemStyle: { color: s.color },
           })),
         },
@@ -646,11 +700,11 @@ export function EChartsPage(): JSX.Element {
     const steps = funnelStepsByFmax();
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Funnel (Fmax)" : "Designs ranked by Fmax (MHz)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       toolbox: echartsToolbox(palette, theme, narrow, "echarts-funnel"),
       tooltip: {
@@ -658,7 +712,7 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
         formatter: "{b}<br/>{c} MHz",
       },
       series: [
@@ -668,7 +722,7 @@ export function EChartsPage(): JSX.Element {
           gap: 2,
           minSize: "12%",
           maxSize: "88%",
-          label: { color: palette.text, fontSize: narrow ? 9 : 10 },
+          label: echartsTextStyle(palette.rgbAxisTitle),
           data: steps.map((s) => ({
             name: s.name,
             value: s.value,
@@ -684,11 +738,11 @@ export function EChartsPage(): JSX.Element {
     const { categories, stats } = syntheticPowerBoxByArch64();
     return {
       backgroundColor: "transparent",
-      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
+      textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
         text: narrow ? "Power box @ 64b" : "Synthetic power bands @ 64b (boxplot)",
         left: "center",
-        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       grid: narrow
         ? { left: "14%", right: "10%", top: "22%", bottom: "32%", containLabel: true }
@@ -701,23 +755,29 @@ export function EChartsPage(): JSX.Element {
         backgroundColor: palette.tooltipBg,
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
-        textStyle: { color: palette.text, fontSize: 12 },
+        textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       xAxis: {
         type: "category",
         data: categories,
         boundaryGap: true,
         name: "Architecture",
-        nameTextStyle: { color: palette.text },
-        axisLabel: { color: palette.textMuted, fontSize: narrow ? 9 : 10 },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
         splitLine: { show: false },
       },
       yAxis: {
         type: "value",
         name: "Power (mW)",
-        nameTextStyle: { color: palette.text },
-        axisLabel: { color: palette.textMuted },
-        splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
+        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        axisLabel: echartsTextStyle(palette.rgbAxisTick),
+        splitLine: {
+          lineStyle: {
+            color: palette.rgbAxisGrid,
+            width: CHART_LINE_WIDTH,
+            type: "dashed",
+          },
+        },
       },
       dataZoom: [
         { type: "inside", xAxisIndex: 0, filterMode: "none" },
@@ -727,7 +787,7 @@ export function EChartsPage(): JSX.Element {
           filterMode: "none",
           height: narrow ? 24 : 18,
           bottom: narrow ? 6 : 10,
-          textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
+          textStyle: echartsTextStyle(palette.rgbAxisTick),
         },
       ],
       series: [
@@ -735,12 +795,13 @@ export function EChartsPage(): JSX.Element {
           type: "boxplot",
           data: stats,
           itemStyle: {
-            color: palette.accentOrange,
-            borderColor: palette.textMuted,
+            color: "rgb(139, 69, 19)",
+            borderColor: palette.rgbAxisTick,
+            borderWidth: CHART_LINE_WIDTH,
           },
           emphasis: {
             itemStyle: {
-              borderColor: palette.text,
+              borderColor: palette.rgbAxisTitle,
               shadowBlur: 8,
             },
           },

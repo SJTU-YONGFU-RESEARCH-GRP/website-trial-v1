@@ -13,7 +13,14 @@ import {
   ppaTreemapFlat,
   rowsByBitWidthOrdered,
 } from "../data/samplePpa";
-import { getChartPalette } from "../theme/chartPalette";
+import {
+  CHART_LINE_WIDTH,
+  getChartPalette,
+  plotFont,
+  plotlyAxisStrokes,
+  plotlyBold,
+  plotTickFont,
+} from "../theme/chartPalette";
 import { useTheme } from "../theme/ThemeContext";
 
 function usePlotlyChart(
@@ -83,6 +90,7 @@ export function PlotlyPage(): JSX.Element {
     sankeyConfig,
   } = useMemo(() => {
       const palette = getChartPalette(theme);
+      const ax = plotlyAxisStrokes(palette);
       const mSize = (bw: number): number =>
         (narrow ? 4 : 0) + 8 + (bw / 64) * 10;
 
@@ -111,7 +119,7 @@ export function PlotlyPage(): JSX.Element {
           marker: {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
-            line: { width: 1, color: palette.markerOutline },
+            line: { width: CHART_LINE_WIDTH, color: palette.markerOutline },
           },
         });
       }
@@ -127,7 +135,11 @@ export function PlotlyPage(): JSX.Element {
           x: ks.map((r) => r.bitWidth),
           y: ks.map((r) => r.fmaxMhz),
           yaxis: "y",
-          line: { color: architectureColor("kogge_stone"), width: 2 },
+          line: { color: architectureColor("kogge_stone"), width: CHART_LINE_WIDTH },
+          marker: {
+            size: 12,
+            line: { width: CHART_LINE_WIDTH, color: architectureColor("kogge_stone") },
+          },
         },
         {
           type: "scatter",
@@ -136,7 +148,11 @@ export function PlotlyPage(): JSX.Element {
           x: ks.map((r) => r.bitWidth),
           y: ks.map((r) => r.areaUm2),
           yaxis: "y2",
-          line: { color: palette.accentOrange, width: 2, dash: "dot" },
+          line: { color: "rgb(139, 69, 19)", width: CHART_LINE_WIDTH, dash: "dot" },
+          marker: {
+            size: 12,
+            line: { width: CHART_LINE_WIDTH, color: "rgb(139, 69, 19)" },
+          },
         },
       ];
 
@@ -146,21 +162,21 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 42, r: 14, t: 20, b: 92 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 10 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Fmax vs power (demo)",
-              font: { size: 12, color: palette.text },
+              text: plotlyBold("Fmax vs power (demo)"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: { text: "Fmax (MHz)", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
-              ...(narrow ? {} : { rangeslider: { visible: true, bordercolor: palette.gridStrong } }),
+              ...ax,
+              title: { text: plotlyBold("Fmax (MHz)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
+              ...(narrow ? {} : { rangeslider: { visible: true, bordercolor: palette.rgbAxisGridStrong } }),
             },
             yaxis: {
-              title: { text: "Power (mW)", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Power (mW)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             legend: {
               orientation: "h",
@@ -168,7 +184,7 @@ export function PlotlyPage(): JSX.Element {
               y: -0.15,
               x: 0.5,
               xanchor: "center",
-              font: { size: 9, color: palette.textMuted },
+              font: plotTickFont(palette.rgbAxisTick),
               itemsizing: "constant",
             },
             hovermode: "closest",
@@ -178,21 +194,21 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 48, r: 24, t: 32, b: 48 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 11 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Pareto-style: Fmax vs power (demo data)",
-              font: { size: 14, color: palette.text },
+              text: plotlyBold("Pareto-style: Fmax vs power (demo data)"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: "Fmax (MHz)",
-              gridcolor: palette.grid,
-              tickfont: { color: palette.textMuted },
-              rangeslider: { visible: true, bordercolor: palette.gridStrong },
+              ...ax,
+              title: { text: plotlyBold("Fmax (MHz)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
+              rangeslider: { visible: true, bordercolor: palette.rgbAxisGridStrong },
             },
             yaxis: {
-              title: "Power (mW)",
-              gridcolor: palette.grid,
-              tickfont: { color: palette.textMuted },
+              ...ax,
+              title: { text: plotlyBold("Power (mW)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             legend: {
               orientation: "h",
@@ -200,7 +216,7 @@ export function PlotlyPage(): JSX.Element {
               y: -0.28,
               x: 0.5,
               xanchor: "center",
-              font: { color: palette.textMuted, size: 11 },
+              font: plotTickFont(palette.rgbAxisTick),
               itemsizing: "constant",
             },
             hovermode: "closest",
@@ -212,27 +228,28 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 46, r: 40, t: 20, b: 96 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 10 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Kogge-Stone scaling",
-              font: { size: 12, color: palette.text },
+              text: plotlyBold("Kogge-Stone scaling"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: { text: "Bit width", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Bit width"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
               dtick: 32,
-              ...(narrow ? {} : { rangeslider: { visible: true, bordercolor: palette.gridStrong } }),
+              ...(narrow ? {} : { rangeslider: { visible: true, bordercolor: palette.rgbAxisGridStrong } }),
             },
             yaxis: {
-              title: { text: "Fmax (MHz)", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Fmax (MHz)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
               side: "left",
             },
             yaxis2: {
-              title: { text: "Area (µm²)", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
+              ...ax,
+              title: { text: plotlyBold("Area (µm²)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
               overlaying: "y",
               side: "right",
               gridcolor: "transparent",
@@ -244,7 +261,7 @@ export function PlotlyPage(): JSX.Element {
               y: -0.2,
               x: 0.5,
               xanchor: "center",
-              font: { size: 9, color: palette.textMuted },
+              font: plotTickFont(palette.rgbAxisTick),
               itemsizing: "constant",
             },
           }
@@ -253,26 +270,28 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 52, r: 52, t: 32, b: 72 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 11 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Scaling: Kogge-Stone vs bit width",
-              font: { size: 14, color: palette.text },
+              text: plotlyBold("Scaling: Kogge-Stone vs bit width"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: "Bit width",
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Bit width"), font: plotFont(palette.rgbAxisTitle) },
               dtick: 32,
-              tickfont: { color: palette.textMuted },
-              rangeslider: { visible: true, bordercolor: palette.gridStrong },
+              tickfont: plotTickFont(palette.rgbAxisTick),
+              rangeslider: { visible: true, bordercolor: palette.rgbAxisGridStrong },
             },
             yaxis: {
-              title: "Fmax (MHz)",
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Fmax (MHz)"), font: plotFont(palette.rgbAxisTitle) },
               side: "left",
-              tickfont: { color: palette.textMuted },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             yaxis2: {
-              title: "Area (µm²)",
+              ...ax,
+              title: { text: plotlyBold("Area (µm²)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
               overlaying: "y",
               side: "right",
               gridcolor: "transparent",
@@ -284,7 +303,7 @@ export function PlotlyPage(): JSX.Element {
               y: -0.32,
               x: 0.5,
               xanchor: "center",
-              font: { color: palette.textMuted, size: 11 },
+              font: plotTickFont(palette.rgbAxisTick),
               itemsizing: "constant",
             },
           };
@@ -311,7 +330,7 @@ export function PlotlyPage(): JSX.Element {
           textposition: "auto",
           marker: {
             color: rows64.map((r) => architectureColor(r.architecture)),
-            line: { width: 1, color: palette.markerOutline },
+            line: { width: CHART_LINE_WIDTH, color: palette.markerOutline },
           },
           hovertemplate:
             "%{x}<br>Power: %{y:.1f} mW<extra></extra>",
@@ -324,21 +343,21 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 46, r: 14, t: 20, b: 88 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 10 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Power @ 64b (bar)",
-              font: { size: 12, color: palette.text },
+              text: plotlyBold("Power @ 64b (bar)"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: { text: "Architecture", font: { size: 10 } },
+              ...ax,
+              title: { text: plotlyBold("Architecture"), font: plotFont(palette.rgbAxisTitle) },
               tickangle: -28,
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             yaxis: {
-              title: { text: "Power (mW)", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Power (mW)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             hovermode: "x unified",
           }
@@ -347,21 +366,21 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 52, r: 24, t: 32, b: 72 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 11 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Power at 64-bit width (by architecture)",
-              font: { size: 14, color: palette.text },
+              text: plotlyBold("Power at 64-bit width (by architecture)"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: "Architecture",
+              ...ax,
+              title: { text: plotlyBold("Architecture"), font: plotFont(palette.rgbAxisTitle) },
               tickangle: -18,
-              gridcolor: palette.grid,
-              tickfont: { color: palette.textMuted },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             yaxis: {
-              title: "Power (mW)",
-              gridcolor: palette.grid,
-              tickfont: { color: palette.textMuted },
+              ...ax,
+              title: { text: plotlyBold("Power (mW)"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             hovermode: "x unified",
             bargap: 0.28,
@@ -378,8 +397,8 @@ export function PlotlyPage(): JSX.Element {
           hovertemplate:
             "Bit width %{x}<br>%{y}<br>Fmax: %{z} MHz<extra></extra>",
           colorbar: {
-            title: { text: "MHz", font: { color: palette.textMuted, size: 11 } },
-            tickfont: { color: palette.textMuted, size: 10 },
+            title: { text: plotlyBold("MHz"), font: plotFont(palette.rgbAxisTitle) },
+            tickfont: plotTickFont(palette.rgbAxisTick),
           },
         },
       ];
@@ -390,20 +409,20 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 72, r: 18, t: 20, b: 56 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 10 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Fmax heatmap",
-              font: { size: 12, color: palette.text },
+              text: plotlyBold("Fmax heatmap"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: { text: "Bit width", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Bit width"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             yaxis: {
-              title: { text: "Architecture", font: { size: 10 } },
-              tickfont: { size: 9, color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Architecture"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
           }
         : {
@@ -411,20 +430,20 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 120, r: 100, t: 32, b: 56 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 11 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Fmax (MHz) — architecture × bit width",
-              font: { size: 14, color: palette.text },
+              text: plotlyBold("Fmax (MHz) — architecture × bit width"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
-              title: "Bit width",
-              tickfont: { color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Bit width"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
             yaxis: {
-              title: "Architecture",
-              tickfont: { color: palette.textMuted },
-              gridcolor: palette.grid,
+              ...ax,
+              title: { text: plotlyBold("Architecture"), font: plotFont(palette.rgbAxisTitle) },
+              tickfont: plotTickFont(palette.rgbAxisTick),
             },
           };
 
@@ -435,11 +454,11 @@ export function PlotlyPage(): JSX.Element {
           values: rows64.map((r) => r.powerMw),
           marker: {
             colors: rows64.map((r) => architectureColor(r.architecture)),
-            line: { color: palette.markerOutline, width: 1 },
+            line: { color: palette.markerOutline, width: CHART_LINE_WIDTH },
           },
           hole: 0.38,
           textinfo: "label+percent",
-          textfont: { color: palette.text, size: narrow ? 10 : 11 },
+          textfont: plotFont(palette.rgbAxisTitle),
           hovertemplate: "%{label}<br>%{value:.1f} mW<br>%{percent}<extra></extra>",
         },
       ];
@@ -450,10 +469,10 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 12, r: 12, t: 20, b: 12 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 10 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Power share @ 64b",
-              font: { size: 12, color: palette.text },
+              text: plotlyBold("Power share @ 64b"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: false,
           }
@@ -462,17 +481,17 @@ export function PlotlyPage(): JSX.Element {
             margin: { l: 16, r: 16, t: 36, b: 16 },
             paper_bgcolor: "transparent",
             plot_bgcolor: "transparent",
-            font: { color: palette.text, size: 11 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "Power share at 64-bit width (donut)",
-              font: { size: 14, color: palette.text },
+              text: plotlyBold("Power share at 64-bit width (donut)"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: true,
             legend: {
               orientation: "v",
               x: 1.02,
               y: 0.5,
-              font: { color: palette.textMuted, size: 11 },
+              font: plotTickFont(palette.rgbAxisTick),
             },
           };
 
@@ -495,7 +514,7 @@ export function PlotlyPage(): JSX.Element {
           marker: {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
-            line: { width: 1, color: palette.markerOutline },
+            line: { width: CHART_LINE_WIDTH, color: palette.markerOutline },
           },
         });
       }
@@ -505,31 +524,31 @@ export function PlotlyPage(): JSX.Element {
             autosize: true,
             margin: { l: 0, r: 0, t: 22, b: 0 },
             paper_bgcolor: "transparent",
-            font: { color: palette.text, size: 10 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "3D PPA cloud",
-              font: { size: 12, color: palette.text },
+              text: plotlyBold("3D PPA cloud"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             legend: {
               itemsizing: "constant",
-              font: { size: 9, color: palette.textMuted },
+              font: plotTickFont(palette.rgbAxisTick),
             },
             scene: {
               bgcolor: "rgba(0,0,0,0)",
               xaxis: {
-                title: { text: "Fmax (MHz)", font: { size: 10 } },
-                gridcolor: palette.grid,
-                tickfont: { size: 9, color: palette.textMuted },
+                ...ax,
+                title: { text: plotlyBold("Fmax (MHz)"), font: plotFont(palette.rgbAxisTitle) },
+                tickfont: plotTickFont(palette.rgbAxisTick),
               },
               yaxis: {
-                title: { text: "Power (mW)", font: { size: 10 } },
-                gridcolor: palette.grid,
-                tickfont: { size: 9, color: palette.textMuted },
+                ...ax,
+                title: { text: plotlyBold("Power (mW)"), font: plotFont(palette.rgbAxisTitle) },
+                tickfont: plotTickFont(palette.rgbAxisTick),
               },
               zaxis: {
-                title: { text: "Area (µm²)", font: { size: 10 } },
-                gridcolor: palette.grid,
-                tickfont: { size: 9, color: palette.textMuted },
+                ...ax,
+                title: { text: plotlyBold("Area (µm²)"), font: plotFont(palette.rgbAxisTitle) },
+                tickfont: plotTickFont(palette.rgbAxisTick),
               },
             },
           }
@@ -537,31 +556,31 @@ export function PlotlyPage(): JSX.Element {
             autosize: true,
             margin: { l: 0, r: 0, t: 34, b: 0 },
             paper_bgcolor: "transparent",
-            font: { color: palette.text, size: 11 },
+            font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: "3D scatter: Fmax × power × area",
-              font: { size: 14, color: palette.text },
+              text: plotlyBold("3D scatter: Fmax × power × area"),
+              font: plotFont(palette.rgbAxisTitle),
             },
             legend: {
               itemsizing: "constant",
-              font: { color: palette.textMuted, size: 11 },
+              font: plotTickFont(palette.rgbAxisTick),
             },
             scene: {
               bgcolor: "rgba(0,0,0,0)",
               xaxis: {
-                title: "Fmax (MHz)",
-                gridcolor: palette.grid,
-                tickfont: { color: palette.textMuted },
+                ...ax,
+                title: { text: plotlyBold("Fmax (MHz)"), font: plotFont(palette.rgbAxisTitle) },
+                tickfont: plotTickFont(palette.rgbAxisTick),
               },
               yaxis: {
-                title: "Power (mW)",
-                gridcolor: palette.grid,
-                tickfont: { color: palette.textMuted },
+                ...ax,
+                title: { text: plotlyBold("Power (mW)"), font: plotFont(palette.rgbAxisTitle) },
+                tickfont: plotTickFont(palette.rgbAxisTick),
               },
               zaxis: {
-                title: "Area (µm²)",
-                gridcolor: palette.grid,
-                tickfont: { color: palette.textMuted },
+                ...ax,
+                title: { text: plotlyBold("Area (µm²)"), font: plotFont(palette.rgbAxisTitle) },
+                tickfont: plotTickFont(palette.rgbAxisTick),
               },
             },
           };
@@ -569,7 +588,7 @@ export function PlotlyPage(): JSX.Element {
       const { labels: tmLabels, parents: tmParents, values: tmValues } =
         ppaTreemapFlat("areaUm2");
       const treemapColors = [
-        palette.gridStrong,
+        palette.rgbAxisGridStrong,
         ...ADDER_DEMO_ROWS.map((r) => architectureColor(r.architecture)),
       ];
       const treemapDataInner: Data[] = [
@@ -578,7 +597,7 @@ export function PlotlyPage(): JSX.Element {
           labels: tmLabels,
           parents: tmParents,
           values: tmValues,
-          textfont: { color: palette.text, size: narrow ? 10 : 11 },
+          textfont: plotFont(palette.rgbAxisTitle),
           marker: { colors: treemapColors },
           hovertemplate: "%{label}<br>Area: %{value} µm²<extra></extra>",
         },
@@ -588,10 +607,10 @@ export function PlotlyPage(): JSX.Element {
         autosize: true,
         margin: { l: 4, r: 4, t: narrow ? 22 : 34, b: 4 },
         paper_bgcolor: "transparent",
-        font: { color: palette.text, size: narrow ? 10 : 11 },
+        font: plotFont(palette.rgbAxisTitle),
         title: {
-          text: narrow ? "Area treemap" : "Die area hierarchy (µm²)",
-          font: { size: narrow ? 12 : 14, color: palette.text },
+          text: plotlyBold(narrow ? "Area treemap" : "Die area hierarchy (µm²)"),
+          font: plotFont(palette.rgbAxisTitle),
         },
       };
 
@@ -620,6 +639,7 @@ export function PlotlyPage(): JSX.Element {
             cmin: 0,
             cmax: 3,
             showscale: false,
+            width: CHART_LINE_WIDTH,
           },
           dimensions: [
             {
@@ -650,18 +670,20 @@ export function PlotlyPage(): JSX.Element {
         autosize: true,
         margin: { l: 24, r: 24, t: narrow ? 22 : 34, b: 16 },
         paper_bgcolor: "transparent",
-        font: { color: palette.text, size: narrow ? 10 : 11 },
+        font: plotFont(palette.rgbAxisTitle),
         title: {
-          text: narrow ? "Parallel coords" : "Parallel coordinates (all designs)",
-          font: { size: narrow ? 12 : 14, color: palette.text },
+          text: plotlyBold(
+            narrow ? "Parallel coords" : "Parallel coordinates (all designs)",
+          ),
+          font: plotFont(palette.rgbAxisTitle),
         },
       };
 
       const sk = plotlySankeyPowerByBitwidth();
       const sankeyNodeColors = [
         ...ADDER_DEMO_ROWS.map((r) => architectureColor(r.architecture)),
-        "#5eb0ff",
-        palette.accentOrange,
+        "rgb(0, 128, 0)",
+        "rgb(139, 69, 19)",
       ];
       const sankeyDataInner: Data[] = [
         {
@@ -671,14 +693,14 @@ export function PlotlyPage(): JSX.Element {
             label: sk.labels,
             pad: 10,
             thickness: 14,
-            line: { color: palette.markerOutline, width: 0.5 },
+            line: { color: palette.markerOutline, width: CHART_LINE_WIDTH },
             color: sankeyNodeColors,
           },
           link: {
             source: sk.source,
             target: sk.target,
             value: sk.value,
-            color: ADDER_DEMO_ROWS.map(() => "rgba(94, 176, 255, 0.25)"),
+            color: ADDER_DEMO_ROWS.map(() => "rgba(0, 0, 255, 0.25)"),
           },
         },
       ];
@@ -687,10 +709,12 @@ export function PlotlyPage(): JSX.Element {
         autosize: true,
         margin: { l: 8, r: 8, t: narrow ? 22 : 34, b: 8 },
         paper_bgcolor: "transparent",
-        font: { color: palette.text, size: narrow ? 10 : 11 },
+        font: plotFont(palette.rgbAxisTitle),
         title: {
-          text: narrow ? "Sankey (power)" : "Power (mW) → bit-width pools",
-          font: { size: narrow ? 12 : 14, color: palette.text },
+          text: plotlyBold(
+            narrow ? "Sankey (power)" : "Power (mW) → bit-width pools",
+          ),
+          font: plotFont(palette.rgbAxisTitle),
         },
       };
 

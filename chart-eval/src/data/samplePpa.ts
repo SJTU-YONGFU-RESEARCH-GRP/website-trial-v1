@@ -19,16 +19,16 @@ export const ADDER_DEMO_ROWS: AdderDemoRow[] = [
   { architecture: "brent_kung", bitWidth: 64, fmaxMhz: 710, powerMw: 7.2, areaUm2: 9100 },
 ];
 
-/** Saturated hues that read well on light backgrounds (Apple-like system tones). */
+/** Architecture colors as explicit RGB (order: blue, green, red, purple). */
 const colors: Record<string, string> = {
-  rca: "#0071e3",
-  cla: "#34c759",
-  kogge_stone: "#ff9500",
-  brent_kung: "#af52de",
+  rca: "rgb(0, 0, 255)",
+  cla: "rgb(0, 128, 0)",
+  kogge_stone: "rgb(255, 0, 0)",
+  brent_kung: "rgb(128, 0, 128)",
 };
 
 export function architectureColor(arch: string): string {
-  return colors[arch] ?? "#86868b";
+  return colors[arch] ?? "rgb(139, 69, 19)";
 }
 
 /** Stable row order for matrices and grouped bars (matches `colors` keys used in demos). */
