@@ -1,6 +1,6 @@
-# Chart evaluation (Plotly.js vs ECharts)
+# Chart demo (Plotly.js)
 
-Small **Vite + React** app in this repo (**website-trial-v1**) to compare **Plotly.js** (basic cartesian bundle) and **Apache ECharts** for PPA-style dashboards (Pareto scatter, dual-axis scaling).
+Small **Vite + React** app (**website-trial-v1**) showcasing **Plotly.js** with a synthetic PPA-style dataset: Pareto scatter, bar, heatmap, donut, 3D scatter, and treemap.
 
 ## Run locally
 
@@ -28,7 +28,6 @@ npm install
 3. This app uses **hash routes** (works on GitHub Pages without server rewrites). Append:
    - **`/#/`** — Home  
    - **`/#/plotly`** — Plotly charts  
-   - **`/#/echarts`** — ECharts charts  
 
 Examples:
 
@@ -58,7 +57,7 @@ Target repo: **[github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1](https://gi
 After deployment, the site URL will be:
 
 **`https://sjtu-yongfu-research-grp.github.io/website-trial-v1/#/`**  
-(Plotly: `…/website-trial-v1/#/plotly` · ECharts: `…/website-trial-v1/#/echarts`)
+(Charts: `…/website-trial-v1/#/plotly`)
 
 ### One-time setup
 
@@ -80,17 +79,10 @@ npm run build
 
 Output: `dist/` (same artifact CI uploads).
 
-## Mobile evaluation
+## Mobile
 
-| Topic | Plotly | ECharts |
-|--------|--------------------|----------------------|
-| Touch | Pinch zoom, drag | Inside zoom + **slider** `dataZoom` on line chart |
-| Bundle | Lazy-loaded route; **`plotly.js-dist-min`** (full Plotly, browser build) | Smaller than Plotly route; canvas rendering |
-| Layout | `ResizeObserver` + `Plots.resize` | `media` queries in options for legend/grid |
-
-Try both routes on a phone; ECharts often feels snappier on low-end devices.
+Plotly supports touch (pinch zoom, drag). The Plotly route is **lazy-loaded** so the home page stays small; the **`plotly.js-dist-min`** chunk is still a large download when you open the charts.
 
 ## Dependencies note
 
-- `plotly.js-dist-min` — official **pre-minified browser bundle** (same feature set as full `plotly.js`, including 3D / sankey / treemap). We import this instead of `plotly.js` so Vite does not bundle Node-only trace code that breaks at runtime under Rolldown. Types still come from `@types/plotly.js`.
-- `echarts` + `echarts-for-react` — full ECharts; for production you can switch to **tree-shaken** ECharts core imports to trim size further.
+- **`plotly.js-dist-min`** — official **pre-minified browser bundle** (3D WebGL, treemap, and many other trace types). We import this instead of `plotly.js` so Vite does not bundle Node-only trace code that breaks at runtime under Rolldown. Types come from **`@types/plotly.js`**.

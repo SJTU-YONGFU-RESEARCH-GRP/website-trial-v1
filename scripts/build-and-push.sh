@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# website-trial-v1: Vite + React + plotly.js-dist-min + ECharts → GitHub Pages at /website-trial-v1/
+# website-trial-v1: Vite + React + plotly.js-dist-min → GitHub Pages at /website-trial-v1/
 #
 # Runs npm ci|install, optional TypeScript check, production vite build, dist verification,
 # then git commit + push.

@@ -2,6 +2,8 @@
  * Chart colors for light / dark UI (kept in sync with index.css `data-theme`).
  */
 
+import type { HoverLabel } from "plotly.js";
+
 /** Shared chart typography: Arial, 20px bold, line width 3 for strokes. */
 export const CHART_FONT_FAMILY = "Arial, sans-serif";
 export const CHART_FONT_SIZE = 20;
@@ -18,6 +20,27 @@ export const CHART_AXIS_FONT_FAMILY = `Arial Black, ${CHART_FONT_FAMILY}`;
 /** Plotly accepts HTML; use for bold where `layout.font` has no weight. */
 export function plotlyBold(text: string): string {
   return `<b>${text}</b>`;
+}
+
+/**
+ * Shared Plotly hover tooltip chrome: theme background/border and heavy type (Arial Black).
+ * Apply on every `layout` so scatter, bar, heatmap, etc. match.
+ */
+export function plotlyHoverLabel(
+  palette: ChartPalette,
+  narrow: boolean,
+): Partial<HoverLabel> {
+  return {
+    bgcolor: palette.tooltipBg,
+    bordercolor: palette.tooltipBorder,
+    font: {
+      family: CHART_AXIS_FONT_FAMILY,
+      size: chartAxisFontSizePx(narrow),
+      color: palette.rgbAxisTitle,
+    },
+    align: "left",
+    namelength: -1,
+  };
 }
 
 /** Default Plotly font object (size 20, Arial). */
@@ -38,24 +61,6 @@ export function plotAxisFont(
   return {
     family: CHART_AXIS_FONT_FAMILY,
     size: chartAxisFontSizePx(narrow),
-    color,
-  };
-}
-
-/** ECharts axis name, ticks, and matching numeric/categorical overlays — same size and bold weight. */
-export function echartsAxisTextStyle(
-  color: string,
-  narrow: boolean,
-): {
-  fontFamily: string;
-  fontSize: number;
-  fontWeight: "bold";
-  color: string;
-} {
-  return {
-    fontFamily: CHART_AXIS_FONT_FAMILY,
-    fontSize: chartAxisFontSizePx(narrow),
-    fontWeight: "bold",
     color,
   };
 }
@@ -152,32 +157,6 @@ export function plotlySceneAxis(
   };
 }
 
-/** ECharts `grid` rect: visible border on all four sides of the plotting area. */
-export function echartsGridBorder(palette: ChartPalette): {
-  borderColor: string;
-  borderWidth: number;
-} {
-  return {
-    borderColor: palette.axisBorderRgb,
-    borderWidth: CHART_LINE_WIDTH,
-  };
-}
-
-/** ECharts textStyle helper matching chart typography. */
-export function echartsTextStyle(color: string): {
-  fontFamily: string;
-  fontSize: number;
-  fontWeight: "bold";
-  color: string;
-} {
-  return {
-    fontFamily: CHART_FONT_FAMILY,
-    fontSize: CHART_FONT_SIZE,
-    fontWeight: "bold",
-    color,
-  };
-}
-
 export type ChartPalette = {
   text: string;
   textMuted: string;
@@ -185,7 +164,7 @@ export type ChartPalette = {
   gridStrong: string;
   /** Axis titles, chart chrome (explicit RGB). */
   rgbAxisTitle: string;
-  /** Legend, dataZoom, and other non-axis chrome (muted). */
+  /** Legend and other non-axis chrome (muted). */
   rgbAxisTick: string;
   /** X/Y (and colorbar) tick value labels — black on light theme. */
   axisValueLabelRgb: string;

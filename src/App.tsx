@@ -7,19 +7,14 @@ import { HomePage } from "./pages/HomePage";
 const PlotlyPage = lazy(async () => ({
   default: (await import("./pages/PlotlyPage")).PlotlyPage,
 }));
-const EChartsPage = lazy(async () => ({
-  default: (await import("./pages/EChartsPage")).EChartsPage,
-}));
 
 export default function App(): ReactElement {
   return (
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header__titles">
-          <h1>Plotly.js vs ECharts</h1>
-          <p>
-            Vite + React · full Plotly + ECharts analytics gallery · touch-friendly defaults
-          </p>
+          <h1>Plotly.js charts</h1>
+          <p>Vite + React · analytics gallery · touch-friendly defaults</p>
         </div>
         <ThemeToggle />
       </header>
@@ -37,12 +32,6 @@ export default function App(): ReactElement {
         >
           Plotly.js
         </NavLink>
-        <NavLink
-          to="/echarts"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          ECharts
-        </NavLink>
       </nav>
       <main>
         <Suspense
@@ -55,7 +44,6 @@ export default function App(): ReactElement {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/plotly" element={<PlotlyPage />} />
-            <Route path="/echarts" element={<EChartsPage />} />
           </Routes>
         </Suspense>
       </main>

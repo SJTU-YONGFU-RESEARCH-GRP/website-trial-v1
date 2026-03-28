@@ -4,8 +4,7 @@
 
 **`https://sjtu-yongfu-research-grp.github.io/website-trial-v1/#/`**
 
-- Plotly: `…/website-trial-v1/#/plotly`
-- ECharts: `…/website-trial-v1/#/echarts`
+- Charts: `…/website-trial-v1/#/plotly`
 
 ## One-time GitHub configuration
 
@@ -52,7 +51,7 @@ npm run build
 npx vite preview   # optional: smoke-test dist/
 ```
 
-`vite.config.ts` sets **`base: "/website-trial-v1/"` in production** (and **`/`** in dev) so JS/CSS and **lazy-loaded** chunks (Plotly, ECharts) load from the correct path. A relative `base: "./"` often breaks the Plotly route on project Pages when asset URLs resolve to `github.io/assets/...` instead of `github.io/website-trial-v1/assets/...`.
+`vite.config.ts` sets **`base: "/website-trial-v1/"` in production** (and **`/`** in dev) so JS/CSS and **lazy-loaded** chunks (Plotly) load from the correct path. A relative `base: "./"` often breaks the chart route on project Pages when asset URLs resolve to `github.io/assets/...` instead of `github.io/website-trial-v1/assets/...`.
 
 After `npm run build`, smoke-test like production with:
 

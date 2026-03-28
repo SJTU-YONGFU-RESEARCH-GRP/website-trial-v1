@@ -5,7 +5,6 @@
 import {
   type AdderDemoRow,
   ADDER_DEMO_ROWS,
-  architectureColor,
   DEMO_ARCH_ORDER,
   DEMO_BIT_WIDTHS,
   formatArchLabel,
@@ -21,11 +20,6 @@ export const SCATTER_AXIS_METRICS: readonly ScatterAxisMetric[] = [
   "bitWidth",
   "architecture",
 ] as const;
-
-/** Metrics allowed as Sankey link magnitude (x/y “axes” here are node groups, not a plot axis). */
-export const SANKEY_FLOW_METRICS = ["fmaxMhz", "powerMw", "areaUm2"] as const;
-
-export type SankeyFlowMetric = (typeof SANKEY_FLOW_METRICS)[number];
 
 const META: Record<ScatterAxisMetric, { label: string; unit: string }> = {
   fmaxMhz: { label: "Fmax", unit: "MHz" },
@@ -169,29 +163,4 @@ export function scatterAxisTreemapFlat(metric: ScatterAxisMetric): {
   const sum = leafVals.reduce((s, v) => s + v, 0);
   const values = [sum, ...leafVals];
   return { labels, parents, values };
-}
-
-/** ECharts sunburst / treemap tree with leaf values from `metric`. */
-export function scatterAxisHierarchyTree(metric: ScatterAxisMetric): {
-  name: string;
-  children: {
-    name: string;
-    itemStyle: { color: string };
-    children: { name: string; value: number }[];
-  }[];
-} {
-  return {
-    name: PPA_ROOT_LABEL,
-    children: DEMO_ARCH_ORDER.map((arch) => {
-      const rows = ADDER_DEMO_ROWS.filter((r) => r.architecture === arch);
-      return {
-        name: formatArchLabel(arch),
-        itemStyle: { color: architectureColor(arch) },
-        children: rows.map((r) => ({
-          name: `${r.bitWidth}b`,
-          value: scatterAxisValue(metric, r),
-        })),
-      };
-    }),
-  };
 }

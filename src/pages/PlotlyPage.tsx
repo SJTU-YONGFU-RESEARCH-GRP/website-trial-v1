@@ -8,12 +8,10 @@ import {
   architectureColor,
   DEMO_ARCH_ORDER,
   formatArchLabel,
-  plotlySankeyByBitwidth,
   rowsByBitWidthOrdered,
 } from "../data/samplePpa";
 import {
   DEFAULT_EXPLORE_AXES,
-  SANKEY_FLOW_METRICS,
   SCATTER_AXIS_METRICS,
   scatterArchitectureTickAxis,
   scatterAxisHeatmapGrid,
@@ -24,7 +22,6 @@ import {
   scatterAxisValue,
   syncExploreAxes,
   type ExploreAxesState,
-  type SankeyFlowMetric,
   type ScatterAxisMetric,
 } from "../data/scatterAxisMetrics";
 import {
@@ -36,6 +33,7 @@ import {
   plotlyAxisFrameX,
   plotlyAxisFrameY,
   plotlyBold,
+  plotlyHoverLabel,
   plotlySceneAxis,
 } from "../theme/chartPalette";
 import { useTheme } from "../theme/ThemeContext";
@@ -77,7 +75,6 @@ export function PlotlyPage(): JSX.Element {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const [exploreAxes, setExploreAxes] = useState<ExploreAxesState>(DEFAULT_EXPLORE_AXES);
-  const [sankeyMetric, setSankeyMetric] = useState<SankeyFlowMetric>("powerMw");
 
   const onExploreAxisChange = (key: keyof ExploreAxesState, m: ScatterAxisMetric) => {
     setExploreAxes((prev) => syncExploreAxes(prev, key, m));
@@ -87,9 +84,6 @@ export function PlotlyPage(): JSX.Element {
     paretoData,
     paretoLayout,
     paretoConfig,
-    lineData,
-    lineLayout,
-    lineConfig,
     barData,
     barLayout,
     barConfig,
@@ -105,18 +99,15 @@ export function PlotlyPage(): JSX.Element {
     treemapData,
     treemapLayout,
     treemapConfig,
-    sankeyData,
-    sankeyLayout,
-    sankeyConfig,
   } = useMemo(() => {
       const ex = exploreAxes;
       const paretoXMetric = ex.x;
       const paretoYMetric = ex.y;
       const paretoZMetric = ex.z;
       const palette = getChartPalette(theme);
+      const hoverLabel = plotlyHoverLabel(palette, narrow);
       const frameX = plotlyAxisFrameX(palette);
       const frameY = plotlyAxisFrameY(palette);
-      const frameYDual = plotlyAxisFrameY(palette, { mirror: false });
       const sceneAxX = plotlySceneAxis(palette, "grey");
       const sceneAxY = plotlySceneAxis(palette, "black");
       const sceneAxZ = plotlySceneAxis(palette, "grey");
@@ -147,10 +138,9 @@ export function PlotlyPage(): JSX.Element {
           name: label,
           x: rows.map((r) => scatterAxisValue(paretoXMetric, r)),
           y: rows.map((r) => scatterAxisValue(paretoYMetric, r)),
-          text: rows.map(
-            (r) => `${label}<br>${r.bitWidth}b<br>${r.areaUm2} µm²`,
-          ),
-          hoverinfo: "x+y+text",
+          text: rows.map((r) => `${plotlyBold(`${r.bitWidth}b`)}<br>${r.areaUm2} µm²`),
+          hovertemplate:
+            `<b>${label}</b><br>%{text}<br><b>${scatterAxisTitle(paretoXMetric)}:</b> %{x}<br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y}<extra></extra>`,
           marker: {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
@@ -159,30 +149,6 @@ export function PlotlyPage(): JSX.Element {
           },
         });
       }
-
-      const ks = ADDER_DEMO_ROWS.filter((r) => r.architecture === "kogge_stone").sort(
-        (a, b) => a.bitWidth - b.bitWidth,
-      );
-      const lineDataInner: Data[] = [
-        {
-          type: "scatter",
-          mode: "lines",
-          name: scatterAxisTitle(paretoXMetric),
-          x: ks.map((r) => r.bitWidth),
-          y: ks.map((r) => scatterAxisValue(paretoXMetric, r)),
-          yaxis: "y",
-          line: { color: architectureColor("kogge_stone"), width: CHART_LINE_WIDTH },
-        },
-        {
-          type: "scatter",
-          mode: "lines",
-          name: scatterAxisTitle(paretoYMetric),
-          x: ks.map((r) => r.bitWidth),
-          y: ks.map((r) => scatterAxisValue(paretoYMetric, r)),
-          yaxis: "y2",
-          line: { color: "rgb(139, 69, 19)", width: CHART_LINE_WIDTH, dash: "dot" },
-        },
-      ];
 
       const paretoPlotBg =
         theme === "dark" ? "rgb(22, 28, 38)" : "rgb(255, 255, 255)";
@@ -232,6 +198,7 @@ export function PlotlyPage(): JSX.Element {
               ...(paretoYRange ? { range: paretoYRange } : {}),
             },
             hovermode: "closest",
+            hoverlabel: hoverLabel,
           }
         : {
             autosize: true,
@@ -265,84 +232,7 @@ export function PlotlyPage(): JSX.Element {
               ...(paretoYRange ? { range: paretoYRange } : {}),
             },
             hovermode: "closest",
-          };
-
-      const lineLayoutInner: Partial<Layout> = narrow
-        ? {
-            autosize: true,
-            margin: { l: 46, r: 40, t: 20, b: 96 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
-            font: plotFont(palette.rgbAxisTitle),
-            title: {
-              text: plotlyBold("Kogge-Stone scaling"),
-              font: plotFont(palette.rgbAxisTitle),
-            },
-            xaxis: {
-              ...frameX,
-              automargin: true,
-              gridcolor: palette.axisGridGreyRgb,
-              title: axTitle("Bit width"),
-              tickfont: axTick,
-              dtick: 32,
-            },
-            yaxis: {
-              ...frameYDual,
-              automargin: true,
-              gridcolor: palette.axisGridBlackRgb,
-              title: axTitle(scatterAxisTitle(paretoXMetric)),
-              tickfont: axTick,
-              side: "left",
-            },
-            yaxis2: {
-              ...frameYDual,
-              automargin: true,
-              gridcolor: "rgba(0,0,0,0)",
-              showgrid: false,
-              title: axTitle(scatterAxisTitle(paretoYMetric)),
-              tickfont: axTick,
-              overlaying: "y",
-              side: "right",
-            },
-            showlegend: false,
-          }
-        : {
-            autosize: true,
-            margin: { l: 52, r: 52, t: 32, b: 72 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
-            font: plotFont(palette.rgbAxisTitle),
-            title: {
-              text: plotlyBold("Scaling: Kogge-Stone vs bit width"),
-              font: plotFont(palette.rgbAxisTitle),
-            },
-            xaxis: {
-              ...frameX,
-              automargin: true,
-              gridcolor: palette.axisGridGreyRgb,
-              title: axTitle("Bit width"),
-              dtick: 32,
-              tickfont: axTick,
-            },
-            yaxis: {
-              ...frameYDual,
-              automargin: true,
-              gridcolor: palette.axisGridBlackRgb,
-              title: axTitle(scatterAxisTitle(paretoXMetric)),
-              side: "left",
-              tickfont: axTick,
-            },
-            yaxis2: {
-              ...frameYDual,
-              automargin: true,
-              gridcolor: "rgba(0,0,0,0)",
-              showgrid: false,
-              title: axTitle(scatterAxisTitle(paretoYMetric)),
-              tickfont: axTick,
-              overlaying: "y",
-              side: "right",
-            },
-            showlegend: false,
+            hoverlabel: hoverLabel,
           };
 
       const commonConfig: Partial<Config> = {
@@ -369,7 +259,8 @@ export function PlotlyPage(): JSX.Element {
             color: rows64.map((r) => architectureColor(r.architecture)),
             line: { width: CHART_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
           },
-          hovertemplate: `%{x}<br>${scatterAxisTitle(paretoYMetric)}: %{y:.3g}<extra></extra>`,
+          hovertemplate:
+            `<b>%{x}</b><br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y:.3g}<extra></extra>`,
         },
       ];
 
@@ -400,6 +291,7 @@ export function PlotlyPage(): JSX.Element {
               tickfont: axTick,
             },
             hovermode: "x unified",
+            hoverlabel: hoverLabel,
           }
         : {
             autosize: true,
@@ -430,6 +322,7 @@ export function PlotlyPage(): JSX.Element {
             },
             hovermode: "x unified",
             bargap: 0.28,
+            hoverlabel: hoverLabel,
           };
 
       const { z: heatZ, colLabels, rowLabels } = scatterAxisHeatmapGrid(paretoZMetric);
@@ -441,7 +334,7 @@ export function PlotlyPage(): JSX.Element {
           z: heatZ,
           colorscale: "Viridis",
           hovertemplate:
-            `Bit width %{x}<br>%{y}<br>${scatterAxisTitle(paretoZMetric)}: %{z}<extra></extra>`,
+            `<b>Bit width %{x}</b><br><b>%{y}</b><br><b>${scatterAxisTitle(paretoZMetric)}:</b> %{z}<extra></extra>`,
           colorbar: {
             title: axTitle(scatterAxisTitle(paretoZMetric)),
             tickfont: axTick,
@@ -474,6 +367,7 @@ export function PlotlyPage(): JSX.Element {
               title: axTitle("Architecture"),
               tickfont: axTick,
             },
+            hoverlabel: hoverLabel,
           }
         : {
             autosize: true,
@@ -501,6 +395,7 @@ export function PlotlyPage(): JSX.Element {
               title: axTitle("Architecture"),
               tickfont: axTick,
             },
+            hoverlabel: hoverLabel,
           };
 
       const pieDataInner: Data[] = [
@@ -516,7 +411,7 @@ export function PlotlyPage(): JSX.Element {
           textinfo: "label+percent",
           textfont: plotAxisFont("#ffffff", narrow),
           hovertemplate:
-            "%{label}<br>%{value:.3g}<br>%{percent}<extra></extra>",
+            "<b>%{label}</b><br><b>Value:</b> %{value:.3g}<br><b>Share:</b> %{percent}<extra></extra>",
         },
       ];
 
@@ -532,6 +427,7 @@ export function PlotlyPage(): JSX.Element {
               font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: false,
+            hoverlabel: hoverLabel,
           }
         : {
             autosize: true,
@@ -546,6 +442,7 @@ export function PlotlyPage(): JSX.Element {
               font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: false,
+            hoverlabel: hoverLabel,
           };
 
       const sceneAxisFor = (
@@ -577,10 +474,10 @@ export function PlotlyPage(): JSX.Element {
             (r) => `${formatArchLabel(arch)} ${r.bitWidth}b`,
           ),
           hovertemplate:
-            "%{text}<br>" +
-            `${scatterAxisTitle(paretoXMetric)}: %{x}<br>` +
-            `${scatterAxisTitle(paretoYMetric)}: %{y}<br>` +
-            `${scatterAxisTitle(paretoZMetric)}: %{z}<extra></extra>`,
+            "<b>%{text}</b><br>" +
+            `<b>${scatterAxisTitle(paretoXMetric)}:</b> %{x}<br>` +
+            `<b>${scatterAxisTitle(paretoYMetric)}:</b> %{y}<br>` +
+            `<b>${scatterAxisTitle(paretoZMetric)}:</b> %{z}<extra></extra>`,
           marker: {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
@@ -609,6 +506,7 @@ export function PlotlyPage(): JSX.Element {
               yaxis: sceneAxisFor(sceneAxY, paretoYMetric),
               zaxis: sceneAxisFor(sceneAxZ, paretoZMetric),
             },
+            hoverlabel: hoverLabel,
           }
         : {
             autosize: true,
@@ -628,6 +526,7 @@ export function PlotlyPage(): JSX.Element {
               yaxis: sceneAxisFor(sceneAxY, paretoYMetric),
               zaxis: sceneAxisFor(sceneAxZ, paretoZMetric),
             },
+            hoverlabel: hoverLabel,
           };
 
       const { labels: tmLabels, parents: tmParents, values: tmValues } =
@@ -645,7 +544,7 @@ export function PlotlyPage(): JSX.Element {
           textfont: plotAxisFont("#ffffff", narrow),
           marker: { colors: treemapColors },
           hovertemplate:
-            `%{label}<br>${scatterAxisTitle(paretoYMetric)}: %{value}<extra></extra>`,
+            `<b>%{label}</b><br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{value}<extra></extra>`,
         },
       ];
 
@@ -663,57 +562,13 @@ export function PlotlyPage(): JSX.Element {
           font: plotFont(palette.rgbAxisTitle),
         },
         showlegend: false,
-      };
-
-      const sk = plotlySankeyByBitwidth(sankeyMetric);
-      const sankeyNodeColors = [
-        ...ADDER_DEMO_ROWS.map((r) => architectureColor(r.architecture)),
-        "rgb(0, 128, 0)",
-        "rgb(139, 69, 19)",
-      ];
-      const sankeyDataInner: Data[] = [
-        {
-          type: "sankey",
-          arrangement: "snap",
-          node: {
-            label: sk.labels,
-            pad: 10,
-            thickness: 14,
-            line: { color: palette.markerOutline, width: CHART_LINE_WIDTH },
-            color: sankeyNodeColors,
-          },
-          link: {
-            source: sk.source,
-            target: sk.target,
-            value: sk.value,
-            color: ADDER_DEMO_ROWS.map(() => "rgba(0, 0, 255, 0.25)"),
-          },
-        },
-      ];
-
-      const sankeyLayoutInner: Partial<Layout> = {
-        autosize: true,
-        margin: { l: 8, r: 8, t: narrow ? 22 : 34, b: 8 },
-        paper_bgcolor: "transparent",
-        font: plotFont(palette.rgbAxisTitle),
-        title: {
-          text: plotlyBold(
-            narrow
-              ? `Sankey (${scatterAxisOptionLabel(sankeyMetric)})`
-              : `${scatterAxisTitle(sankeyMetric)} → bit-width pools`,
-          ),
-          font: plotFont(palette.rgbAxisTitle),
-        },
-        showlegend: false,
+        hoverlabel: hoverLabel,
       };
 
       return {
         paretoData: paretoDataInner,
         paretoLayout: paretoLayoutInner,
         paretoConfig: commonConfig,
-        lineData: lineDataInner,
-        lineLayout: lineLayoutInner,
-        lineConfig: commonConfig,
         barData: barDataInner,
         barLayout: barLayoutInner,
         barConfig: commonConfig,
@@ -729,28 +584,23 @@ export function PlotlyPage(): JSX.Element {
         treemapData: treemapDataInner,
         treemapLayout: treemapLayoutInner,
         treemapConfig: commonConfig,
-        sankeyData: sankeyDataInner,
-        sankeyLayout: sankeyLayoutInner,
-        sankeyConfig: commonConfig,
       };
-    }, [narrow, theme, exploreAxes, sankeyMetric]);
+    }, [narrow, theme, exploreAxes]);
 
   const paretoRef = usePlotlyChart(paretoData, paretoLayout, paretoConfig);
-  const lineRef = usePlotlyChart(lineData, lineLayout, lineConfig);
   const barRef = usePlotlyChart(barData, barLayout, barConfig);
   const heatmapRef = usePlotlyChart(heatmapData, heatmapLayout, heatmapConfig);
   const pieRef = usePlotlyChart(pieData, pieLayout, pieConfig);
   const scatter3dRef = usePlotlyChart(scatter3dData, scatter3dLayout, scatter3dConfig);
   const treemapRef = usePlotlyChart(treemapData, treemapLayout, treemapConfig);
-  const sankeyRef = usePlotlyChart(sankeyData, sankeyLayout, sankeyConfig);
 
   return (
     <div>
       <div className="chart-card">
         <h2>Explore metrics</h2>
         <p className="hint">
-          <strong>X</strong> / <strong>Y</strong> drive the 2D scatter, dual-axis line (Kogge-Stone), bar
-          @64b, donut, and treemap. <strong>Z</strong> colors the heatmap.{" "}
+          <strong>X</strong> / <strong>Y</strong> drive the 2D scatter, bar @64b, donut, and treemap.{" "}
+          <strong>Z</strong> colors the heatmap.{" "}
           <strong>3D scatter</strong> uses all three (each axis must be a different metric).
         </p>
         <div className="axis-pickers">
@@ -810,16 +660,6 @@ export function PlotlyPage(): JSX.Element {
         </div>
       </div>
       <div className="chart-card">
-        <h2>Dual-axis line</h2>
-        <p className="hint">
-          Kogge-Stone only: <strong>X</strong> metric (left axis) and <strong>Y</strong> metric (right)
-          vs bit width. Pinch/drag or mode-bar zoom (<code>dataZoom</code> on ECharts).
-        </p>
-        <div className="plot-host">
-          <div ref={lineRef} style={{ width: "100%", height: "100%" }} />
-        </div>
-      </div>
-      <div className="chart-card">
         <h2>Grouped bar</h2>
         <p className="hint">
           64-bit rows: <strong>Y</strong> metric by architecture. Mode bar: zoom, pan, autoscale, PNG.
@@ -865,35 +705,9 @@ export function PlotlyPage(): JSX.Element {
           <div ref={treemapRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
-      <div className="chart-card">
-        <h2>Sankey</h2>
-        <p className="hint">
-          Nodes are <strong>architecture × bit width</strong>; each design links to a <strong>32b</strong> or{" "}
-          <strong>64b</strong> aggregate pool. Band width is the selected metric (not a Cartesian axis).
-        </p>
-        <div className="axis-pickers">
-          <label className="axis-picker">
-            Flow value (link width)
-            <select
-              value={sankeyMetric}
-              aria-label="Sankey flow metric"
-              onChange={(e) => setSankeyMetric(e.target.value as SankeyFlowMetric)}
-            >
-              {SANKEY_FLOW_METRICS.map((m) => (
-                <option key={m} value={m}>
-                  {scatterAxisOptionLabel(m)}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div className="plot-host">
-          <div ref={sankeyRef} style={{ width: "100%", height: "100%" }} />
-        </div>
-      </div>
       <p className="note">
         This page loads the official <strong>plotly.js-dist-min</strong> bundle (3D WebGL,
-        sankey, treemap, geo-capable, etc.) — large download, but avoids bundling
+        treemap, geo-capable, etc.) — large download, but avoids bundling
         raw <code>plotly.js</code> source through Vite (fewer Node-polyfill runtime bugs).
         For a smaller first paint elsewhere, lazy-load this route only (already done).
       </p>
