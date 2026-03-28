@@ -33,6 +33,7 @@ import {
   CHART_LINE_WIDTH,
   CHART_MARKER_OUTLINE_RGB,
   getChartPalette,
+  plotInsetBackground,
   plotAxisFont,
   plotFont,
   plotlyAxisFrameX,
@@ -114,6 +115,7 @@ export function PlotlyPage(): JSX.Element {
         ? ex.bitWidth
         : DESIGN_BIT_WIDTHS[0];
       const palette = getChartPalette(theme);
+      const plotSurfaceBg = plotInsetBackground(theme);
       const hoverLabel = plotlyHoverLabel(palette, narrow);
       const frameX = plotlyAxisFrameX(palette);
       const frameY = plotlyAxisFrameY(palette);
@@ -159,8 +161,6 @@ export function PlotlyPage(): JSX.Element {
         });
       }
 
-      const paretoPlotBg =
-        theme === "dark" ? "rgb(22, 28, 38)" : "rgb(255, 255, 255)";
       const paretoXRange = scatterAxisRange(paretoXMetric);
       const paretoYRange = scatterAxisRange(paretoYMetric);
       const paretoXArchTicks =
@@ -171,15 +171,15 @@ export function PlotlyPage(): JSX.Element {
         `${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)}`,
       );
       const paretoTitleWide = plotlyBold(
-        `Pareto-style: ${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)}`,
+        `Pareto-style: ${scatterAxisTitle(paretoYMetric)} vs ${scatterAxisTitle(paretoXMetric)}`,
       );
 
       const paretoLayoutInner: Partial<Layout> = narrow
         ? {
             autosize: true,
             margin: { l: 42, r: 14, t: 20, b: 56 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: paretoPlotBg,
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: paretoTitleNarrow,
@@ -212,8 +212,8 @@ export function PlotlyPage(): JSX.Element {
         : {
             autosize: true,
             margin: { l: 48, r: 24, t: 32, b: 56 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: paretoPlotBg,
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: paretoTitleWide,
@@ -277,8 +277,8 @@ export function PlotlyPage(): JSX.Element {
         ? {
             autosize: true,
             margin: { l: 46, r: 14, t: 20, b: 88 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(`${scatterAxisTitle(paretoYMetric)} @ ${plotBitWidth}b (bar)`),
@@ -305,8 +305,8 @@ export function PlotlyPage(): JSX.Element {
         : {
             autosize: true,
             margin: { l: 52, r: 24, t: 32, b: 72 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(
@@ -355,8 +355,8 @@ export function PlotlyPage(): JSX.Element {
         ? {
             autosize: true,
             margin: { l: 72, r: 18, t: 20, b: 56 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(`${scatterAxisTitle(paretoZMetric)} heatmap`),
@@ -381,8 +381,8 @@ export function PlotlyPage(): JSX.Element {
         : {
             autosize: true,
             margin: { l: 120, r: 100, t: 32, b: 56 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(
@@ -428,8 +428,8 @@ export function PlotlyPage(): JSX.Element {
         ? {
             autosize: true,
             margin: { l: 12, r: 12, t: 20, b: 12 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(`${scatterAxisTitle(paretoYMetric)} share @ ${plotBitWidth}b`),
@@ -441,8 +441,8 @@ export function PlotlyPage(): JSX.Element {
         : {
             autosize: true,
             margin: { l: 16, r: 16, t: 36, b: 16 },
-            paper_bgcolor: "transparent",
-            plot_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(
@@ -493,7 +493,7 @@ export function PlotlyPage(): JSX.Element {
         ? {
             autosize: true,
             margin: { l: 0, r: 0, t: 22, b: 0 },
-            paper_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(
@@ -503,7 +503,7 @@ export function PlotlyPage(): JSX.Element {
             },
             showlegend: false,
             scene: {
-              bgcolor: "rgba(0,0,0,0)",
+              bgcolor: plotSurfaceBg,
               xaxis: sceneAxisFor(sceneAxX, paretoXMetric),
               yaxis: sceneAxisFor(sceneAxY, paretoYMetric),
               zaxis: sceneAxisFor(sceneAxZ, paretoZMetric),
@@ -513,7 +513,7 @@ export function PlotlyPage(): JSX.Element {
         : {
             autosize: true,
             margin: { l: 0, r: 0, t: 34, b: 0 },
-            paper_bgcolor: "transparent",
+            paper_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
               text: plotlyBold(
@@ -523,7 +523,7 @@ export function PlotlyPage(): JSX.Element {
             },
             showlegend: false,
             scene: {
-              bgcolor: "rgba(0,0,0,0)",
+              bgcolor: plotSurfaceBg,
               xaxis: sceneAxisFor(sceneAxX, paretoXMetric),
               yaxis: sceneAxisFor(sceneAxY, paretoYMetric),
               zaxis: sceneAxisFor(sceneAxZ, paretoZMetric),
@@ -553,7 +553,8 @@ export function PlotlyPage(): JSX.Element {
       const treemapLayoutInner: Partial<Layout> = {
         autosize: true,
         margin: { l: 4, r: 4, t: narrow ? 22 : 34, b: 4 },
-        paper_bgcolor: "transparent",
+        paper_bgcolor: plotSurfaceBg,
+        plot_bgcolor: plotSurfaceBg,
         font: plotFont(palette.rgbAxisTitle),
         title: {
           text: plotlyBold(

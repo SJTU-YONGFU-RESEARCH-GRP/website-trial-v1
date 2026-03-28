@@ -224,6 +224,14 @@ export function getChartPalette(theme: ThemeMode): ChartPalette {
 }
 
 /**
+ * Opaque background for Plotly charts: matches `index.css` `--plot-inset-bg` on `.plot-host`.
+ * Using solid paper/plot (not transparent) fixes PNG export showing a default grey behind titles and margins.
+ */
+export function plotInsetBackground(theme: ThemeMode): string {
+  return theme === "dark" ? "#131b26" : "#fafafa";
+}
+
+/**
  * Plotly heatmap colorscale: low values cool blue, high values accent orange (matches site palette).
  */
 export function plotlyHeatmapColorscale(
