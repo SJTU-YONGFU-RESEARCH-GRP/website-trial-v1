@@ -10,10 +10,12 @@ const bufferPkgDir = path.join(
   path.sep,
 );
 
-// For GitHub project Pages use: base: "/digital-designs-analytics/"
-export default defineConfig({
+// GitHub **project** Pages serves this app at /website-trial-v1/ (not repo root).
+// A relative base ("./") often breaks lazy-loaded chunks when the URL omits a trailing
+// slash or the bundler emits absolute /assets/... URLs. Use an explicit prefix in prod.
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: "./",
+  base: mode === "production" ? "/website-trial-v1/" : "/",
   resolve: {
     alias: {
       // plotly.js CJS (image trace) uses require('buffer/') — trailing slash matters.
@@ -26,4 +28,4 @@ export default defineConfig({
   optimizeDeps: {
     include: ["plotly.js", "buffer"],
   },
-});
+}));

@@ -53,7 +53,15 @@ npm run build
 npx vite preview   # optional: smoke-test dist/
 ```
 
-`vite.config.ts` uses **`base: "./"`** so assets resolve correctly on a **project** Pages URL (`/website-trial-v1/`).
+`vite.config.ts` sets **`base: "/website-trial-v1/"` in production** (and **`/`** in dev) so JS/CSS and **lazy-loaded** chunks (Plotly, ECharts) load from the correct path. A relative `base: "./"` often breaks the Plotly route on project Pages when asset URLs resolve to `github.io/assets/...` instead of `github.io/website-trial-v1/assets/...`.
+
+After `npm run build`, smoke-test like production with:
+
+```bash
+npx vite preview
+```
+
+Then open **`http://localhost:4173/website-trial-v1/#/plotly`** (note the **`/website-trial-v1/`** prefix).
 
 ## Troubleshooting: deploy job `404` / `Failed to create deployment`
 
