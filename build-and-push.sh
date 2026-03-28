@@ -47,6 +47,10 @@ Environment:
   GH_PAGES_BASE         Subpath segment for dist check (default: website-trial-v1).
                          Must match vite.config.ts production base, without slashes.
 
+If npm ci fails with "package.json and package-lock.json ... not in sync", run once:
+  ./build-and-push.sh --use-install
+(or: cd chart-eval && npm install) then commit the updated package-lock.json.
+
 EOF
 }
 

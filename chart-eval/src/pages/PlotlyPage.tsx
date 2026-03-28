@@ -20,7 +20,7 @@ function usePlotlyChart(
   data: Data[],
   layout: Partial<Layout>,
   config: Partial<Config>,
-): RefObject<HTMLDivElement | null> {
+): RefObject<HTMLDivElement> {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export function PlotlyPage(): JSX.Element {
           text: rows.map(
             (r) => `${arch}<br>${r.bitWidth}b<br>${r.areaUm2} µm²`,
           ),
-          hoverinfo: "text+x+y",
+          hoverinfo: "x+y+text",
           marker: {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
@@ -588,9 +588,10 @@ export function PlotlyPage(): JSX.Element {
       const amin = Math.min(...ADDER_DEMO_ROWS.map((r) => r.areaUm2));
       const amaxN = Math.max(...ADDER_DEMO_ROWS.map((r) => r.areaUm2));
 
-      const parcoordsDataInner: Data[] = [
+      // Parcoords trace: @types/plotly.js `Data` union omits `dimensions` / parcoords line colorscale.
+      const parcoordsDataInner = [
         {
-          type: "parcoords",
+          type: "parcoords" as const,
           line: {
             color: pcColors,
             colorscale: [
@@ -626,7 +627,7 @@ export function PlotlyPage(): JSX.Element {
             },
           ],
         },
-      ];
+      ] as unknown as Data[];
 
       const parcoordsLayoutInner: Partial<Layout> = {
         autosize: true,

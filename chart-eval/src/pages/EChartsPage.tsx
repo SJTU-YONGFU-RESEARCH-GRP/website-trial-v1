@@ -579,11 +579,14 @@ export function EChartsPage(): JSX.Element {
         {
           type: "treemap",
           roam: true,
-          gapWidth: 2,
           breadcrumb: { itemStyle: { color: palette.textMuted } },
           label: { show: true, color: palette.text, fontSize: narrow ? 9 : 10 },
           upperLabel: { show: true, color: palette.textMuted, fontSize: 10 },
-          itemStyle: { borderColor: palette.gridStrong, borderWidth: 1 },
+          itemStyle: {
+            borderColor: palette.gridStrong,
+            borderWidth: 1,
+            gapWidth: 2,
+          },
           data: [tree],
         },
       ],
