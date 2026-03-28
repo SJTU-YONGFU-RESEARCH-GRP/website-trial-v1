@@ -46,7 +46,9 @@ import {
   BAR_DONUT_BASELINE_OPTIONS,
   DEFAULT_EXPLORE_AXES,
   DESIGN_CATEGORIES,
+  designCategoryChartTitle,
   metricSupportsLogScale,
+  scatterBaselineTitleQualifier,
   NUMERIC_SCALE_OPTIONS,
   plotlyAxisTypeForMetric,
   SCATTER_AXIS_METRICS,
@@ -266,12 +268,11 @@ export function PlotlyPage(): JSX.Element {
         paretoXMetric === "architecture" ? scatterArchitectureTickAxis(categoryArchOrder) : {};
       const paretoYArchTicks =
         paretoYMetric === "architecture" ? scatterArchitectureTickAxis(categoryArchOrder) : {};
-      const paretoTitleNarrow = plotlyBold(
-        `${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)}`,
-      );
-      const paretoTitleWide = plotlyBold(
-        `Pareto-style: ${scatterAxisTitle(paretoYMetric)} vs ${scatterAxisTitle(paretoXMetric)}`,
-      );
+      const scatterSliceTitle = scatterBaselineTitleQualifier(barBaseline);
+      const categoryChartTitle = designCategoryChartTitle(category);
+      const paretoTitleText = `${categoryChartTitle}: ${scatterAxisTitle(paretoYMetric)} Vs ${scatterAxisTitle(paretoXMetric)} ${scatterSliceTitle}`;
+      const paretoTitleNarrow = plotlyBold(paretoTitleText);
+      const paretoTitleWide = plotlyBold(paretoTitleText);
 
       const paretoLayoutInner: Partial<Layout> = narrow
         ? {
@@ -804,6 +805,8 @@ export function PlotlyPage(): JSX.Element {
         });
       }
 
+      const scatter3dTitleText = `${categoryChartTitle}: ${scatterAxisTitle(paretoXMetric)} × ${scatterAxisTitle(paretoYMetric)} × ${scatterAxisTitle(paretoZMetric)} ${scatterSliceTitle}`;
+
       const scatter3dLayoutInner: Partial<Layout> = narrow
         ? {
             autosize: true,
@@ -811,9 +814,7 @@ export function PlotlyPage(): JSX.Element {
             paper_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold(
-                `3D: ${scatterAxisTitle(paretoXMetric)} × ${scatterAxisTitle(paretoYMetric)} × ${scatterAxisTitle(paretoZMetric)}`,
-              ),
+              text: plotlyBold(scatter3dTitleText),
               font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: false,
@@ -833,9 +834,7 @@ export function PlotlyPage(): JSX.Element {
             paper_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold(
-                `3D scatter: ${scatterAxisTitle(paretoXMetric)} × ${scatterAxisTitle(paretoYMetric)} × ${scatterAxisTitle(paretoZMetric)}`,
-              ),
+              text: plotlyBold(scatter3dTitleText),
               font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: false,

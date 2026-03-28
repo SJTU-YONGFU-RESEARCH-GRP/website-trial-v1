@@ -166,6 +166,24 @@ export type ExploreAxisKey = "x" | "y" | "z";
  */
 export type BarDonutBaselineMode = "architecture" | "bitWidth" | "technology";
 
+/**
+ * Short dataset name for chart titles, e.g. "Adder" (strips trailing " (dataset)" from the UI label).
+ */
+export function designCategoryChartTitle(id: DesignCategoryId): string {
+  return designCategoryLabel(id).replace(/\s*\(dataset\)\s*$/i, "").trim();
+}
+
+/** Parenthetical for Pareto / 3D titles — matches bar/donut / scatter baseline. */
+export function scatterBaselineTitleQualifier(mode: BarDonutBaselineMode): string {
+  if (mode === "architecture") {
+    return "(Fixed Technology & Bit Width)";
+  }
+  if (mode === "bitWidth") {
+    return "(Fixed Technology)";
+  }
+  return "(Fixed Bit Width)";
+}
+
 /** Linear vs log₁₀ for numeric chart axes and magnitudes (architecture index stays linear). */
 export type NumericScaleMode = "linear" | "log";
 
