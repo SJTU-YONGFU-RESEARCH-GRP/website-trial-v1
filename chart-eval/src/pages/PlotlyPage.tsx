@@ -7,23 +7,28 @@ import {
   ADDER_DEMO_ROWS,
   architectureColor,
   DEMO_ARCH_ORDER,
-  fmaxMhzHeatmapGrid,
   formatArchLabel,
   plotlySankeyPowerByBitwidth,
-  ppaTreemapFlat,
   rowsByBitWidthOrdered,
 } from "../data/samplePpa";
 import {
+  DEFAULT_EXPLORE_AXES,
   SCATTER_AXIS_METRICS,
   scatterArchitectureTickAxis,
+  scatterAxisExtent,
+  scatterAxisHeatmapGrid,
   scatterAxisOptionLabel,
   scatterAxisRange,
   scatterAxisTitle,
+  scatterAxisTreemapFlat,
   scatterAxisValue,
+  syncExploreAxes,
+  type ExploreAxesState,
   type ScatterAxisMetric,
 } from "../data/scatterAxisMetrics";
 import {
   CHART_LINE_WIDTH,
+  CHART_MARKER_OUTLINE_RGB,
   getChartPalette,
   plotAxisFont,
   plotFont,
@@ -31,7 +36,6 @@ import {
   plotlyAxisFrameY,
   plotlyBold,
   plotlySceneAxis,
-  plotTickFont,
 } from "../theme/chartPalette";
 import { useTheme } from "../theme/ThemeContext";
 
@@ -71,22 +75,10 @@ function usePlotlyChart(
 export function PlotlyPage(): JSX.Element {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
-  const [paretoXMetric, setParetoXMetric] = useState<ScatterAxisMetric>("fmaxMhz");
-  const [paretoYMetric, setParetoYMetric] = useState<ScatterAxisMetric>("powerMw");
+  const [exploreAxes, setExploreAxes] = useState<ExploreAxesState>(DEFAULT_EXPLORE_AXES);
 
-  const onParetoXMetricChange = (m: ScatterAxisMetric) => {
-    setParetoXMetric(m);
-    if (m === paretoYMetric) {
-      const next = SCATTER_AXIS_METRICS.find((x) => x !== m);
-      if (next) setParetoYMetric(next);
-    }
-  };
-  const onParetoYMetricChange = (m: ScatterAxisMetric) => {
-    setParetoYMetric(m);
-    if (m === paretoXMetric) {
-      const next = SCATTER_AXIS_METRICS.find((x) => x !== m);
-      if (next) setParetoXMetric(next);
-    }
+  const onExploreAxisChange = (key: keyof ExploreAxesState, m: ScatterAxisMetric) => {
+    setExploreAxes((prev) => syncExploreAxes(prev, key, m));
   };
 
   const {
@@ -118,6 +110,10 @@ export function PlotlyPage(): JSX.Element {
     sankeyLayout,
     sankeyConfig,
   } = useMemo(() => {
+      const ex = exploreAxes;
+      const paretoXMetric = ex.x;
+      const paretoYMetric = ex.y;
+      const paretoZMetric = ex.z;
       const palette = getChartPalette(theme);
       const frameX = plotlyAxisFrameX(palette);
       const frameY = plotlyAxisFrameY(palette);
@@ -126,7 +122,7 @@ export function PlotlyPage(): JSX.Element {
       const sceneAxY = plotlySceneAxis(palette, "black");
       const sceneAxZ = plotlySceneAxis(palette, "grey");
       const axTitle = (label: string) => ({
-        text: plotlyBold(label),
+        text: label,
         font: plotAxisFont(palette.rgbAxisTitle, narrow),
         standoff: narrow ? 10 : 14,
       });
@@ -160,7 +156,7 @@ export function PlotlyPage(): JSX.Element {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
             opacity: 1,
-            line: { width: 1, color: palette.axisBorderRgb },
+            line: { width: 1, color: CHART_MARKER_OUTLINE_RGB },
           },
         });
       }
@@ -172,18 +168,18 @@ export function PlotlyPage(): JSX.Element {
         {
           type: "scatter",
           mode: "lines",
-          name: "Fmax (MHz)",
+          name: scatterAxisTitle(paretoXMetric),
           x: ks.map((r) => r.bitWidth),
-          y: ks.map((r) => r.fmaxMhz),
+          y: ks.map((r) => scatterAxisValue(paretoXMetric, r)),
           yaxis: "y",
           line: { color: architectureColor("kogge_stone"), width: CHART_LINE_WIDTH },
         },
         {
           type: "scatter",
           mode: "lines",
-          name: "Area (µm²)",
+          name: scatterAxisTitle(paretoYMetric),
           x: ks.map((r) => r.bitWidth),
-          y: ks.map((r) => r.areaUm2),
+          y: ks.map((r) => scatterAxisValue(paretoYMetric, r)),
           yaxis: "y2",
           line: { color: "rgb(139, 69, 19)", width: CHART_LINE_WIDTH, dash: "dot" },
         },
@@ -198,10 +194,10 @@ export function PlotlyPage(): JSX.Element {
       const paretoYArchTicks =
         paretoYMetric === "architecture" ? scatterArchitectureTickAxis() : {};
       const paretoTitleNarrow = plotlyBold(
-        `${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)} (demo)`,
+        `${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)}`,
       );
       const paretoTitleWide = plotlyBold(
-        `Pareto-style: ${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)} (demo data)`,
+        `Pareto-style: ${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)}`,
       );
 
       const paretoLayoutInner: Partial<Layout> = narrow
@@ -295,7 +291,7 @@ export function PlotlyPage(): JSX.Element {
               ...frameYDual,
               automargin: true,
               gridcolor: palette.axisGridBlackRgb,
-              title: axTitle("Fmax (MHz)"),
+              title: axTitle(scatterAxisTitle(paretoXMetric)),
               tickfont: axTick,
               side: "left",
             },
@@ -304,20 +300,12 @@ export function PlotlyPage(): JSX.Element {
               automargin: true,
               gridcolor: "rgba(0,0,0,0)",
               showgrid: false,
-              title: axTitle("Area (µm²)"),
+              title: axTitle(scatterAxisTitle(paretoYMetric)),
               tickfont: axTick,
               overlaying: "y",
               side: "right",
             },
-            legend: {
-              orientation: "h",
-              yanchor: "top",
-              y: -0.2,
-              x: 0.5,
-              xanchor: "center",
-              font: plotTickFont(palette.rgbAxisTick),
-              itemsizing: "constant",
-            },
+            showlegend: false,
           }
         : {
             autosize: true,
@@ -341,7 +329,7 @@ export function PlotlyPage(): JSX.Element {
               ...frameYDual,
               automargin: true,
               gridcolor: palette.axisGridBlackRgb,
-              title: axTitle("Fmax (MHz)"),
+              title: axTitle(scatterAxisTitle(paretoXMetric)),
               side: "left",
               tickfont: axTick,
             },
@@ -350,20 +338,12 @@ export function PlotlyPage(): JSX.Element {
               automargin: true,
               gridcolor: "rgba(0,0,0,0)",
               showgrid: false,
-              title: axTitle("Area (µm²)"),
+              title: axTitle(scatterAxisTitle(paretoYMetric)),
               tickfont: axTick,
               overlaying: "y",
               side: "right",
             },
-            legend: {
-              orientation: "h",
-              yanchor: "bottom",
-              y: -0.32,
-              x: 0.5,
-              xanchor: "center",
-              font: plotTickFont(palette.rgbAxisTick),
-              itemsizing: "constant",
-            },
+            showlegend: false,
           };
 
       const commonConfig: Partial<Config> = {
@@ -381,17 +361,16 @@ export function PlotlyPage(): JSX.Element {
       const barDataInner: Data[] = [
         {
           type: "bar",
-          name: "Power @ 64b",
+          name: "Metric @ 64b",
           x: rows64.map((r) => formatArchLabel(r.architecture)),
-          y: rows64.map((r) => r.powerMw),
-          text: rows64.map((r) => `${r.powerMw} mW`),
+          y: rows64.map((r) => scatterAxisValue(paretoYMetric, r)),
+          text: rows64.map((r) => String(scatterAxisValue(paretoYMetric, r))),
           textposition: "auto",
           marker: {
             color: rows64.map((r) => architectureColor(r.architecture)),
-            line: { width: CHART_LINE_WIDTH, color: palette.markerOutline },
+            line: { width: CHART_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
           },
-          hovertemplate:
-            "%{x}<br>Power: %{y:.1f} mW<extra></extra>",
+          hovertemplate: `%{x}<br>${scatterAxisTitle(paretoYMetric)}: %{y:.3g}<extra></extra>`,
         },
       ];
 
@@ -403,7 +382,7 @@ export function PlotlyPage(): JSX.Element {
             plot_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("Power @ 64b (bar)"),
+              text: plotlyBold(`${scatterAxisTitle(paretoYMetric)} @ 64b (bar)`),
               font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
@@ -418,7 +397,7 @@ export function PlotlyPage(): JSX.Element {
               ...frameY,
               automargin: true,
               gridcolor: palette.axisGridBlackRgb,
-              title: axTitle("Power (mW)"),
+              title: axTitle(scatterAxisTitle(paretoYMetric)),
               tickfont: axTick,
             },
             hovermode: "x unified",
@@ -430,7 +409,9 @@ export function PlotlyPage(): JSX.Element {
             plot_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("Power at 64-bit width (by architecture)"),
+              text: plotlyBold(
+                `${scatterAxisTitle(paretoYMetric)} at 64-bit width (by architecture)`,
+              ),
               font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
@@ -445,14 +426,14 @@ export function PlotlyPage(): JSX.Element {
               ...frameY,
               automargin: true,
               gridcolor: palette.axisGridBlackRgb,
-              title: axTitle("Power (mW)"),
+              title: axTitle(scatterAxisTitle(paretoYMetric)),
               tickfont: axTick,
             },
             hovermode: "x unified",
             bargap: 0.28,
           };
 
-      const { z: heatZ, colLabels, rowLabels } = fmaxMhzHeatmapGrid();
+      const { z: heatZ, colLabels, rowLabels } = scatterAxisHeatmapGrid(paretoZMetric);
       const heatmapDataInner: Data[] = [
         {
           type: "heatmap",
@@ -461,9 +442,9 @@ export function PlotlyPage(): JSX.Element {
           z: heatZ,
           colorscale: "Viridis",
           hovertemplate:
-            "Bit width %{x}<br>%{y}<br>Fmax: %{z} MHz<extra></extra>",
+            `Bit width %{x}<br>%{y}<br>${scatterAxisTitle(paretoZMetric)}: %{z}<extra></extra>`,
           colorbar: {
-            title: axTitle("MHz"),
+            title: axTitle(scatterAxisTitle(paretoZMetric)),
             tickfont: axTick,
           },
         },
@@ -477,7 +458,7 @@ export function PlotlyPage(): JSX.Element {
             plot_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("Fmax heatmap"),
+              text: plotlyBold(`${scatterAxisTitle(paretoZMetric)} heatmap`),
               font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
@@ -502,7 +483,9 @@ export function PlotlyPage(): JSX.Element {
             plot_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("Fmax (MHz) — architecture × bit width"),
+              text: plotlyBold(
+                `${scatterAxisTitle(paretoZMetric)} — architecture × bit width`,
+              ),
               font: plotFont(palette.rgbAxisTitle),
             },
             xaxis: {
@@ -525,15 +508,16 @@ export function PlotlyPage(): JSX.Element {
         {
           type: "pie",
           labels: rows64.map((r) => formatArchLabel(r.architecture)),
-          values: rows64.map((r) => r.powerMw),
+          values: rows64.map((r) => scatterAxisValue(paretoYMetric, r)),
           marker: {
             colors: rows64.map((r) => architectureColor(r.architecture)),
-            line: { color: palette.markerOutline, width: CHART_LINE_WIDTH },
+            line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
           },
           hole: 0.38,
           textinfo: "label+percent",
           textfont: plotAxisFont("#ffffff", narrow),
-          hovertemplate: "%{label}<br>%{value:.1f} mW<br>%{percent}<extra></extra>",
+          hovertemplate:
+            "%{label}<br>%{value:.3g}<br>%{percent}<extra></extra>",
         },
       ];
 
@@ -545,7 +529,7 @@ export function PlotlyPage(): JSX.Element {
             plot_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("Power share @ 64b"),
+              text: plotlyBold(`${scatterAxisTitle(paretoYMetric)} share @ 64b`),
               font: plotFont(palette.rgbAxisTitle),
             },
             showlegend: false,
@@ -557,17 +541,27 @@ export function PlotlyPage(): JSX.Element {
             plot_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("Power share at 64-bit width (donut)"),
+              text: plotlyBold(
+                `${scatterAxisTitle(paretoYMetric)} share at 64-bit width (donut)`,
+              ),
               font: plotFont(palette.rgbAxisTitle),
             },
-            showlegend: true,
-            legend: {
-              orientation: "v",
-              x: 1.02,
-              y: 0.5,
-              font: plotTickFont(palette.rgbAxisTick),
-            },
+            showlegend: false,
           };
+
+      const sceneAxisFor = (
+        base: typeof sceneAxX,
+        metric: ScatterAxisMetric,
+      ) => {
+        const r = scatterAxisRange(metric);
+        return {
+          ...base,
+          title: axTitle(scatterAxisTitle(metric)),
+          tickfont: axTick,
+          ...(metric === "architecture" ? scatterArchitectureTickAxis() : {}),
+          ...(r ? { range: r as [number, number] } : {}),
+        };
+      };
 
       const scatter3dDataInner: Data[] = [];
       for (const arch of DEMO_ARCH_ORDER) {
@@ -577,19 +571,22 @@ export function PlotlyPage(): JSX.Element {
           type: "scatter3d",
           mode: "markers",
           name: formatArchLabel(arch),
-          x: rows.map((r) => r.fmaxMhz),
-          y: rows.map((r) => r.powerMw),
-          z: rows.map((r) => r.areaUm2),
+          x: rows.map((r) => scatterAxisValue(paretoXMetric, r)),
+          y: rows.map((r) => scatterAxisValue(paretoYMetric, r)),
+          z: rows.map((r) => scatterAxisValue(paretoZMetric, r)),
           text: rows.map(
             (r) => `${formatArchLabel(arch)} ${r.bitWidth}b`,
           ),
           hovertemplate:
-            "%{text}<br>Fmax: %{x} MHz<br>Power: %{y} mW<br>Area: %{z} µm²<extra></extra>",
+            "%{text}<br>" +
+            `${scatterAxisTitle(paretoXMetric)}: %{x}<br>` +
+            `${scatterAxisTitle(paretoYMetric)}: %{y}<br>` +
+            `${scatterAxisTitle(paretoZMetric)}: %{z}<extra></extra>`,
           marker: {
             size: rows.map((r) => mSize(r.bitWidth)),
             color: architectureColor(arch),
             opacity: 1,
-            line: { width: 1, color: palette.axisBorderRgb },
+            line: { width: 1, color: CHART_MARKER_OUTLINE_RGB },
           },
         });
       }
@@ -601,30 +598,17 @@ export function PlotlyPage(): JSX.Element {
             paper_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("3D PPA cloud"),
+              text: plotlyBold(
+                `3D: ${scatterAxisTitle(paretoXMetric)} × ${scatterAxisTitle(paretoYMetric)} × ${scatterAxisTitle(paretoZMetric)}`,
+              ),
               font: plotFont(palette.rgbAxisTitle),
             },
-            legend: {
-              itemsizing: "constant",
-              font: plotTickFont(palette.rgbAxisTick),
-            },
+            showlegend: false,
             scene: {
               bgcolor: "rgba(0,0,0,0)",
-              xaxis: {
-                ...sceneAxX,
-                title: axTitle("Fmax (MHz)"),
-                tickfont: axTick,
-              },
-              yaxis: {
-                ...sceneAxY,
-                title: axTitle("Power (mW)"),
-                tickfont: axTick,
-              },
-              zaxis: {
-                ...sceneAxZ,
-                title: axTitle("Area (µm²)"),
-                tickfont: axTick,
-              },
+              xaxis: sceneAxisFor(sceneAxX, paretoXMetric),
+              yaxis: sceneAxisFor(sceneAxY, paretoYMetric),
+              zaxis: sceneAxisFor(sceneAxZ, paretoZMetric),
             },
           }
         : {
@@ -633,35 +617,22 @@ export function PlotlyPage(): JSX.Element {
             paper_bgcolor: "transparent",
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold("3D scatter: Fmax × power × area"),
+              text: plotlyBold(
+                `3D scatter: ${scatterAxisTitle(paretoXMetric)} × ${scatterAxisTitle(paretoYMetric)} × ${scatterAxisTitle(paretoZMetric)}`,
+              ),
               font: plotFont(palette.rgbAxisTitle),
             },
-            legend: {
-              itemsizing: "constant",
-              font: plotTickFont(palette.rgbAxisTick),
-            },
+            showlegend: false,
             scene: {
               bgcolor: "rgba(0,0,0,0)",
-              xaxis: {
-                ...sceneAxX,
-                title: axTitle("Fmax (MHz)"),
-                tickfont: axTick,
-              },
-              yaxis: {
-                ...sceneAxY,
-                title: axTitle("Power (mW)"),
-                tickfont: axTick,
-              },
-              zaxis: {
-                ...sceneAxZ,
-                title: axTitle("Area (µm²)"),
-                tickfont: axTick,
-              },
+              xaxis: sceneAxisFor(sceneAxX, paretoXMetric),
+              yaxis: sceneAxisFor(sceneAxY, paretoYMetric),
+              zaxis: sceneAxisFor(sceneAxZ, paretoZMetric),
             },
           };
 
       const { labels: tmLabels, parents: tmParents, values: tmValues } =
-        ppaTreemapFlat("areaUm2");
+        scatterAxisTreemapFlat(paretoYMetric);
       const treemapColors = [
         palette.axisBorderRgb,
         ...ADDER_DEMO_ROWS.map((r) => architectureColor(r.architecture)),
@@ -674,7 +645,8 @@ export function PlotlyPage(): JSX.Element {
           values: tmValues,
           textfont: plotAxisFont("#ffffff", narrow),
           marker: { colors: treemapColors },
-          hovertemplate: "%{label}<br>Area: %{value} µm²<extra></extra>",
+          hovertemplate:
+            `%{label}<br>${scatterAxisTitle(paretoYMetric)}: %{value}<extra></extra>`,
         },
       ];
 
@@ -684,20 +656,22 @@ export function PlotlyPage(): JSX.Element {
         paper_bgcolor: "transparent",
         font: plotFont(palette.rgbAxisTitle),
         title: {
-          text: plotlyBold(narrow ? "Area treemap" : "Die area hierarchy (µm²)"),
+          text: plotlyBold(
+            narrow
+              ? `${scatterAxisTitle(paretoYMetric)} treemap`
+              : `${scatterAxisTitle(paretoYMetric)} — hierarchy`,
+          ),
           font: plotFont(palette.rgbAxisTitle),
         },
+        showlegend: false,
       };
 
       const archIdx = (a: string): number =>
         Math.max(0, DEMO_ARCH_ORDER.indexOf(a));
       const pcColors = ADDER_DEMO_ROWS.map((r) => archIdx(r.architecture));
-      const fmin = Math.min(...ADDER_DEMO_ROWS.map((r) => r.fmaxMhz));
-      const fmaxN = Math.max(...ADDER_DEMO_ROWS.map((r) => r.fmaxMhz));
-      const pmin = Math.min(...ADDER_DEMO_ROWS.map((r) => r.powerMw));
-      const pmaxN = Math.max(...ADDER_DEMO_ROWS.map((r) => r.powerMw));
-      const amin = Math.min(...ADDER_DEMO_ROWS.map((r) => r.areaUm2));
-      const amaxN = Math.max(...ADDER_DEMO_ROWS.map((r) => r.areaUm2));
+      const [rx0, rx1] = scatterAxisExtent(ADDER_DEMO_ROWS, paretoXMetric);
+      const [ry0, ry1] = scatterAxisExtent(ADDER_DEMO_ROWS, paretoYMetric);
+      const [rz0, rz1] = scatterAxisExtent(ADDER_DEMO_ROWS, paretoZMetric);
 
       // Parcoords trace: @types/plotly.js `Data` union omits `dimensions` / parcoords line colorscale.
       const parcoordsDataInner = [
@@ -723,19 +697,19 @@ export function PlotlyPage(): JSX.Element {
               range: [32, 64],
             },
             {
-              label: "Fmax (MHz)",
-              values: ADDER_DEMO_ROWS.map((r) => r.fmaxMhz),
-              range: [fmin, fmaxN],
+              label: scatterAxisTitle(paretoXMetric),
+              values: ADDER_DEMO_ROWS.map((r) => scatterAxisValue(paretoXMetric, r)),
+              range: [rx0, rx1],
             },
             {
-              label: "Power (mW)",
-              values: ADDER_DEMO_ROWS.map((r) => r.powerMw),
-              range: [pmin, pmaxN],
+              label: scatterAxisTitle(paretoYMetric),
+              values: ADDER_DEMO_ROWS.map((r) => scatterAxisValue(paretoYMetric, r)),
+              range: [ry0, ry1],
             },
             {
-              label: "Area (µm²)",
-              values: ADDER_DEMO_ROWS.map((r) => r.areaUm2),
-              range: [amin, amaxN],
+              label: scatterAxisTitle(paretoZMetric),
+              values: ADDER_DEMO_ROWS.map((r) => scatterAxisValue(paretoZMetric, r)),
+              range: [rz0, rz1],
             },
           ],
         },
@@ -752,6 +726,7 @@ export function PlotlyPage(): JSX.Element {
           ),
           font: plotFont(palette.rgbAxisTitle),
         },
+        showlegend: false,
       };
 
       const sk = plotlySankeyPowerByBitwidth();
@@ -791,6 +766,7 @@ export function PlotlyPage(): JSX.Element {
           ),
           font: plotFont(palette.rgbAxisTitle),
         },
+        showlegend: false,
       };
 
       return {
@@ -822,7 +798,7 @@ export function PlotlyPage(): JSX.Element {
         sankeyLayout: sankeyLayoutInner,
         sankeyConfig: commonConfig,
       };
-    }, [narrow, theme, paretoXMetric, paretoYMetric]);
+    }, [narrow, theme, exploreAxes]);
 
   const paretoRef = usePlotlyChart(paretoData, paretoLayout, paretoConfig);
   const lineRef = usePlotlyChart(lineData, lineLayout, lineConfig);
@@ -837,20 +813,19 @@ export function PlotlyPage(): JSX.Element {
   return (
     <div>
       <div className="chart-card">
-        <h2>Pareto scatter</h2>
+        <h2>Explore metrics</h2>
         <p className="hint">
-          Pinch/drag or mode-bar zoom; larger markers = wider adder (bubble-style). Choose
-          horizontal and vertical metrics below. Legend is hidden to avoid overlapping the axis
-          title — architecture color appears in the hover card.{" "}
-          <code>plotly.js-dist-min</code> browser bundle.
+          <strong>X</strong> / <strong>Y</strong> drive the 2D scatter, dual-axis line (Kogge-Stone), bar
+          @64b, donut, treemap, and parallel coordinates. <strong>Z</strong> colors the heatmap.{" "}
+          <strong>3D scatter</strong> uses all three (each axis must be a different metric).
         </p>
         <div className="axis-pickers">
           <label className="axis-picker">
-            Horizontal
+            X (horizontal / depth)
             <select
-              value={paretoXMetric}
-              aria-label="Pareto chart horizontal axis"
-              onChange={(e) => onParetoXMetricChange(e.target.value as ScatterAxisMetric)}
+              value={exploreAxes.x}
+              aria-label="Explore metric X"
+              onChange={(e) => onExploreAxisChange("x", e.target.value as ScatterAxisMetric)}
             >
               {SCATTER_AXIS_METRICS.map((m) => (
                 <option key={m} value={m}>
@@ -860,13 +835,27 @@ export function PlotlyPage(): JSX.Element {
             </select>
           </label>
           <label className="axis-picker">
-            Vertical
+            Y (vertical / bar &amp; pie)
             <select
-              value={paretoYMetric}
-              aria-label="Pareto chart vertical axis"
-              onChange={(e) => onParetoYMetricChange(e.target.value as ScatterAxisMetric)}
+              value={exploreAxes.y}
+              aria-label="Explore metric Y"
+              onChange={(e) => onExploreAxisChange("y", e.target.value as ScatterAxisMetric)}
             >
-              {SCATTER_AXIS_METRICS.filter((m) => m !== paretoXMetric).map((m) => (
+              {SCATTER_AXIS_METRICS.map((m) => (
+                <option key={m} value={m}>
+                  {scatterAxisOptionLabel(m)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="axis-picker">
+            Z (heatmap color)
+            <select
+              value={exploreAxes.z}
+              aria-label="Explore metric Z"
+              onChange={(e) => onExploreAxisChange("z", e.target.value as ScatterAxisMetric)}
+            >
+              {SCATTER_AXIS_METRICS.map((m) => (
                 <option key={m} value={m}>
                   {scatterAxisOptionLabel(m)}
                 </option>
@@ -874,6 +863,14 @@ export function PlotlyPage(): JSX.Element {
             </select>
           </label>
         </div>
+      </div>
+      <div className="chart-card">
+        <h2>Pareto scatter</h2>
+        <p className="hint">
+          Pinch/drag or mode-bar zoom; larger markers = wider adder (bubble-style). Uses{" "}
+          <strong>X</strong> × <strong>Y</strong> from above — hover points for details.{" "}
+          <code>plotly.js-dist-min</code> browser bundle.
+        </p>
         <div className="plot-host">
           <div ref={paretoRef} style={{ width: "100%", height: "100%" }} />
         </div>
@@ -881,8 +878,8 @@ export function PlotlyPage(): JSX.Element {
       <div className="chart-card">
         <h2>Dual-axis line</h2>
         <p className="hint">
-          Fmax (left) and area (right) vs bit width. Use pinch/drag or mode-bar tools to zoom
-          (ECharts twin uses <code>dataZoom</code> sliders).
+          Kogge-Stone only: <strong>X</strong> metric (left axis) and <strong>Y</strong> metric (right)
+          vs bit width. Pinch/drag or mode-bar zoom (<code>dataZoom</code> on ECharts).
         </p>
         <div className="plot-host">
           <div ref={lineRef} style={{ width: "100%", height: "100%" }} />
@@ -891,8 +888,7 @@ export function PlotlyPage(): JSX.Element {
       <div className="chart-card">
         <h2>Grouped bar</h2>
         <p className="hint">
-          Same 64-bit rows: power (mW) by architecture. Mode bar: zoom, pan, autoscale,
-          PNG.
+          64-bit rows: <strong>Y</strong> metric by architecture. Mode bar: zoom, pan, autoscale, PNG.
         </p>
         <div className="plot-host">
           <div ref={barRef} style={{ width: "100%", height: "100%" }} />
@@ -900,14 +896,18 @@ export function PlotlyPage(): JSX.Element {
       </div>
       <div className="chart-card">
         <h2>Heatmap</h2>
-        <p className="hint">Fmax across architecture × bit width (same synthetic PPA grid).</p>
+        <p className="hint">
+          Cell color = <strong>Z</strong> metric across architecture × bit width (same grid).
+        </p>
         <div className="plot-host">
           <div ref={heatmapRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
       <div className="chart-card">
         <h2>Donut (pie)</h2>
-        <p className="hint">Relative power at 64b — complements the bar view.</p>
+        <p className="hint">
+          Relative <strong>Y</strong> at 64b (same slice as the bar chart).
+        </p>
         <div className="plot-host plot-host--short">
           <div ref={pieRef} style={{ width: "100%", height: "100%" }} />
         </div>
@@ -915,8 +915,8 @@ export function PlotlyPage(): JSX.Element {
       <div className="chart-card">
         <h2>3D scatter</h2>
         <p className="hint">
-          Fmax, power, and area in one view (WebGL). Drag to rotate; mode bar for PNG /
-          reset camera.
+          WebGL cloud using <strong>X</strong> × <strong>Y</strong> × <strong>Z</strong> from above. Drag to rotate; mode bar
+          for PNG / reset camera.
         </p>
         <div className="plot-host plot-host--tall">
           <div ref={scatter3dRef} style={{ width: "100%", height: "100%" }} />
@@ -924,7 +924,9 @@ export function PlotlyPage(): JSX.Element {
       </div>
       <div className="chart-card">
         <h2>Treemap</h2>
-        <p className="hint">Hierarchical die area (µm²) — root → each architecture×width.</p>
+        <p className="hint">
+          Tile size from <strong>Y</strong> metric — root → each architecture×width leaf.
+        </p>
         <div className="plot-host plot-host--short">
           <div ref={treemapRef} style={{ width: "100%", height: "100%" }} />
         </div>
@@ -932,7 +934,8 @@ export function PlotlyPage(): JSX.Element {
       <div className="chart-card">
         <h2>Parallel coordinates</h2>
         <p className="hint">
-          Brush along axes to filter the eight synthetic designs; color encodes architecture.
+          Bit width plus <strong>X</strong>, <strong>Y</strong>, <strong>Z</strong> axes; brush to filter designs (color =
+          architecture).
         </p>
         <div className="plot-host">
           <div ref={parcoordsRef} style={{ width: "100%", height: "100%" }} />

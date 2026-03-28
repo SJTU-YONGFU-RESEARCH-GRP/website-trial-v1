@@ -7,6 +7,14 @@ export const CHART_FONT_FAMILY = "Arial, sans-serif";
 export const CHART_FONT_SIZE = 20;
 export const CHART_LINE_WIDTH = 3;
 
+/** Marker edge and pie/donut slice outline — black in both themes. */
+export const CHART_MARKER_OUTLINE_RGB = "rgb(0, 0, 0)";
+
+/**
+ * Heavy face for axis titles + ticks so numbering matches label weight (Plotly has no tick fontWeight).
+ */
+export const CHART_AXIS_FONT_FAMILY = `Arial Black, ${CHART_FONT_FAMILY}`;
+
 /** Plotly accepts HTML; use for bold where `layout.font` has no weight. */
 export function plotlyBold(text: string): string {
   return `<b>${text}</b>`;
@@ -22,19 +30,19 @@ export function chartAxisFontSizePx(narrow: boolean): number {
   return narrow ? 12 : 16;
 }
 
-/** Plotly axis title and tick font — same family and size (avoids Arial Black ticks vs regular titles). */
+/** Plotly axis title and tick font — same bold family, size, and color role. */
 export function plotAxisFont(
   color: string,
   narrow: boolean,
 ): { family: string; size: number; color: string } {
   return {
-    family: CHART_FONT_FAMILY,
+    family: CHART_AXIS_FONT_FAMILY,
     size: chartAxisFontSizePx(narrow),
     color,
   };
 }
 
-/** ECharts axis name + tick labels — matches {@link plotAxisFont} sizing. */
+/** ECharts axis name, ticks, and matching numeric/categorical overlays — same size and bold weight. */
 export function echartsAxisTextStyle(
   color: string,
   narrow: boolean,
@@ -45,7 +53,7 @@ export function echartsAxisTextStyle(
   color: string;
 } {
   return {
-    fontFamily: CHART_FONT_FAMILY,
+    fontFamily: CHART_AXIS_FONT_FAMILY,
     fontSize: chartAxisFontSizePx(narrow),
     fontWeight: "bold",
     color,
@@ -58,7 +66,7 @@ export function echartsAxisTextStyle(
  */
 export function plotTickFont(color: string): { family: string; size: number; color: string } {
   return {
-    family: `Arial Black, ${CHART_FONT_FAMILY}`,
+    family: CHART_AXIS_FONT_FAMILY,
     size: CHART_FONT_SIZE,
     color,
   };

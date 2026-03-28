@@ -6,25 +6,29 @@ import {
   ADDER_DEMO_ROWS,
   architectureColor,
   DEMO_ARCH_ORDER,
-  fmaxMhzHeatmapGrid,
   formatArchLabel,
   funnelStepsByFmax,
-  ppaHierarchyTree,
   radarMetrics64Normalized,
   rowsByBitWidthOrdered,
   syntheticPowerBoxByArch64,
 } from "../data/samplePpa";
 import {
+  DEFAULT_EXPLORE_AXES,
   SCATTER_AXIS_METRICS,
   scatterAxisDisplayValue,
+  scatterAxisHeatmapGrid,
+  scatterAxisHierarchyTree,
   scatterAxisOptionLabel,
   scatterAxisRange,
   scatterAxisTitle,
   scatterAxisValue,
+  syncExploreAxes,
+  type ExploreAxesState,
   type ScatterAxisMetric,
 } from "../data/scatterAxisMetrics";
 import {
   CHART_LINE_WIDTH,
+  CHART_MARKER_OUTLINE_RGB,
   echartsAxisTextStyle,
   echartsGridBorder,
   echartsTextStyle,
@@ -87,25 +91,15 @@ type ScatterDatum = {
 export function EChartsPage(): JSX.Element {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
-  const [paretoXMetric, setParetoXMetric] = useState<ScatterAxisMetric>("fmaxMhz");
-  const [paretoYMetric, setParetoYMetric] = useState<ScatterAxisMetric>("powerMw");
+  const [exploreAxes, setExploreAxes] = useState<ExploreAxesState>(DEFAULT_EXPLORE_AXES);
 
-  const onParetoXMetricChange = (m: ScatterAxisMetric) => {
-    setParetoXMetric(m);
-    if (m === paretoYMetric) {
-      const next = SCATTER_AXIS_METRICS.find((x) => x !== m);
-      if (next) setParetoYMetric(next);
-    }
-  };
-  const onParetoYMetricChange = (m: ScatterAxisMetric) => {
-    setParetoYMetric(m);
-    if (m === paretoXMetric) {
-      const next = SCATTER_AXIS_METRICS.find((x) => x !== m);
-      if (next) setParetoXMetric(next);
-    }
+  const onExploreAxisChange = (key: keyof ExploreAxesState, m: ScatterAxisMetric) => {
+    setExploreAxes((prev) => syncExploreAxes(prev, key, m));
   };
 
   const paretoOption = useMemo((): EChartsOption => {
+    const paretoXMetric = exploreAxes.x;
+    const paretoYMetric = exploreAxes.y;
     const palette = getChartPalette(theme);
     const byArch = new Map<string, typeof ADDER_DEMO_ROWS>();
     for (const row of ADDER_DEMO_ROWS) {
@@ -130,7 +124,7 @@ export function EChartsPage(): JSX.Element {
           itemStyle: {
             color: architectureColor(arch),
             opacity: 1,
-            borderColor: palette.axisBorderRgb,
+            borderColor: CHART_MARKER_OUTLINE_RGB,
             borderWidth: 1,
           },
           emphasis: { focus: "series" as const },
@@ -269,7 +263,7 @@ export function EChartsPage(): JSX.Element {
           height: narrow ? 32 : 22,
           bottom: narrow ? 8 : 36,
           moveHandleSize: narrow ? 10 : 7,
-          textStyle: echartsTextStyle(palette.rgbAxisTick),
+          textStyle: echartsAxisTextStyle(palette.rgbAxisTick, narrow),
         },
       ],
       media: [
@@ -287,9 +281,11 @@ export function EChartsPage(): JSX.Element {
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const lineOption = useMemo((): EChartsOption => {
+    const xM = exploreAxes.x;
+    const yM = exploreAxes.y;
     const palette = getChartPalette(theme);
     const ks = ADDER_DEMO_ROWS.filter((r) => r.architecture === "kogge_stone").sort(
       (a, b) => a.bitWidth - b.bitWidth,
@@ -300,7 +296,9 @@ export function EChartsPage(): JSX.Element {
       backgroundColor: "transparent",
       textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
-        text: narrow ? "Kogge-Stone scaling" : "Scaling: Kogge-Stone vs bit width",
+        text: narrow
+          ? `Kogge-Stone: ${scatterAxisTitle(xM)} / ${scatterAxisTitle(yM)}`
+          : `Scaling: Kogge-Stone vs bit width (${scatterAxisTitle(xM)} / ${scatterAxisTitle(yM)})`,
         left: "center",
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
@@ -331,12 +329,7 @@ export function EChartsPage(): JSX.Element {
         borderWidth: 1,
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
-      legend: {
-        bottom: narrow ? 52 : 0,
-        data: ["Fmax (MHz)", "Area (µm²)"],
-        textStyle: echartsTextStyle(palette.rgbAxisTick),
-        itemGap: narrow ? 12 : 16,
-      },
+      legend: { show: false },
       xAxis: {
         type: "category",
         data: bw,
@@ -360,12 +353,19 @@ export function EChartsPage(): JSX.Element {
       yAxis: [
         {
           type: "value",
-          name: "Fmax (MHz)",
+          name: scatterAxisTitle(xM),
           position: "left",
           nameLocation: "middle",
           nameGap: narrow ? 42 : 48,
           nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
-          axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
+          axisLabel: {
+            ...echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
+            ...(xM === "architecture"
+              ? {
+                  formatter: (v: string | number) => scatterAxisDisplayValue("architecture", Number(v)),
+                }
+              : {}),
+          },
           axisLine: {
             show: true,
             lineStyle: {
@@ -383,12 +383,19 @@ export function EChartsPage(): JSX.Element {
         },
         {
           type: "value",
-          name: "Area (µm²)",
+          name: scatterAxisTitle(yM),
           position: "right",
           nameLocation: "middle",
           nameGap: narrow ? 42 : 48,
           nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
-          axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
+          axisLabel: {
+            ...echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
+            ...(yM === "architecture"
+              ? {
+                  formatter: (v: string | number) => scatterAxisDisplayValue("architecture", Number(v)),
+                }
+              : {}),
+          },
           axisLine: {
             show: true,
             lineStyle: { color: "rgb(139, 69, 19)", width: CHART_LINE_WIDTH },
@@ -398,19 +405,19 @@ export function EChartsPage(): JSX.Element {
       ],
       series: [
         {
-          name: "Fmax (MHz)",
+          name: scatterAxisTitle(xM),
           type: "line",
           yAxisIndex: 0,
-          data: ks.map((r) => r.fmaxMhz),
+          data: ks.map((r) => scatterAxisValue(xM, r)),
           smooth: true,
           showSymbol: false,
           lineStyle: { width: CHART_LINE_WIDTH, color: architectureColor("kogge_stone") },
         },
         {
-          name: "Area (µm²)",
+          name: scatterAxisTitle(yM),
           type: "line",
           yAxisIndex: 1,
-          data: ks.map((r) => r.areaUm2),
+          data: ks.map((r) => scatterAxisValue(yM, r)),
           smooth: true,
           showSymbol: false,
           lineStyle: {
@@ -428,7 +435,7 @@ export function EChartsPage(): JSX.Element {
           height: narrow ? 32 : 22,
           bottom: narrow ? 8 : 36,
           moveHandleSize: narrow ? 10 : 7,
-          textStyle: echartsTextStyle(palette.rgbAxisTick),
+          textStyle: echartsAxisTextStyle(palette.rgbAxisTick, narrow),
         },
       ],
       media: [
@@ -450,16 +457,19 @@ export function EChartsPage(): JSX.Element {
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const barOption = useMemo((): EChartsOption => {
+    const yM = exploreAxes.y;
     const palette = getChartPalette(theme);
     const rows64 = rowsByBitWidthOrdered(64);
     return {
       backgroundColor: "transparent",
       textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
-        text: narrow ? "Power @ 64b (bar)" : "Power at 64-bit width (by architecture)",
+        text: narrow
+          ? `${scatterAxisTitle(yM)} @ 64b (bar)`
+          : `${scatterAxisTitle(yM)} at 64-bit width (by architecture)`,
         left: "center",
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
@@ -517,11 +527,19 @@ export function EChartsPage(): JSX.Element {
       },
       yAxis: {
         type: "value",
-        name: "Power (mW)",
+        name: scatterAxisTitle(yM),
         nameLocation: "middle",
         nameGap: narrow ? 44 : 50,
         nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
-        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
+        axisLabel: {
+          ...echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
+          ...(yM === "architecture"
+            ? {
+                formatter: (v: string | number) =>
+                  scatterAxisDisplayValue("architecture", Number(v)),
+              }
+            : {}),
+        },
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -535,20 +553,20 @@ export function EChartsPage(): JSX.Element {
       },
       series: [
         {
-          name: "Power (mW)",
+          name: scatterAxisTitle(yM),
           type: "bar",
           barMaxWidth: narrow ? 36 : 48,
           data: rows64.map((r) => ({
-            value: r.powerMw,
+            value: scatterAxisValue(yM, r),
             itemStyle: { color: architectureColor(r.architecture) },
           })),
           label: {
             show: true,
             position: "top",
-            ...echartsTextStyle(palette.rgbAxisTick),
+            ...echartsAxisTextStyle(palette.rgbAxisTick, narrow),
             formatter: (p) => {
               const v = (p as { value?: number }).value;
-              return v != null ? `${v} mW` : "";
+              return v != null ? scatterAxisDisplayValue(yM, v) : "";
             },
           },
         },
@@ -562,15 +580,16 @@ export function EChartsPage(): JSX.Element {
           height: narrow ? 26 : 20,
           bottom: narrow ? 6 : 10,
           moveHandleSize: narrow ? 10 : 7,
-          textStyle: echartsTextStyle(palette.rgbAxisTick),
+          textStyle: echartsAxisTextStyle(palette.rgbAxisTick, narrow),
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const heatmapOption = useMemo((): EChartsOption => {
+    const zM = exploreAxes.z;
     const palette = getChartPalette(theme);
-    const { z, colLabels, rowLabels } = fmaxMhzHeatmapGrid();
+    const { z, colLabels, rowLabels } = scatterAxisHeatmapGrid(zM);
     const cells: [number, number, number][] = [];
     for (let i = 0; i < z.length; i++) {
       for (let j = 0; j < z[i].length; j++) {
@@ -585,7 +604,9 @@ export function EChartsPage(): JSX.Element {
       backgroundColor: "transparent",
       textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
-        text: narrow ? "Fmax heatmap" : "Fmax (MHz) — architecture × bit width",
+        text: narrow
+          ? `${scatterAxisTitle(zM)} heatmap`
+          : `${scatterAxisTitle(zM)} — architecture × bit width`,
         left: "center",
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
@@ -622,7 +643,7 @@ export function EChartsPage(): JSX.Element {
           const [xi, yi, val] = v;
           const bw = colLabels[xi];
           const arch = rowLabels[yi];
-          return `${arch}<br/>${bw} b · Fmax ${val} MHz`;
+          return `${arch}<br/>${bw} b · ${scatterAxisTitle(zM)}: ${scatterAxisDisplayValue(zM, val)}`;
         },
       },
       xAxis: {
@@ -673,7 +694,7 @@ export function EChartsPage(): JSX.Element {
         right: narrow ? 2 : 8,
         top: "middle",
         itemHeight: narrow ? 120 : 160,
-        textStyle: echartsTextStyle(palette.rgbAxisTick),
+        textStyle: echartsAxisTextStyle(palette.rgbAxisTick, narrow),
         inRange: {
           color: ["#313695", "#4575b4", "#abd9e9", "#fee090", "#d73027", "#a50026"],
         },
@@ -684,7 +705,7 @@ export function EChartsPage(): JSX.Element {
           data: cells,
           label: {
             show: true,
-            ...echartsTextStyle(palette.rgbAxisTitle),
+            ...echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
             formatter: (p) => {
               const raw = (p as { value?: unknown; data?: unknown }).value ?? (p as { data?: unknown }).data;
               const triple = Array.isArray(raw) ? (raw as [number, number, number]) : undefined;
@@ -704,20 +725,23 @@ export function EChartsPage(): JSX.Element {
           filterMode: "none",
           height: narrow ? 22 : 18,
           bottom: narrow ? 4 : 8,
-          textStyle: echartsTextStyle(palette.rgbAxisTick),
+          textStyle: echartsAxisTextStyle(palette.rgbAxisTick, narrow),
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const pieOption = useMemo((): EChartsOption => {
+    const yM = exploreAxes.y;
     const palette = getChartPalette(theme);
     const rows64 = rowsByBitWidthOrdered(64);
     return {
       backgroundColor: "transparent",
       textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
-        text: narrow ? "Power share @ 64b" : "Power share at 64-bit width (donut)",
+        text: narrow
+          ? `${scatterAxisTitle(yM)} share @ 64b`
+          : `${scatterAxisTitle(yM)} share at 64-bit width (donut)`,
         left: "center",
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
@@ -728,22 +752,28 @@ export function EChartsPage(): JSX.Element {
         borderColor: palette.tooltipBorder,
         borderWidth: 1,
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
-        formatter: "{b}<br/>{c} mW ({d}%)",
+        formatter: (params: unknown) => {
+          const p = params as { name?: string; value?: number; percent?: number };
+          const v = p.value;
+          const pct = p.percent;
+          if (v == null || pct == null) return "";
+          return `${p.name ?? ""}<br/>${scatterAxisDisplayValue(yM, v)} (${pct.toFixed(1)}%)`;
+        },
       },
-      legend: {
-        bottom: 4,
-        type: "scroll",
-        textStyle: echartsTextStyle(palette.rgbAxisTick),
-      },
+      legend: { show: false },
       series: [
         {
-          name: "Power",
+          name: scatterAxisTitle(yM),
           type: "pie",
           radius: narrow ? ["36%", "58%"] : ["40%", "66%"],
           center: ["50%", "46%"],
+          itemStyle: {
+            borderColor: CHART_MARKER_OUTLINE_RGB,
+            borderWidth: CHART_LINE_WIDTH,
+          },
           data: rows64.map((r) => ({
             name: formatArchLabel(r.architecture),
-            value: r.powerMw,
+            value: scatterAxisValue(yM, r),
             itemStyle: { color: architectureColor(r.architecture) },
           })),
           label: { show: true, ...echartsAxisTextStyle("#ffffff", narrow) },
@@ -757,16 +787,19 @@ export function EChartsPage(): JSX.Element {
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const sunburstOption = useMemo((): EChartsOption => {
+    const yM = exploreAxes.y;
     const palette = getChartPalette(theme);
-    const tree = ppaHierarchyTree("areaUm2");
+    const tree = scatterAxisHierarchyTree(yM);
     return {
       backgroundColor: "transparent",
       textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
-        text: narrow ? "Sunburst (area)" : "Hierarchy: die area (µm²)",
+        text: narrow
+          ? `Sunburst (${scatterAxisTitle(yM)})`
+          : `Hierarchy: ${scatterAxisTitle(yM)} by arch × width`,
         left: "center",
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
@@ -776,7 +809,7 @@ export function EChartsPage(): JSX.Element {
           type: "sunburst",
           data: [tree],
           radius: [0, "92%"],
-          label: echartsTextStyle(palette.rgbAxisTitle),
+          label: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
           itemStyle: {
             borderRadius: 6,
             borderWidth: CHART_LINE_WIDTH,
@@ -786,16 +819,19 @@ export function EChartsPage(): JSX.Element {
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const echartsTreemapOption = useMemo((): EChartsOption => {
+    const yM = exploreAxes.y;
     const palette = getChartPalette(theme);
-    const tree = ppaHierarchyTree("powerMw");
+    const tree = scatterAxisHierarchyTree(yM);
     return {
       backgroundColor: "transparent",
       textStyle: echartsTextStyle(palette.rgbAxisTitle),
       title: {
-        text: narrow ? "Treemap (power)" : "Treemap: power (mW) by arch × width",
+        text: narrow
+          ? `Treemap (${scatterAxisTitle(yM)})`
+          : `Treemap: ${scatterAxisTitle(yM)} by arch × width`,
         left: "center",
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
@@ -816,7 +852,7 @@ export function EChartsPage(): JSX.Element {
         },
       ],
     };
-  }, [narrow, theme]);
+  }, [narrow, theme, exploreAxes]);
 
   const radarOption = useMemo((): EChartsOption => {
     const palette = getChartPalette(theme);
@@ -830,11 +866,7 @@ export function EChartsPage(): JSX.Element {
         textStyle: echartsTextStyle(palette.rgbAxisTitle),
       },
       toolbox: echartsToolbox(palette, theme, narrow, "echarts-radar"),
-      legend: {
-        bottom: 0,
-        type: "scroll",
-        textStyle: echartsTextStyle(palette.rgbAxisTick),
-      },
+      legend: { show: false },
       radar: {
         indicator: indicators,
         radius: narrow ? "58%" : "62%",
@@ -890,7 +922,7 @@ export function EChartsPage(): JSX.Element {
           gap: 2,
           minSize: "12%",
           maxSize: "88%",
-          label: echartsTextStyle(palette.rgbAxisTitle),
+          label: { show: true, ...echartsAxisTextStyle(palette.rgbAxisTitle, narrow) },
           data: steps.map((s) => ({
             name: s.name,
             value: s.value,
@@ -986,7 +1018,7 @@ export function EChartsPage(): JSX.Element {
           filterMode: "none",
           height: narrow ? 24 : 18,
           bottom: narrow ? 6 : 10,
-          textStyle: echartsTextStyle(palette.rgbAxisTick),
+          textStyle: echartsAxisTextStyle(palette.rgbAxisTick, narrow),
         },
       ],
       series: [
@@ -1007,24 +1039,25 @@ export function EChartsPage(): JSX.Element {
         },
       ],
     };
-  }, [narrow, theme, paretoXMetric, paretoYMetric]);
+  }, [narrow, theme]);
+
+  const exKey = `${exploreAxes.x}-${exploreAxes.y}-${exploreAxes.z}`;
 
   return (
     <div>
       <div className="chart-card">
-        <h2>Pareto scatter</h2>
+        <h2>Explore metrics</h2>
         <p className="hint">
-          Choose horizontal and vertical metrics below. Toolbox: rectangle <strong>dataZoom</strong>,{" "}
-          <strong>reset</strong>, PNG. Inside zoom + bottom slider (x). Legend is hidden so it does
-          not cover the axis title — use the hover card for architecture and metrics.
+          <strong>X</strong> / <strong>Y</strong> drive the scatter, dual line, bar, donut, sunburst,
+          and treemap. <strong>Z</strong> colors the heatmap. Matches the Plotly page defaults.
         </p>
         <div className="axis-pickers">
           <label className="axis-picker">
-            Horizontal
+            X
             <select
-              value={paretoXMetric}
-              aria-label="Pareto chart horizontal axis"
-              onChange={(e) => onParetoXMetricChange(e.target.value as ScatterAxisMetric)}
+              value={exploreAxes.x}
+              aria-label="Explore metric X"
+              onChange={(e) => onExploreAxisChange("x", e.target.value as ScatterAxisMetric)}
             >
               {SCATTER_AXIS_METRICS.map((m) => (
                 <option key={m} value={m}>
@@ -1034,13 +1067,27 @@ export function EChartsPage(): JSX.Element {
             </select>
           </label>
           <label className="axis-picker">
-            Vertical
+            Y
             <select
-              value={paretoYMetric}
-              aria-label="Pareto chart vertical axis"
-              onChange={(e) => onParetoYMetricChange(e.target.value as ScatterAxisMetric)}
+              value={exploreAxes.y}
+              aria-label="Explore metric Y"
+              onChange={(e) => onExploreAxisChange("y", e.target.value as ScatterAxisMetric)}
             >
-              {SCATTER_AXIS_METRICS.filter((m) => m !== paretoXMetric).map((m) => (
+              {SCATTER_AXIS_METRICS.map((m) => (
+                <option key={m} value={m}>
+                  {scatterAxisOptionLabel(m)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="axis-picker">
+            Z (heatmap)
+            <select
+              value={exploreAxes.z}
+              aria-label="Explore metric Z"
+              onChange={(e) => onExploreAxisChange("z", e.target.value as ScatterAxisMetric)}
+            >
+              {SCATTER_AXIS_METRICS.map((m) => (
                 <option key={m} value={m}>
                   {scatterAxisOptionLabel(m)}
                 </option>
@@ -1048,9 +1095,16 @@ export function EChartsPage(): JSX.Element {
             </select>
           </label>
         </div>
+      </div>
+      <div className="chart-card">
+        <h2>Pareto scatter</h2>
+        <p className="hint">
+          Toolbox: rectangle <strong>dataZoom</strong>, <strong>reset</strong>, PNG. Uses{" "}
+          <strong>X</strong> × <strong>Y</strong> from above (no legend — hover for detail).
+        </p>
         <div className="plot-host">
           <ReactECharts
-            key={`pareto-${narrow ? "n" : "w"}-${paretoXMetric}-${paretoYMetric}`}
+            key={`pareto-${narrow ? "n" : "w"}-${exKey}`}
             option={paretoOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -1062,12 +1116,11 @@ export function EChartsPage(): JSX.Element {
       <div className="chart-card">
         <h2>Dual-axis line + slider</h2>
         <p className="hint">
-          Same scaling series as Plotly. Toolbox adds x-only rectangle zoom + reset; bottom
-          slider for phones.
+          Kogge-Stone: <strong>X</strong> (left) and <strong>Y</strong> (right) vs bit width — same as Plotly.
         </p>
         <div className="plot-host">
           <ReactECharts
-            key={narrow ? "line-narrow" : "line-wide"}
+            key={`line-${narrow ? "n" : "w"}-${exKey}`}
             option={lineOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -1079,12 +1132,11 @@ export function EChartsPage(): JSX.Element {
       <div className="chart-card">
         <h2>Grouped bar</h2>
         <p className="hint">
-          64-bit power by architecture. <strong>magicType</strong> toggles line/bar;
-          slider + inside zoom on categories.
+          64-bit <strong>Y</strong> metric by architecture. <strong>magicType</strong> toggles line/bar.
         </p>
         <div className="plot-host">
           <ReactECharts
-            key={narrow ? "bar-narrow" : "bar-wide"}
+            key={`bar-${narrow ? "n" : "w"}-${exKey}`}
             option={barOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -1096,12 +1148,11 @@ export function EChartsPage(): JSX.Element {
       <div className="chart-card">
         <h2>Heatmap</h2>
         <p className="hint">
-          Fmax grid with <strong>visualMap</strong>, cell labels, and 2D zoom (inside +
-          slider).
+          Cell color = <strong>Z</strong> metric; <strong>visualMap</strong> + 2D zoom.
         </p>
         <div className="plot-host">
           <ReactECharts
-            key={narrow ? "heat-narrow" : "heat-wide"}
+            key={`heat-${narrow ? "n" : "w"}-${exKey}`}
             option={heatmapOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -1112,10 +1163,12 @@ export function EChartsPage(): JSX.Element {
       </div>
       <div className="chart-card">
         <h2>Donut (pie)</h2>
-        <p className="hint">Power mix at 64b — pairs with the bar chart.</p>
+        <p className="hint">
+          Relative <strong>Y</strong> at 64b — same slice as the bar chart.
+        </p>
         <div className="plot-host plot-host--short">
           <ReactECharts
-            key={narrow ? "pie-narrow" : "pie-wide"}
+            key={`pie-${narrow ? "n" : "w"}-${exKey}`}
             option={pieOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -1127,11 +1180,11 @@ export function EChartsPage(): JSX.Element {
       <div className="chart-card">
         <h2>Sunburst</h2>
         <p className="hint">
-          Radial hierarchy for die <strong>area</strong> (µm²): architecture → bit width.
+          Radial hierarchy: leaf values = <strong>Y</strong> metric (architecture → bit width).
         </p>
         <div className="plot-host plot-host--short">
           <ReactECharts
-            key={narrow ? "sun-narrow" : "sun-wide"}
+            key={`sun-${narrow ? "n" : "w"}-${exKey}`}
             option={sunburstOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -1143,12 +1196,11 @@ export function EChartsPage(): JSX.Element {
       <div className="chart-card">
         <h2>Treemap</h2>
         <p className="hint">
-          Rectangular layout for <strong>power</strong> (mW); pinch/drag <code>roam</code> on
-          touch.
+          Tile area ∝ <strong>Y</strong> metric; pinch/drag <code>roam</code> on touch.
         </p>
         <div className="plot-host plot-host--short">
           <ReactECharts
-            key={narrow ? "tree-narrow" : "tree-wide"}
+            key={`tree-${narrow ? "n" : "w"}-${exKey}`}
             option={echartsTreemapOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}

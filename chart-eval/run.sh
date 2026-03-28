@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Chart eval demo — npm wrapper. Run from repo root or from this directory.
+# Chart eval — npm wrapper. Run from repo root or from this directory.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

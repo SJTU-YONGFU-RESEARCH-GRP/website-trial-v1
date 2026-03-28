@@ -16,7 +16,7 @@ export default function App(): ReactElement {
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header__titles">
-          <h1>Plotly.js vs ECharts — evaluation demo</h1>
+          <h1>Plotly.js vs ECharts</h1>
           <p>
             Vite + React · full Plotly + ECharts analytics gallery · touch-friendly defaults
           </p>

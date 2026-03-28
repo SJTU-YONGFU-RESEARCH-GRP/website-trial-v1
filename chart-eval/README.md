@@ -1,4 +1,4 @@
-# Chart evaluation demo (Plotly.js vs ECharts)
+# Chart evaluation (Plotly.js vs ECharts)
 
 Small **Vite + React** app under `websites/chart-eval` to compare **Plotly.js** (basic cartesian bundle) and **Apache ECharts** for PPA-style dashboards (Pareto scatter, dual-axis scaling). Aligns with `docs/WEBSITE_DESIGN.md` (static site + JSON-driven analytics later).
 
@@ -78,7 +78,7 @@ Output: `dist/` (same artifact CI uploads).
 
 ## Mobile evaluation
 
-| Topic | Plotly (this demo) | ECharts (this demo) |
+| Topic | Plotly | ECharts |
 |--------|--------------------|----------------------|
 | Touch | Pinch zoom, drag | Inside zoom + **slider** `dataZoom` on line chart |
 | Bundle | Lazy-loaded route; **`plotly.js-dist-min`** (full Plotly, browser build) | Smaller than Plotly route; canvas rendering |
