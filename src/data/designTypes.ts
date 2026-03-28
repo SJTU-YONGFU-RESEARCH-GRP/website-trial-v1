@@ -3,6 +3,8 @@
 export type DesignRow = {
   architecture: string;
   bitWidth: number;
+  /** Process corner: nm label (e.g. 7nm) or PDK-style name (e.g. sky130). */
+  processNode: string;
   fmaxMhz: number;
   powerMw: number;
   areaUm2: number;

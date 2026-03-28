@@ -286,6 +286,30 @@ main {
   height: 100% !important;
 }
 
+/*
+ * Locked aspect ratios for WYSIWYG exports (Plotly camera / Download plot).
+ * Overrides fixed heights from .plot-host / --short / --tall and all breakpoints.
+ */
+.plot-host.plot-host--aspect-16x9,
+.plot-host.plot-host--aspect-4x3,
+.plot-host.plot-host--aspect-1x1 {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+
+.plot-host.plot-host--aspect-16x9 {
+  aspect-ratio: 16 / 9;
+}
+
+.plot-host.plot-host--aspect-4x3 {
+  aspect-ratio: 4 / 3;
+}
+
+.plot-host.plot-host--aspect-1x1 {
+  aspect-ratio: 1 / 1;
+}
+
 .note {
   font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
   color: var(--text-secondary);

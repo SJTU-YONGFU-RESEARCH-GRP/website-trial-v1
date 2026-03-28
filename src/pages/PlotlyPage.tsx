@@ -2,16 +2,38 @@ import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { Config, Data, Layout } from "plotly.js";
 // Pre-minified browser build — avoids Vite bundling plotly's Node-only trace helpers.
 import Plotly from "plotly.js-dist-min";
+
+/** Plot container shape: flexible heights vs fixed aspect for export / mobile shells. */
+export type PlotAspectMode = "flexible" | "16:9" | "4:3" | "1:1";
+
+const PLOT_ASPECT_OPTIONS: readonly { value: PlotAspectMode; label: string }[] = [
+  { value: "flexible", label: "Flexible (screen height)" },
+  { value: "16:9", label: "16:9" },
+  { value: "4:3", label: "4:3" },
+  { value: "1:1", label: "1:1" },
+] as const;
+
+function plotHostAspectClass(mode: PlotAspectMode): string {
+  if (mode === "16:9") return "plot-host--aspect-16x9";
+  if (mode === "4:3") return "plot-host--aspect-4x3";
+  if (mode === "1:1") return "plot-host--aspect-1x1";
+  return "";
+}
 import { useNarrowScreen } from "../hooks/useNarrowScreen";
 import {
   DESIGN_ROWS,
-  DESIGN_ARCH_ORDER,
-  DESIGN_BIT_WIDTHS,
+  DESIGN_PROCESS_NODES,
   architectureColor,
+  designArchOrderForRows,
+  designBitWidthsForRows,
+  designRowsForFamily,
+  designRowsForProcess,
+  findDesignRow,
   formatArchLabel,
-  rowsByBitWidthOrdered,
+  rowsByBitWidthOrderedIn,
 } from "../data/design";
 import {
+  BAR_DONUT_BASELINE_OPTIONS,
   DEFAULT_EXPLORE_AXES,
   DESIGN_CATEGORIES,
   SCATTER_AXIS_METRICS,
@@ -24,6 +46,7 @@ import {
   scatterAxisValue,
   scene3dAxisTickHideEnds,
   syncExploreAxes,
+  type BarDonutBaselineMode,
   type ExploreAxesState,
   type DesignCategoryId,
   type ExploreAxisKey,
@@ -32,6 +55,7 @@ import {
 import {
   CHART_LINE_WIDTH,
   CHART_MARKER_OUTLINE_RGB,
+  chartAxisFontSizePx,
   getChartPalette,
   plotInsetBackground,
   plotAxisFont,
@@ -82,6 +106,12 @@ export function PlotlyPage(): JSX.Element {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const [exploreAxes, setExploreAxes] = useState<ExploreAxesState>(DEFAULT_EXPLORE_AXES);
+  const [plotAspectMode, setPlotAspectMode] = useState<PlotAspectMode>("flexible");
+
+  const categoryForUi = DESIGN_CATEGORIES.some((c) => c.id === exploreAxes.category)
+    ? exploreAxes.category
+    : DESIGN_CATEGORIES[0].id;
+  const bitWidthOptions = designBitWidthsForRows(designRowsForFamily(DESIGN_ROWS, categoryForUi));
 
   const onExploreAxisChange = (key: ExploreAxisKey, m: ScatterAxisMetric) => {
     setExploreAxes((prev) => syncExploreAxes(prev, key, m));
@@ -111,9 +141,19 @@ export function PlotlyPage(): JSX.Element {
       const paretoXMetric = ex.x;
       const paretoYMetric = ex.y;
       const paretoZMetric = ex.z;
-      const plotBitWidth = (DESIGN_BIT_WIDTHS as readonly number[]).includes(ex.bitWidth)
+      const processNode = (DESIGN_PROCESS_NODES as readonly string[]).includes(ex.processNode)
+        ? ex.processNode
+        : DESIGN_PROCESS_NODES[0];
+      const category = DESIGN_CATEGORIES.some((c) => c.id === ex.category)
+        ? ex.category
+        : DESIGN_CATEGORIES[0].id;
+      const categoryRowsAll = designRowsForFamily(DESIGN_ROWS, category);
+      const categoryArchOrder = designArchOrderForRows(categoryRowsAll);
+      const categoryBitWidths = designBitWidthsForRows(categoryRowsAll);
+      const rowsFiltered = designRowsForProcess(categoryRowsAll, processNode);
+      const plotBitWidth = (categoryBitWidths as readonly number[]).includes(ex.bitWidth)
         ? ex.bitWidth
-        : DESIGN_BIT_WIDTHS[0];
+        : categoryBitWidths[0];
       const palette = getChartPalette(theme);
       const plotSurfaceBg = plotInsetBackground(theme);
       const hoverLabel = plotlyHoverLabel(palette, narrow);
@@ -132,14 +172,14 @@ export function PlotlyPage(): JSX.Element {
         (narrow ? 4 : 0) + 8 + (bw / 64) * 10;
 
       const byArch = new Map<string, typeof DESIGN_ROWS>();
-      for (const row of DESIGN_ROWS) {
+      for (const row of rowsFiltered) {
         const list = byArch.get(row.architecture) ?? [];
         list.push(row);
         byArch.set(row.architecture, list);
       }
 
       const paretoDataInner: Data[] = [];
-      for (const arch of DESIGN_ARCH_ORDER) {
+      for (const arch of categoryArchOrder) {
         const rows = byArch.get(arch);
         if (!rows?.length) continue;
         const label = formatArchLabel(arch);
@@ -147,8 +187,8 @@ export function PlotlyPage(): JSX.Element {
           type: "scatter",
           mode: "markers",
           name: label,
-          x: rows.map((r) => scatterAxisValue(paretoXMetric, r)),
-          y: rows.map((r) => scatterAxisValue(paretoYMetric, r)),
+          x: rows.map((r) => scatterAxisValue(paretoXMetric, r, categoryArchOrder)),
+          y: rows.map((r) => scatterAxisValue(paretoYMetric, r, categoryArchOrder)),
           text: rows.map((r) => `${plotlyBold(`${r.bitWidth}b`)}<br>${r.areaUm2} µm²`),
           hovertemplate:
             `<b>${label}</b><br>%{text}<br><b>${scatterAxisTitle(paretoXMetric)}:</b> %{x}<br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y}<extra></extra>`,
@@ -161,12 +201,12 @@ export function PlotlyPage(): JSX.Element {
         });
       }
 
-      const paretoXRange = scatterAxisRange(paretoXMetric);
-      const paretoYRange = scatterAxisRange(paretoYMetric);
+      const paretoXRange = scatterAxisRange(paretoXMetric, categoryArchOrder);
+      const paretoYRange = scatterAxisRange(paretoYMetric, categoryArchOrder);
       const paretoXArchTicks =
-        paretoXMetric === "architecture" ? scatterArchitectureTickAxis() : {};
+        paretoXMetric === "architecture" ? scatterArchitectureTickAxis(categoryArchOrder) : {};
       const paretoYArchTicks =
-        paretoYMetric === "architecture" ? scatterArchitectureTickAxis() : {};
+        paretoYMetric === "architecture" ? scatterArchitectureTickAxis(categoryArchOrder) : {};
       const paretoTitleNarrow = plotlyBold(
         `${scatterAxisTitle(paretoXMetric)} vs ${scatterAxisTitle(paretoYMetric)}`,
       );
@@ -255,41 +295,147 @@ export function PlotlyPage(): JSX.Element {
         toImageButtonOptions: { format: "png", filename: "plotly-chart" },
       };
 
-      const rowsAtBw = rowsByBitWidthOrdered(plotBitWidth);
-      const barDataInner: Data[] = [
-        {
-          type: "bar",
-          name: `Metric @ ${plotBitWidth}b`,
-          x: rowsAtBw.map((r) => formatArchLabel(r.architecture)),
-          y: rowsAtBw.map((r) => scatterAxisValue(paretoYMetric, r)),
-          text: rowsAtBw.map((r) => String(scatterAxisValue(paretoYMetric, r))),
-          textposition: "auto",
-          marker: {
-            color: rowsAtBw.map((r) => architectureColor(r.architecture)),
-            line: { width: CHART_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
+      const barBaseline: BarDonutBaselineMode =
+        ex.barDonutBaseline === "bitWidth" || ex.barDonutBaseline === "processNode"
+          ? ex.barDonutBaseline
+          : "architecture";
+
+      const metricAtArchBwProc = (arch: string, bw: number, proc: string): number => {
+        const row = findDesignRow(arch, bw, proc);
+        return row ? scatterAxisValue(paretoYMetric, row, categoryArchOrder) : 0;
+      };
+
+      const pieSliceColors = (count: number): string[] =>
+        Array.from({ length: count }, (_, i) => {
+          const h = Math.round((i * 360) / Math.max(count, 1)) % 360;
+          return `hsl(${h}, 50%, 52%)`;
+        });
+
+      const rowsAtBw = rowsByBitWidthOrderedIn(
+        categoryRowsAll,
+        categoryArchOrder,
+        plotBitWidth,
+        processNode,
+      );
+      const barGrouped = barBaseline !== "architecture";
+
+      const barLine = { width: CHART_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB };
+
+      let barDataInner: Data[];
+      let barXTitle: string;
+      let barTitleNarrow: string;
+      let barTitleWide: string;
+
+      if (barBaseline === "architecture") {
+        barDataInner = [
+          {
+            type: "bar" as const,
+            name: `Metric @ ${plotBitWidth}b`,
+            x: rowsAtBw.map((r) => formatArchLabel(r.architecture)),
+            y: rowsAtBw.map((r) => scatterAxisValue(paretoYMetric, r, categoryArchOrder)),
+            text: rowsAtBw.map((r) =>
+              String(scatterAxisValue(paretoYMetric, r, categoryArchOrder)),
+            ),
+            textposition: "auto",
+            marker: {
+              color: rowsAtBw.map((r) => architectureColor(r.architecture)),
+              line: barLine,
+            },
+            hovertemplate:
+              `<b>%{x}</b><br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y:.3g}<extra></extra>`,
           },
-          hovertemplate:
-            `<b>%{x}</b><br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y:.3g}<extra></extra>`,
-        },
-      ];
+        ];
+        barXTitle = "Architecture";
+        barTitleNarrow = `${scatterAxisTitle(paretoYMetric)} @ ${plotBitWidth}b (bar)`;
+        barTitleWide = `${scatterAxisTitle(paretoYMetric)} at ${plotBitWidth}-bit width (by architecture)`;
+      } else if (barBaseline === "bitWidth") {
+        const xCat = categoryBitWidths.map((bw) => `${bw}b`);
+        barDataInner = categoryArchOrder.map((arch) => {
+          const label = formatArchLabel(arch);
+          return {
+            type: "bar" as const,
+            name: label,
+            x: xCat,
+            y: categoryBitWidths.map((bw) => metricAtArchBwProc(arch, bw, processNode)),
+            marker: {
+              color: architectureColor(arch),
+              line: barLine,
+            },
+            hovertemplate:
+              `<b>${label}</b><br>%{x}<br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y:.3g}<extra></extra>`,
+          };
+        });
+        barXTitle = "Bit width";
+        barTitleNarrow = `${scatterAxisTitle(paretoYMetric)} vs bit width @ ${processNode}`;
+        barTitleWide = `${scatterAxisTitle(paretoYMetric)} by bit width (tech baseline ${processNode})`;
+      } else {
+        const xCat = [...DESIGN_PROCESS_NODES];
+        barDataInner = categoryArchOrder.map((arch) => {
+          const label = formatArchLabel(arch);
+          return {
+            type: "bar" as const,
+            name: label,
+            x: xCat,
+            y: DESIGN_PROCESS_NODES.map((proc) => metricAtArchBwProc(arch, plotBitWidth, proc)),
+            marker: {
+              color: architectureColor(arch),
+              line: barLine,
+            },
+            hovertemplate:
+              `<b>${label}</b><br>%{x}<br><b>${scatterAxisTitle(paretoYMetric)}:</b> %{y:.3g}<extra></extra>`,
+          };
+        });
+        barXTitle = "Process / PDK";
+        barTitleNarrow = `${scatterAxisTitle(paretoYMetric)} vs process @ ${plotBitWidth}b`;
+        barTitleWide = `${scatterAxisTitle(paretoYMetric)} by process (bit baseline ${plotBitWidth}b)`;
+      }
+
+      const barLegendWide = barGrouped
+        ? {
+            orientation: "v" as const,
+            yanchor: "top" as const,
+            y: 1,
+            xanchor: "left" as const,
+            x: 1.01,
+            font: { ...plotAxisFont(palette.rgbAxisTitle, narrow), size: chartAxisFontSizePx(narrow) - 1 },
+          }
+        : undefined;
+
+      const barLegendNarrow = barGrouped
+        ? {
+            orientation: "h" as const,
+            yanchor: "top" as const,
+            y: -0.22,
+            xanchor: "center" as const,
+            x: 0.5,
+            font: { ...plotAxisFont(palette.rgbAxisTitle, narrow), size: 9 },
+          }
+        : undefined;
+
+      const barMarginRight = barGrouped ? (narrow ? 12 : 220) : narrow ? 14 : 24;
+      const barMarginBottom = barGrouped ? (narrow ? 140 : 72) : narrow ? 88 : 72;
 
       const barLayoutInner: Partial<Layout> = narrow
         ? {
             autosize: true,
-            margin: { l: 46, r: 14, t: 20, b: 88 },
+            margin: { l: 46, r: barMarginRight, t: 20, b: barMarginBottom },
             paper_bgcolor: plotSurfaceBg,
             plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold(`${scatterAxisTitle(paretoYMetric)} @ ${plotBitWidth}b (bar)`),
+              text: plotlyBold(barTitleNarrow),
               font: plotFont(palette.rgbAxisTitle),
             },
+            showlegend: barGrouped,
+            ...(barGrouped && barLegendNarrow
+              ? { legend: barLegendNarrow, barmode: "group" as const }
+              : {}),
             xaxis: {
               ...frameX,
               automargin: true,
               gridcolor: palette.axisGridGreyRgb,
-              title: axTitle("Architecture"),
-              tickangle: -28,
+              title: axTitle(barXTitle),
+              tickangle: barBaseline === "processNode" ? -42 : -28,
               tickfont: axTick,
             },
             yaxis: {
@@ -304,22 +450,24 @@ export function PlotlyPage(): JSX.Element {
           }
         : {
             autosize: true,
-            margin: { l: 52, r: 24, t: 32, b: 72 },
+            margin: { l: 52, r: barMarginRight, t: 32, b: barMarginBottom },
             paper_bgcolor: plotSurfaceBg,
             plot_bgcolor: plotSurfaceBg,
             font: plotFont(palette.rgbAxisTitle),
             title: {
-              text: plotlyBold(
-                `${scatterAxisTitle(paretoYMetric)} at ${plotBitWidth}-bit width (by architecture)`,
-              ),
+              text: plotlyBold(barTitleWide),
               font: plotFont(palette.rgbAxisTitle),
             },
+            showlegend: barGrouped,
+            ...(barGrouped && barLegendWide
+              ? { legend: barLegendWide, barmode: "group" as const, bargroupgap: 0.08 }
+              : {}),
             xaxis: {
               ...frameX,
               automargin: true,
               gridcolor: palette.axisGridGreyRgb,
-              title: axTitle("Architecture"),
-              tickangle: -18,
+              title: axTitle(barXTitle),
+              tickangle: barBaseline === "processNode" ? -35 : -18,
               tickfont: axTick,
             },
             yaxis: {
@@ -330,11 +478,118 @@ export function PlotlyPage(): JSX.Element {
               tickfont: axTick,
             },
             hovermode: "x unified",
-            bargap: 0.28,
+            bargap: barGrouped ? 0.18 : 0.28,
             hoverlabel: hoverLabel,
           };
 
-      const { z: heatZ, colLabels, rowLabels } = scatterAxisHeatmapGrid(paretoZMetric);
+      let pieDataInner: Data[];
+      let pieTitleNarrow: string;
+      let pieTitleWide: string;
+
+      if (barBaseline === "architecture") {
+        pieDataInner = [
+          {
+            type: "pie",
+            labels: rowsAtBw.map((r) => formatArchLabel(r.architecture)),
+            values: rowsAtBw.map((r) => scatterAxisValue(paretoYMetric, r, categoryArchOrder)),
+            marker: {
+              colors: rowsAtBw.map((r) => architectureColor(r.architecture)),
+              line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
+            },
+            hole: 0.38,
+            textinfo: "label+percent",
+            textfont: plotAxisFont("#ffffff", narrow),
+            hovertemplate:
+              "<b>%{label}</b><br><b>Value:</b> %{value:.3g}<br><b>Share:</b> %{percent}<extra></extra>",
+          },
+        ];
+        pieTitleNarrow = `${scatterAxisTitle(paretoYMetric)} share @ ${plotBitWidth}b`;
+        pieTitleWide = `${scatterAxisTitle(paretoYMetric)} share at ${plotBitWidth}-bit width (donut)`;
+      } else if (barBaseline === "bitWidth") {
+        const pieLabels = categoryBitWidths.map((bw) => `${bw}b`);
+        const pieValues = categoryBitWidths.map((bw) =>
+          categoryArchOrder.reduce((s, arch) => s + metricAtArchBwProc(arch, bw, processNode), 0),
+        );
+        pieDataInner = [
+          {
+            type: "pie",
+            labels: pieLabels,
+            values: pieValues,
+            marker: {
+              colors: pieSliceColors(pieLabels.length),
+              line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
+            },
+            hole: 0.38,
+            textinfo: "label+percent",
+            textfont: plotAxisFont("#ffffff", narrow),
+            hovertemplate:
+              "<b>%{label}</b><br><b>Σ architectures:</b> %{value:.3g}<br><b>Share:</b> %{percent}<extra></extra>",
+          },
+        ];
+        pieTitleNarrow = `Σ ${scatterAxisTitle(paretoYMetric)} by bit width @ ${processNode}`;
+        pieTitleWide = `${scatterAxisTitle(paretoYMetric)} pooled across architectures @ ${processNode}`;
+      } else {
+        const pieLabels = [...DESIGN_PROCESS_NODES];
+        const pieValues = DESIGN_PROCESS_NODES.map((proc) =>
+          categoryArchOrder.reduce((s, arch) => s + metricAtArchBwProc(arch, plotBitWidth, proc), 0),
+        );
+        pieDataInner = [
+          {
+            type: "pie",
+            labels: pieLabels,
+            values: pieValues,
+            marker: {
+              colors: pieSliceColors(pieLabels.length),
+              line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
+            },
+            hole: 0.38,
+            textinfo: "label+percent",
+            textfont: plotAxisFont("#ffffff", narrow),
+            hovertemplate:
+              "<b>%{label}</b><br><b>Σ architectures:</b> %{value:.3g}<br><b>Share:</b> %{percent}<extra></extra>",
+          },
+        ];
+        pieTitleNarrow = `Σ ${scatterAxisTitle(paretoYMetric)} by process @ ${plotBitWidth}b`;
+        pieTitleWide = `${scatterAxisTitle(paretoYMetric)} pooled across architectures @ ${plotBitWidth}b`;
+      }
+
+      const pieLayoutInner: Partial<Layout> = narrow
+        ? {
+            autosize: true,
+            margin: { l: 12, r: 12, t: 20, b: 12 },
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
+            font: plotFont(palette.rgbAxisTitle),
+            title: {
+              text: plotlyBold(pieTitleNarrow),
+              font: plotFont(palette.rgbAxisTitle),
+            },
+            showlegend: false,
+            hoverlabel: hoverLabel,
+          }
+        : {
+            autosize: true,
+            margin: { l: 16, r: 16, t: 36, b: 16 },
+            paper_bgcolor: plotSurfaceBg,
+            plot_bgcolor: plotSurfaceBg,
+            font: plotFont(palette.rgbAxisTitle),
+            title: {
+              text: plotlyBold(pieTitleWide),
+              font: plotFont(palette.rgbAxisTitle),
+            },
+            showlegend: false,
+            hoverlabel: hoverLabel,
+          };
+
+      const { z: heatZ, colLabels, rowLabels } = scatterAxisHeatmapGrid(
+        paretoZMetric,
+        processNode,
+        {
+          sourceRows: categoryRowsAll,
+          archOrder: categoryArchOrder,
+          bitWidths: categoryBitWidths,
+        },
+      );
       const heatmapDataInner: Data[] = [
         {
           type: "heatmap",
@@ -407,71 +662,30 @@ export function PlotlyPage(): JSX.Element {
             hoverlabel: hoverLabel,
           };
 
-      const pieDataInner: Data[] = [
-        {
-          type: "pie",
-          labels: rowsAtBw.map((r) => formatArchLabel(r.architecture)),
-          values: rowsAtBw.map((r) => scatterAxisValue(paretoYMetric, r)),
-          marker: {
-            colors: rowsAtBw.map((r) => architectureColor(r.architecture)),
-            line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
-          },
-          hole: 0.38,
-          textinfo: "label+percent",
-          textfont: plotAxisFont("#ffffff", narrow),
-          hovertemplate:
-            "<b>%{label}</b><br><b>Value:</b> %{value:.3g}<br><b>Share:</b> %{percent}<extra></extra>",
-        },
-      ];
-
-      const pieLayoutInner: Partial<Layout> = narrow
-        ? {
-            autosize: true,
-            margin: { l: 12, r: 12, t: 20, b: 12 },
-            paper_bgcolor: plotSurfaceBg,
-            plot_bgcolor: plotSurfaceBg,
-            font: plotFont(palette.rgbAxisTitle),
-            title: {
-              text: plotlyBold(`${scatterAxisTitle(paretoYMetric)} share @ ${plotBitWidth}b`),
-              font: plotFont(palette.rgbAxisTitle),
-            },
-            showlegend: false,
-            hoverlabel: hoverLabel,
-          }
-        : {
-            autosize: true,
-            margin: { l: 16, r: 16, t: 36, b: 16 },
-            paper_bgcolor: plotSurfaceBg,
-            plot_bgcolor: plotSurfaceBg,
-            font: plotFont(palette.rgbAxisTitle),
-            title: {
-              text: plotlyBold(
-                `${scatterAxisTitle(paretoYMetric)} share at ${plotBitWidth}-bit width (donut)`,
-              ),
-              font: plotFont(palette.rgbAxisTitle),
-            },
-            showlegend: false,
-            hoverlabel: hoverLabel,
-          };
-
       const sceneAxisFor = (base: typeof sceneAxX, metric: ScatterAxisMetric) => ({
         ...base,
         title: axTitle(scatterAxisTitle(metric)),
         tickfont: axTick,
-        ...scene3dAxisTickHideEnds(metric, DESIGN_ROWS),
+        ...scene3dAxisTickHideEnds(
+          metric,
+          rowsFiltered,
+          6,
+          categoryArchOrder,
+          categoryBitWidths,
+        ),
       });
 
       const scatter3dDataInner: Data[] = [];
-      for (const arch of DESIGN_ARCH_ORDER) {
+      for (const arch of categoryArchOrder) {
         const rows = byArch.get(arch);
         if (!rows?.length) continue;
         scatter3dDataInner.push({
           type: "scatter3d",
           mode: "markers",
           name: formatArchLabel(arch),
-          x: rows.map((r) => scatterAxisValue(paretoXMetric, r)),
-          y: rows.map((r) => scatterAxisValue(paretoYMetric, r)),
-          z: rows.map((r) => scatterAxisValue(paretoZMetric, r)),
+          x: rows.map((r) => scatterAxisValue(paretoXMetric, r, categoryArchOrder)),
+          y: rows.map((r) => scatterAxisValue(paretoYMetric, r, categoryArchOrder)),
+          z: rows.map((r) => scatterAxisValue(paretoZMetric, r, categoryArchOrder)),
           text: rows.map(
             (r) => `${formatArchLabel(arch)} ${r.bitWidth}b`,
           ),
@@ -532,10 +746,15 @@ export function PlotlyPage(): JSX.Element {
           };
 
       const { labels: tmLabels, parents: tmParents, values: tmValues } =
-        scatterAxisTreemapFlat(paretoYMetric);
+        scatterAxisTreemapFlat(
+          paretoYMetric,
+          processNode,
+          categoryRowsAll,
+          categoryArchOrder,
+        );
       const treemapColors = [
         palette.axisBorderRgb,
-        ...DESIGN_ROWS.map((r) => architectureColor(r.architecture)),
+        ...rowsFiltered.map((r) => architectureColor(r.architecture)),
       ];
       const treemapDataInner: Data[] = [
         {
@@ -597,17 +816,51 @@ export function PlotlyPage(): JSX.Element {
   const pieRef = usePlotlyChart(pieData, pieLayout, pieConfig);
   const barRef = usePlotlyChart(barData, barLayout, barConfig);
 
+  const aspectExtra = plotHostAspectClass(plotAspectMode);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      for (const r of [paretoRef, scatter3dRef, heatmapRef, treemapRef, pieRef, barRef]) {
+        const el = r.current;
+        if (el) void Plotly.Plots.resize(el);
+      }
+    });
+    return () => cancelAnimationFrame(id);
+  }, [plotAspectMode]);
+
   return (
     <div>
       <div className="chart-card">
         <h2>Explore metrics</h2>
         <p className="hint">
-          <strong>Category</strong> selects the dataset family (more coming later).{" "}
-          <strong>X</strong> / <strong>Y</strong> / <strong>Z</strong> are distinct quantities: scatter and 3D use all
-          three; bar and donut use <strong>Y</strong> at the chosen <strong>bit width</strong>; treemap uses{" "}
-          <strong>Y</strong> across all designs; heatmap grids architecture × bit width with <strong>Z</strong> as color.
+          <strong>Category</strong> filters the dataset to one design family (adder, voter, CORDIC); all charts below use
+          only that family&apos;s architectures and rows.{" "}
+          <strong>Bar / donut baseline</strong> chooses what stays fixed: compare architectures at one tech and width,
+          sweep <strong>bit widths</strong> with technology held on <strong>Process</strong>, or sweep{" "}
+          <strong>process / PDK</strong> with width held on <strong>Bit width</strong>.{" "}
+          <strong>Process</strong> also anchors heatmap, treemap, Pareto, and 3D.{" "}
+          <strong>X</strong> / <strong>Y</strong> / <strong>Z</strong> are distinct metrics: scatter and 3D use all three;
+          bar and donut use <strong>Y</strong>; treemap uses <strong>Y</strong> at the selected process; heatmap uses{" "}
+          <strong>Z</strong> on an architecture × bit-width grid.{" "}
+          <strong>Plot aspect</strong> sets the frame for every chart so PNG exports match common mobile layouts (e.g.{" "}
+          <strong>4:3</strong> in portrait, <strong>16:9</strong> in landscape); <strong>Flexible</strong> keeps the old
+          viewport-based heights.
         </p>
         <div className="axis-pickers">
+          <label className="axis-picker">
+            Plot aspect (all charts)
+            <select
+              value={PLOT_ASPECT_OPTIONS.some((o) => o.value === plotAspectMode) ? plotAspectMode : "flexible"}
+              aria-label="Aspect ratio for all plot frames and downloads"
+              onChange={(e) => setPlotAspectMode(e.target.value as PlotAspectMode)}
+            >
+              {PLOT_ASPECT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="axis-picker">
             Category
             <select
@@ -620,6 +873,29 @@ export function PlotlyPage(): JSX.Element {
               {DESIGN_CATEGORIES.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="axis-picker">
+            Bar / donut baseline
+            <select
+              value={
+                BAR_DONUT_BASELINE_OPTIONS.some((o) => o.value === exploreAxes.barDonutBaseline)
+                  ? exploreAxes.barDonutBaseline
+                  : "architecture"
+              }
+              aria-label="Bar and donut chart baseline dimension"
+              onChange={(e) =>
+                setExploreAxes((p) => ({
+                  ...p,
+                  barDonutBaseline: e.target.value as BarDonutBaselineMode,
+                }))
+              }
+            >
+              {BAR_DONUT_BASELINE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
                 </option>
               ))}
             </select>
@@ -667,18 +943,42 @@ export function PlotlyPage(): JSX.Element {
             </select>
           </label>
           <label className="axis-picker">
+            Process / PDK
+            <select
+              value={
+                (DESIGN_PROCESS_NODES as readonly string[]).includes(exploreAxes.processNode)
+                  ? exploreAxes.processNode
+                  : DESIGN_PROCESS_NODES[0]
+              }
+              aria-label="Process node or PDK for heatmap treemap bar donut"
+              onChange={(e) =>
+                setExploreAxes((p) => ({ ...p, processNode: e.target.value }))
+              }
+            >
+              {DESIGN_PROCESS_NODES.map((node) => (
+                <option key={node} value={node}>
+                  {node}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="axis-picker">
             Bit width (bar &amp; donut)
             <select
-              value={exploreAxes.bitWidth}
+              value={
+                bitWidthOptions.includes(exploreAxes.bitWidth)
+                  ? exploreAxes.bitWidth
+                  : bitWidthOptions[0]
+              }
               aria-label="Bit width for bar and donut charts"
               onChange={(e) => {
                 const v = Number(e.target.value);
                 setExploreAxes((p) =>
-                  (DESIGN_BIT_WIDTHS as readonly number[]).includes(v) ? { ...p, bitWidth: v } : p,
+                  bitWidthOptions.includes(v) ? { ...p, bitWidth: v } : p,
                 );
               }}
             >
-              {DESIGN_BIT_WIDTHS.map((bw) => (
+              {bitWidthOptions.map((bw) => (
                 <option key={bw} value={bw}>
                   {bw}b
                 </option>
@@ -693,7 +993,7 @@ export function PlotlyPage(): JSX.Element {
           Pinch/drag or mode-bar zoom; larger markers = wider bit width (bubble-style). Uses{" "}
           <strong>X</strong> × <strong>Y</strong> from above — hover points for details.{" "}
         </p>
-        <div className="plot-host">
+        <div className={`plot-host ${aspectExtra}`.trim()}>
           <div ref={paretoRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
@@ -703,44 +1003,47 @@ export function PlotlyPage(): JSX.Element {
           WebGL cloud using <strong>X</strong> × <strong>Y</strong> × <strong>Z</strong> from above. Drag to rotate; mode bar
           for PNG / reset camera.
         </p>
-        <div className="plot-host plot-host--tall">
+        <div className={`plot-host plot-host--tall ${aspectExtra}`.trim()}>
           <div ref={scatter3dRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
       <div className="chart-card">
         <h2>Heatmap</h2>
         <p className="hint">
-          Cell color = <strong>Z</strong> metric across architecture × bit width (same grid).
+          Cell color = <strong>Z</strong> metric across architecture × bit width at the selected{" "}
+          <strong>process</strong>.
         </p>
-        <div className="plot-host">
+        <div className={`plot-host ${aspectExtra}`.trim()}>
           <div ref={heatmapRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
       <div className="chart-card">
         <h2>Treemap</h2>
         <p className="hint">
-          Tile size from <strong>Y</strong> metric — root → each architecture×width leaf.
+          Tile size from <strong>Y</strong> metric — root → each architecture×width leaf at the selected{" "}
+          <strong>process</strong>.
         </p>
-        <div className="plot-host plot-host--short">
+        <div className={`plot-host plot-host--short ${aspectExtra}`.trim()}>
           <div ref={treemapRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
       <div className="chart-card">
         <h2>Donut (pie)</h2>
         <p className="hint">
-          Relative <strong>Y</strong> at the selected <strong>bit width</strong> (same slice as the bar chart).
+          Shares follow <strong>Bar / donut baseline</strong>: per architecture at fixed tech &amp; width, or pooled Σ{" "}
+          <strong>Y</strong> across architectures over bit widths (tech baseline) or over process corners (bit baseline).
         </p>
-        <div className="plot-host plot-host--short">
+        <div className={`plot-host plot-host--short ${aspectExtra}`.trim()}>
           <div ref={pieRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
       <div className="chart-card">
         <h2>Grouped bar</h2>
         <p className="hint">
-          Rows at the selected <strong>bit width</strong>: <strong>Y</strong> metric by architecture. Mode bar: zoom,
-          pan, autoscale, PNG.
+          Layout follows <strong>Bar / donut baseline</strong> (architecture vs bit width vs process on the category axis).
+          Mode bar: zoom, pan, autoscale, PNG.
         </p>
-        <div className="plot-host">
+        <div className={`plot-host ${aspectExtra}`.trim()}>
           <div ref={barRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "generate:data": "node scripts/generate-design-data.mjs",
+    "generate:data": "node scripts/synthesize-design-json.mjs && node scripts/generate-design-data.mjs",
     "build": "npm run generate:data && vite build",
     "preview": "vite preview"
   },

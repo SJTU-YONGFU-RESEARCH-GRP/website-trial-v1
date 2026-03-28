@@ -4,9 +4,14 @@
 
 import {
   type DesignRow,
+  type DesignFamilyId,
+  DESIGN_FAMILIES,
   DESIGN_ROWS,
   DESIGN_ARCH_ORDER,
   DESIGN_BIT_WIDTHS,
+  DEFAULT_PROCESS_NODE,
+  designRowsForProcess,
+  designBitWidthsForRows,
   formatArchLabel,
   DESIGN_ROOT_LABEL,
 } from "./design";
@@ -41,18 +46,26 @@ export function scatterAxisOptionLabel(metric: ScatterAxisMetric): string {
 }
 
 /** Numeric value used for the given row on a linear / value axis. */
-export function scatterAxisValue(metric: ScatterAxisMetric, row: DesignRow): number {
+export function scatterAxisValue(
+  metric: ScatterAxisMetric,
+  row: DesignRow,
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
+): number {
   if (metric === "architecture") {
-    return DESIGN_ARCH_ORDER.indexOf(row.architecture);
+    return archOrder.indexOf(row.architecture);
   }
   return row[metric];
 }
 
 /** String for tooltips / axis labels (architecture index → display name). */
-export function scatterAxisDisplayValue(metric: ScatterAxisMetric, value: number): string {
+export function scatterAxisDisplayValue(
+  metric: ScatterAxisMetric,
+  value: number,
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
+): string {
   if (metric === "architecture") {
     const i = Math.round(value);
-    const arch = DESIGN_ARCH_ORDER[i];
+    const arch = archOrder[i];
     return arch ? formatArchLabel(arch) : String(value);
   }
   return String(value);
@@ -61,32 +74,48 @@ export function scatterAxisDisplayValue(metric: ScatterAxisMetric, value: number
 /** Suggested [min, max] for axis; omit to let the library autorange. */
 export function scatterAxisRange(
   metric: ScatterAxisMetric,
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
 ): [number, number] | undefined {
   if (metric === "architecture") {
-    return [-0.5, DESIGN_ARCH_ORDER.length - 0.5];
+    return [-0.5, archOrder.length - 0.5];
   }
   return undefined;
 }
 
 /** Plotly tickvals / ticktext when an axis encodes architecture index. */
-export function scatterArchitectureTickAxis(): {
+export function scatterArchitectureTickAxis(
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
+): {
   tickmode: "array";
   tickvals: number[];
   ticktext: string[];
 } {
   return {
     tickmode: "array",
-    tickvals: DESIGN_ARCH_ORDER.map((_, i) => i),
-    ticktext: DESIGN_ARCH_ORDER.map(formatArchLabel),
+    tickvals: archOrder.map((_, i) => i),
+    ticktext: archOrder.map(formatArchLabel),
   };
 }
 
-/** Dataset family for the explore panel (expand when more categories ship). */
-export type DesignCategoryId = "adder";
+/** Explore panel category — same ids as `designFamily` on each row. */
+export type DesignCategoryId = DesignFamilyId;
 
-export const DESIGN_CATEGORIES: readonly { id: DesignCategoryId; label: string }[] = [
-  { id: "adder", label: "Adder (synthetic design)" },
-];
+/** Human-readable category label from a family id (filename stem or explicit `designFamily`). */
+export function designCategoryDefaultLabel(id: string): string {
+  const titled = id
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+  return titled ? `${titled} (dataset)` : id;
+}
+
+/** Built from DESIGN_FAMILIES emitted at codegen (add a data/*.json file and rebuild). */
+export const DESIGN_CATEGORIES: readonly { id: DesignCategoryId; label: string }[] =
+  DESIGN_FAMILIES.map((id) => ({
+    id,
+    label: designCategoryDefaultLabel(id),
+  }));
 
 export function designCategoryLabel(id: DesignCategoryId): string {
   const row = DESIGN_CATEGORIES.find((c) => c.id === id);
@@ -97,19 +126,49 @@ export function designCategoryLabel(id: DesignCategoryId): string {
 export type ExploreAxisKey = "x" | "y" | "z";
 
 /**
+ * What bar and donut charts hold fixed vs sweep on the category axis.
+ * - `architecture`: one bar per architecture at the selected process and bit width.
+ * - `bitWidth`: tech baseline — fixed process; X = bit widths; grouped by architecture.
+ * - `processNode`: bit baseline — fixed bit width; X = process / PDK; grouped by architecture.
+ */
+export type BarDonutBaselineMode = "architecture" | "bitWidth" | "processNode";
+
+export const BAR_DONUT_BASELINE_OPTIONS: readonly {
+  value: BarDonutBaselineMode;
+  label: string;
+}[] = [
+  { value: "architecture", label: "Architectures (fixed tech & bit width)" },
+  { value: "bitWidth", label: "Bit widths (baseline: technology)" },
+  { value: "processNode", label: "Tech / PDK (baseline: bit width)" },
+] as const;
+
+/**
  * Explore panel: dataset category, Cartesian metrics (must differ), and slice bit width for bar/pie.
  */
 export type ExploreAxesState = {
   category: DesignCategoryId;
+  /** Process / PDK slice for charts that need a single corner (heatmap, bar, etc.). */
+  processNode: string;
   bitWidth: number;
+  /** Bar and donut: fixed tech vs fixed bit width vs both fixed (see `BarDonutBaselineMode`). */
+  barDonutBaseline: BarDonutBaselineMode;
   x: ScatterAxisMetric;
   y: ScatterAxisMetric;
   z: ScatterAxisMetric;
 };
 
+/** Prefer "adder" when present so demos stay stable; else first merged family. */
+function defaultExploreCategory(): DesignCategoryId {
+  const ids = DESIGN_FAMILIES as readonly string[];
+  if (ids.includes("adder")) return "adder" as DesignCategoryId;
+  return DESIGN_FAMILIES[0];
+}
+
 export const DEFAULT_EXPLORE_AXES: ExploreAxesState = {
-  category: "adder",
+  category: defaultExploreCategory(),
+  processNode: DEFAULT_PROCESS_NODE,
   bitWidth: 64,
+  barDonutBaseline: "architecture",
   x: "fmaxMhz",
   y: "powerMw",
   z: "areaUm2",
@@ -117,7 +176,7 @@ export const DEFAULT_EXPLORE_AXES: ExploreAxesState = {
 
 /**
  * Updates one of X/Y/Z and reassigns duplicates so the three metrics stay distinct.
- * Preserves `category` and `bitWidth`.
+ * Preserves `category`, `processNode`, `bitWidth`, and `barDonutBaseline`.
  */
 export function syncExploreAxes(
   prev: ExploreAxesState,
@@ -139,27 +198,43 @@ export function syncExploreAxes(
 }
 
 /** Heatmap cell values: rows = architectures, cols = bit widths. */
-export function scatterAxisHeatmapGrid(metric: ScatterAxisMetric): {
+export function scatterAxisHeatmapGrid(
+  metric: ScatterAxisMetric,
+  processNode: string = DEFAULT_PROCESS_NODE,
+  sliceOpts: {
+    sourceRows?: readonly DesignRow[];
+    archOrder?: readonly string[];
+    bitWidths?: readonly number[];
+  } = {},
+): {
   z: number[][];
   colLabels: string[];
   rowLabels: string[];
 } {
-  const z = DESIGN_ARCH_ORDER.map((arch) =>
-    DESIGN_BIT_WIDTHS.map((bw) => {
-      const row = DESIGN_ROWS.find((r) => r.architecture === arch && r.bitWidth === bw);
-      return row ? scatterAxisValue(metric, row) : 0;
+  const sourceRows = sliceOpts.sourceRows ?? DESIGN_ROWS;
+  const archOrder = sliceOpts.archOrder ?? DESIGN_ARCH_ORDER;
+  const bitWidths = sliceOpts.bitWidths ?? DESIGN_BIT_WIDTHS;
+  const procSlice = designRowsForProcess(sourceRows, processNode);
+  const z = archOrder.map((arch) =>
+    bitWidths.map((bw) => {
+      const row = procSlice.find((r) => r.architecture === arch && r.bitWidth === bw);
+      return row ? scatterAxisValue(metric, row, archOrder) : 0;
     }),
   );
   return {
     z,
-    colLabels: DESIGN_BIT_WIDTHS.map((bw) => `${bw}`),
-    rowLabels: DESIGN_ARCH_ORDER.map(formatArchLabel),
+    colLabels: bitWidths.map((bw) => `${bw}`),
+    rowLabels: archOrder.map(formatArchLabel),
   };
 }
 
 /** Min/max for parallel-coords or autorange; expands degenerate ranges. */
-export function scatterAxisExtent(rows: readonly DesignRow[], metric: ScatterAxisMetric): [number, number] {
-  const vals = rows.map((r) => scatterAxisValue(metric, r));
+export function scatterAxisExtent(
+  rows: readonly DesignRow[],
+  metric: ScatterAxisMetric,
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
+): [number, number] {
+  const vals = rows.map((r) => scatterAxisValue(metric, r, archOrder));
   let lo = Math.min(...vals);
   let hi = Math.max(...vals);
   if (lo === hi) {
@@ -205,6 +280,8 @@ export function scene3dAxisTickHideEnds(
   metric: ScatterAxisMetric,
   rows: readonly DesignRow[],
   tickCount: number = 6,
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
+  bitWidths: readonly number[] = DESIGN_BIT_WIDTHS,
 ): {
   tickmode: "array";
   tickvals: number[];
@@ -212,9 +289,9 @@ export function scene3dAxisTickHideEnds(
   range?: [number, number];
 } {
   if (metric === "architecture") {
-    const ax = scatterArchitectureTickAxis();
+    const ax = scatterArchitectureTickAxis(archOrder);
     const ticktext = tickTextsWithOptionalHiddenEnds(ax.tickvals, (__, i) => ax.ticktext[i] ?? "");
-    const range = scatterAxisRange(metric);
+    const range = scatterAxisRange(metric, archOrder);
     return {
       tickmode: "array",
       tickvals: [...ax.tickvals],
@@ -224,8 +301,10 @@ export function scene3dAxisTickHideEnds(
   }
 
   if (metric === "bitWidth") {
-    const [lo0, hi0] = scatterAxisExtent(rows, metric);
-    let tickvals: number[] = DESIGN_BIT_WIDTHS.filter((bw) => bw >= lo0 && bw <= hi0);
+    const bws =
+      rows.length > 0 ? designBitWidthsForRows(rows) : [...bitWidths];
+    const [lo0, hi0] = scatterAxisExtent(rows, metric, archOrder);
+    let tickvals: number[] = bws.filter((bw) => bw >= lo0 && bw <= hi0);
     if (tickvals.length === 0) {
       tickvals = [lo0, hi0];
     }
@@ -236,7 +315,7 @@ export function scene3dAxisTickHideEnds(
     return { tickmode: "array", tickvals: [...tickvals], ticktext, range: [lo - pad, hi + pad] };
   }
 
-  const [lo0, hi0] = scatterAxisExtent(rows, metric);
+  const [lo0, hi0] = scatterAxisExtent(rows, metric, archOrder);
   const span = hi0 - lo0 || 1;
   const pad = span * 0.08;
   const lo = lo0 - pad;
@@ -248,18 +327,24 @@ export function scene3dAxisTickHideEnds(
 }
 
 /** Plotly icicle/treemap flat encoding from a chosen leaf value metric. */
-export function scatterAxisTreemapFlat(metric: ScatterAxisMetric): {
+export function scatterAxisTreemapFlat(
+  metric: ScatterAxisMetric,
+  processNode: string = DEFAULT_PROCESS_NODE,
+  sourceRows: readonly DesignRow[] = DESIGN_ROWS,
+  archOrder: readonly string[] = DESIGN_ARCH_ORDER,
+): {
   labels: string[];
   parents: string[];
   values: number[];
 } {
+  const slice = designRowsForProcess(sourceRows, processNode);
   const root = DESIGN_ROOT_LABEL;
-  const leafLabels = DESIGN_ROWS.map(
+  const leafLabels = slice.map(
     (r) => `${formatArchLabel(r.architecture)} · ${r.bitWidth}b`,
   );
   const labels = [root, ...leafLabels];
-  const parents = ["", ...DESIGN_ROWS.map(() => root)];
-  const leafVals = DESIGN_ROWS.map((r) => scatterAxisValue(metric, r));
+  const parents = ["", ...slice.map(() => root)];
+  const leafVals = slice.map((r) => scatterAxisValue(metric, r, archOrder));
   const sum = leafVals.reduce((s, v) => s + v, 0);
   const values = [sum, ...leafVals];
   return { labels, parents, values };
