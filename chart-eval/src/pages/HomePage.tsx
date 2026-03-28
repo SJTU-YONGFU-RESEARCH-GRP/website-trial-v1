@@ -15,12 +15,13 @@ export function HomePage(): JSX.Element {
             Pages without server rewrite rules.
           </li>
           <li>
-            Chart containers use <strong>min-height</strong> and{" "}
-            <strong>viewport units</strong> so phones get usable plot area.
+            <strong>Plotly</strong> includes a richer mode bar (zoom, pan, PNG download,
+            etc.). <strong>ECharts</strong> adds a small toolbox with PNG export on each
+            chart; interaction model differs from Plotly.
           </li>
           <li>
-            ECharts page uses <code>media</code> queries in options for smaller legends
-            on narrow screens.
+            Chart containers use <strong>min-height</strong> and{" "}
+            <strong>viewport units</strong> so phones get usable plot area.
           </li>
         </ul>
       </div>

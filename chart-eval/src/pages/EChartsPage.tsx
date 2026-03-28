@@ -27,17 +27,16 @@ export function EChartsPage(): JSX.Element {
 
     const bump = narrow ? 5 : 0;
 
+    // Numeric x + y require value axes (default xAxis is "category", which hides scatter).
     const series = [...byArch.entries()].map(([arch, rows]) => ({
       name: arch,
       type: "scatter" as const,
-      symbolSize: (params: { data: ScatterDatum }) => {
-        const bw = params.data.bitWidth;
-        return bump + 10 + (bw / 64) * 14;
-      },
       itemStyle: { color: architectureColor(arch) },
       emphasis: { focus: "series" as const },
       data: rows.map((r) => ({
         value: [r.fmaxMhz, r.powerMw] as [number, number],
+        // Per-point size: symbolSize callbacks receive [x,y], not this object (bitWidth was undefined → broken plot).
+        symbolSize: bump + 10 + (r.bitWidth / 64) * 14,
         bitWidth: r.bitWidth,
         areaUm2: r.areaUm2,
       })),
@@ -54,6 +53,19 @@ export function EChartsPage(): JSX.Element {
       grid: narrow
         ? { left: "14%", right: "8%", top: "20%", bottom: "38%", containLabel: true }
         : { left: "12%", right: "6%", top: "18%", bottom: "22%", containLabel: true },
+      toolbox: {
+        right: narrow ? 4 : 8,
+        top: narrow ? 4 : 8,
+        iconStyle: { borderColor: palette.textMuted },
+        emphasis: { iconStyle: { borderColor: palette.text } },
+        feature: {
+          saveAsImage: {
+            title: "Save as PNG",
+            name: "echarts-pareto",
+            backgroundColor: theme === "dark" ? "#131b26" : "#fafafa",
+          },
+        },
+      },
       tooltip: {
         trigger: "item",
         backgroundColor: palette.tooltipBg,
@@ -77,18 +89,22 @@ export function EChartsPage(): JSX.Element {
         textStyle: { color: palette.textMuted },
       },
       xAxis: {
+        type: "value",
         name: "Fmax (MHz)",
         nameLocation: "middle",
         nameGap: narrow ? 22 : 28,
+        scale: true,
         axisLabel: { fontSize: narrow ? 9 : 11, color: palette.textMuted },
         nameTextStyle: { fontSize: narrow ? 10 : 12, color: palette.text },
         axisLine: { lineStyle: { color: palette.gridStrong } },
         splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
       },
       yAxis: {
+        type: "value",
         name: "Power (mW)",
         nameLocation: "middle",
         nameGap: narrow ? 32 : 40,
+        scale: true,
         axisLabel: { fontSize: narrow ? 9 : 11, color: palette.textMuted },
         nameTextStyle: { fontSize: narrow ? 10 : 12, color: palette.text },
         axisLine: { lineStyle: { color: palette.gridStrong } },
@@ -131,6 +147,19 @@ export function EChartsPage(): JSX.Element {
       grid: narrow
         ? { left: "16%", right: "18%", top: "20%", bottom: "42%", containLabel: true }
         : { left: "12%", right: "14%", top: "18%", bottom: "24%", containLabel: true },
+      toolbox: {
+        right: narrow ? 4 : 8,
+        top: narrow ? 4 : 8,
+        iconStyle: { borderColor: palette.textMuted },
+        emphasis: { iconStyle: { borderColor: palette.text } },
+        feature: {
+          saveAsImage: {
+            title: "Save as PNG",
+            name: "echarts-scaling",
+            backgroundColor: theme === "dark" ? "#131b26" : "#fafafa",
+          },
+        },
+      },
       tooltip: {
         trigger: "axis",
         backgroundColor: palette.tooltipBg,
