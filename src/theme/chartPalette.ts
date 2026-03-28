@@ -12,8 +12,14 @@ export const CHART_LINE_WIDTH = 3;
 /** Marker edge and pie/donut slice outline — black in both themes. */
 export const CHART_MARKER_OUTLINE_RGB = "rgb(0, 0, 0)";
 
-/** Scatter / 3D point marker stroke (px); thicker than default 1 so bubbles read clearly on busy plots. */
+/** 2D Pareto scatter marker stroke (px); SVG traces use this directly. */
 export const CHART_SCATTER_MARKER_LINE_WIDTH = 2.5;
+
+/**
+ * 3D scatter marker stroke (px). Plotly `scatter3d` (WebGL) draws edges thinner than 2D scatter at the
+ * same numeric width — set higher so outlines match the Pareto plot visually.
+ */
+export const CHART_SCATTER3D_MARKER_LINE_WIDTH = 4;
 
 /**
  * Heavy face for axis titles + ticks so numbering matches label weight (Plotly has no tick fontWeight).

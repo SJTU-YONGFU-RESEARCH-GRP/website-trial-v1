@@ -71,6 +71,7 @@ import {
 import {
   CHART_LINE_WIDTH,
   CHART_MARKER_OUTLINE_RGB,
+  CHART_SCATTER3D_MARKER_LINE_WIDTH,
   CHART_SCATTER_MARKER_LINE_WIDTH,
   chartAxisFontSizePx,
   getChartPalette,
@@ -796,7 +797,7 @@ export function PlotlyPage(): JSX.Element {
             size: scatterMarkerSize,
             color: architectureColor(arch),
             opacity: 1,
-            line: { width: CHART_SCATTER_MARKER_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
+            line: { width: CHART_SCATTER3D_MARKER_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
           },
         });
       }
