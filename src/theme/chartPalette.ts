@@ -4,6 +4,8 @@
 
 import type { HoverLabel } from "plotly.js";
 
+export type ThemeMode = "light" | "dark";
+
 /** Shared chart typography: Arial, 20px bold, line width 3 for strokes. */
 export const CHART_FONT_FAMILY = "Arial, sans-serif";
 export const CHART_FONT_SIZE = 20;
@@ -12,14 +14,22 @@ export const CHART_LINE_WIDTH = 3;
 /** Marker edge and pie/donut slice outline — black in both themes. */
 export const CHART_MARKER_OUTLINE_RGB = "rgb(0, 0, 0)";
 
+/**
+ * Scatter marker outline color: must contrast with dark saturated fills and the plot inset background.
+ * Pure black disappears on dark-blue / dark-green markers and in dark theme; pure white would fail on light UI.
+ */
+export function chartScatterMarkerStrokeRgb(theme: ThemeMode): string {
+  return theme === "dark" ? "rgb(248, 250, 252)" : "rgb(12, 14, 18)";
+}
+
 /** 2D Pareto scatter marker stroke (px); SVG traces use this directly. */
-export const CHART_SCATTER_MARKER_LINE_WIDTH = 2.5;
+export const CHART_SCATTER_MARKER_LINE_WIDTH = 3.5;
 
 /**
  * 3D scatter marker stroke (px). Plotly `scatter3d` (WebGL) draws edges thinner than 2D scatter at the
  * same numeric width — set higher so outlines match the Pareto plot visually.
  */
-export const CHART_SCATTER3D_MARKER_LINE_WIDTH = 5;
+export const CHART_SCATTER3D_MARKER_LINE_WIDTH = 6;
 
 /**
  * Heavy face for axis titles + ticks so numbering matches label weight (Plotly has no tick fontWeight).
@@ -225,8 +235,6 @@ const dark: ChartPalette = {
   tooltipBorder: "#3d4f66",
   markerOutline: "rgba(231, 236, 243, 0.35)",
 };
-
-export type ThemeMode = "light" | "dark";
 
 export function getChartPalette(theme: ThemeMode): ChartPalette {
   return theme === "dark" ? dark : light;

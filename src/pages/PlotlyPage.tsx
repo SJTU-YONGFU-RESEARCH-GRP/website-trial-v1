@@ -74,6 +74,7 @@ import {
   CHART_SCATTER3D_MARKER_LINE_WIDTH,
   CHART_SCATTER_MARKER_LINE_WIDTH,
   chartAxisFontSizePx,
+  chartScatterMarkerStrokeRgb,
   getChartPalette,
   plotInsetBackground,
   plotAxisFont,
@@ -213,6 +214,7 @@ export function PlotlyPage(): JSX.Element {
             : categoryRowsAll.filter((r) => r.bitWidth === plotBitWidth);
       const rowsFiltered = designRowsForTechnology(categoryRowsAll, techNode);
       const palette = getChartPalette(theme);
+      const scatterMarkerStroke = chartScatterMarkerStrokeRgb(theme);
       const plotSurfaceBg = plotInsetBackground(theme);
       const hoverLabel = plotlyHoverLabel(palette, narrow);
       const frameX = plotlyAxisFrameX(palette);
@@ -253,7 +255,7 @@ export function PlotlyPage(): JSX.Element {
             size: scatterMarkerSize,
             color: architectureColor(arch),
             opacity: 1,
-            line: { width: CHART_SCATTER_MARKER_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
+            line: { width: CHART_SCATTER_MARKER_LINE_WIDTH, color: scatterMarkerStroke },
           },
         });
       }
@@ -797,7 +799,7 @@ export function PlotlyPage(): JSX.Element {
             size: scatterMarkerSize,
             color: architectureColor(arch),
             opacity: 1,
-            line: { width: CHART_SCATTER3D_MARKER_LINE_WIDTH, color: CHART_MARKER_OUTLINE_RGB },
+            line: { width: CHART_SCATTER3D_MARKER_LINE_WIDTH, color: scatterMarkerStroke },
           },
         });
       }
