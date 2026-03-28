@@ -94,15 +94,18 @@ export function PlotlyPage(): JSX.Element {
       }
 
       const paretoDataInner: Data[] = [];
-      for (const [arch, rows] of byArch) {
+      for (const arch of DEMO_ARCH_ORDER) {
+        const rows = byArch.get(arch);
+        if (!rows?.length) continue;
+        const label = formatArchLabel(arch);
         paretoDataInner.push({
           type: "scatter",
           mode: "markers",
-          name: arch,
+          name: label,
           x: rows.map((r) => r.fmaxMhz),
           y: rows.map((r) => r.powerMw),
           text: rows.map(
-            (r) => `${arch}<br>${r.bitWidth}b<br>${r.areaUm2} µm²`,
+            (r) => `${label}<br>${r.bitWidth}b<br>${r.areaUm2} µm²`,
           ),
           hoverinfo: "x+y+text",
           marker: {
@@ -120,7 +123,7 @@ export function PlotlyPage(): JSX.Element {
         {
           type: "scatter",
           mode: "lines+markers",
-          name: "Kogge-Stone Fmax",
+          name: "Fmax (MHz)",
           x: ks.map((r) => r.bitWidth),
           y: ks.map((r) => r.fmaxMhz),
           yaxis: "y",
@@ -129,7 +132,7 @@ export function PlotlyPage(): JSX.Element {
         {
           type: "scatter",
           mode: "lines+markers",
-          name: "Kogge-Stone area",
+          name: "Area (µm²)",
           x: ks.map((r) => r.bitWidth),
           y: ks.map((r) => r.areaUm2),
           yaxis: "y2",
@@ -166,6 +169,7 @@ export function PlotlyPage(): JSX.Element {
               x: 0.5,
               xanchor: "center",
               font: { size: 9, color: palette.textMuted },
+              itemsizing: "constant",
             },
             hovermode: "closest",
           }
@@ -197,6 +201,7 @@ export function PlotlyPage(): JSX.Element {
               x: 0.5,
               xanchor: "center",
               font: { color: palette.textMuted, size: 11 },
+              itemsizing: "constant",
             },
             hovermode: "closest",
           };
@@ -240,6 +245,7 @@ export function PlotlyPage(): JSX.Element {
               x: 0.5,
               xanchor: "center",
               font: { size: 9, color: palette.textMuted },
+              itemsizing: "constant",
             },
           }
         : {
@@ -279,6 +285,7 @@ export function PlotlyPage(): JSX.Element {
               x: 0.5,
               xanchor: "center",
               font: { color: palette.textMuted, size: 11 },
+              itemsizing: "constant",
             },
           };
 
@@ -470,11 +477,13 @@ export function PlotlyPage(): JSX.Element {
           };
 
       const scatter3dDataInner: Data[] = [];
-      for (const [arch, rows] of byArch) {
+      for (const arch of DEMO_ARCH_ORDER) {
+        const rows = byArch.get(arch);
+        if (!rows?.length) continue;
         scatter3dDataInner.push({
           type: "scatter3d",
           mode: "markers",
-          name: arch,
+          name: formatArchLabel(arch),
           x: rows.map((r) => r.fmaxMhz),
           y: rows.map((r) => r.powerMw),
           z: rows.map((r) => r.areaUm2),
@@ -500,6 +509,10 @@ export function PlotlyPage(): JSX.Element {
             title: {
               text: "3D PPA cloud",
               font: { size: 12, color: palette.text },
+            },
+            legend: {
+              itemsizing: "constant",
+              font: { size: 9, color: palette.textMuted },
             },
             scene: {
               bgcolor: "rgba(0,0,0,0)",
@@ -528,6 +541,10 @@ export function PlotlyPage(): JSX.Element {
             title: {
               text: "3D scatter: Fmax × power × area",
               font: { size: 14, color: palette.text },
+            },
+            legend: {
+              itemsizing: "constant",
+              font: { color: palette.textMuted, size: 11 },
             },
             scene: {
               bgcolor: "rgba(0,0,0,0)",

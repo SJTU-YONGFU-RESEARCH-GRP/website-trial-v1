@@ -5,6 +5,7 @@ import { useNarrowScreen } from "../hooks/useNarrowScreen";
 import {
   ADDER_DEMO_ROWS,
   architectureColor,
+  DEMO_ARCH_ORDER,
   fmaxMhzHeatmapGrid,
   formatArchLabel,
   funnelStepsByFmax,
@@ -82,19 +83,26 @@ export function EChartsPage(): JSX.Element {
     const bump = narrow ? 5 : 0;
 
     // Numeric x + y require value axes (default xAxis is "category", which hides scatter).
-    const series = [...byArch.entries()].map(([arch, rows]) => ({
-      name: arch,
-      type: "scatter" as const,
-      itemStyle: { color: architectureColor(arch) },
-      emphasis: { focus: "series" as const },
-      data: rows.map((r) => ({
-        value: [r.fmaxMhz, r.powerMw] as [number, number],
-        // Per-point size: symbolSize callbacks receive [x,y], not this object (bitWidth was undefined → broken plot).
-        symbolSize: bump + 10 + (r.bitWidth / 64) * 14,
-        bitWidth: r.bitWidth,
-        areaUm2: r.areaUm2,
-      })),
-    }));
+    const series = DEMO_ARCH_ORDER.flatMap((arch) => {
+      const rows = byArch.get(arch);
+      if (!rows?.length) return [];
+      const label = formatArchLabel(arch);
+      return [
+        {
+          name: label,
+          type: "scatter" as const,
+          itemStyle: { color: architectureColor(arch) },
+          emphasis: { focus: "series" as const },
+          data: rows.map((r) => ({
+            value: [r.fmaxMhz, r.powerMw] as [number, number],
+            // Per-point size: symbolSize callbacks receive [x,y], not this object (bitWidth was undefined → broken plot).
+            symbolSize: bump + 10 + (r.bitWidth / 64) * 14,
+            bitWidth: r.bitWidth,
+            areaUm2: r.areaUm2,
+          })),
+        },
+      ];
+    });
 
     return {
       backgroundColor: "transparent",
