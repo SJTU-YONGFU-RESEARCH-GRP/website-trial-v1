@@ -9,7 +9,7 @@ import {
   DESIGN_BIT_WIDTHS,
   formatArchLabel,
   DESIGN_ROOT_LABEL,
-} from "./sampleDesign";
+} from "./design";
 
 export type ScatterAxisMetric = "fmaxMhz" | "powerMw" | "areaUm2" | "bitWidth" | "architecture";
 

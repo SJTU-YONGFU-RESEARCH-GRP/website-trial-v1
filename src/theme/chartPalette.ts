@@ -232,24 +232,24 @@ export function plotInsetBackground(theme: ThemeMode): string {
 }
 
 /**
- * Plotly heatmap colorscale: low values cool blue, high values accent orange (matches site palette).
+ * Plotly heatmap colorscale: low → blue, high → red (sequential, aligned with scatter arch colors).
  */
 export function plotlyHeatmapColorscale(
-  palette: ChartPalette,
+  _palette: ChartPalette,
   theme: ThemeMode,
 ): [number, string][] {
   if (theme === "dark") {
     return [
-      [0, "rgb(18, 24, 36)"],
-      [0.35, "rgb(40, 70, 120)"],
-      [0.65, "rgb(70, 140, 210)"],
-      [1, palette.accentOrange],
+      [0, "rgb(18, 32, 72)"],
+      [0.35, "rgb(45, 95, 185)"],
+      [0.65, "rgb(160, 75, 120)"],
+      [1, "rgb(235, 75, 75)"],
     ];
   }
   return [
-    [0, "rgb(236, 244, 255)"],
-    [0.35, "rgb(147, 197, 253)"],
-    [0.65, "rgb(37, 99, 235)"],
-    [1, palette.accentOrange],
+    [0, "rgb(232, 242, 255)"],
+    [0.35, "rgb(96, 165, 250)"],
+    [0.65, "rgb(220, 100, 120)"],
+    [1, "rgb(200, 30, 30)"],
   ];
 }

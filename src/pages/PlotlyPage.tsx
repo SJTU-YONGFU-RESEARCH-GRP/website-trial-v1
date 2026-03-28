@@ -10,7 +10,7 @@ import {
   architectureColor,
   formatArchLabel,
   rowsByBitWidthOrdered,
-} from "../data/sampleDesign";
+} from "../data/design";
 import {
   DEFAULT_EXPLORE_AXES,
   DESIGN_CATEGORIES,
