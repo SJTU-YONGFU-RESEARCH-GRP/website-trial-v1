@@ -1,13 +1,12 @@
 /**
- * Writes one `data/<name>.json` per entry in `FAMILY_CONFIG` (synthetic metrics:
- * bit widths, five architectures per family, technology nodes (nm + kit ids).
+ * Optional: overwrites `data/<name>.json` for each entry in `FAMILY_CONFIG` (synthetic
+ * metrics: bit widths, architectures per family, technology nodes).
  *
- * To add a generated family: extend `FAMILY_CONFIG`, then run `npm run generate:data`.
- * For hand-authored datasets, add any other `data/*.json` file; the merge step picks
- * it up automatically (see `generate-design-data.mjs`).
- *
- * Run: node scripts/synthesize-design-json.mjs
- * (Invoked automatically from `npm run generate:data`.)
+ * Source of truth for the site build is `data/*.json`; `npm run build` only runs
+ * `generate-design-data.mjs` (data → `src/data/generatedDesignRows.ts`). Run this
+ * script when you want to regenerate the default synthetic JSON files:
+ *   npm run synthesize:data
+ * Then commit the updated `data/*.json` if desired.
  */
 import fs from "node:fs";
 import path from "node:path";
