@@ -1,4 +1,4 @@
-/** Synthetic design-metric rows for Pareto / scaling charts (not real silicon). */
+/** Design-metric rows for Pareto / scaling charts (not real silicon). */
 
 import type { DesignRow } from "./designTypes";
 import {
@@ -89,26 +89,26 @@ export function findDesignRow(
 }
 
 /**
- * Saturated RGB series palette (red, blue, green, purple, orange, brown, …) shared by
- * all charts so architecture / category colors stay consistent (no mixed pastel vs dark).
+ * RGB series palette: pure primaries and secondaries (full 0/255 channels), then mixed
+ * saturated corners so many architectures stay distinct. Shared across scatter, bar, donut, treemap, 3D.
  */
 export const ARCHITECTURE_SERIES_RGB: readonly string[] = [
-  "rgb(211, 47, 47)",
-  "rgb(25, 118, 210)",
-  "rgb(56, 142, 60)",
-  "rgb(123, 31, 162)",
-  "rgb(245, 124, 0)",
-  "rgb(121, 85, 72)",
-  "rgb(0, 137, 123)",
-  "rgb(192, 28, 28)",
-  "rgb(63, 81, 181)",
-  "rgb(0, 121, 107)",
-  "rgb(230, 74, 25)",
-  "rgb(106, 27, 154)",
-  "rgb(46, 125, 50)",
-  "rgb(21, 101, 192)",
-  "rgb(175, 0, 145)",
-  "rgb(130, 119, 23)",
+  "rgb(255, 0, 0)",
+  "rgb(0, 255, 0)",
+  "rgb(0, 0, 255)",
+  "rgb(255, 255, 0)",
+  "rgb(255, 0, 255)",
+  "rgb(0, 255, 255)",
+  "rgb(255, 128, 0)",
+  "rgb(128, 0, 255)",
+  "rgb(0, 128, 255)",
+  "rgb(255, 0, 128)",
+  "rgb(128, 255, 0)",
+  "rgb(0, 255, 128)",
+  "rgb(192, 0, 0)",
+  "rgb(0, 192, 0)",
+  "rgb(0, 0, 192)",
+  "rgb(255, 192, 0)",
 ];
 
 /** Color for the i-th series (donut slices by category index, etc.). */
@@ -194,7 +194,7 @@ export function fmaxMhzHeatmapGrid(
 }
 
 /** Root label shared by hierarchy charts (treemap / sunburst). */
-export const DESIGN_ROOT_LABEL = "Synthetic design";
+export const DESIGN_ROOT_LABEL = "Design";
 
 /**
  * Plotly treemap / sunburst flat encoding: root + one leaf per design.
@@ -217,7 +217,7 @@ export function designTreemapFlat(
 }
 
 /**
- * Synthetic whiskers around 64b power for boxplot examples (illustrative only).
+ * Whiskers around 64b power for boxplot examples (illustrative only).
  */
 export function syntheticPowerBoxByArch64(
   technologyNode: string = DEFAULT_TECHNOLOGY_NODE,
