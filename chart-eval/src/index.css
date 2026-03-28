@@ -1,13 +1,29 @@
+/*
+ * Light theme — Apple-style neutrals (f5f5f7 canvas, 1d1d1f type, system blues).
+ * https://developer.apple.com/design/human-interface-guidelines/color
+ */
+
 :root {
-  color-scheme: light dark;
-  --bg: #0f1419;
-  --surface: #1a2332;
-  --text: #e7ecf3;
-  --muted: #8b9bb4;
-  --accent: #3d8bfd;
-  --border: #2d3a4d;
-  font-family: system-ui, "Segoe UI", Roboto, Ubuntu, sans-serif;
-  line-height: 1.5;
+  color-scheme: light;
+  --plot-inset-bg: #fafafa;
+  --canvas: #f5f5f7;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --border: #d2d2d7;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --nav-pad: max(0.75rem, env(safe-area-inset-left, 0px));
+  --nav-pad-right: max(0.75rem, env(safe-area-inset-right, 0px));
+  --nav-pad-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.47059;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
 }
 
 *,
@@ -16,12 +32,17 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--bg);
+  background: var(--canvas);
   color: var(--text);
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
 }
 
 #root {
@@ -32,115 +53,283 @@ a {
   color: var(--accent);
 }
 
+a:active {
+  color: var(--accent-hover);
+}
+
 .app-shell {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.75rem 1rem 2rem;
+  padding: max(0.75rem, env(safe-area-inset-top, 0px)) var(--nav-pad-right)
+    max(1rem, var(--nav-pad-bottom)) var(--nav-pad);
 }
 
 @media (min-width: 768px) {
   .app-shell {
-    padding: 1.25rem 1.5rem 2.5rem;
+    padding: 1.5rem 1.75rem 2.5rem;
   }
 }
 
-header {
-  margin-bottom: 1rem;
-}
-
 header h1 {
-  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
   font-weight: 600;
+  letter-spacing: -0.02em;
   margin: 0 0 0.35rem;
+  line-height: 1.2;
+  color: var(--text);
 }
 
 header p {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-size: clamp(0.875rem, 2.8vw, 0.9375rem);
+  line-height: 1.4;
+  font-weight: 400;
 }
 
 nav {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.45rem;
+  }
 }
 
 nav a {
-  padding: 0.5rem 0.85rem;
-  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   text-decoration: none;
   color: var(--text);
-  font-size: 0.9rem;
-  min-height: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  min-height: 48px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+@media (max-width: 640px) {
+  nav a {
+    font-size: 0.8125rem;
+    padding: 0.6rem 0.35rem;
+  }
 }
 
 nav a:hover,
 nav a:focus-visible {
-  border-color: var(--accent);
+  border-color: var(--border);
   outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 nav a.active {
-  background: #243044;
-  border-color: var(--accent);
+  background: rgba(0, 113, 227, 0.08);
+  border-color: rgba(0, 113, 227, 0.35);
+  color: var(--accent);
 }
 
 main {
   flex: 1;
+  min-width: 0;
 }
 
 .chart-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 0.65rem 0.55rem;
+  margin-bottom: 0.85rem;
+  min-width: 0;
+  box-shadow: var(--shadow-card);
 }
 
 @media (min-width: 768px) {
   .chart-card {
-    padding: 1rem 1.25rem;
+    padding: 1.125rem 1.35rem;
+    border-radius: 20px;
   }
 }
 
 .chart-card h2 {
-  font-size: 1rem;
-  margin: 0 0 0.5rem;
+  font-size: clamp(0.9375rem, 3.5vw, 1.0625rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.35rem;
+  color: var(--text);
 }
 
 .chart-card p.hint {
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin: 0 0 0.75rem;
+  font-size: clamp(0.75rem, 2.8vw, 0.8125rem);
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem;
+  line-height: 1.45;
 }
 
-/* Plotly / ECharts containers: min height for mobile readability */
+@media (min-width: 768px) {
+  .chart-card p.hint {
+    margin-bottom: 0.75rem;
+  }
+}
+
 .plot-host {
   width: 100%;
-  min-height: 280px;
-  height: min(55vh, 420px);
+  min-width: 0;
+  min-height: min(52dvh, 400px);
+  height: min(56dvh, 440px);
+  touch-action: manipulation;
+  position: relative;
+  background: var(--plot-inset-bg, #fafafa);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .plot-host {
+    min-height: 300px;
+    height: min(50dvh, 400px);
+  }
 }
 
 @media (min-width: 768px) {
   .plot-host {
     min-height: 360px;
     height: 420px;
+    border-radius: 14px;
   }
 }
 
+.plot-host > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .note {
-  font-size: 0.85rem;
-  color: var(--muted);
+  font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
+  color: var(--text-secondary);
   border-left: 3px solid var(--accent);
   padding-left: 0.75rem;
-  margin-top: 1rem;
+  margin-top: 0.85rem;
+  line-height: 1.5;
+}
+
+code {
+  font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+  color: var(--text);
+}
+
+/* —— Dark theme (toggle via ThemeToggle / data-theme on <html>) —— */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0f1419;
+  --surface: #1a2332;
+  --surface-elevated: #1e2a3d;
+  --text: #e7ecf3;
+  --text-secondary: #8b9bb4;
+  --accent: #5eb0ff;
+  --accent-hover: #7cc4ff;
+  --border: #2d3a4d;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --plot-inset-bg: #131b26;
+}
+
+:root[data-theme="dark"] nav a {
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] nav a:hover,
+:root[data-theme="dark"] nav a:focus-visible {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] nav a.active {
+  background: rgba(94, 176, 255, 0.12);
+  border-color: rgba(94, 176, 255, 0.45);
+  color: var(--accent);
+}
+
+:root[data-theme="dark"] .plot-host {
+  background: var(--plot-inset-bg);
+}
+
+:root[data-theme="dark"] code {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Header row + theme switch */
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.app-header__titles {
+  flex: 1;
+  min-width: min(100%, 200px);
+}
+
+.theme-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.45rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: var(--border);
+  outline: none;
+}
+
+.theme-toggle:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.35);
+}
+
+:root[data-theme="dark"] .theme-toggle:focus-visible {
+  box-shadow: 0 0 0 3px rgba(94, 176, 255, 0.35);
+}
+
+.theme-toggle__icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.theme-toggle__label {
+  line-height: 1.2;
 }

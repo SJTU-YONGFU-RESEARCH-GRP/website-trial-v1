@@ -54,3 +54,44 @@ npx vite preview   # optional: smoke-test dist/
 ```
 
 `vite.config.ts` uses **`base: "./"`** so assets resolve correctly on a **project** Pages URL (`/website-trial-v1/`).
+
+## Troubleshooting: deploy job `404` / `Failed to create deployment`
+
+The **`actions/deploy-pages`** step calls GitHub’s Pages API. A **404** usually means Pages is **not enabled** for this repo or **not** wired to **GitHub Actions**.
+
+### Fix (repository)
+
+1. Open **`https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1/settings/pages`**
+2. Under **Build and deployment**:
+   - **Source** must be **GitHub Actions** (not *Deploy from a branch*).
+3. Click **Save** if you changed anything.
+4. Re-run the failed workflow (**Actions** → failed run → **Re-run all jobs**).
+
+Until Source is **GitHub Actions**, the API has nothing to deploy to and returns **Not Found (404)**.
+
+### Fix (organization)
+
+If the repo is under an **organization**, an owner may need to allow Pages:
+
+- **Organization → Settings → Member privileges** (or **Actions / Pages** policies): ensure **GitHub Pages** is allowed for repositories.
+- Some orgs restrict who can enable Pages; you need **admin** on the repo (or org owner) to turn it on.
+
+### Private repository
+
+On **free** GitHub plans, **private** repos often **cannot** publish a **public** GitHub Pages site without a paid feature. If `website-trial-v1` is private:
+
+- **Make the repo public**, or  
+- Use **GitHub Enterprise / Team** features your org pays for, or  
+- Host the built `dist/` elsewhere (e.g. Cloudflare Pages).
+
+### First deploy and `github-pages` environment
+
+The workflow uses the **`github-pages`** environment. The first time, GitHub may ask you to **approve** deployment rules (e.g. wait for approval). Check:
+
+- **Settings → Environments → github-pages**
+
+If a protection rule blocks deployment, adjust it or approve the pending deployment in the Actions run.
+
+### Verify build job succeeded
+
+The **deploy** job only runs after **build** uploads the artifact. If **build** failed, fix that first; a misleading error can sometimes follow a partial run—always check the **build** job logs.

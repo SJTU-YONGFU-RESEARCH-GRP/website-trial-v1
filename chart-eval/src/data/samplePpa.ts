@@ -19,13 +19,14 @@ export const ADDER_DEMO_ROWS: AdderDemoRow[] = [
   { architecture: "brent_kung", bitWidth: 64, fmaxMhz: 710, powerMw: 7.2, areaUm2: 9100 },
 ];
 
+/** Saturated hues that read well on light backgrounds (Apple-like system tones). */
 const colors: Record<string, string> = {
-  rca: "#7eb6ff",
-  cla: "#5ce1a3",
-  kogge_stone: "#ffb84d",
-  brent_kung: "#d4a5ff",
+  rca: "#0071e3",
+  cla: "#34c759",
+  kogge_stone: "#ff9500",
+  brent_kung: "#af52de",
 };
 
 export function architectureColor(arch: string): string {
-  return colors[arch] ?? "#94a3b8";
+  return colors[arch] ?? "#86868b";
 }

@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
+import { useNarrowScreen } from "../hooks/useNarrowScreen";
 import { ADDER_DEMO_ROWS, architectureColor } from "../data/samplePpa";
+import { getChartPalette } from "../theme/chartPalette";
+import { useTheme } from "../theme/ThemeContext";
 
 type ScatterDatum = {
   value: [number, number];
@@ -10,7 +13,11 @@ type ScatterDatum = {
 };
 
 export function EChartsPage(): JSX.Element {
+  const narrow = useNarrowScreen(640);
+  const { theme } = useTheme();
+
   const paretoOption = useMemo((): EChartsOption => {
+    const palette = getChartPalette(theme);
     const byArch = new Map<string, typeof ADDER_DEMO_ROWS>();
     for (const row of ADDER_DEMO_ROWS) {
       const list = byArch.get(row.architecture) ?? [];
@@ -18,12 +25,14 @@ export function EChartsPage(): JSX.Element {
       byArch.set(row.architecture, list);
     }
 
+    const bump = narrow ? 5 : 0;
+
     const series = [...byArch.entries()].map(([arch, rows]) => ({
       name: arch,
       type: "scatter" as const,
       symbolSize: (params: { data: ScatterDatum }) => {
         const bw = params.data.bitWidth;
-        return 10 + (bw / 64) * 14;
+        return bump + 10 + (bw / 64) * 14;
       },
       itemStyle: { color: architectureColor(arch) },
       emphasis: { focus: "series" as const },
@@ -36,15 +45,21 @@ export function EChartsPage(): JSX.Element {
 
     return {
       backgroundColor: "transparent",
-      textStyle: { color: "#e7ecf3" },
+      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
       title: {
-        text: "Pareto-style: Fmax vs power (demo data)",
+        text: narrow ? "Fmax vs power (demo)" : "Pareto-style: Fmax vs power (demo data)",
         left: "center",
-        textStyle: { fontSize: 14, color: "#e7ecf3" },
+        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
       },
-      grid: { left: "12%", right: "6%", top: "18%", bottom: "22%", containLabel: true },
+      grid: narrow
+        ? { left: "14%", right: "8%", top: "20%", bottom: "38%", containLabel: true }
+        : { left: "12%", right: "6%", top: "18%", bottom: "22%", containLabel: true },
       tooltip: {
         trigger: "item",
+        backgroundColor: palette.tooltipBg,
+        borderColor: palette.tooltipBorder,
+        borderWidth: 1,
+        textStyle: { color: palette.text, fontSize: 12 },
         formatter: (params: unknown) => {
           const p = params as {
             seriesName?: string;
@@ -59,36 +74,47 @@ export function EChartsPage(): JSX.Element {
       legend: {
         bottom: 0,
         type: "scroll",
-        textStyle: { color: "#8b9bb4" },
+        textStyle: { color: palette.textMuted },
       },
       xAxis: {
         name: "Fmax (MHz)",
         nameLocation: "middle",
-        nameGap: 28,
-        axisLine: { lineStyle: { color: "#2d3a4d" } },
-        splitLine: { lineStyle: { color: "#2d3a4d" } },
+        nameGap: narrow ? 22 : 28,
+        axisLabel: { fontSize: narrow ? 9 : 11, color: palette.textMuted },
+        nameTextStyle: { fontSize: narrow ? 10 : 12, color: palette.text },
+        axisLine: { lineStyle: { color: palette.gridStrong } },
+        splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
       },
       yAxis: {
         name: "Power (mW)",
         nameLocation: "middle",
-        nameGap: 40,
-        axisLine: { lineStyle: { color: "#2d3a4d" } },
-        splitLine: { lineStyle: { color: "#2d3a4d" } },
+        nameGap: narrow ? 32 : 40,
+        axisLabel: { fontSize: narrow ? 9 : 11, color: palette.textMuted },
+        nameTextStyle: { fontSize: narrow ? 10 : 12, color: palette.text },
+        axisLine: { lineStyle: { color: palette.gridStrong } },
+        splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
       },
       series,
       media: [
         {
-          query: { maxWidth: 480 },
+          query: { maxWidth: 640 },
           option: {
-            grid: { bottom: "32%", left: "14%" },
-            legend: { bottom: "6%", orient: "horizontal" },
+            grid: { bottom: "40%", left: "16%", right: "10%" },
+            legend: {
+              bottom: 4,
+              type: "scroll",
+              itemWidth: 12,
+              itemHeight: 10,
+              textStyle: { fontSize: 9, color: palette.textMuted },
+            },
           },
         },
       ],
     };
-  }, []);
+  }, [narrow, theme]);
 
   const lineOption = useMemo((): EChartsOption => {
+    const palette = getChartPalette(theme);
     const ks = ADDER_DEMO_ROWS.filter((r) => r.architecture === "kogge_stone").sort(
       (a, b) => a.bitWidth - b.bitWidth,
     );
@@ -96,38 +122,53 @@ export function EChartsPage(): JSX.Element {
 
     return {
       backgroundColor: "transparent",
-      textStyle: { color: "#e7ecf3" },
+      textStyle: { color: palette.text, fontSize: narrow ? 10 : 12 },
       title: {
-        text: "Scaling: Kogge-Stone vs bit width",
+        text: narrow ? "Kogge-Stone scaling" : "Scaling: Kogge-Stone vs bit width",
         left: "center",
-        textStyle: { fontSize: 14, color: "#e7ecf3" },
+        textStyle: { fontSize: narrow ? 12 : 14, color: palette.text },
       },
-      grid: { left: "12%", right: "14%", top: "18%", bottom: "24%", containLabel: true },
-      tooltip: { trigger: "axis" },
+      grid: narrow
+        ? { left: "16%", right: "18%", top: "20%", bottom: "42%", containLabel: true }
+        : { left: "12%", right: "14%", top: "18%", bottom: "24%", containLabel: true },
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: palette.tooltipBg,
+        borderColor: palette.tooltipBorder,
+        borderWidth: 1,
+        textStyle: { color: palette.text, fontSize: 12 },
+      },
       legend: {
-        bottom: 0,
+        bottom: narrow ? 52 : 0,
         data: ["Fmax (MHz)", "Area (µm²)"],
-        textStyle: { color: "#8b9bb4" },
+        textStyle: { color: palette.textMuted, fontSize: narrow ? 10 : 12 },
+        itemGap: narrow ? 12 : 16,
       },
       xAxis: {
         type: "category",
         data: bw,
         name: "Bit width",
-        axisLine: { lineStyle: { color: "#2d3a4d" } },
+        nameTextStyle: { color: palette.text },
+        axisLabel: { color: palette.textMuted },
+        axisLine: { lineStyle: { color: palette.gridStrong } },
       },
       yAxis: [
         {
           type: "value",
           name: "Fmax (MHz)",
           position: "left",
+          nameTextStyle: { color: palette.text },
+          axisLabel: { color: palette.textMuted },
           axisLine: { show: true, lineStyle: { color: architectureColor("kogge_stone") } },
-          splitLine: { lineStyle: { color: "#2d3a4d" } },
+          splitLine: { lineStyle: { color: palette.grid, type: "dashed" } },
         },
         {
           type: "value",
           name: "Area (µm²)",
           position: "right",
-          axisLine: { show: true, lineStyle: { color: "#ff9f4a" } },
+          nameTextStyle: { color: palette.text },
+          axisLabel: { color: palette.textMuted },
+          axisLine: { show: true, lineStyle: { color: palette.accentOrange } },
           splitLine: { show: false },
         },
       ],
@@ -139,8 +180,8 @@ export function EChartsPage(): JSX.Element {
           data: ks.map((r) => r.fmaxMhz),
           smooth: true,
           symbol: "circle",
-          symbolSize: 8,
-          lineStyle: { width: 2, color: architectureColor("kogge_stone") },
+          symbolSize: narrow ? 11 : 8,
+          lineStyle: { width: narrow ? 2.5 : 2, color: architectureColor("kogge_stone") },
         },
         {
           name: "Area (µm²)",
@@ -149,8 +190,8 @@ export function EChartsPage(): JSX.Element {
           data: ks.map((r) => r.areaUm2),
           smooth: true,
           symbol: "diamond",
-          symbolSize: 8,
-          lineStyle: { width: 2, type: "dashed", color: "#ff9f4a" },
+          symbolSize: narrow ? 11 : 8,
+          lineStyle: { width: 2, type: "dashed", color: palette.accentOrange },
         },
       ],
       dataZoom: [
@@ -158,25 +199,32 @@ export function EChartsPage(): JSX.Element {
         {
           type: "slider",
           xAxisIndex: 0,
-          height: 22,
-          bottom: 36,
-          textStyle: { color: "#8b9bb4" },
+          height: narrow ? 32 : 22,
+          bottom: narrow ? 8 : 36,
+          moveHandleSize: narrow ? 10 : 7,
+          textStyle: { color: palette.textMuted, fontSize: narrow ? 9 : 11 },
         },
       ],
       media: [
         {
           query: { maxWidth: 480 },
           option: {
-            grid: { bottom: "38%" },
+            grid: { bottom: "44%" },
             dataZoom: [
-              { type: "inside", xAxisIndex: 0 },
-              { type: "slider", xAxisIndex: 0, height: 20, bottom: 52 },
+              { type: "inside", xAxisIndex: 0, filterMode: "none" },
+              {
+                type: "slider",
+                xAxisIndex: 0,
+                height: 34,
+                bottom: 6,
+                moveHandleSize: 12,
+              },
             ],
           },
         },
       ],
     };
-  }, []);
+  }, [narrow, theme]);
 
   return (
     <div>
@@ -188,6 +236,7 @@ export function EChartsPage(): JSX.Element {
         </p>
         <div className="plot-host">
           <ReactECharts
+            key={narrow ? "pareto-narrow" : "pareto-wide"}
             option={paretoOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}
@@ -203,6 +252,7 @@ export function EChartsPage(): JSX.Element {
         </p>
         <div className="plot-host">
           <ReactECharts
+            key={narrow ? "line-narrow" : "line-wide"}
             option={lineOption}
             style={{ height: "100%", width: "100%" }}
             opts={{ renderer: "canvas" }}

@@ -9,7 +9,7 @@ export function HomePage(): JSX.Element {
           Built with <strong>Vite + React</strong> (recommended in docs for JSON-driven
           dashboards + GitHub Pages).
         </p>
-        <ul style={{ margin: 0, paddingLeft: "1.25rem", color: "var(--muted)" }}>
+        <ul style={{ margin: 0, paddingLeft: "1.25rem", color: "var(--text-secondary)" }}>
           <li>
             <strong>HashRouter</strong> (<code>#/plotly</code>) works on GitHub Project
             Pages without server rewrite rules.
