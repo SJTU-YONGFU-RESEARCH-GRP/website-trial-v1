@@ -17,6 +17,41 @@ export function plotFont(color: string): { family: string; size: number; color: 
   return { family: CHART_FONT_FAMILY, size: CHART_FONT_SIZE, color };
 }
 
+/** Axis tick + title size: smaller on narrow viewports so labels clear titles and fit phones. */
+export function chartAxisFontSizePx(narrow: boolean): number {
+  return narrow ? 12 : 16;
+}
+
+/** Plotly axis title and tick font — same family and size (avoids Arial Black ticks vs regular titles). */
+export function plotAxisFont(
+  color: string,
+  narrow: boolean,
+): { family: string; size: number; color: string } {
+  return {
+    family: CHART_FONT_FAMILY,
+    size: chartAxisFontSizePx(narrow),
+    color,
+  };
+}
+
+/** ECharts axis name + tick labels — matches {@link plotAxisFont} sizing. */
+export function echartsAxisTextStyle(
+  color: string,
+  narrow: boolean,
+): {
+  fontFamily: string;
+  fontSize: number;
+  fontWeight: "bold";
+  color: string;
+} {
+  return {
+    fontFamily: CHART_FONT_FAMILY,
+    fontSize: chartAxisFontSizePx(narrow),
+    fontWeight: "bold",
+    color,
+  };
+}
+
 /**
  * Plotly tick / category labels with bold weight (Plotly has no fontWeight on ticks).
  * Uses Arial Black when available.

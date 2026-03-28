@@ -25,6 +25,7 @@ import {
 } from "../data/scatterAxisMetrics";
 import {
   CHART_LINE_WIDTH,
+  echartsAxisTextStyle,
   echartsGridBorder,
   echartsTextStyle,
   getChartPalette,
@@ -202,17 +203,18 @@ export function EChartsPage(): JSX.Element {
         type: "value",
         name: scatterAxisTitle(paretoXMetric),
         nameLocation: "middle",
-        nameGap: narrow ? 22 : 28,
+        nameGap: narrow ? 36 : 42,
         scale: true,
         axisLabel: {
-          ...echartsTextStyle(palette.axisValueLabelRgb),
+          ...echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
           ...(paretoXMetric === "architecture"
             ? {
-                formatter: (v: number) => scatterAxisDisplayValue("architecture", v),
+                formatter: (v: string | number) =>
+                  scatterAxisDisplayValue("architecture", Number(v)),
               }
             : {}),
         },
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -231,17 +233,18 @@ export function EChartsPage(): JSX.Element {
         type: "value",
         name: scatterAxisTitle(paretoYMetric),
         nameLocation: "middle",
-        nameGap: narrow ? 32 : 40,
+        nameGap: narrow ? 48 : 54,
         scale: true,
         axisLabel: {
-          ...echartsTextStyle(palette.axisValueLabelRgb),
+          ...echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
           ...(paretoYMetric === "architecture"
             ? {
-                formatter: (v: number) => scatterAxisDisplayValue("architecture", v),
+                formatter: (v: string | number) =>
+                  scatterAxisDisplayValue("architecture", Number(v)),
               }
             : {}),
         },
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -338,8 +341,10 @@ export function EChartsPage(): JSX.Element {
         type: "category",
         data: bw,
         name: "Bit width",
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-        axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+        nameLocation: "middle",
+        nameGap: narrow ? 32 : 38,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -357,8 +362,10 @@ export function EChartsPage(): JSX.Element {
           type: "value",
           name: "Fmax (MHz)",
           position: "left",
-          nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-          axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+          nameLocation: "middle",
+          nameGap: narrow ? 42 : 48,
+          nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+          axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
           axisLine: {
             show: true,
             lineStyle: {
@@ -378,8 +385,10 @@ export function EChartsPage(): JSX.Element {
           type: "value",
           name: "Area (µm²)",
           position: "right",
-          nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-          axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+          nameLocation: "middle",
+          nameGap: narrow ? 42 : 48,
+          nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+          axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
           axisLine: {
             show: true,
             lineStyle: { color: "rgb(139, 69, 19)", width: CHART_LINE_WIDTH },
@@ -487,9 +496,11 @@ export function EChartsPage(): JSX.Element {
         type: "category",
         data: rows64.map((r) => formatArchLabel(r.architecture)),
         name: "Architecture",
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
+        nameLocation: "middle",
+        nameGap: narrow ? 38 : 44,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
         axisLabel: {
-          ...echartsTextStyle(palette.axisValueLabelRgb),
+          ...echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
           rotate: narrow ? 28 : 16,
         },
         axisLine: {
@@ -507,8 +518,10 @@ export function EChartsPage(): JSX.Element {
       yAxis: {
         type: "value",
         name: "Power (mW)",
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-        axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+        nameLocation: "middle",
+        nameGap: narrow ? 44 : 50,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -617,9 +630,9 @@ export function EChartsPage(): JSX.Element {
         data: colLabels,
         name: "Bit width",
         nameLocation: "middle",
-        nameGap: narrow ? 24 : 28,
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-        axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+        nameGap: narrow ? 34 : 40,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -636,8 +649,10 @@ export function EChartsPage(): JSX.Element {
         type: "category",
         data: rowLabels,
         name: "Architecture",
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-        axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+        nameLocation: "middle",
+        nameGap: narrow ? 36 : 42,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -731,7 +746,7 @@ export function EChartsPage(): JSX.Element {
             value: r.powerMw,
             itemStyle: { color: architectureColor(r.architecture) },
           })),
-          label: echartsTextStyle(palette.rgbAxisTitle),
+          label: { show: true, ...echartsAxisTextStyle("#ffffff", narrow) },
           emphasis: {
             itemStyle: {
               shadowBlur: 12,
@@ -790,8 +805,8 @@ export function EChartsPage(): JSX.Element {
           type: "treemap",
           roam: true,
           breadcrumb: { itemStyle: { color: palette.rgbAxisTick } },
-          label: { show: true, ...echartsTextStyle(palette.rgbAxisTitle) },
-          upperLabel: { show: true, ...echartsTextStyle(palette.rgbAxisTick) },
+          label: { show: true, ...echartsAxisTextStyle("#ffffff", narrow) },
+          upperLabel: { show: true, ...echartsAxisTextStyle("#ffffff", narrow) },
           itemStyle: {
             borderColor: palette.axisBorderRgb,
             borderWidth: CHART_LINE_WIDTH,
@@ -831,7 +846,7 @@ export function EChartsPage(): JSX.Element {
           lineStyle: { color: palette.axisGridGreyRgb, width: CHART_LINE_WIDTH },
         },
         splitArea: { show: true },
-        axisName: echartsTextStyle(palette.axisValueLabelRgb),
+        axisName: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
       },
       series: [
         {
@@ -929,8 +944,10 @@ export function EChartsPage(): JSX.Element {
         data: categories,
         boundaryGap: true,
         name: "Architecture",
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-        axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+        nameLocation: "middle",
+        nameGap: narrow ? 38 : 44,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
@@ -946,8 +963,10 @@ export function EChartsPage(): JSX.Element {
       yAxis: {
         type: "value",
         name: "Power (mW)",
-        nameTextStyle: echartsTextStyle(palette.rgbAxisTitle),
-        axisLabel: echartsTextStyle(palette.axisValueLabelRgb),
+        nameLocation: "middle",
+        nameGap: narrow ? 44 : 50,
+        nameTextStyle: echartsAxisTextStyle(palette.rgbAxisTitle, narrow),
+        axisLabel: echartsAxisTextStyle(palette.axisValueLabelRgb, narrow),
         axisLine: {
           lineStyle: { color: palette.axisBorderRgb, width: CHART_LINE_WIDTH },
         },
