@@ -140,7 +140,7 @@ export function designCategoryDefaultLabel(id: string): string {
     .filter(Boolean)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(" ");
-  return titled ? `${titled} (dataset)` : id;
+  return titled ? `${titled}` : id;
 }
 
 /** Built from DESIGN_CATEGORY_IDS emitted at codegen (add a data/*.json file and rebuild). */
