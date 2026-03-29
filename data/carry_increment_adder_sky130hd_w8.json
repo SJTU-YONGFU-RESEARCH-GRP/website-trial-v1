@@ -1,0 +1,36 @@
+{
+  "architecture": "carry_increment_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 364.859638,
+  "powerMw": 6.409e-08,
+  "areaUm2": 237.728,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "carry_increment_adder",
+    "numCells": 24,
+    "numWireBits": 108,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__maj3_2": 8,
+      "sky130_fd_sc_hd__xnor2_1": 15,
+      "sky130_fd_sc_hd__xnor2_2": 1
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/carry_increment_adder_w8",
+    "metrics": {
+      "criticalPathDelayPs": 2740.78,
+      "fmaxEstimateMhz": 364.859638,
+      "leakagePowerNw": 0.064090313,
+      "powerLeakageMw": 6.409e-08,
+      "powerMw": 6.409e-08,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

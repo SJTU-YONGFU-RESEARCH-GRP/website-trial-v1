@@ -1,0 +1,42 @@
+{
+  "architecture": "brent_kung_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 4,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 774.497351,
+  "powerMw": 6.2627e-08,
+  "areaUm2": 148.8928,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "brent_kung_adder",
+    "numCells": 18,
+    "numWireBits": 116,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__a22o_2": 1,
+      "sky130_fd_sc_hd__a32o_2": 1,
+      "sky130_fd_sc_hd__maj3_2": 2,
+      "sky130_fd_sc_hd__nand2_1": 2,
+      "sky130_fd_sc_hd__nand3_1": 2,
+      "sky130_fd_sc_hd__nand4_1": 1,
+      "sky130_fd_sc_hd__or2_2": 2,
+      "sky130_fd_sc_hd__xnor2_2": 1,
+      "sky130_fd_sc_hd__xor2_1": 6
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/brent_kung_adder_w4",
+    "metrics": {
+      "criticalPathDelayPs": 1291.16,
+      "fmaxEstimateMhz": 774.497351,
+      "leakagePowerNw": 0.062626517,
+      "powerLeakageMw": 6.2627e-08,
+      "powerMw": 6.2627e-08,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

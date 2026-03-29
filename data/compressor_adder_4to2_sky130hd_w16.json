@@ -1,0 +1,50 @@
+{
+  "architecture": "compressor_adder_4to2",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 16,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 117.537541,
+  "powerMw": 5.53169e-07,
+  "areaUm2": 1254.9536,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "compressor_adder_4to2",
+    "numCells": 170,
+    "numWireBits": 638,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__a21o_1": 11,
+      "sky130_fd_sc_hd__a21o_2": 1,
+      "sky130_fd_sc_hd__and2_2": 2,
+      "sky130_fd_sc_hd__clkbuf_1": 2,
+      "sky130_fd_sc_hd__inv_1": 17,
+      "sky130_fd_sc_hd__lpflow_isobufsrc_2": 1,
+      "sky130_fd_sc_hd__maj3_1": 11,
+      "sky130_fd_sc_hd__maj3_2": 9,
+      "sky130_fd_sc_hd__nand2_1": 34,
+      "sky130_fd_sc_hd__nand2_2": 1,
+      "sky130_fd_sc_hd__nand3_1": 2,
+      "sky130_fd_sc_hd__or2_1": 1,
+      "sky130_fd_sc_hd__or2_4": 1,
+      "sky130_fd_sc_hd__xnor2_1": 44,
+      "sky130_fd_sc_hd__xnor2_2": 1,
+      "sky130_fd_sc_hd__xor2_1": 31,
+      "sky130_fd_sc_hd__xor3_2": 1
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/compressor_adder_4to2_w16",
+    "metrics": {
+      "criticalPathDelayPs": 8507.92,
+      "fmaxEstimateMhz": 117.537541,
+      "leakagePowerNw": 0.553168945,
+      "powerLeakageMw": 5.53169e-07,
+      "powerMw": 5.53169e-07,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

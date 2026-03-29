@@ -1,0 +1,36 @@
+{
+  "architecture": "manchester_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 16,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 186.06659,
+  "powerMw": 1.22537e-07,
+  "areaUm2": 467.9488,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "manchester_adder",
+    "numCells": 48,
+    "numWireBits": 304,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__maj3_2": 16,
+      "sky130_fd_sc_hd__xnor2_1": 31,
+      "sky130_fd_sc_hd__xnor2_2": 1
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/manchester_adder_w16",
+    "metrics": {
+      "criticalPathDelayPs": 5374.42,
+      "fmaxEstimateMhz": 186.06659,
+      "leakagePowerNw": 0.122536649,
+      "powerLeakageMw": 1.22537e-07,
+      "powerMw": 1.22537e-07,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

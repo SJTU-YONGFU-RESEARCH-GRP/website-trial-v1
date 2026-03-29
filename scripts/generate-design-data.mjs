@@ -7,8 +7,11 @@
  * Technology defaults and `processNode` → effective nm mappings live in
  * `data/technology-map.json` (not merged as rows).
  *
- * Each row file may be a JSON array or `{ "rows": [ ... ] }`.
- * Rows are tagged with `designFamily` from the filename (stem) unless already set.
+ * Each row file may be:
+ * - a JSON array of design objects `[{...}, {...}]` (all designs in one file), or
+ * - `{ "rows": [ ... ] }` (same as above), or
+ * - a single design object `{ ... }` (one design per file).
+ * Rows are tagged with `designFamily` from the filename (stem) unless already set on the object.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -161,16 +164,27 @@ function assertRow(row, sourceFile) {
 }
 
 /**
+ * Reads design row(s) from one JSON file: array, `{ rows: [...] }`, or a single row object.
+ *
  * @param {string} filePath
  * @returns {unknown[]}
  */
 function readRowsArray(filePath) {
   const raw = fs.readFileSync(filePath, "utf8");
   const data = JSON.parse(raw);
+  const base = path.basename(filePath);
   if (Array.isArray(data)) return data;
-  if (data && typeof data === "object" && Array.isArray(data.rows)) return data.rows;
+  if (data !== null && typeof data === "object" && !Array.isArray(data)) {
+    if (Object.prototype.hasOwnProperty.call(data, "rows")) {
+      if (!Array.isArray(data.rows)) {
+        throw new Error(`${base}: property "rows" must be an array`);
+      }
+      return data.rows;
+    }
+    return [data];
+  }
   throw new Error(
-    `${path.basename(filePath)}: expected a JSON array or an object with a "rows" array`,
+    `${base}: expected a JSON array, an object with a "rows" array, or one design object`,
   );
 }
 

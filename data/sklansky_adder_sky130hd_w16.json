@@ -1,0 +1,66 @@
+{
+  "architecture": "sklansky_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 16,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 283.986834,
+  "powerMw": 3.59824e-07,
+  "areaUm2": 969.68,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "sklansky_adder",
+    "numCells": 166,
+    "numWireBits": 573,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__a211oi_2": 3,
+      "sky130_fd_sc_hd__a21o_1": 2,
+      "sky130_fd_sc_hd__a21oi_1": 20,
+      "sky130_fd_sc_hd__a21oi_2": 2,
+      "sky130_fd_sc_hd__a31oi_1": 2,
+      "sky130_fd_sc_hd__a31oi_2": 1,
+      "sky130_fd_sc_hd__a41o_1": 1,
+      "sky130_fd_sc_hd__inv_1": 6,
+      "sky130_fd_sc_hd__lpflow_inputiso0n_1": 1,
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": 7,
+      "sky130_fd_sc_hd__nand2_1": 28,
+      "sky130_fd_sc_hd__nand2b_1": 2,
+      "sky130_fd_sc_hd__nand3_1": 3,
+      "sky130_fd_sc_hd__nand4_1": 2,
+      "sky130_fd_sc_hd__nor2_1": 31,
+      "sky130_fd_sc_hd__nor2b_1": 2,
+      "sky130_fd_sc_hd__nor3_1": 4,
+      "sky130_fd_sc_hd__nor4_1": 2,
+      "sky130_fd_sc_hd__o2111ai_1": 1,
+      "sky130_fd_sc_hd__o211ai_1": 2,
+      "sky130_fd_sc_hd__o211ai_2": 1,
+      "sky130_fd_sc_hd__o21ai_0": 8,
+      "sky130_fd_sc_hd__o21ai_1": 2,
+      "sky130_fd_sc_hd__o21ai_2": 1,
+      "sky130_fd_sc_hd__o21bai_1": 2,
+      "sky130_fd_sc_hd__o311ai_1": 2,
+      "sky130_fd_sc_hd__or2_2": 1,
+      "sky130_fd_sc_hd__xnor2_1": 20,
+      "sky130_fd_sc_hd__xnor2_2": 2,
+      "sky130_fd_sc_hd__xor2_1": 5,
+      "$paramod\\kogge_stone_adder\\DATA_WIDTH=32'00000000000000000000000000010000": 1
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/sklansky_adder_w16",
+    "metrics": {
+      "criticalPathDelayPs": 3521.29,
+      "fmaxEstimateMhz": 283.986834,
+      "leakagePowerNw": 0.359824137,
+      "powerLeakageMw": 3.59824e-07,
+      "powerMw": 3.59824e-07,
+      "missingLeakageCells": [
+        "$paramod\\kogge_stone_adder\\DATA_WIDTH=32'00000000000000000000000000010000"
+      ],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

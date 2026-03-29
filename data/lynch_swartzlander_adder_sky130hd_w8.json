@@ -1,0 +1,62 @@
+{
+  "architecture": "lynch_swartzlander_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 467.392371,
+  "powerMw": 1.59666e-07,
+  "areaUm2": 409.1424,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "lynch_swartzlander_adder",
+    "numCells": 57,
+    "numWireBits": 214,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__a21o_1": 1,
+      "sky130_fd_sc_hd__a21oi_1": 3,
+      "sky130_fd_sc_hd__a22o_2": 1,
+      "sky130_fd_sc_hd__a311o_1": 1,
+      "sky130_fd_sc_hd__a31o_1": 1,
+      "sky130_fd_sc_hd__a31oi_1": 1,
+      "sky130_fd_sc_hd__a31oi_2": 1,
+      "sky130_fd_sc_hd__a32oi_2": 1,
+      "sky130_fd_sc_hd__and2_2": 1,
+      "sky130_fd_sc_hd__and2b_2": 1,
+      "sky130_fd_sc_hd__and3_1": 1,
+      "sky130_fd_sc_hd__and4_1": 1,
+      "sky130_fd_sc_hd__inv_1": 1,
+      "sky130_fd_sc_hd__lpflow_inputiso0n_1": 1,
+      "sky130_fd_sc_hd__lpflow_inputiso0p_1": 3,
+      "sky130_fd_sc_hd__lpflow_inputiso1p_1": 1,
+      "sky130_fd_sc_hd__maj3_2": 1,
+      "sky130_fd_sc_hd__nand2_1": 8,
+      "sky130_fd_sc_hd__nand3_1": 1,
+      "sky130_fd_sc_hd__nor2_1": 6,
+      "sky130_fd_sc_hd__o211ai_1": 1,
+      "sky130_fd_sc_hd__o21ai_0": 2,
+      "sky130_fd_sc_hd__o21ai_1": 3,
+      "sky130_fd_sc_hd__o31a_1": 1,
+      "sky130_fd_sc_hd__o41ai_2": 1,
+      "sky130_fd_sc_hd__or2_2": 1,
+      "sky130_fd_sc_hd__xnor2_1": 5,
+      "sky130_fd_sc_hd__xor2_1": 5,
+      "sky130_fd_sc_hd__xor2_2": 2
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/lynch_swartzlander_adder_w8",
+    "metrics": {
+      "criticalPathDelayPs": 2139.53,
+      "fmaxEstimateMhz": 467.392371,
+      "leakagePowerNw": 0.159666053,
+      "powerLeakageMw": 1.59666e-07,
+      "powerMw": 1.59666e-07,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

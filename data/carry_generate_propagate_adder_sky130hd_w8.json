@@ -1,0 +1,53 @@
+{
+  "architecture": "carry_generate_propagate_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "sky130hd",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 714.117387,
+  "powerMw": 7.8619e-08,
+  "areaUm2": 264.0032,
+  "yosys": {
+    "pdk": "sky130hd",
+    "designStem": "carry_generate_propagate_adder",
+    "numCells": 37,
+    "numWireBits": 181,
+    "numCellsByType": {
+      "sky130_fd_sc_hd__a21oi_1": 1,
+      "sky130_fd_sc_hd__a221o_1": 1,
+      "sky130_fd_sc_hd__a22oi_2": 1,
+      "sky130_fd_sc_hd__a311oi_1": 1,
+      "sky130_fd_sc_hd__a31oi_1": 1,
+      "sky130_fd_sc_hd__lpflow_inputiso0n_1": 1,
+      "sky130_fd_sc_hd__maj3_2": 1,
+      "sky130_fd_sc_hd__nand2_1": 4,
+      "sky130_fd_sc_hd__nand2b_1": 1,
+      "sky130_fd_sc_hd__nand3_1": 1,
+      "sky130_fd_sc_hd__nor2_1": 3,
+      "sky130_fd_sc_hd__nor2b_1": 1,
+      "sky130_fd_sc_hd__nor3_1": 1,
+      "sky130_fd_sc_hd__o21ai_0": 2,
+      "sky130_fd_sc_hd__o21ai_1": 2,
+      "sky130_fd_sc_hd__o221ai_2": 1,
+      "sky130_fd_sc_hd__o22a_1": 1,
+      "sky130_fd_sc_hd__or2_2": 1,
+      "sky130_fd_sc_hd__xnor2_1": 9,
+      "sky130_fd_sc_hd__xor2_1": 3
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/sky130hd/carry_generate_propagate_adder_w8",
+    "metrics": {
+      "criticalPathDelayPs": 1400.33,
+      "fmaxEstimateMhz": 714.117387,
+      "leakagePowerNw": 0.078619065,
+      "powerLeakageMw": 7.8619e-08,
+      "powerMw": 7.8619e-08,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}
