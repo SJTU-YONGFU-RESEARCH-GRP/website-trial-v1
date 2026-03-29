@@ -433,6 +433,20 @@ export function PlotlyPage(): JSX.Element {
         toImageButtonOptions: { format: "png", filename: "plotly-chart" },
       };
 
+      /** Pie traces default to a tiny modebar (often only PNG); restore 2D + pie hover like other charts. */
+      const pieChartConfig: Partial<Config> = {
+        ...commonConfig,
+        modeBarButtonsToAdd: [
+          "zoom2d",
+          "pan2d",
+          "zoomIn2d",
+          "zoomOut2d",
+          "autoScale2d",
+          "resetScale2d",
+          "hoverClosestPie",
+        ],
+      };
+
       const metricAtArchBwProc = (arch: string, bw: number, proc: string): number => {
         const row = findDesignRow(arch, bw, proc);
         return row ? scatterAxisValue(paretoYMetric, row, effectiveArchOrder) : 0;
@@ -660,6 +674,7 @@ export function PlotlyPage(): JSX.Element {
         pieDataInner = [
           {
             type: "pie",
+            domain: { x: [0, 1], y: [0, 1] },
             labels: rowsAtBw.map((r) => formatArchLabel(r.architecture)),
             values: rowsAtBw.map((r) => scatterAxisValue(paretoYMetric, r, effectiveArchOrder)),
             marker: {
@@ -684,6 +699,7 @@ export function PlotlyPage(): JSX.Element {
         pieDataInner = [
           {
             type: "pie",
+            domain: { x: [0, 1], y: [0, 1] },
             labels: pieLabels,
             values: pieValues,
             marker: {
@@ -708,6 +724,7 @@ export function PlotlyPage(): JSX.Element {
         pieDataInner = [
           {
             type: "pie",
+            domain: { x: [0, 1], y: [0, 1] },
             labels: pieLabels,
             values: pieValues,
             marker: {
@@ -1028,7 +1045,7 @@ export function PlotlyPage(): JSX.Element {
         heatmapConfig: commonConfig,
         pieData: pieDataInner,
         pieLayout: pieLayoutInner,
-        pieConfig: commonConfig,
+        pieConfig: pieChartConfig,
         scatter3dData: scatter3dDataInner,
         scatter3dLayout: scatter3dLayoutInner,
         scatter3dConfig: commonConfig,
