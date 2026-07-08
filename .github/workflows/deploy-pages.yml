@@ -1,4 +1,4 @@
-# GitHub Pages: build Vite app at repo root and deploy dist/
+# GitHub Pages: build Vite app (any branch) and deploy (main/master only)
 # Repo: https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1
 #
 # Site URL: https://sjtu-yongfu-research-grp.github.io/website-trial-v1/
@@ -46,6 +46,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
