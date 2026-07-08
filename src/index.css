@@ -577,6 +577,290 @@ code {
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* —— Home page tool cards —— */
+.home-intro {
+  font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
+  color: var(--text-secondary);
+  margin: 0 0 0.85rem;
+  line-height: 1.5;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1rem 1.125rem;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.tool-card:hover {
+  border-color: var(--border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+:root[data-theme="dark"] .tool-card:hover {
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+}
+
+.tool-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.tool-card__header h2 {
+  font-size: clamp(0.9375rem, 3.5vw, 1.0625rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--text);
+}
+
+.tool-card__subtitle {
+  font-size: clamp(0.6875rem, 2.5vw, 0.75rem);
+  color: var(--text-secondary);
+  background: var(--plot-inset-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.05rem 0.45rem;
+  white-space: nowrap;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.tool-card p.hint {
+  margin: 0 0 0.65rem;
+  flex: 1;
+}
+
+.tool-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--surface);
+  align-self: flex-start;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tool-card__link:hover {
+  border-color: var(--accent);
+  background: rgba(0, 113, 227, 0.04);
+}
+
+:root[data-theme="dark"] .tool-card__link:hover {
+  background: rgba(94, 176, 255, 0.08);
+}
+
+/* —— Flow: flowchart bar ─────────────────────── */
+.flow-flowchart {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.15rem;
+  margin: 0.65rem 0 0.15rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.flow-flowchart__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  min-width: 80px;
+  text-align: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.flow-step--done {
+  border-color: #30d158;
+  background: rgba(48, 209, 88, 0.06);
+}
+
+.flow-step--active {
+  border-color: var(--accent);
+  background: rgba(0, 113, 227, 0.08);
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.15);
+}
+
+.flow-step--idle {
+  opacity: 0.55;
+}
+
+.flow-step__icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.flow-step__label {
+  font-size: 0.67rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.flow-step__sub {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.flow-flowchart__arrow {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  padding: 0 0.1rem;
+  flex-shrink: 0;
+}
+
+/* —— Flow: selector grid ─────────────────────── */
+.flow-selector-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.flow-run-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: clamp(0.75rem, 2.8vw, 0.8125rem);
+  color: var(--text-secondary);
+}
+
+.flow-run-date {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+/* —— Flow: badges ────────────────────────────── */
+.flow-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.08rem 0.5rem;
+  border-radius: 999px;
+  line-height: 1.55;
+  white-space: nowrap;
+}
+
+.flow-badge--done { background: rgba(48, 209, 88, 0.12); color: #30d158; }
+.flow-badge--run  { background: rgba(0, 113, 227, 0.12); color: var(--accent); animation: flow-pulse 1.8s ease-in-out infinite; }
+.flow-badge--idle { background: rgba(0, 0, 0, 0.04); color: var(--text-secondary); }
+.flow-badge--fail { background: rgba(255, 69, 58, 0.12); color: #ff453a; }
+
+@keyframes flow-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+/* —— Flow: timeline ──────────────────────────── */
+.flow-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.flow-timeline__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.flow-timeline__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+  background: var(--border);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--border);
+}
+
+.flow-timeline__item--done .flow-timeline__dot {
+  background: #30d158;
+  box-shadow: 0 0 0 2px #30d158;
+}
+
+.flow-timeline__item--running .flow-timeline__dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+  animation: flow-pulse 1.8s ease-in-out infinite;
+}
+
+.flow-timeline__item--error .flow-timeline__dot {
+  background: #ff453a;
+  box-shadow: 0 0 0 2px #ff453a;
+}
+
+.flow-timeline__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.flow-timeline__header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.flow-timeline__name {
+  font-size: clamp(0.75rem, 2.8vw, 0.8125rem);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.flow-timeline__tool {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: var(--plot-inset-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 5px;
+  padding: 0.02rem 0.4rem;
+}
+
+.flow-timeline__duration {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-theme="dark"] .flow-badge--idle {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 /* Header row + theme switch */
 .app-header {
   display: flex;
