@@ -1,0 +1,56 @@
+{
+  "architecture": "wallace_tree_adder_full",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 4,
+  "processNode": "cfet",
+  "canonicalTechnology": "7nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 1943.256899,
+  "powerMw": 4.15117e-07,
+  "areaUm2": 880.8448,
+  "yosys": {
+    "pdk": "cfet",
+    "designStem": "wallace_tree_adder_full",
+    "numCells": 62,
+    "numWireBits": 559,
+    "numCellsByType": {
+      "cfet_a31oi_2": 1,
+      "cfet_lpflow_inputiso0n_1": 1,
+      "cfet_maj3_1": 20,
+      "cfet_maj3_2": 2,
+      "cfet_nand2_1": 3,
+      "cfet_nand2b_1": 1,
+      "cfet_nand3_1": 1,
+      "cfet_nor2_1": 1,
+      "cfet_nor3_1": 1,
+      "cfet_o21ai_0": 1,
+      "cfet_o21ai_1": 1,
+      "cfet_o221ai_2": 1,
+      "cfet_or2_2": 1,
+      "cfet_xnor2_1": 4,
+      "cfet_xnor2_2": 2,
+      "cfet_xor2_1": 1,
+      "cfet_xor3_2": 20,
+      "$paramod\\carry_save_adder\\DATA_WIDTH=32'00000000000000000000000000000100": 5,
+      "$paramod\\ripple_carry_adder\\DATA_WIDTH=32'00000000000000000000000000000101": 1
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/cfet/wallace_tree_adder_full_w4",
+    "numOperands": 8,
+    "metrics": {
+      "criticalPathDelayPs": 514.6,
+      "fmaxEstimateMhz": 1943.256899,
+      "leakagePowerNw": 0.415117252,
+      "powerLeakageMw": 4.15117e-07,
+      "powerMw": 4.15117e-07,
+      "missingLeakageCells": [
+        "$paramod\\carry_save_adder\\DATA_WIDTH=32'00000000000000000000000000000100",
+        "$paramod\\ripple_carry_adder\\DATA_WIDTH=32'00000000000000000000000000000101"
+      ],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

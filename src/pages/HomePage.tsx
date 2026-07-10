@@ -13,6 +13,7 @@ const TOOLS = [
     subtitle: "AutoCellGen-V2",
     repo: "AutoCellGen_V2",
     url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/AutoCellGen_V2",
+    flowPath: undefined,
     description:
       "Automated standard-cell layout generation engine. Produces GDSII layout from transistor-level netlists with design-rule-correct placement and routing.",
   },
@@ -21,6 +22,7 @@ const TOOLS = [
     subtitle: "fastercap_v2",
     repo: "fastercap_v2",
     url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/fastercap_v2",
+    flowPath: undefined,
     description:
       "Fast parasitic capacitance extraction for VLSI layouts. Computes Maxwell capacitance matrices and generates annotated CDL netlists for post-layout simulation.",
   },
@@ -29,6 +31,7 @@ const TOOLS = [
     subtitle: "DeviceOpt",
     repo: "DeviceOpt",
     url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/DeviceOpt",
+    flowPath: undefined,
     description:
       "Multi-objective device geometry optimizer. Sweeps transistor dimensions → extracts parasitics → evaluates Pareto frontier for performance, area, and power.",
   },
@@ -53,8 +56,8 @@ export function HomePage(): JSX.Element {
             <a
               className="tool-card__link"
               href={t.flowPath || t.url}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={t.flowPath ? undefined : "_blank"}
+              rel={t.flowPath ? undefined : "noopener noreferrer"}
             >
               {t.flowPath ? (
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

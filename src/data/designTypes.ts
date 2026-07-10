@@ -3,11 +3,11 @@
 export type DesignRow = {
   architecture: string;
   bitWidth: number;
-  /** Technology node: nm label (e.g. 7nm) or kit id (e.g. sky130). JSON field name stays `processNode`. */
+  /** Technology node: nm label (e.g. 7nm) or kit id (e.g. cfet). JSON field name stays `processNode`. */
   processNode: string;
   /**
-   * Canonical technology for grouping and comparison: plain nm label (e.g. 130nm). Named kits that
-   * share the same effective node point here (e.g. sky130, ihpsg13g2, and 130nm → 130nm).
+   * Canonical technology for grouping and comparison: plain nm label (e.g. 7nm). Named kits that
+   * share the same effective node point here (e.g. cfet, ihpsg13g2, and 130nm → 130nm).
    */
   canonicalTechnology: string;
   /** True when `processNode` is a named PDK/kit id rather than a numeric nm label. */

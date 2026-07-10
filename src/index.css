@@ -100,7 +100,7 @@ nav {
 @media (max-width: 640px) {
   nav {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.45rem;
   }
 }
@@ -859,6 +859,177 @@ code {
 
 :root[data-theme="dark"] .flow-badge--idle {
   background: rgba(255, 255, 255, 0.06);
+}
+
+/* —— Flow: empty state ─────────────────────── */
+.flow-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.flow-empty__icon {
+  font-size: 1.8rem;
+  line-height: 1;
+  opacity: 0.55;
+}
+
+.flow-empty__text {
+  font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* —— Flow: layout preview ──────────────────── */
+.flow-layout-preview {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  background: var(--plot-inset-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.flow-layout-preview__svg {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  line-height: 0;
+}
+
+.flow-layout-preview__svg svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* —— Flow: layout meta info ────────────────── */
+.flow-layout-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.flow-layout-meta__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem;
+  background: var(--plot-inset-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+
+.flow-layout-meta__block strong {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.1rem;
+}
+
+.flow-layout-meta__block span {
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+/* —— Flow: subsection title ────────────────── */
+.flow-subsection-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.3rem;
+}
+
+/* —— Flow: subsection grid (net map / CDL side by side) ──── */
+.flow-subsection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .flow-subsection-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— Flow: PEX quality checks ──────────────── */
+.flow-pex-quality__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.flow-pex-quality__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.flow-pex-quality__item--pass {
+  background: rgba(48, 209, 88, 0.06);
+  border-color: rgba(48, 209, 88, 0.3);
+}
+
+.flow-pex-quality__item--fail {
+  background: rgba(255, 69, 58, 0.06);
+  border-color: rgba(255, 69, 58, 0.3);
+}
+
+.flow-pex-quality__label {
+  color: var(--text-secondary);
+}
+
+.flow-pex-quality__value {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.flow-pex-quality__icon {
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.flow-pex-quality__item--pass .flow-pex-quality__icon {
+  color: #30d158;
+}
+
+.flow-pex-quality__item--fail .flow-pex-quality__icon {
+  color: #ff453a;
+}
+
+/* —— Flow: DeviceOpt Pareto row highlight ──── */
+.flow-devopt-row--pareto {
+  background: rgba(255, 159, 10, 0.07);
+}
+
+.flow-devopt-row--pareto:hover {
+  background: rgba(255, 159, 10, 0.14) !important;
+}
+
+/* —— Flow: DeviceOpt branch arrow ──────────── */
+.flow-arrow--branch {
+  font-size: 1.1rem;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* —— Flow: DeviceOpt step variant ──────────── */
+.flow-step--opt {
+  border-color: var(--accent);
+  background: rgba(94, 176, 255, 0.08);
 }
 
 /* Header row + theme switch */
