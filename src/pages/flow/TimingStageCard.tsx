@@ -2,215 +2,147 @@ import { useMemo } from "react";
 import type { Config, Data, Layout } from "plotly.js";
 import { useNarrowScreen } from "../../hooks/useNarrowScreen";
 import { useTheme } from "../../theme/ThemeContext";
-import {
-  getChartPalette,
-  plotInsetBackground,
-  plotAxisFont,
-  plotFont,
-  plotlyAxisFrameX,
-  plotlyAxisFrameY,
-  plotlyBold,
-  plotlyHoverLabel,
-  chartScatterMarkerStrokeRgb,
-} from "../../theme/chartPalette";
+import { getChartPalette, plotInsetBackground, plotAxisFont, plotFont, plotlyAxisFrameX, plotlyAxisFrameY, plotlyBold, plotlyHoverLabel } from "../../theme/chartPalette";
 import { usePlotlyChart } from "../../hooks/usePlotlyChart";
-import type { AlgorithmCellResult, LayoutRoutingAlgorithm } from "../../data/toolFlowTypes";
+import type { CellBenchmarkResult, LayoutRoutingAlgorithm } from "../../data/toolFlowTypes";
+import { findAlgoResult, deltaPct, commonCompletedCells } from "../../data/toolFlowTypes";
 import { EmptyState } from "./EmptyState";
 
-interface TimingStageCardProps {
-  results: AlgorithmCellResult[];
+interface Props {
+  cellResult: CellBenchmarkResult | null;
   algorithms: LayoutRoutingAlgorithm[];
-  selectedCell: string;
+  baselineAlgoId: string;
+  compareAlgoId: string;
+  cellResults: CellBenchmarkResult[];
 }
 
-export function TimingStageCard({
-  results,
-  algorithms,
-  selectedCell,
-}: TimingStageCardProps): JSX.Element {
+export function TimingStageCard({ cellResult, algorithms, baselineAlgoId, compareAlgoId, cellResults }: Props): JSX.Element {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const palette = getChartPalette(theme);
-  const plotSurfaceBg = plotInsetBackground(theme);
-  const scatterMarkerStroke = chartScatterMarkerStrokeRgb(theme);
+  const bg = plotInsetBackground(theme);
   const axTick = plotAxisFont(palette.axisValueLabelRgb, narrow);
-  const axTitle = (label: string) => ({
-    text: label,
-    font: plotAxisFont(palette.rgbAxisTitle, narrow),
-    standoff: narrow ? 10 : 14,
-  });
   const hoverLabel = plotlyHoverLabel(palette, narrow);
   const frameX = plotlyAxisFrameX(palette);
   const frameY = plotlyAxisFrameY(palette);
-  const commonConfig: Partial<Config> = {
-    responsive: true,
-    displayModeBar: true,
-    scrollZoom: true,
-    doubleClick: "reset",
-    displaylogo: false,
-    ...(narrow ? { modeBarButtonsToRemove: ["lasso2d", "select2d"] as const } : {}),
-    toImageButtonOptions: { format: "png", filename: "flow-timing-chart" },
-  };
 
-  const completed = results.filter((r) => r.timing);
-  const algoColors = ["#0071e3", "#ff9f0a", "#30d158", "#bf5af2", "#ff375f"];
+  const baselineR = cellResult ? findAlgoResult(cellResult, baselineAlgoId) : null;
+  const compareR = cellResult && compareAlgoId ? findAlgoResult(cellResult, compareAlgoId) : null;
+  const blTim = baselineR?.timing ?? null;
+  const cpTim = compareR?.timing ?? null;
+  const baselineAlgo = algorithms.find((a) => a.algorithmId === baselineAlgoId);
+  const compareAlgo = algorithms.find((a) => a.algorithmId === compareAlgoId);
 
-  const chartData = useMemo(() => {
-    if (completed.length === 0) return null;
+  // Common-cell library geomean
+  const libraryStats = useMemo(() => {
+    const common = commonCompletedCells(cellResults, baselineAlgoId, compareAlgoId);
+    let bSum = 0, cSum = 0, count = 0;
+    for (const cell of common) {
+      const br = findAlgoResult(cell, baselineAlgoId);
+      const cr = findAlgoResult(cell, compareAlgoId);
+      if (br?.timing && cr?.timing) { bSum += Math.log(br.timing.geomeanDelayPs); cSum += Math.log(cr.timing.geomeanDelayPs); count++; }
+    }
+    return { commonCount: common.length, libGeoB: bSum>0?+Math.exp(bSum/count).toFixed(2):0, libGeoC: cSum>0?+Math.exp(cSum/count).toFixed(2):0 };
+  }, [cellResults, baselineAlgoId, compareAlgoId]);
 
-    const loadsSet = new Set<number>();
-    completed.forEach((r) => r.timing!.rows.forEach((row) => loadsSet.add(row.outputLoadFF)));
-    const loads = [...loadsSet].sort((a, b) => a - b);
-
-    const delayTraces: Data[] = [];
-
-    completed.forEach((r, ai) => {
-      const algo = algorithms.find((a) => a.algorithmId === r.algorithmId);
-      const color = algoColors[ai % algoColors.length];
-      const tim = r.timing!;
-
-      loads.forEach((load, li) => {
-        const pts = tim.rows.filter((row) => row.outputLoadFF === load);
-        if (pts.length === 0) return;
-        const dash = li === 0 ? "solid" : li === 1 ? "dash" : "dot";
-        delayTraces.push({
-          type: "scatter",
-          mode: "lines+markers",
-          name: `${algo?.algorithmName ?? r.algorithmId} @ CL=${load}fF`,
-          x: pts.map((p) => p.inputTransitionPs),
-          y: pts.map((p) => p.delayPs),
-          marker: {
-            size: 7,
-            color,
-            line: { width: 1, color: scatterMarkerStroke },
-            symbol: li === 0 ? "circle" : li === 1 ? "diamond" : "square",
-          },
-          line: {
-            shape: "spline",
-            color,
-            width: 2,
-            dash,
-          },
-          hovertemplate: `<b>${selectedCell}</b> ${algo?.algorithmName ?? r.algorithmId}<br>Input slew: %{x} ps<br>Delay: %{y:.1f} ps<extra></extra>`,
-        } as unknown as Data);
-      });
+  // Per-arc Δ% table
+  const arcDeltas = useMemo(() => {
+    if (!blTim || !cpTim) return [];
+    // Group by input transition
+    const uniqueSlews = [...new Set(blTim.rows.map((r) => r.inputTransitionPs))].sort((a,b)=>a-b);
+    return uniqueSlews.map((slew) => {
+      const bRows = blTim.rows.filter((r) => r.inputTransitionPs === slew);
+      const loadAvg = (_d: number) => {
+        const loads = bRows.map((r) => r.outputLoadFF);
+        const avgB = loads.reduce((s,l)=>{const br=bRows.find(r=>r.outputLoadFF===l);return s+(br?.delayPs??0);},0)/loads.length;
+        return avgB;
+      };
+      return { slewPs: slew, blAvgDelay: +loadAvg(0).toFixed(1), cpAvgDelay: +loadAvg(1).toFixed(1) };
     });
+  }, [blTim, cpTim]);
+
+  // Delay scatter: comparison of delay across the full slew/load grid
+  const chartData = useMemo(() => {
+    if (!blTim) return null;
+    const traces: Data[] = [];
+    if (blTim.rows.length > 0) {
+      const loads = [...new Set(blTim.rows.map((r) => r.outputLoadFF))].sort((a,b)=>a-b);
+      const bName = baselineAlgo?.algorithmName ?? baselineAlgoId;
+      const cName = compareAlgo?.algorithmName ?? compareAlgoId;
+      const bByLoad = loads.map((lf) => blTim.rows.filter((r) => r.outputLoadFF === lf).map((r) => r.delayPs));
+      const cByLoad = loads.map((lf) => cpTim?.rows.filter((r) => r.outputLoadFF === lf).map((r) => r.delayPs) ?? []);
+
+      traces.push({
+        type: "scatter", mode: "lines+markers",
+        name: `${bName} (${blTim.cellName})`,
+        x: loads, y: bByLoad.map((arr) => arr.reduce((s,v)=>s+v,0)/arr.length),
+        line: { color: "#0071e3" }, marker: { size: 8 },
+        hovertemplate: `<b>${bName}</b><br>Load: %{x} fF<br>Delay: %{y:.1f} ps<extra></extra>`,
+      } as unknown as Data);
+
+      if (cpTim && cByLoad.some((a) => a.length > 0)) {
+        traces.push({
+          type: "scatter", mode: "lines+markers",
+          name: `${cName} (${cpTim.cellName})`,
+          x: loads, y: cByLoad.map((arr) => arr.length > 0 ? arr.reduce((s,v)=>s+v,0)/arr.length : null),
+          line: { color: "#ff9f0a" }, marker: { size: 8 },
+          hovertemplate: `<b>${cName}</b><br>Load: %{x} fF<br>Delay: %{y:.1f} ps<extra></extra>`,
+        } as unknown as Data);
+      }
+    }
 
     const layout: Partial<Layout> = {
-      autosize: true,
-      margin: narrow
-        ? { l: 46, r: 14, t: 24, b: 52 }
-        : { l: 54, r: 24, t: 32, b: 56 },
-      paper_bgcolor: plotSurfaceBg,
-      plot_bgcolor: plotSurfaceBg,
+      autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
+      paper_bgcolor: bg, plot_bgcolor: bg,
       font: plotFont(palette.rgbAxisTitle),
-      title: {
-        text: plotlyBold(`${selectedCell} — delay vs input slew (overlaid by algorithm)`),
-        font: plotFont(palette.rgbAxisTitle),
-      },
-      showlegend: !narrow,
-      legend: narrow
-        ? {
-            orientation: "h",
-            yanchor: "top",
-            y: -0.35,
-            xanchor: "center",
-            x: 0.5,
-            font: { ...axTick, size: 8 },
-            itemsizing: "constant",
-          }
-        : {
-            orientation: "v",
-            yanchor: "top",
-            y: 1,
-            xanchor: "left",
-            x: 1.02,
-            font: axTick,
-          },
-      xaxis: {
-        ...frameX,
-        automargin: true,
-        gridcolor: palette.axisGridGreyRgb,
-        title: axTitle("Input transition (ps)"),
-        tickfont: axTick,
-      },
-      yaxis: {
-        ...frameY,
-        automargin: true,
-        gridcolor: palette.axisGridBlackRgb,
-        title: axTitle("Delay (ps)"),
-        tickfont: axTick,
-      },
-      hovermode: "closest",
-      hoverlabel: hoverLabel,
+      title: { text: plotlyBold(`Delay vs. Load — ${blTim.cellName}`), font: plotFont(palette.rgbAxisTitle) },
+      xaxis: { ...frameX, title: { text: "Output Load (fF)", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: "log" },
+      yaxis: { ...frameY, title: { text: "Delay (ps)", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, gridcolor: palette.axisGridGreyRgb },
+      showlegend: true, legend: narrow ? { orientation:"h", y: -0.3 } : { orientation:"v", x: 1.02 },
+      hovermode: "closest", hoverlabel: hoverLabel,
     };
+    return { data: traces, layout };
+  }, [blTim, cpTim, narrow, palette, bg, axTick, hoverLabel, frameX, frameY, baselineAlgo, compareAlgo]);
 
-    return { data: delayTraces, layout };
-  }, [completed, algorithms, selectedCell, narrow, palette, plotSurfaceBg, axTick, axTitle, hoverLabel, frameX, frameY, scatterMarkerStroke]);
-
-  const chartRef = usePlotlyChart(
-    chartData?.data ?? [],
-    chartData?.layout ?? {},
-    commonConfig,
-  );
+  const chartRef = usePlotlyChart(chartData?.data ?? [], chartData?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
 
   return (
     <div className="chart-card">
       <h2>Timing Characterization: libcharx</h2>
       <p className="hint">
-        libcharx generates NLDM lookup tables. Charts overlay delay vs input
-        transition curves across algorithms. <code>{selectedCell}</code>
+        Delay overlay for same pin arc across algorithms. Per-arc Δ% and common-cell library stats.
+        {libraryStats.commonCount > 0 && <> Common-cell library geo-mean: baseline {libraryStats.libGeoB} ps, compare {libraryStats.libGeoC} ps (Δ = {deltaPct(libraryStats.libGeoC, libraryStats.libGeoB)?.toFixed(1)}%).</>}
       </p>
-
-      {completed.length === 0 ? (
+      {!blTim ? (
         <EmptyState message="No timing data for this cell" icon="⏱" />
       ) : (
         <>
-          <div className="plot-host">
-            <div ref={chartRef} style={{ width: "100%", height: "100%" }} />
+          {chartData && (
+            <div className="plot-host plot-host--short">
+              <div ref={chartRef} style={{ width: "100%", height: "100%" }} />
+            </div>
+          )}
+
+          {/* Per-cell geo-mean Δ% */}
+          <div style={{marginTop:"0.5rem",padding:"0.5rem 0.75rem",background:"var(--surface2,#f0f4f8)",borderRadius:"6px"}}>
+            <strong>{cellResult?.cellName ?? "—"}:</strong>{" "}
+            Baseline geo-mean = {blTim.geomeanDelayPs} ps
+            {cpTim && <> | Compare geo-mean = {cpTim.geomeanDelayPs} ps | Δ% = {deltaPct(cpTim.geomeanDelayPs, blTim.geomeanDelayPs)?.toFixed(1)}%</>}
           </div>
 
-          {/* Combined timing table */}
-          <div className="analog-table-wrap" style={{ marginTop: "0.5rem" }}>
-            <table className="analog-table">
-              <thead>
-                <tr>
-                  <th>Algorithm</th>
-                  <th>Input slew (ps)</th>
-                  <th>Output load (fF)</th>
-                  <th>Delay (ps)</th>
-                  <th>Output slew (ps)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {completed.map((r) => {
-                  const algo = algorithms.find((a) => a.algorithmId === r.algorithmId);
-                  return r.timing!.rows.map((row, i) => (
-                    <tr key={`${r.algorithmId}-${i}`}>
-                      <td><code>{algo?.algorithmName ?? r.algorithmId}</code></td>
-                      <td>{row.inputTransitionPs}</td>
-                      <td>{row.outputLoadFF.toFixed(1)}</td>
-                      <td>{row.delayPs.toFixed(1)}</td>
-                      <td>{row.slewPs.toFixed(1)}</td>
-                    </tr>
-                  ));
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Geomean delay summary */}
-          <div style={{ marginTop: "0.5rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-            {completed.map((r) => {
-              const algo = algorithms.find((a) => a.algorithmId === r.algorithmId);
-              return (
-                <div key={r.algorithmId} className="flow-pex-quality__item flow-pex-quality__item--pass" style={{ padding: "0.3rem 0.6rem" }}>
-                  <strong>{algo?.algorithmName ?? r.algorithmId}</strong>:
-                  {" "}GM delay = {r.timing!.geomeanDelayPs.toFixed(1)} ps
-                </div>
-              );
-            })}
-          </div>
+          {/* Per-arc table */}
+          {arcDeltas.length > 0 && (
+            <div className="analog-table-wrap" style={{marginTop:"0.5rem"}}>
+              <table className="analog-table">
+                <thead><tr><th>Input Slew (ps)</th><th>Baseline Avg Delay (ps)</th><th>Compare Avg Delay (ps)</th><th>Δ%</th></tr></thead>
+                <tbody>
+                  {arcDeltas.map((a) => (
+                    <tr key={a.slewPs}><td>{a.slewPs}</td><td>{a.blAvgDelay}</td><td>{a.cpAvgDelay}</td><td>{deltaPct(a.cpAvgDelay, a.blAvgDelay)?.toFixed(1)}%</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </>
       )}
     </div>

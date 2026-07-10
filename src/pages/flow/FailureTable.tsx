@@ -1,45 +1,51 @@
 import type { CellBenchmarkResult, LayoutRoutingAlgorithm } from "../../data/toolFlowTypes";
 import { Badge } from "./Badge";
 
-interface FailureTableProps {
+interface Props {
   cellResults: CellBenchmarkResult[];
   algorithms: LayoutRoutingAlgorithm[];
+  baselineAlgoId: string;
+  compareAlgoId: string;
 }
 
-export function FailureTable({
-  cellResults,
-  algorithms,
-}: FailureTableProps): JSX.Element {
+export function FailureTable({ cellResults, algorithms, baselineAlgoId, compareAlgoId }: Props): JSX.Element {
   const failures = cellResults
-    .map((cr) => ({
-      cellName: cr.cellName,
-      failures: cr.algorithmResults.filter((r) => r.status === "failed"),
-    }))
-    .filter((f) => f.failures.length > 0);
+    .flatMap((cr) =>
+      cr.algorithmResults
+        .filter((r) => r.status === "failed" && (r.algorithmId === baselineAlgoId || r.algorithmId === compareAlgoId))
+        .map((r) => ({
+          cellName: cr.cellName,
+          cellClass: cr.cellClass,
+          algorithmId: r.algorithmId,
+          algorithmName: algorithms.find((a) => a.algorithmId === r.algorithmId)?.algorithmName ?? r.algorithmId,
+          failedStage: r.failedStage ?? "unknown",
+          errorSummary: r.errorSummary ?? "No details available",
+          status: r.status,
+        })),
+    );
 
   if (failures.length === 0) {
     return (
       <div className="chart-card">
-        <h2>Robustness / Failure Summary</h2>
-        <p className="hint" style={{ padding: "1rem 0" }}>
-          All cells completed successfully across all algorithms.
-        </p>
+        <h2>Failure / Robustness Report</h2>
+        <p className="hint">All cells completed successfully across selected algorithms. ✅</p>
       </div>
     );
   }
 
   return (
     <div className="chart-card">
-      <h2>Robustness / Failure Summary</h2>
+      <h2>Failure / Robustness Report</h2>
       <p className="hint">
-        Cells that failed in one or more algorithms. Use this table to identify
-        robustness issues in the library or routing flow.
+        {failures.length} failure(s) across {baselineAlgoId} and {compareAlgoId}.
+        Failures indicate robustness gaps, not necessarily worse QoR.
       </p>
       <div className="analog-table-wrap">
         <table className="analog-table">
           <thead>
             <tr>
               <th>Cell</th>
+              <th>Class</th>
               <th>Algorithm</th>
               <th>Failed Stage</th>
               <th>Error Summary</th>
@@ -47,21 +53,16 @@ export function FailureTable({
             </tr>
           </thead>
           <tbody>
-            {failures.map((f) =>
-              f.failures.map((ar) => (
-                <tr key={`${f.cellName}-${ar.algorithmId}`}>
-                  <td><code>{f.cellName}</code></td>
-                  <td>
-                    {algorithms.find((a) => a.algorithmId === ar.algorithmId)?.algorithmName ?? ar.algorithmId}
-                  </td>
-                  <td>{ar.failedStage ?? "—"}</td>
-                  <td style={{ maxWidth: "300px", wordBreak: "break-word" }}>
-                    <code style={{ fontSize: "0.75rem" }}>{ar.errorSummary ?? "No details"}</code>
-                  </td>
-                  <td><Badge status={ar.status} /></td>
-                </tr>
-              )),
-            )}
+            {failures.map((f, i) => (
+              <tr key={i}>
+                <td><code>{f.cellName}</code></td>
+                <td>{f.cellClass}</td>
+                <td>{f.algorithmName}</td>
+                <td>{f.failedStage}</td>
+                <td style={{fontSize:"0.8rem",maxWidth:300}}>{f.errorSummary}</td>
+                <td><Badge status={f.status} /></td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

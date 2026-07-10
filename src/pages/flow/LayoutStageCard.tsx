@@ -1,120 +1,145 @@
-import type { AlgorithmCellResult, LayoutRoutingAlgorithm } from "../../data/toolFlowTypes";
+import type { AlgorithmCellResult, LayoutRoutingAlgorithm, CellBenchmarkResult } from "../../data/toolFlowTypes";
+import { findAlgoResult, deltaPct, DEMO_PROVENANCE_LABEL } from "../../data/toolFlowTypes";
 import { EmptyState } from "./EmptyState";
 
-interface LayoutStageCardProps {
-  results: AlgorithmCellResult[];
+interface Props {
+  cellResult: CellBenchmarkResult | null;
   algorithms: LayoutRoutingAlgorithm[];
+  baselineAlgoId: string;
+  compareAlgoId: string;
 }
 
-export function LayoutStageCard({
-  results,
-  algorithms,
-}: LayoutStageCardProps): JSX.Element {
-  const completed = results.filter((r) => r.layout);
+function PreviewBox({ algo, layout, isBaseline }: {
+  algo: LayoutRoutingAlgorithm; layout: NonNullable<AlgorithmCellResult["layout"]>; isBaseline: boolean;
+}): JSX.Element {
+  return (
+    <div className="flow-layout-preview" style={{flex:"1 1 240px",minWidth:200}}>
+      <strong style={{fontSize:"0.78rem"}}>
+        {isBaseline ? "📏 " : "📐 "}
+        {algo.algorithmName} ({layout.previewType ?? "placeholder"})
+      </strong>
+      {layout.layoutPreviewSvg && (
+        <div style={{marginTop:"0.25rem",border:"1px solid var(--border,#e2e8f0)",borderRadius:"4px",overflow:"hidden",background:"var(--surface2,#f8fafc)"}}
+          dangerouslySetInnerHTML={{ __html: layout.layoutPreviewSvg }} />
+      )}
+      {!layout.layoutPreviewSvg && (
+        <div style={{marginTop:"0.25rem",padding:"2rem",textAlign:"center",background:"var(--surface2,#f8fafc)",borderRadius:"4px",fontSize:"0.8rem",color:"var(--muted,#94a3b8)"}}>
+          No preview available
+        </div>
+      )}
+    </div>
+  );
+}
 
-  if (completed.length === 0) {
-    return (
-      <div className="chart-card">
-        <h2>Layout Generation: AutoCellGen-V2</h2>
-        <EmptyState message="No layout data available" icon="📐" />
-      </div>
-    );
+export function LayoutStageCard({ cellResult, algorithms, baselineAlgoId, compareAlgoId }: Props): JSX.Element {
+  if (!cellResult) {
+    return <div className="chart-card"><h2>Layout Generation: AutoCellGen-V2</h2><EmptyState message="No cell selected" icon="📐" /></div>;
   }
+
+  const baselineR = findAlgoResult(cellResult, baselineAlgoId);
+  const compareR = compareAlgoId ? findAlgoResult(cellResult, compareAlgoId) : null;
+  const baselineAlgo = algorithms.find((a) => a.algorithmId === baselineAlgoId);
+  const compareAlgo = compareAlgoId ? algorithms.find((a) => a.algorithmId === compareAlgoId) : null;
+
+  const bl = baselineR?.layout ?? null;
+  const cl = compareR?.layout ?? null;
 
   return (
     <div className="chart-card">
       <h2>Layout Generation: AutoCellGen-V2</h2>
       <p className="hint">
-        Standard-cell layout metrics per algorithm. Cell width varies by
-        placement strategy and drive strength.
+        Same-scale side-by-side layout previews for cell <code>{cellResult.cellName}</code>.
+        All dimensions in grid units (asap7_cfet config grid). {DEMO_PROVENANCE_LABEL}
       </p>
 
-      {/* Layout previews */}
-      {completed.some((r) => r.layout!.layoutPreviewSvg) && (
-        <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem", flexWrap: "wrap" }}>
-          {completed.map((r) => {
-            const algo = algorithms.find((a) => a.algorithmId === r.algorithmId);
-            if (!r.layout?.layoutPreviewSvg) return null;
-            return (
-              <div key={r.algorithmId} style={{ flex: "1 1 200px" }}>
-                <strong style={{ fontSize: "0.75rem" }}>{algo?.algorithmName ?? r.algorithmId}</strong>
-                <div
-                  className="flow-layout-preview__svg"
-                  style={{ marginTop: "0.25rem" }}
-                  dangerouslySetInnerHTML={{ __html: r.layout.layoutPreviewSvg }}
-                />
-              </div>
-            );
-          })}
+      {/* Side-by-side previews */}
+      {(bl || cl) && (
+        <div style={{display:"flex",gap:"1rem",marginBottom:"0.75rem",flexWrap:"wrap"}}>
+          {bl && baselineAlgo && <PreviewBox algo={baselineAlgo} layout={bl} isBaseline />}
+          {cl && compareAlgo && <PreviewBox algo={compareAlgo} layout={cl} isBaseline={false} />}
         </div>
       )}
 
-      {/* Metrics table — one column per algorithm */}
+      {/* Metrics table */}
       <div className="analog-table-wrap">
         <table className="analog-table">
           <thead>
             <tr>
               <th>Metric</th>
-              {completed.map((r) => {
-                const algo = algorithms.find((a) => a.algorithmId === r.algorithmId);
-                return <th key={r.algorithmId}><code>{algo?.algorithmName ?? r.algorithmId}</code></th>;
-              })}
+              {bl && <th><code>{baselineAlgo?.algorithmName ?? baselineAlgoId}</code></th>}
+              {cl && <th><code>{compareAlgo?.algorithmName ?? compareAlgoId}</code></th>}
+              {bl && cl && <th>Δ%</th>}
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Width (nm)</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.widthNm}</td>)}
+              <td>Width (grid)</td>
+              {bl && <td>{bl.widthGrid}</td>}
+              {cl && <td>{cl.widthGrid}</td>}
+              {bl && cl && <td>{deltaPct(cl.widthGrid, bl.widthGrid)?.toFixed(1) ?? "—"}%</td>}
             </tr>
             <tr>
-              <td>Height (nm)</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.heightNm}</td>)}
+              <td>Height (grid)</td>
+              {bl && <td>{bl.heightGrid}</td>}
+              {cl && <td>{cl.heightGrid}</td>}
+              {bl && cl && <td>{deltaPct(cl.heightGrid, bl.heightGrid)?.toFixed(1) ?? "—"}%</td>}
             </tr>
             <tr>
-              <td>Area (µm²)</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.areaUm2.toFixed(1)}</td>)}
+              <td>Area (grid²)</td>
+              {bl && <td>{bl.areaGrid2}</td>}
+              {cl && <td>{cl.areaGrid2}</td>}
+              {bl && cl && <td>{deltaPct(cl.areaGrid2, bl.areaGrid2)?.toFixed(1) ?? "—"}%</td>}
             </tr>
             <tr>
               <td>Utilization</td>
-              {completed.map((r) => <td key={r.algorithmId}>{(r.layout!.utilization * 100).toFixed(0)}%</td>)}
+              {bl && <td>{(bl.utilization * 100).toFixed(0)}%</td>}
+              {cl && <td>{(cl.utilization * 100).toFixed(0)}%</td>}
+              {bl && cl && <td>{deltaPct(cl.utilization, bl.utilization)?.toFixed(1) ?? "—"}%</td>}
             </tr>
             <tr>
               <td>Transistors</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.transistorCount}</td>)}
-            </tr>
-            <tr>
-              <td>Track count</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.trackCount}</td>)}
+              {bl && <td>{bl.transistorCount}</td>}
+              {cl && <td>{cl.transistorCount}</td>}
+              {bl && cl && <td>—</td>}
             </tr>
             <tr>
               <td>Routing</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.routingStatus}</td>)}
+              {bl && <td>{bl.routingStatus}</td>}
+              {cl && <td>{cl.routingStatus}</td>}
+              {bl && cl && <td>—</td>}
             </tr>
             <tr>
               <td>Runtime (s)</td>
-              {completed.map((r) => <td key={r.algorithmId}>{r.layout!.runtimeSec.toFixed(1)}</td>)}
+              {bl && <td>{bl.runtimeSec.toFixed(1)}</td>}
+              {cl && <td>{cl.runtimeSec.toFixed(1)}</td>}
+              {bl && cl && <td>{deltaPct(cl.runtimeSec, bl.runtimeSec)?.toFixed(1) ?? "—"}%</td>}
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Rules & Config of the first completed result */}
-      <div className="flow-layout-meta" style={{ marginTop: "0.5rem" }}>
-        <div className="flow-layout-meta__block">
-          <strong>Rules</strong>
-          <span>Min. width: {completed[0].layout!.rules.minWidthNm} nm</span>
-          <span>Min. spacing: {completed[0].layout!.rules.minSpacingNm} nm</span>
-          <span>Metal layers: {completed[0].layout!.rules.metalLayers}</span>
+      {/* Config diff */}
+      {bl && cl && baselineAlgo && compareAlgo && (
+        <div style={{marginTop:"0.5rem"}}>
+          <h3 className="flow-subsection-title">Config Diff</h3>
+          <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
+            <div className="flow-layout-meta" style={{flex:1}}>
+              <div className="flow-layout-meta__block">
+                <strong>{baselineAlgo.algorithmName}</strong>
+                <span>{bl.configSummary}</span>
+                <span>{bl.netlistSummary}</span>
+              </div>
+            </div>
+            <div className="flow-layout-meta" style={{flex:1}}>
+              <div className="flow-layout-meta__block">
+                <strong>{compareAlgo.algorithmName}</strong>
+                <span>{cl.configSummary}</span>
+                <span>{cl.netlistSummary}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flow-layout-meta__block">
-          <strong>Config</strong>
-          <span>{completed[0].layout!.configSummary}</span>
-        </div>
-        <div className="flow-layout-meta__block">
-          <strong>Netlist</strong>
-          <span>{completed[0].layout!.netlistSummary}</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

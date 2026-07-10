@@ -1,237 +1,179 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Config, Data, Layout } from "plotly.js";
 import { useNarrowScreen } from "../../hooks/useNarrowScreen";
 import { useTheme } from "../../theme/ThemeContext";
-import {
-  getChartPalette,
-  plotInsetBackground,
-  plotAxisFont,
-  plotFont,
-  plotlyBold,
-  plotlyHoverLabel,
-} from "../../theme/chartPalette";
+import { getChartPalette, plotInsetBackground, plotAxisFont, plotFont, plotlyAxisFrameX, plotlyAxisFrameY, plotlyBold, plotlyHoverLabel } from "../../theme/chartPalette";
 import { usePlotlyChart } from "../../hooks/usePlotlyChart";
 import type { DeviceOptData } from "../../data/toolFlowTypes";
-import { Badge } from "./Badge";
-import { EmptyState } from "./EmptyState";
+import { DEMO_PROVENANCE_LABEL } from "../../data/toolFlowTypes";
 
-interface DeviceOptCardProps {
-  deviceOpt: DeviceOptData | null;
-}
+interface Props { deviceOpt: DeviceOptData; }
 
-export function DeviceOptCard({ deviceOpt }: DeviceOptCardProps): JSX.Element {
+type ViewMode = "2d_cap_res" | "2d_cap_del" | "2d_res_del" | "3d";
+
+const MODE_LABELS: Record<ViewMode, string> = {
+  "2d_cap_res": "C vs R", "2d_cap_del": "C vs Delay", "2d_res_del": "R vs Delay", "3d": "3D Frontier",
+};
+
+export function DeviceOptCard({ deviceOpt }: Props): JSX.Element {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const palette = getChartPalette(theme);
-  const plotSurfaceBg = plotInsetBackground(theme);
+  const bg = plotInsetBackground(theme);
   const axTick = plotAxisFont(palette.axisValueLabelRgb, narrow);
-  const axTitle = (label: string) => ({
-    text: label,
-    font: plotAxisFont(palette.rgbAxisTitle, narrow),
-    standoff: narrow ? 12 : 16,
-  });
   const hoverLabel = plotlyHoverLabel(palette, narrow);
+  const frameX = plotlyAxisFrameX(palette);
+  const frameY = plotlyAxisFrameY(palette);
+
+  const [mode, setMode] = useState<ViewMode>("2d_cap_del");
+  const [xKey, setXKey] = useState<"capacitanceFF"|"resistanceOhm"|"timingPs">("capacitanceFF");
+  const [yKey, setYKey] = useState<"capacitanceFF"|"resistanceOhm"|"timingPs"|"powerUW">("timingPs");
+
+  const sols = deviceOpt.solutions;
+  const paretoIds = new Set(sols.filter((s) => s.paretoFront).map((s) => s.solutionId));
 
   const chartData = useMemo(() => {
-    if (!deviceOpt) return null;
+    if (sols.length === 0) return null;
 
-    const paretoPts = deviceOpt.solutions.filter((s) => s.paretoFront);
-    const nonParetoPts = deviceOpt.solutions.filter((s) => !s.paretoFront);
+    const nonPareto = sols.filter((s) => !s.paretoFront);
+    const paretoSols = sols.filter((s) => s.paretoFront);
 
-    const traces: Data[] = [
-      {
-        type: "scatter3d",
-        mode: "markers",
-        name: "Swept points",
-        x: nonParetoPts.map((s) => s.tinPs),
-        y: nonParetoPts.map((s) => s.tsPs),
-        z: nonParetoPts.map((s) => s.toutPs),
-        marker: {
-          size: 5,
-          color: palette.axisGridBlackRgb,
-          opacity: 0.45,
-          line: { width: 0.5, color: palette.axisValueLabelRgb },
-        },
-        hovertemplate:
-          `<b>%{text}</b><br>` +
-          `tin: %{x} ps<br>ts: %{y} ps<br>tout: %{z} ps<br>` +
-          `reward: %{customdata[0]:.2f}<extra></extra>`,
-        text: nonParetoPts.map((s) => s.solutionId),
-        customdata: nonParetoPts.map((s) => [s.reward]),
-      } as unknown as Data,
-      {
-        type: "scatter3d",
-        mode: "markers+lines",
-        name: "Pareto front",
-        x: paretoPts.map((s) => s.tinPs),
-        y: paretoPts.map((s) => s.tsPs),
-        z: paretoPts.map((s) => s.toutPs),
-        marker: {
-          size: 8,
-          color: "#ff9f0a",
-          line: { width: 1.5, color: "#ffffff" },
-        },
-        line: {
-          color: "#ff9f0a",
-          width: 3,
-          dash: "dot",
-        },
-        hovertemplate:
-          `<b>%{text}</b><br>` +
-          `tin: %{x} ps<br>ts: %{y} ps<br>tout: %{z} ps<br>` +
-          `reward: %{customdata[0]:.2f}<br>` +
-          `W/L/F: %{customdata[1]}<extra></extra>`,
-        text: paretoPts.map((s) => s.solutionId),
-        customdata: paretoPts.map((s) => [
-          s.reward,
-          `${s.parameters.widthUm}/${s.parameters.lengthNm}/${s.parameters.fingers}`,
-        ]),
-      } as unknown as Data,
-    ];
-
-    const sceneLayout: Partial<Layout> = {
-      autosize: true,
-      margin: { l: 0, r: 0, t: 28, b: 0 },
-      paper_bgcolor: plotSurfaceBg,
-      font: plotFont(palette.rgbAxisTitle),
-      title: {
-        text: plotlyBold(
-          `DeviceOpt — 3D Pareto (tin×ts×tout) — ${deviceOpt.cellName}`,
-        ),
-        font: plotFont(palette.rgbAxisTitle),
-      },
-      showlegend: true,
-      legend: narrow
-        ? {
-            orientation: "h",
-            yanchor: "top",
-            y: -0.1,
-            xanchor: "center",
-            x: 0.5,
-            font: { ...axTick, size: 9 },
-          }
-        : {
-            orientation: "v",
-            yanchor: "top",
-            y: 1,
-            xanchor: "left",
-            x: 1.02,
-            font: axTick,
-          },
-      scene: {
-        xaxis: {
-          title: axTitle("tin (ps)"),
-          gridcolor: palette.axisGridGreyRgb,
-          tickfont: axTick,
-        },
-        yaxis: {
-          title: axTitle("ts (ps)"),
-          gridcolor: palette.axisGridGreyRgb,
-          tickfont: axTick,
-        },
-        zaxis: {
-          title: axTitle("tout (ps)"),
-          gridcolor: palette.axisGridGreyRgb,
-          tickfont: axTick,
-        },
-        camera: {
-          eye: { x: 1.8, y: 1.8, z: 1.2 },
-        },
-        bgcolor: plotSurfaceBg,
-      },
-      hovermode: "closest",
-      hoverlabel: hoverLabel,
+    const xVals = (a: typeof sols) => a.map((s) => s[xKey]);
+    const yVals = (a: typeof sols) => a.map((s) => s[yKey]);
+    const zVals = (a: typeof sols) => {
+      const zKey = (["capacitanceFF", "resistanceOhm", "timingPs", "powerUW"] as const).find((k) => k !== xKey && k !== yKey) ?? "powerUW";
+      return a.map((s) => s[zKey]);
     };
 
-    return { data: traces, layout: sceneLayout };
-  }, [deviceOpt, narrow, palette, plotSurfaceBg, axTick, axTitle, hoverLabel]);
+    const traces: Data[] = [];
 
-  const chartRef = usePlotlyChart(
-    chartData?.data ?? [],
-    chartData?.layout ?? {},
-    {
-      responsive: true,
-      displayModeBar: true,
-      scrollZoom: true,
-      doubleClick: "reset",
-      displaylogo: false,
-      ...(narrow
-        ? { modeBarButtonsToRemove: ["lasso2d", "select2d"] as const }
-        : {}),
-      toImageButtonOptions: {
-        format: "png",
-        filename: "flow-deviceopt-3d",
-      },
-    } satisfies Partial<Config>,
-  );
+    if (mode === "3d") {
+      traces.push({
+        type: "scatter3d", mode: "markers",
+        name: "Dominated",
+        x: xVals(nonPareto), y: yVals(nonPareto), z: zVals(nonPareto),
+        marker: { color: "#94a3b8", size: 4, opacity: 0.6 },
+        text: nonPareto.map((s) => `${s.solutionId} (${s.meta})`),
+        hovertemplate: "%{text}<br>Hsep=%{x:.0f} Tsp_drain=%{y:.0f}<br>%{z.name}=%{z:.2f}<extra></extra>",
+      } as unknown as Data);
+      traces.push({
+        type: "scatter3d", mode: "markers",
+        name: "Pareto-optimal",
+        x: xVals(paretoSols), y: yVals(paretoSols), z: zVals(paretoSols),
+        marker: { color: "#ff9f0a", size: 8, line: { color: "#000", width: 1 } },
+        text: paretoSols.map((s) => `${s.solutionId} (${s.meta})`),
+        hovertemplate: "%{text}<br>Hsep=%{x:.0f}<extra></extra>",
+      } as unknown as Data);
+    } else {
+      traces.push({
+        type: "scatter", mode: "markers",
+        name: "Dominated",
+        x: xVals(nonPareto), y: yVals(nonPareto),
+        marker: { color: "#94a3b8", size: 8, opacity: 0.6 },
+        text: nonPareto.map((s) => s.solutionId),
+        hovertemplate: "%{text} (%{x:.2f}, %{y:.2f})<extra></extra>",
+      } as unknown as Data);
+      traces.push({
+        type: "scatter", mode: "markers",
+        name: "Pareto-optimal",
+        x: xVals(paretoSols), y: yVals(paretoSols),
+        marker: { color: "#ff9f0a", size: 11, line: { color: "#000", width: 1 } },
+        text: paretoSols.map((s) => s.solutionId),
+        hovertemplate: "%{text} (%{x:.2f}, %{y:.2f})<extra></extra>",
+      } as unknown as Data);
+    }
+
+    const layout: Partial<Layout> = {
+      autosize: true,
+      margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
+      paper_bgcolor: bg, plot_bgcolor: bg,
+      font: plotFont(palette.rgbAxisTitle),
+      title: { text: plotlyBold(`DeviceOpt — Pareto Frontier (${MODE_LABELS[mode]})`), font: plotFont(palette.rgbAxisTitle) },
+      showlegend: true,
+      legend: narrow ? { orientation:"h", y: -0.3 } : { orientation:"v", x: 1.02 },
+      hovermode: "closest", hoverlabel: hoverLabel,
+    };
+
+    if (mode === "3d") {
+      (layout as any).scene = {
+        xaxis: { title: xKey, gridcolor: palette.axisGridGreyRgb },
+        yaxis: { title: yKey, gridcolor: palette.axisGridGreyRgb },
+        zaxis: { title: "3rd obj", gridcolor: palette.axisGridGreyRgb },
+        bgcolor: bg,
+      };
+    } else {
+      layout.xaxis = { ...frameX, title: { text: xKey, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick };
+      layout.yaxis = { ...frameY, title: { text: yKey, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, gridcolor: palette.axisGridGreyRgb };
+    }
+
+    return { data: traces, layout };
+  }, [sols, mode, xKey, yKey, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
+
+  const chartRef = usePlotlyChart(chartData?.data ?? [], chartData?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
+
+  // Parameter table
+  const params = ["Hsep","Tsp_drain","Hbot","Tsp_psource","Tsp_nsource","FP","GXT","gate_length"] as const;
 
   return (
     <div className="chart-card">
-      <h2>Device Optimization: DeviceOpt</h2>
+      <h2>Upstream Device Optimization: DeviceOpt</h2>
       <p className="hint">
-        Independent multi‑objective sweep over transistor dimensions (tin, ts,
-        tout). Pareto‑optimal points (orange) form the 3D frontier. Each
-        solution corresponds to a (width, length, finger) configuration.
+        CFET device geometry sweep across {sols.length} solutions. Pareto optimality is computed programmatically (non-dominated set
+        for minimizing C, R, delay). {paretoIds.size}/{sols.length} solutions on Pareto front.
+        {DEMO_PROVENANCE_LABEL}
       </p>
 
-      {!deviceOpt ? (
-        <EmptyState message="No device optimization data available" icon="🎯" />
-      ) : (
-        <>
-          <div className="plot-host plot-host--3d">
-            <div ref={chartRef} style={{ width: "100%", height: "100%" }} />
-          </div>
+      <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.5rem"}}>
+        <label className="axis-picker" style={{display:"inline-flex",alignItems:"center",gap:"0.3rem"}}>
+          View: <select value={mode} onChange={(e) => setMode(e.target.value as ViewMode)}>
+            {Object.entries(MODE_LABELS).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
+          </select>
+        </label>
+        <label className="axis-picker" style={{display:"inline-flex",alignItems:"center",gap:"0.3rem"}}>
+          X: <select value={xKey} onChange={(e) => setXKey(e.target.value as any)}>
+            {(["capacitanceFF","resistanceOhm","timingPs","powerUW"] as const).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </label>
+        <label className="axis-picker" style={{display:"inline-flex",alignItems:"center",gap:"0.3rem"}}>
+          Y: <select value={yKey} onChange={(e) => setYKey(e.target.value as any)}>
+            {(["capacitanceFF","resistanceOhm","timingPs","powerUW"] as const).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </label>
+      </div>
 
-          <div className="analog-table-wrap" style={{ marginTop: "0.5rem" }}>
-            <table className="analog-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>tin (ps)</th>
-                  <th>ts (ps)</th>
-                  <th>tout (ps)</th>
-                  <th>Reward</th>
-                  <th>W/L/F</th>
-                  <th>C (fF)</th>
-                  <th>R (Ω)</th>
-                  <th>Pareto</th>
-                  <th>Meta</th>
-                </tr>
-              </thead>
-              <tbody>
-                {deviceOpt.solutions.map((s) => (
-                  <tr
-                    key={s.solutionId}
-                    className={
-                      s.paretoFront ? "flow-devopt-row--pareto" : undefined
-                    }
-                  >
-                    <td><code>{s.solutionId}</code></td>
-                    <td>{s.tinPs.toFixed(1)}</td>
-                    <td>{s.tsPs.toFixed(1)}</td>
-                    <td>{s.toutPs.toFixed(1)}</td>
-                    <td>{s.reward.toFixed(3)}</td>
-                    <td>
-                      {s.parameters.widthUm}/{s.parameters.lengthNm}/
-                      {s.parameters.fingers}
-                    </td>
-                    <td>{s.capacitanceFF.toFixed(2)}</td>
-                    <td>{s.resistanceOhm}</td>
-                    <td>
-                      {s.paretoFront ? (
-                        <Badge status="done" />
-                      ) : (
-                        <span className="flow-badge flow-badge--idle">—</span>
-                      )}
-                    </td>
-                    <td><code>{s.meta}</code></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
+      {chartData && (
+        <div className="plot-host plot-host--tall">
+          <div ref={chartRef} style={{ width:"100%", height:"100%" }} />
+        </div>
       )}
+
+      {/* Pareto solutions detail table */}
+      <div className="analog-table-wrap" style={{marginTop:"0.5rem"}}>
+        <table className="analog-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Meta</th>
+              {params.map((p) => <th key={p}>{p}</th>)}
+              <th>C (fF)</th><th>R (Ω)</th><th>Delay (ps)</th><th>Power (µW)</th><th>Reward</th><th>Pareto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sols.map((s) => (
+              <tr key={s.solutionId} style={{fontWeight: s.paretoFront ? 700 : 400, opacity: s.paretoFront ? 1 : 0.7}}>
+                <td><code>{s.solutionId}</code></td>
+                <td>{s.meta}</td>
+                {params.map((p) => <td key={p}>{s[p]}</td>)}
+                <td>{s.capacitanceFF}</td>
+                <td>{s.resistanceOhm}</td>
+                <td>{s.timingPs}</td>
+                <td>{s.powerUW}</td>
+                <td>{s.reward.toFixed(4)}</td>
+                <td>{s.paretoFront ? "✓ Pareto" : ""}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
     "generate:data": "node scripts/generate-design-data.mjs",
-    "build": "npm run generate:data && vite build",
+    "validate:flow-data": "node scripts/validate-flow-data.mjs",
+    "build": "npm run generate:data && npm run validate:flow-data && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
