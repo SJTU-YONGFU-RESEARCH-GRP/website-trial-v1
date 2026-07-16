@@ -8,6 +8,7 @@
 |------|------|
 | `/#/` | Home — tool entry cards |
 | `/#/flow` | Flow dashboard — CFET Standard-Cell Library P&R Algorithm Comparison Platform |
+| `/#/benchmark` | SPICE Model Benchmark — DC/AC/Transient/Noise verification |
 | `/#/plotly` | Digital circuit charts (Pareto, bar, heatmap, 3D, …) |
 | `/#/analog` | Analog circuit charts |
 
@@ -27,12 +28,14 @@ The dev server runs on `http://0.0.0.0:3000`.
 |---------|-------------|
 | `npm run dev` | Start dev server |
 | `npm run generate:data` | Generate deterministic design data |
+| `npm run generate:spice-benchmark` | Scan SPICE benchmark runs and generate manifest |
 | `npm run validate:flow-data` | Validate flow benchmark data integrity |
+| `npm run validate:spice-benchmark-data` | Validate SPICE benchmark manifest |
 | `npm run typecheck` | Run TypeScript compiler check (`tsc --noEmit`) |
-| `npm run build` | generate:data → validate:flow-data → typecheck → Vite production build |
+| `npm run build` | generate:data → generate:spice-benchmark → validate:flow-data → validate:spice-benchmark-data → typecheck → Vite production build |
 | `npm run preview` | Preview the production build |
 
-Build chain: `generate:data → validate:flow-data → typecheck → vite build`
+Build chain: `generate:data → generate:spice-benchmark → validate:flow-data → validate:spice-benchmark-data → typecheck → vite build`
 
 ## Host on GitHub Pages
 
@@ -45,6 +48,52 @@ URL: **`https://sjtu-yongfu-research-grp.github.io/website-trial-v1/`**
 3. Feature branches build only (no deploy).
 
 CI workflow: `.github/workflows/deploy-pages.yml`
+
+## Benchmark — SPICE Model Verification
+
+The `/benchmark` page statically displays `spice_model_benchmark` results with interactive data exploration:
+
+### Data Model
+
+- **`SpiceBenchmarkManifest`** — top-level container with runs, models, netlist suites, and artifacts
+- **`BenchmarkRun`** — one evaluation: model, netlist suite, simulator, verification tests, data/plot artifacts
+- **`NetlistSuite`** — four analysis-specific circuits: dcCircuit, acCircuit, transientCircuit, noiseCircuit
+- **`AnalysisDomain`**: `dc` | `ac` | `transient` | `noise` | `overview`
+- **`DataArtifact`** — parsed data file (CSV/TXT/RAW) with column headers and row count
+- **`PlotArtifact`** — PNG/SVG with display URL (copied to `public/benchmark/`)
+- **`ReportSummary`** — parsed REPORT.md with overall status and structured verification tests
+
+### Page Sections
+
+| Section | Content |
+|---------|---------|
+| **Benchmark Overview** | Model, format, device, netlist suite paths, pass/fail donut KPI |
+| **Data Explorer** | Run/model/format/suite/analysis/dataset selectors, X/Y/Z columns, chart type, scale, aspect |
+| **Plot Gallery** | All PNG plots grouped by DC/AC/Transient/Noise, lightbox zoom and download |
+| **Verification Report** | Structured pass/fail/unavailable summary, per-domain test tables, raw REPORT.md |
+| **Artifacts** | All data/plot files with names, domains, formats, sizes, and hashes |
+
+### Data Generation
+
+```bash
+npm run generate:spice-benchmark
+```
+
+Scans `data/spice-benchmark/runs/*`:
+- Reads `run_manifest.json` and `REPORT.md`
+- Indexes all `data/*.csv/.txt/.raw/.json` — parses CSV/TXT headers, counts rows
+- Copies `plots/*.png` to `public/benchmark/<run-id>/plots/`
+- Generates `src/data/generatedSpiceBenchmarkManifest.ts`
+- Excludes any path/name containing `sky130` or `skywater`
+
+### Domain-based Chart Presets
+
+| Domain | Default charts |
+|--------|---------------|
+| DC | IV multi-curve, KCL, temperature, bias heatmap |
+| AC | C-V, multi-freq C-V, capacitance matrix heatmap, S-parameter, NQS |
+| Transient | Input/output waveforms, delay, power, energy |
+| Noise | Log-log PSD, bias/temperature comparison |
 
 ## Flow Dashboard — CFET Standard-Cell Library P&R Algorithm Comparison Platform
 
@@ -121,13 +170,16 @@ src/pages/flow/
 src/
 ├── data/
 │   ├── toolFlowTypes.ts         # Benchmark-centric type system + helpers (commonCompletedCells, buildNonDominatedPareto, deltaPct)
-│   └── toolFlowDemoData.ts      # Deterministic synthetic demo data (multi-benchmark manifests)
+│   ├── toolFlowDemoData.ts      # Deterministic synthetic demo data (multi-benchmark manifests)
+│   ├── SpiceBenchmarkTypes.ts   # SPICE benchmark types (manifest, runs, models, netlist suites, artifacts)
+│   └── generatedSpiceBenchmarkManifest.ts  # Auto-generated from data/spice-benchmark/runs/
 ├── hooks/
 │   ├── usePlotlyChart.ts        # Shared Plotly rendering hook
 │   └── useNarrowScreen.ts       # Responsive breakpoint hook
 ├── pages/
 │   ├── flow/                    # Flow sub-components (14 files)
 │   ├── ToolFlowPage.tsx         # Tabbed flow page
+│   ├── SpiceBenchmarkPage.tsx   # SPICE model benchmark page
 │   ├── HomePage.tsx             # Tool entry cards
 │   ├── PlotlyPage.tsx
 │   └── AnalogPage.tsx

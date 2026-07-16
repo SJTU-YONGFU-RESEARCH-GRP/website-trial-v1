@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
     "generate:data": "node scripts/generate-design-data.mjs",
+    "generate:spice-benchmark": "node scripts/generate-spice-benchmark-data.mjs",
     "validate:flow-data": "node scripts/validate-flow-data.mjs",
-    "build": "npm run generate:data && npm run validate:flow-data && tsc --noEmit && vite build",
+    "validate:spice-benchmark-data": "node scripts/validate-spice-benchmark-data.mjs",
+    "build": "npm run generate:data && npm run generate:spice-benchmark && npm run validate:flow-data && npm run validate:spice-benchmark-data && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

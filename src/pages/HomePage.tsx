@@ -9,6 +9,15 @@ const TOOLS = [
       "End-to-end design flow connecting layout generation, parasitic extraction, and timing characterization for digital standard cells.",
   },
   {
+    title: "SPICE Model Benchmark",
+    subtitle: "DC / AC / Transient / Noise verification",
+    repo: "spice_model_benchmark",
+    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark",
+    flowPath: "/#/benchmark",
+    description:
+      "SPICE model verification benchmark: DC IV curves, AC C-V, transient switching, and noise PSD analysis across models and netlist suites.",
+  },
+  {
     title: "Layout Generation",
     subtitle: "AutoCellGen-V2",
     repo: "AutoCellGen_V2",
