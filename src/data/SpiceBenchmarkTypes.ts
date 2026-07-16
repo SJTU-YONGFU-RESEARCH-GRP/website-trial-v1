@@ -46,7 +46,7 @@ export interface DataArtifact {
   name: string;
   relPath: string;
   domain: AnalysisDomain;
-  format: "csv" | "txt" | "raw" | "json";
+  format: "csv" | "txt" | "raw" | "json" | "dat" | "raw_binary";
   size: string;
   hash: string;
   /** Column headers parsed at generation time; null for .raw */
@@ -55,6 +55,10 @@ export interface DataArtifact {
   rowCount: number;
   /** Public URL for lazy fetch (served from public/). */
   fetchUrl: string | null;
+  /** Text preview (first 200 chars). */
+  preview?: string;
+  /** First few parsed rows. */
+  rowPreview?: string[][];
 }
 
 /* ─── Plot artifact — a plot image in the run ─── */

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Plotly from "plotly.js-dist-min";
 import type { Config, Data, Layout } from "plotly.js";
 import { useNarrowScreen } from "../hooks/useNarrowScreen";
@@ -9,50 +9,34 @@ import {
 } from "../theme/chartPalette";
 import { SPICE_BENCHMARK_MANIFEST } from "../data/generatedSpiceBenchmarkManifest";
 import type {
-  SpiceBenchmarkManifest, BenchmarkRun, AnalysisDomain, ComparisonMode,
-  NumericScaleMode, PlotAspectMode, SpiceExploreState,
+  BenchmarkRun, AnalysisDomain, ComparisonMode,
+  NumericScaleMode, PlotAspectMode, DataArtifact,
 } from "../data/SpiceBenchmarkTypes";
-import { DEFAULT_SPICE_EXPLORE_STATE, ANALYSIS_DOMAINS } from "../data/SpiceBenchmarkTypes";
+import { ANALYSIS_DOMAINS } from "../data/SpiceBenchmarkTypes";
 import { Badge } from "./flow/Badge";
 import { EmptyState } from "./flow/EmptyState";
+import "../benchmark.css";
 
-/* ─── Constants ─── */
-const NUMERIC_SCALE_OPTIONS = [{value:"linear",label:"Linear"},{value:"log",label:"Log10"}] as const;
-const PLOT_ASPECT_OPTIONS = [{value:"flexible",label:"Flexible"},{value:"16:9",label:"16:9"},{value:"4:3",label:"4:3"},{value:"1:1",label:"1:1"}] as const;
-const CHART_TYPES = [{value:"scatter",label:"Scatter"},{value:"line",label:"Line"},{value:"heatmap",label:"Heatmap"},{value:"bar",label:"Bar"}] as const;
-const COMPARISON_MODES: {value:ComparisonMode;label:string}[] = [{value:"single",label:"Single run"},{value:"compare_models",label:"Compare models"},{value:"compare_suites",label:"Compare suites"}];
-const DOMAIN_LABELS: Record<AnalysisDomain, string> = {overview:"Overview",dc:"DC",ac:"AC",transient:"Transient",noise:"Noise"};
+const BASE = import.meta.env.BASE_URL || "/";
 
-/* ─── Domain-based smart defaults for axis columns and chart type ─── */
+const DOMAIN_LABELS: Record<AnalysisDomain, string> = { overview: "Overview", dc: "DC", ac: "AC", transient: "Transient", noise: "Noise" };
 const DOMAIN_DEFAULT_X: Record<AnalysisDomain, string[]> = {
-  overview: [],
-  dc: ["Vds","Vgs","Vds(V)","Vbias","temp(C)"],
-  ac: ["freq(Hz)","freq","frequency","frequency(Hz)","Vgs(V)"],
-  transient: ["time(s)","time","t(s)","Vin(V)"],
-  noise: ["freq(Hz)","freq","frequency","frequency(Hz)"],
+  overview: [], dc: ["Vds", "Vgs", "vds", "vgs", "Vds(V)", "Vbias"], ac: ["freq(Hz)", "freq", "frequency", "Vgs(V)"],
+  transient: ["time(s)", "time", "t(s)"], noise: ["freq(Hz)", "freq", "frequency"],
 };
 const DOMAIN_DEFAULT_Y: Record<AnalysisDomain, string[]> = {
-  overview: [],
-  dc: ["Id(A)","Ids(A)","gm(A/V)","gds(A/V)","I(V)"],
-  ac: ["Cgg(F)","Cgd(F)","Cgs(F)","Cgb(F)","C(F)","mag","dB"],
-  transient: ["Vout(V)","Vout","Vin(V)","Iin(A)","power(W)"],
-  noise: ["Sid(A^2/Hz)","Svg(V^2/Hz)","Sv(V^2/Hz)","PSD"],
+  overview: [], dc: ["Id(A)", "Id", "Ids(A)", "gm(A/V)", "I(V)"], ac: ["Cgg(F)", "Cgd(F)", "Cgs(F)", "mag"],
+  transient: ["Vout(V)", "Vout", "Vin(V)", "Iin(A)", "power(W)"], noise: ["Sid(A^2/Hz)", "Svg(V^2/Hz)", "Sv(V^2/Hz)"],
 };
-const DOMAIN_DEFAULT_CHART: Record<AnalysisDomain, SpiceExploreState["chartType"]> = {
-  overview: "scatter", dc: "scatter", ac: "scatter", transient: "line", noise: "scatter",
-};
+const DOMAIN_CHART: Record<AnalysisDomain, string> = { overview: "scatter", dc: "scatter", ac: "scatter", transient: "line", noise: "scatter" };
 
-type TabId = "overview" | "explorer" | "gallery" | "verification" | "artifacts";
-const TABS: {id:TabId;label:string}[] = [
-  {id:"overview",label:"Benchmark Overview"},
-  {id:"explorer",label:"Data Explorer"},
-  {id:"gallery",label:"Plot Gallery"},
-  {id:"verification",label:"Verification Report"},
-  {id:"artifacts",label:"Artifacts"},
-];
+function pickDefault(cols: string[], candidates: string[]): string {
+  for (const c of candidates) { if (cols.includes(c)) return c; }
+  return cols[0] ?? "";
+}
 
-/* ─── Chart helper ─── */
-function usePlotlyChart(data:Data[], layout:Partial<Layout>, config:Partial<Config>) {
+/** Shared Plotly helper — reads from the project hook pattern. */
+function usePlotlyChart(data: Data[], layout: Partial<Layout>, config: Partial<Config>) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current; if (!el) return;
@@ -65,44 +49,77 @@ function usePlotlyChart(data:Data[], layout:Partial<Layout>, config:Partial<Conf
   return ref;
 }
 
-function plotHostAspectClass(mode: PlotAspectMode): string {
-  if (mode==="16:9") return "plot-host--aspect-16x9";
-  if (mode==="4:3") return "plot-host--aspect-4x3";
-  if (mode==="1:1") return "plot-host--aspect-1x1";
-  return "";
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Data cache (lazy fetch)                                             */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const dataCache = new Map<string, Record<string, string>[]>();
+
+function useLazyData(artifact: DataArtifact | null): { rows: Record<string, string>[] | null; error: string | null } {
+  const [rows, setRows] = useState<Record<string, string>[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!artifact) { setRows(null); return; }
+    const url = artifact.fetchUrl;
+    if (!url) { setRows(null); return; }
+    const fullUrl = BASE + url;
+    if (dataCache.has(fullUrl)) { setRows(dataCache.get(fullUrl)!); return; }
+    let cancelled = false;
+    fetch(fullUrl).then(r => { if (!r.ok) throw new Error(`${r.status} ${r.statusText}`); return r.text(); }).then(text => {
+      if (cancelled) return;
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      const headers = lines[0].split(",").map(h => h.trim());
+      const data = lines.slice(1).map(l => { const v = l.split(","); const o: Record<string, string> = {}; headers.forEach((h, i) => o[h] = v[i]?.trim() ?? ""); return o; });
+      dataCache.set(fullUrl, data);
+      if (!cancelled) setRows(data);
+    }).catch(err => { if (!cancelled) setError(err.message); });
+    return () => { cancelled = true; };
+  }, [artifact?.fetchUrl]);
+  return { rows, error };
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*  Sub-components                                                      */
+/*  KPI Donut Chart                                                     */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-function OverviewSection({ run }: { run: BenchmarkRun }): JSX.Element {
+function KpiDonut({ pass, fail, na }: { pass: number; fail: number; na: number }) {
+  const ref = usePlotlyChart(
+    [{ type: "pie", values: [pass, fail, na], labels: ["Pass", "Fail", "N/A"], hole: 0.55, marker: { colors: ["var(--ok,#22c55e)", "var(--fail,#ef4444)", "var(--muted,#94a3b8)"] }, textinfo: "label+value" } as Data],
+    { autosize: true, margin: { l: 4, r: 4, t: 4, b: 4 }, showlegend: false, paper_bgcolor: "transparent", plot_bgcolor: "transparent" } as Partial<Layout>,
+    { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>,
+  );
+  return <div className="plot-host plot-host--short"><div ref={ref} style={{ width: "100%", height: "100%" }} /></div>;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Overview Section                                                    */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+function OverviewSection({ run }: { run: BenchmarkRun }) {
   const ns = run.netlistSuite;
   const ts = run.verificationTests;
-  const passCount = ts.filter(t=>t.status==="pass").length;
-  const failCount = ts.filter(t=>t.status==="fail").length;
-  const naCount = ts.filter(t=>t.status==="unavailable").length;
+  const passCount = ts.filter(t => t.status === "pass").length;
+  const failCount = ts.filter(t => t.status === "fail").length;
+  const naCount = ts.filter(t => t.status === "unavailable").length;
 
   return (
-    <div className="chart-card">
-      <h2>Benchmark Overview — {run.runId}</h2>
-      {run.status === "example" && <p className="hint" style={{color:"var(--warning,#ff9f0a)"}}>⚠ Example result — not real fabrication data</p>}
-      <div className="flow-kpi-grid" style={{marginBottom:"0.75rem"}}>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Model</div><div className="flow-kpi-card__value">{run.modelId}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Format</div><div className="flow-kpi-card__value">{run.modelFormat}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Device</div><div className="flow-kpi-card__value">{run.deviceName}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Simulator</div><div className="flow-kpi-card__value">{run.simulator} {run.simulatorVersion}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Generated</div><div className="flow-kpi-card__value" style={{fontSize:"0.75rem"}}>{run.generatedAt?.slice(0,10)}</div></div>
-      </div>
-
-      {/* Donut chart — pass/fail/unavailable */}
-      <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
-        <div style={{flex:"1 1 200px"}}>
-          <DountChart pass={passCount} fail={failCount} na={naCount} />
+    <div className="chart-card benchmark-section" id="bm-overview">
+      <h2>Overview — {run.runId} <span className="hint">({run.dataArtifacts.length} datasets, {run.plotArtifacts.length} plots)</span></h2>
+      {run.status === "example" && <p className="hint benchmark-demo-warn">⚠ Example result — not real fabrication data</p>}
+      <div className="benchmark-overview-grid">
+        <div className="benchmark-overview-kpis">
+          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Model</div><div className="flow-kpi-card__value">{run.modelId}</div></div>
+          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Format</div><div className="flow-kpi-card__value">{run.modelFormat}</div></div>
+          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Device</div><div className="flow-kpi-card__value">{run.deviceName || "—"}</div></div>
+          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Simulator</div><div className="flow-kpi-card__value">{run.simulator} {run.simulatorVersion}</div></div>
+          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Generated</div><div className="flow-kpi-card__value benchmark-date">{run.generatedAt?.slice(0, 10) || "—"}</div></div>
         </div>
-        <div style={{flex:"1 1 300px"}}>
+        <div className="benchmark-overview-donut">
+          <KpiDonut pass={passCount} fail={failCount} na={naCount} />
+        </div>
+        <div className="benchmark-overview-nets">
           <h3 className="flow-subsection-title">Netlist Suite</h3>
-          <table className="analog-table"><tbody>
+          <table className="benchmark-table"><tbody>
             <tr><td>DC</td><td><code>{ns.dcCircuit || "—"}</code></td></tr>
             <tr><td>AC</td><td><code>{ns.acCircuit || "—"}</code></td></tr>
             <tr><td>Transient</td><td><code>{ns.transientCircuit || "—"}</code></td></tr>
@@ -110,42 +127,18 @@ function OverviewSection({ run }: { run: BenchmarkRun }): JSX.Element {
           </tbody></table>
         </div>
       </div>
-
-      <div style={{marginTop:"0.5rem"}}>
-        <p className="hint">
-          Modes: {run.modes.join(", ")} &middot; Commit: <code>{run.commitSha?.slice(0,8)}</code>
-          &middot; Pass: {passCount} &middot; Fail: {failCount} &middot; N/A: {naCount}
-        </p>
-      </div>
+      <p className="hint">Modes: {run.modes.join(", ") || "—"} · Commit: <code>{run.commitSha?.slice(0, 8) || "—"}</code> · Pass: {passCount} · Fail: {failCount} · N/A: {naCount}</p>
     </div>
   );
 }
 
-function DountChart({ pass, fail, na }: {pass:number;fail:number;na:number}): JSX.Element {
-  const ref = usePlotlyChart(
-    [{type:"pie",values:[pass,fail,na],labels:["Pass","Fail","N/A"],hole:0.55,
-      marker:{colors:["#22c55e","#ef4444","#94a3b8"]},
-      textinfo:"label+value", hoverinfo:"label+percent"} as Data],
-    {autosize:true,margin:{l:8,r:8,t:8,b:8},showlegend:false,
-     paper_bgcolor:"transparent",plot_bgcolor:"transparent",
-     font:{family:"Inter,sans-serif",size:11,color:"#334155"}} as Partial<Layout>,
-    {responsive:true,displayModeBar:false,displaylogo:false} satisfies Partial<Config>
-  );
-  return <div className="plot-host plot-host--short"><div ref={ref} style={{width:"100%",height:"100%"}}/></div>;
-}
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  BenchmarkDatasetCard — one per dataset                              */
+/* ═══════════════════════════════════════════════════════════════════ */
 
-function pickDefault(cols: string[], candidates: string[]): string {
-  for (const c of candidates) { if (cols.includes(c)) return c; }
-  return cols[0] ?? "";
-}
+const PAGE_SIZE = 50;
 
-/** Persist loaded CSV rows so we don't re-fetch on every render. */
-const dataCache = new Map<string, Record<string,string>[]>();
-
-function ExplorerSection({ manifest, run, explore, setExplore }: {
-  manifest: SpiceBenchmarkManifest; run: BenchmarkRun; explore: SpiceExploreState;
-  setExplore: React.Dispatch<React.SetStateAction<SpiceExploreState>>;
-}): JSX.Element {
+function BenchmarkDatasetCard({ artifact, domain }: { artifact: DataArtifact; domain: AnalysisDomain }) {
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const palette = getChartPalette(theme);
@@ -154,243 +147,152 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
   const hoverLabel = plotlyHoverLabel(palette, narrow);
   const frameX = plotlyAxisFrameX(palette);
   const frameY = plotlyAxisFrameY(palette);
-  const aspectCls = plotHostAspectClass(explore.plotAspect);
 
-  // Filtered datasets for current run
-  const datasets = run.dataArtifacts.filter(d => explore.analysis==="overview"||d.domain===explore.analysis);
-  const selectedDataset = datasets.find(d => d.name===explore.datasetId) ?? datasets[0];
-  const cols = selectedDataset?.columns ?? [];
+  const cols = artifact.columns ?? [];
+  const { rows, error } = useLazyData(artifact);
 
-  // ─── Domain-based smart defaults ───
+  const [xCol, setXCol] = useState("");
+  const [yCols, setYCols] = useState<string[]>([]);
+  const [chartType, setChartType] = useState("scatter");
+  const [xScale, setXScale] = useState<NumericScaleMode>("linear");
+  const [yScale, setYScale] = useState<NumericScaleMode>("linear");
+  const [tablePage, setTablePage] = useState(0);
+
+  // Auto-configure defaults when data loads
   useEffect(() => {
-    if (!selectedDataset || !selectedDataset.columns) return;
-    const domain = selectedDataset.domain as AnalysisDomain;
+    if (cols.length === 0) return;
     const dx = DOMAIN_DEFAULT_X[domain] ?? [];
     const dy = DOMAIN_DEFAULT_Y[domain] ?? [];
-    const dChart = DOMAIN_DEFAULT_CHART[domain] ?? "scatter";
-    const newX = explore.xColumn && cols.includes(explore.xColumn) ? null : pickDefault(cols, dx);
-    const newY = explore.yColumn && cols.includes(explore.yColumn) ? null : pickDefault(cols, dy);
-    const newZ = cols.length > 2 ? (explore.zColumn && cols.includes(explore.zColumn) ? null : cols[2]) : null;
-    const updates: Record<string, unknown> = {};
-    if (newX) updates.xColumn = newX;
-    if (newY) updates.yColumn = newY;
-    if (newZ !== null) updates.zColumn = newZ;
-    if (newX && newY) updates.chartType = dChart;
-    else if (cols.length <= 2) updates.chartType = "line";
-    if (Object.keys(updates).length > 0) setExplore(p => ({...p, ...updates}));
-  }, [selectedDataset?.name, selectedDataset?.domain]);
+    setXCol(pickDefault(cols, dx));
+    setYCols([pickDefault(cols, dy)]);
+    setChartType(DOMAIN_CHART[domain] ?? "scatter");
+    if (domain === "noise" || (cols[0] && /freq/i.test(cols[0]))) setXScale("log");
+    if (domain === "noise") setYScale("log");
+  }, [artifact.name, domain]);
 
-  // ─── Lazy fetch data rows ───
-  const [rows, setRows] = useState<Record<string,string>[] | null>(null);
-  const [rowsErr, setRowsErr] = useState<string | null>(null);
-  useEffect(() => {
-    if (!selectedDataset) { setRows(null); return; }
-    const url = selectedDataset.fetchUrl;
-    const cacheKey = url ?? selectedDataset.name;
-    if (dataCache.has(cacheKey)) { setRows(dataCache.get(cacheKey)!); return; }
-    if (!url) { setRows(null); return; }
-    let cancelled = false;
-    fetch(url).then(r => { if (!r.ok) throw new Error(r.statusText); return r.text(); }).then(text => {
-      if (cancelled) return;
-      const lines = text.trim().split(/\r?\n/).filter(Boolean);
-      if (lines.length < 2) { setRows([]); return; }
-      const headers = lines[0].split(",").map(h => h.trim());
-      const data = lines.slice(1).map(line => {
-        const vals = line.split(",");
-        const obj: Record<string,string> = {};
-        headers.forEach((h,i) => obj[h] = vals[i]?.trim() ?? "");
-        return obj;
-      });
-      dataCache.set(cacheKey, data);
-      if (!cancelled) setRows(data);
-    }).catch(err => { if (!cancelled) setRowsErr(err.message); });
-    return () => { cancelled = true; };
-  }, [selectedDataset?.name, selectedDataset?.fetchUrl]);
-
-  const displayRows = useMemo(() => {
-    if (!rows) return null;
-    const maxRows = 500;
-    if (rows.length <= maxRows) return rows;
-    return rows.slice(0, maxRows);
-  }, [rows]);
-
-  // ─── Build Plotly chart from loaded rows ───
+  // Build chart
   const chart = useMemo(() => {
-    if (!selectedDataset || !selectedDataset.columns || !rows) return null;
-    const xCol = explore.xColumn || cols[0];
-    const yCol = explore.yColumn || cols[1];
-    const zCol = explore.zColumn || cols[2];
-    const xIdx = cols.indexOf(xCol);
-    const yIdx = cols.indexOf(yCol);
-    const zIdx = cols.indexOf(zCol);
-    if (xIdx < 0 || yIdx < 0) return null;
+    if (!rows || !xCol || yCols.length === 0) return null;
+    const xVals = rows.map(r => +r[xCol]);
 
-    const xVals = rows.map(r => +r[xCol]);  const yVals = rows.map(r => +r[yCol]);
-    const zVals = zIdx >= 0 ? rows.map(r => +r[zCol]) : [];
-
-    const mode = explore.chartType === "line" ? "lines+markers" : "markers";
-
-    if (explore.chartType === "scatter" || explore.chartType === "line") {
+    if (chartType === "scatter" || chartType === "line") {
+      const traces: Data[] = yCols.map(yc => {
+        const yVals = rows.map(r => +r[yc]);
+        return { type: "scatter", mode: chartType === "line" ? "lines+markers" : "markers", x: xVals, y: yVals, name: yc,
+          marker: { size: 5 }, line: { width: 1.5 },
+          hovertemplate: `${xCol}: %{x}<br>${yc}: %{y}<extra></extra>` } as Data;
+      });
       return {
-        data: [{ type: "scatter", mode, x: xVals, y: yVals,
-          name: selectedDataset.name,
-          hovertemplate: `${xCol}: %{x}<br>${yCol}: %{y}<extra></extra>` } as Data],
+        data: traces,
         layout: {
-          autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
+          autosize: true, margin: narrow ? { l: 48, r: 12, t: 24, b: 44 } : { l: 56, r: 20, t: 28, b: 48 },
           paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-          title: { text: plotlyBold(`${DOMAIN_LABELS[selectedDataset.domain]} — ${selectedDataset.name}`), font: plotFont(palette.rgbAxisTitle) },
-          xaxis: { ...frameX, title: { text: xCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: explore.numericScaleX === "log" ? "log" : "linear" },
-          yaxis: { ...frameY, title: { text: yCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: explore.numericScaleY === "log" ? "log" : "linear" },
-          showlegend: true, hovermode: "closest", hoverlabel: hoverLabel,
-        } as Partial<Layout>,
-      };
-    }
-    if (explore.chartType === "bar") {
-      return {
-        data: [{ type: "bar", x: xVals, y: yVals, name: yCol } as Data],
-        layout: {
-          autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
-          paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-          title: { text: plotlyBold(selectedDataset.name), font: plotFont(palette.rgbAxisTitle) },
-          xaxis: { ...frameX, title: { text: xCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick },
-          yaxis: { ...frameY, title: { text: yCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: explore.numericScaleY === "log" ? "log" : "linear" },
+          title: { text: plotlyBold(`${artifact.name}`), font: plotFont(palette.rgbAxisTitle) },
+          xaxis: { ...frameX, title: xCol, tickfont: axTick, type: xScale === "log" ? "log" : "linear" },
+          yaxis: { ...frameY, title: yCols.join(" / "), tickfont: axTick, type: yScale === "log" ? "log" : "linear", gridcolor: palette.axisGridGreyRgb },
+          showlegend: yCols.length > 1, legend: narrow ? { orientation: "h", y: -0.3 } : { x: 1.02 },
           hovermode: "closest", hoverlabel: hoverLabel,
         } as Partial<Layout>,
       };
     }
-    if (explore.chartType === "heatmap" && zIdx >= 0) {
+    if (chartType === "heatmap" && cols.length >= 3) {
+      const zVals = yCols.map(yc => rows.map(r => +r[yc]));
       return {
-        data: [{ type: "heatmap", z: [zVals], x: xVals.map(String), y: [yCol], colorscale: "Viridis",
-          hovertemplate: `${xCol}: %{x}<br>${yCol}: %{y}<br>${zCol}: %{z}<extra></extra>` } as Data],
+        data: [{ type: "heatmap", z: zVals, x: xVals.map(String), y: yCols, colorscale: "Viridis",
+          hovertemplate: `${xCol}: %{x}<br>%{y}: %{z}<extra></extra>` } as Data],
         layout: {
-          autosize: true, margin: narrow ? { l: 64, r: 16, t: 36, b: 64 } : { l: 80, r: 24, t: 40, b: 72 },
+          autosize: true, margin: narrow ? { l: 56, r: 12, t: 24, b: 64 } : { l: 72, r: 20, t: 28, b: 68 },
           paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-          title: { text: plotlyBold(`${selectedDataset.name} — heatmap`), font: plotFont(palette.rgbAxisTitle) },
-          xaxis: { ...frameX, title: { text: xCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick },
-          yaxis: { ...frameY, title: { text: yCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, autorange: "reversed" as const },
+          title: { text: plotlyBold(`${artifact.name} — heatmap`), font: plotFont(palette.rgbAxisTitle) },
+          xaxis: { ...frameX, title: xCol, tickfont: axTick },
+          yaxis: { ...frameY, tickfont: axTick, autorange: "reversed" as const },
           hovermode: "closest", hoverlabel: hoverLabel,
         } as Partial<Layout>,
       };
     }
     return null;
-  }, [selectedDataset, explore, rows, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
+  }, [rows, xCol, yCols, chartType, xScale, yScale, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
 
   const chartRef = usePlotlyChart(chart?.data ?? [], chart?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
 
-  // ─── CSV download ───
+  const displayRows = rows && rows.length > 0 ? rows : null;
+  const totalPages = displayRows ? Math.ceil(displayRows.length / PAGE_SIZE) : 0;
+  const pageRows = displayRows ? displayRows.slice(tablePage * PAGE_SIZE, (tablePage + 1) * PAGE_SIZE) : null;
+
   const downloadCsv = () => {
-    if (!rows || !cols.length) return;
+    if (!rows) return;
     const csv = [cols.join(","), ...rows.map(r => cols.map(c => r[c] ?? "").join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = `${selectedDataset?.name ?? "data"}.csv`; a.click();
-    URL.revokeObjectURL(url);
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${artifact.name}.csv`; a.click();
   };
 
-  // ─── Series checkboxes ───
-  const allCols = selectedDataset?.columns ?? [];
-  const sel = explore.seriesSelection.length === 0 ? [...allCols] : explore.seriesSelection;
-  const toggleAll = (on: boolean) => setExplore(p => ({ ...p, seriesSelection: on ? [] : allCols.slice() }));
-  const toggleCol = (col: string) => setExplore(p => {
-    const cur = p.seriesSelection.length === 0 ? [...allCols] : [...p.seriesSelection];
-    const idx = cur.indexOf(col);
-    if (idx >= 0) { cur.splice(idx, 1); } else { cur.push(col); }
-    return { ...p, seriesSelection: cur };
+  const toggleYCol = (col: string) => setYCols(prev => {
+    const next = prev.includes(col) ? prev.filter(c => c !== col) : [...prev, col];
+    return next.length === 0 ? prev : next;
   });
 
   return (
-    <div>
-      {/* Controls card */}
-      <div className="chart-card">
-        <h2>Explore metrics</h2>
-        <div className="flow-selector-grid" style={{marginBottom:"0.5rem"}}>
-          <label className="axis-picker">Run<select value={explore.runId} onChange={e=>setExplore(p=>({...p,runId:e.target.value}))}>{Object.values(manifest.runs).map(r=><option key={r.runId} value={r.runId}>{r.runId} {r.status==="example"?" (example)":""}</option>)}</select></label>
-          <label className="axis-picker">Model<select value={explore.modelId} onChange={e=>setExplore(p=>({...p,modelId:e.target.value}))}>{manifest.modelIds.filter(mid=>manifest.runs[explore.runId]?.modelId===mid || !explore.runId).map(mid=><option key={mid} value={mid}>{mid}</option>)}</select></label>
-          <label className="axis-picker">Format<select value={explore.modelFormat} onChange={e=>setExplore(p=>({...p,modelFormat:e.target.value as any}))}><option value="">— any —</option>{manifest.modelFormats.map(f=><option key={f} value={f}>{f}</option>)}</select></label>
-        </div>
-        <div className="flow-selector-grid" style={{marginBottom:"0.5rem"}}>
-          <label className="axis-picker">Netlist Suite<select value={explore.suiteId} onChange={e=>setExplore(p=>({...p,suiteId:e.target.value}))}>{manifest.suiteIds.map(sid=><option key={sid} value={sid}>{sid}</option>)}</select></label>
-          <label className="axis-picker">Analysis<select value={explore.analysis} onChange={e=>setExplore(p=>({...p,analysis:e.target.value as AnalysisDomain}))}>{ANALYSIS_DOMAINS.map(d=><option key={d} value={d}>{DOMAIN_LABELS[d]}</option>)}</select></label>
-          <label className="axis-picker">Dataset<select value={explore.datasetId} onChange={e=>setExplore(p=>({...p,datasetId:e.target.value}))}><option value="">— auto —</option>{datasets.map(d=><option key={d.name} value={d.name}>{d.name} ({d.rowCount} rows)</option>)}</select></label>
-        </div>
-        <div className="flow-selector-grid" style={{marginBottom:"0.5rem"}}>
-          <label className="axis-picker">Comparison<select value={explore.comparisonMode} onChange={e=>setExplore(p=>({...p,comparisonMode:e.target.value as ComparisonMode}))}>{COMPARISON_MODES.map(c=><option key={c.value} value={c.value}>{c.label}</option>)}</select></label>
-          {cols.length > 0 && <>
-            <label className="axis-picker">X<select value={explore.xColumn} onChange={e=>setExplore(p=>({...p,xColumn:e.target.value}))}>{cols.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
-            <label className="axis-picker">Y<select value={explore.yColumn} onChange={e=>setExplore(p=>({...p,yColumn:e.target.value}))}>{cols.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
-          </>}
-        </div>
-        <div className="flow-selector-grid">
-          {cols.length > 2 && <label className="axis-picker">Z<select value={explore.zColumn} onChange={e=>setExplore(p=>({...p,zColumn:e.target.value}))}>{cols.map(c=><option key={c} value={c}>{c}</option>)}</select></label>}
-          <label className="axis-picker">Chart<select value={explore.chartType} onChange={e=>setExplore(p=>({...p,chartType:e.target.value as any}))}>{CHART_TYPES.map(ct=><option key={ct.value} value={ct.value}>{ct.label}</option>)}</select></label>
-        </div>
-        <div className="flow-selector-grid" style={{marginTop:"0.5rem"}}>
-          <label className="axis-picker">X scale<select value={explore.numericScaleX} onChange={e=>setExplore(p=>({...p,numericScaleX:e.target.value as NumericScaleMode}))}>{NUMERIC_SCALE_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
-          <label className="axis-picker">Y scale<select value={explore.numericScaleY} onChange={e=>setExplore(p=>({...p,numericScaleY:e.target.value as NumericScaleMode}))}>{NUMERIC_SCALE_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
-          <label className="axis-picker">Aspect<select value={explore.plotAspect} onChange={e=>setExplore(p=>({...p,plotAspect:e.target.value as PlotAspectMode}))}>{PLOT_ASPECT_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
-        </div>
-
-        {/* ─── Series multi-select checkboxes ─── */}
-        {cols.length > 0 && (
-          <div style={{marginTop:"0.5rem",padding:"0.5rem",background:"var(--surface2,#f8fafc)",borderRadius:"6px"}}>
-            <div style={{display:"flex",gap:"0.75rem",marginBottom:"0.3rem",alignItems:"center"}}>
-              <strong style={{fontSize:"0.8rem"}}>Series:</strong>
-              <button className="tab-btn" style={{fontSize:"0.7rem",padding:"0.2rem 0.5rem",border:"1px solid var(--border,#cbd5e1)",borderRadius:"4px",cursor:"pointer",background:"var(--surface,#fff)"}} onClick={()=>toggleAll(true)}>Select all</button>
-              <button className="tab-btn" style={{fontSize:"0.7rem",padding:"0.2rem 0.5rem",border:"1px solid var(--border,#cbd5e1)",borderRadius:"4px",cursor:"pointer",background:"var(--surface,#fff)"}} onClick={()=>toggleAll(false)}>Unselect all</button>
-            </div>
-            <div style={{display:"flex",flexWrap:"wrap",gap:"0.3rem 0.75rem"}}>
-              {allCols.map(c => (
-                <label key={c} style={{display:"flex",alignItems:"center",gap:"0.25rem",fontSize:"0.75rem",cursor:"pointer"}}>
-                  <input type="checkbox" checked={sel.includes(c)} onChange={() => toggleCol(c)} />
-                  {c}
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {selectedDataset && (
-          <p className="hint" style={{marginTop:"0.5rem"}}>
-            Columns: {cols.join(", ") ?? "N/A"} &middot; {rows ? `${rows.length} rows loaded` : `${selectedDataset.rowCount} rows available`} &middot; Hash: <code>{selectedDataset.hash}</code>
-          </p>
-        )}
+    <div className="chart-card benchmark-dataset-card">
+      <div className="benchmark-dataset-header">
+        <span className="benchmark-domain-badge">{DOMAIN_LABELS[domain]}</span>
+        <code>{artifact.name}</code>
+        <span className="hint">{artifact.rowCount > 0 ? `${artifact.rowCount} rows` : ""} · {artifact.size} · <code>{artifact.hash}</code></span>
+        {rows && rows.length > 0 && <button className="benchmark-btn" onClick={downloadCsv}>⬇ CSV ({rows.length} rows)</button>}
       </div>
 
-      {/* Chart */}
-      {selectedDataset ? (
-        <div className="chart-card">
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"0.5rem"}}>
-            <h2>{DOMAIN_LABELS[selectedDataset.domain]} — {selectedDataset.name}</h2>
-            {rows && rows.length > 0 && <button className="tab-btn" onClick={downloadCsv} style={{fontSize:"0.72rem",padding:"0.3rem 0.6rem",border:"1px solid var(--border,#cbd5e1)",borderRadius:"4px",cursor:"pointer",background:"var(--surface,#fff)"}}>⬇ Download CSV ({rows.length} rows)</button>}
-          </div>
-          <p className="hint">
-            Interactive Plotly chart with auto-configured defaults per analysis domain.{" "}
-            {rows && rows.length >= 500 ? `Showing first 500 of ${rows.length} points. Download CSV for full data.` :
-             !rows && selectedDataset.fetchUrl ? "Loading data…" :
-             !selectedDataset.fetchUrl ? "No fetch URL — data must be copied to public/ during generation." : ""}
-          </p>
-          {chart ? (
-            <div className={`plot-host ${aspectCls}`.trim()}>
-              <div ref={chartRef} style={{width:"100%",height:"100%"}}/>
-            </div>
-          ): !rows ? <EmptyState message="Loading data from server…" icon="⏳"/> : <EmptyState message="Select axis columns to render chart" icon="📊"/>}
-          {rowsErr && <p className="hint" style={{color:"#ef4444"}}>Error loading data: {rowsErr}</p>}
-        </div>
-      ) : <div className="chart-card"><EmptyState message="No dataset selected for this analysis domain" icon="📊"/></div>}
+      {/* Controls */}
+      <div className="benchmark-dataset-controls">
+        <label className="axis-picker">X<select value={xCol} onChange={e => setXCol(e.target.value)}>{cols.map(c => <option key={c}>{c}</option>)}</select></label>
+        <label className="axis-picker">Chart<select value={chartType} onChange={e => setChartType(e.target.value)}>{["scatter","line","bar","heatmap"].map(t => <option key={t}>{t}</option>)}</select></label>
+        <label className="axis-picker">X scale<select value={xScale} onChange={e => setXScale(e.target.value as NumericScaleMode)}>{["linear","log"].map(s => <option key={s}>{s}</option>)}</select></label>
+        <label className="axis-picker">Y scale<select value={yScale} onChange={e => setYScale(e.target.value as NumericScaleMode)}>{["linear","log"].map(s => <option key={s}>{s}</option>)}</select></label>
+      </div>
 
-      {/* Data table preview */}
-      {selectedDataset && (
-        <div className="chart-card">
-          <h2>Data Table — {selectedDataset.name}</h2>
-          <div className="analog-table-wrap" style={{maxHeight:"350px",overflowY:"auto"}}>
-            <table className="analog-table">
-              <thead><tr>{cols.map(c=><th key={c}>{c}</th>)}</tr></thead>
-              <tbody>
-                {displayRows ? displayRows.map((r,i) => <tr key={i}>{cols.map(c=><td key={c}>{r[c] ?? ""}</td>)}</tr>) :
-                 <tr><td colSpan={cols.length||1} style={{textAlign:"center",color:"var(--muted,#94a3b8)",padding:"1rem"}}>
-                   {rowsErr ? `⚠ ${rowsErr}` : !selectedDataset.fetchUrl ? "No fetch URL. Run generate:spice-benchmark to copy data to public/." : "Loading…"}
-                 </td></tr>}
-              </tbody>
+      {/* Y series multi-select */}
+      {cols.length > 1 && (
+        <div className="benchmark-series">
+          <span className="hint">Y series:</span>
+          <div className="benchmark-series-checkboxes">
+            {cols.filter(c => c !== xCol).map(c => (
+              <label key={c} className="benchmark-series-item"><input type="checkbox" checked={yCols.includes(c)} onChange={() => toggleYCol(c)} />{c}</label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Chart */}
+      {chart ? (
+        <div className="plot-host plot-host--tall">
+          <div ref={chartRef} style={{ width: "100%", height: "100%" }} />
+        </div>
+      ) : rows === null && artifact.fetchUrl ? (
+        <EmptyState message="Loading data…" icon="⏳" />
+      ) : rows && rows.length === 0 ? (
+        <EmptyState message="No data rows" icon="📭" />
+      ) : artifact.fetchUrl ? (
+        <EmptyState message="Select X and Y columns to plot" icon="📊" />
+      ) : (
+        <EmptyState message={`${artifact.format} — download available (no inline chart)`} icon="📁" />
+      )}
+      {error && <p className="hint benchmark-error">{error}</p>}
+
+      {/* Paginated data table */}
+      {displayRows && displayRows.length > 0 && (
+        <div className="benchmark-table-section">
+          <div className="benchmark-table-header">
+            <span>Data <span className="hint">({displayRows.length} rows)</span></span>
+            <div className="benchmark-pagination">
+              <button className="benchmark-btn" disabled={tablePage === 0} onClick={() => setTablePage(0)}>««</button>
+              <button className="benchmark-btn" disabled={tablePage === 0} onClick={() => setTablePage(p => Math.max(0, p - 1))}>«</button>
+              <span className="hint">Page {tablePage + 1}/{totalPages || 1}</span>
+              <button className="benchmark-btn" disabled={tablePage >= totalPages - 1} onClick={() => setTablePage(p => Math.min(totalPages - 1, p + 1))}>»</button>
+              <button className="benchmark-btn" disabled={tablePage >= totalPages - 1} onClick={() => setTablePage(totalPages - 1)}>»»</button>
+            </div>
+          </div>
+          <div className="analog-table-wrap benchmark-table-wrap">
+            <table className="benchmark-table">
+              <thead><tr>{cols.map(c => <th key={c}>{c}</th>)}</tr></thead>
+              <tbody>{pageRows?.map((r, i) => <tr key={i}>{cols.map(c => <td key={c}>{r[c] ?? ""}</td>)}</tr>)}</tbody>
             </table>
           </div>
         </div>
@@ -399,38 +301,47 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
   );
 }
 
-function PlotGallery({ run }: { run: BenchmarkRun }): JSX.Element {
-  const narrow = useNarrowScreen(640);
-  const [lightbox, setLightbox] = useState<string|null>(null);
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Plot Gallery (no tabs, 2-col grid)                                  */
+/* ═══════════════════════════════════════════════════════════════════ */
 
-  // Group plot artifacts by domain
+function PlotGallery({ run }: { run: BenchmarkRun }) {
+  const narrow = useNarrowScreen(640);
+  const [lightbox, setLightbox] = useState<string | null>(null);
   const grouped = useMemo(() => {
     const m = new Map<AnalysisDomain, typeof run.plotArtifacts>();
-    for (const p of run.plotArtifacts) {
-      const lis = m.get(p.domain) ?? [];
-      lis.push(p);
-      m.set(p.domain, lis);
-    }
-    return [...ANALYSIS_DOMAINS.filter(d=>d!=="overview"), "overview" as AnalysisDomain].filter(d=>m.has(d)).map(d=>({domain:d,plots:m.get(d)!}));
+    for (const p of run.plotArtifacts) { const list = m.get(p.domain) ?? []; list.push(p); m.set(p.domain, list); }
+    return m;
   }, [run.plotArtifacts]);
 
-  if (run.plotArtifacts.length===0) return <div className="chart-card"><h2>Plot Gallery</h2><EmptyState message="No plot images in this run" icon="🖼"/></div>;
+  if (run.plotArtifacts.length === 0) return <div className="chart-card benchmark-section" id="bm-gallery"><h2>Original Plots</h2><EmptyState message="No plot images in this run" icon="🖼" /></div>;
 
   return (
-    <div>
-      {lightbox && <div onClick={()=>setLightbox(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}><img src={lightbox} style={{maxWidth:"90vw",maxHeight:"90vh",objectFit:"contain"}} alt="Plot"/></div>}
-      {grouped.map(g=>(
-        <div key={g.domain} className="chart-card">
-          <h2>{DOMAIN_LABELS[g.domain]} Plots ({g.plots.length})</h2>
-          <div style={{display:"grid",gridTemplateColumns:`repeat(${narrow?2:3},1fr)`,gap:"0.75rem"}}>
-            {g.plots.map(p=>(p.displayUrl?(
-              <div key={p.relPath} style={{border:"1px solid var(--border,#e2e8f0)",borderRadius:"6px",overflow:"hidden",cursor:"pointer"}} onClick={()=>setLightbox(p.displayUrl)}>
-                <img src={p.displayUrl} alt={p.name} style={{width:"100%",height:"auto",display:"block"}} loading="lazy"/>
-                <div style={{padding:"0.3rem 0.5rem",fontSize:"0.7rem",background:"var(--surface2,#f8fafc)"}}>{p.name} ({p.size})</div>
+    <div className="chart-card benchmark-section" id="bm-gallery">
+      {lightbox && (
+        <div className="benchmark-lightbox" onClick={() => setLightbox(null)}>
+          <img src={lightbox} alt="" />
+          <a href={lightbox} download className="benchmark-btn benchmark-lightbox-dl">Download</a>
+        </div>
+      )}
+      <h2>Original Plots <span className="hint">({run.plotArtifacts.length} total)</span></h2>
+      {[...grouped.entries()].map(([domain, plots]) => (
+        <div key={domain} className="benchmark-plot-group">
+          <h3 className="flow-subsection-title">{DOMAIN_LABELS[domain]} — {plots.length} plots</h3>
+          <div className={`benchmark-plot-grid ${narrow ? "benchmark-plot-grid--1col" : "benchmark-plot-grid--2col"}`}>
+            {plots.map(p => p.displayUrl ? (
+              <div key={p.relPath} className="benchmark-plot-card" onClick={() => setLightbox(BASE + p.displayUrl)}>
+                <div className="benchmark-plot-img-wrap">
+                  <img src={BASE + p.displayUrl} alt={p.name} loading="lazy" />
+                </div>
+                <div className="benchmark-plot-info">
+                  <span>{p.name}</span>
+                  <span className="hint">{p.size}</span>
+                </div>
               </div>
-            ):(
-              <div key={p.relPath} style={{border:"1px dashed var(--border,#e2e8f0)",borderRadius:"6px",padding:"1rem",textAlign:"center",color:"var(--muted)"}}>{p.name} (no preview)</div>
-            )))}
+            ) : (
+              <div key={p.relPath} className="benchmark-plot-card benchmark-plot-card--empty">{p.name}</div>
+            ))}
           </div>
         </div>
       ))}
@@ -438,53 +349,60 @@ function PlotGallery({ run }: { run: BenchmarkRun }): JSX.Element {
   );
 }
 
-function VerificationSection({ run }: { run: BenchmarkRun }): JSX.Element {
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Verification Section                                                */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+function VerificationSection({ run }: { run: BenchmarkRun }) {
   const ts = run.verificationTests;
   const grouped = useMemo(() => {
-    const m = new Map<AnalysisDomain, typeof ts>();
-    for (const t of ts) { const lis = m.get(t.domain as AnalysisDomain) ?? []; lis.push(t); m.set(t.domain as AnalysisDomain, lis); }
+    const m = new Map<string, typeof ts>();
+    for (const t of ts) { const list = m.get(t.domain) ?? []; list.push(t); m.set(t.domain, list); }
     return m;
   }, [ts]);
+  const passCount = ts.filter(t => t.status === "pass").length;
+  const failCount = ts.filter(t => t.status === "fail").length;
+  const naCount = ts.filter(t => t.status === "unavailable").length;
 
   return (
-    <>
-      <div className="chart-card">
-        <h2>Verification Summary</h2>
-        <div className="flow-kpi-grid">
-          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Overall</div><div className="flow-kpi-card__value"><Badge status={run.reportSummary.overallStatus==="pass"?"completed":run.reportSummary.overallStatus==="fail"?"failed":"pending"}/></div></div>
-          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Pass</div><div className="flow-kpi-card__value" style={{color:"#22c55e"}}>{ts.filter(t=>t.status==="pass").length}</div></div>
-          <div className="flow-kpi-card"><div className="flow-kpi-card__label">Fail</div><div className="flow-kpi-card__value" style={{color:"#ef4444"}}>{ts.filter(t=>t.status==="fail").length}</div></div>
-          <div className="flow-kpi-card"><div className="flow-kpi-card__label">N/A</div><div className="flow-kpi-card__value" style={{color:"#94a3b8"}}>{ts.filter(t=>t.status==="unavailable").length}</div></div>
-        </div>
+    <div className="chart-card benchmark-section" id="bm-verify">
+      <h2>Verification Report</h2>
+      <div className="benchmark-verify-summary">
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Overall</div><div className="flow-kpi-card__value"><Badge status={run.reportSummary.overallStatus === "pass" ? "completed" : run.reportSummary.overallStatus === "fail" ? "failed" : "pending"} /></div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Pass</div><div className="flow-kpi-card__value" style={{ color: "var(--ok,#22c55e)" }}>{passCount}</div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Fail</div><div className="flow-kpi-card__value" style={{ color: "var(--fail,#ef4444)" }}>{failCount}</div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">N/A</div><div className="flow-kpi-card__value" style={{ color: "var(--muted)" }}>{naCount}</div></div>
       </div>
-
-      {[...grouped.entries()].map(([domain,tests])=>(
-        <div key={domain} className="chart-card">
-          <h2>{DOMAIN_LABELS[domain]} Tests</h2>
-          <div className="analog-table-wrap"><table className="analog-table"><thead><tr><th>Test</th><th>Status</th><th>Detail</th></tr></thead><tbody>
-            {tests.map(t=><tr key={t.testId}><td>{t.name}</td><td><Badge status={t.status==="pass"?"completed":t.status==="fail"?"failed":"pending"}/></td><td style={{fontSize:"0.8rem"}}>{t.detail}</td></tr>)}
+      {[...grouped.entries()].map(([domain, tests]) => (
+        <div key={domain} className="benchmark-verify-domain">
+          <h3 className="flow-subsection-title">{DOMAIN_LABELS[domain as AnalysisDomain] ?? domain} — {tests.length} tests</h3>
+          <div className="benchmark-table-wrap"><table className="benchmark-table"><thead><tr><th>Test</th><th>Status</th><th>Detail</th></tr></thead><tbody>
+            {tests.map(t => <tr key={t.testId}><td>{t.name}</td><td><Badge status={t.status === "pass" ? "completed" : t.status === "fail" ? "failed" : "pending"} /></td><td className="benchmark-test-detail">{t.detail}</td></tr>)}
           </tbody></table></div>
         </div>
       ))}
-
       {run.reportSummary.reportMarkdown && (
-        <div className="chart-card">
-          <h2>Raw REPORT.md</h2>
-          <pre style={{background:"var(--surface2,#f8fafc)",padding:"0.75rem",borderRadius:"6px",overflowX:"auto",fontSize:"0.78rem",lineHeight:1.5,maxHeight:"400px",overflowY:"auto",whiteSpace:"pre-wrap"}}>{run.reportSummary.reportMarkdown}</pre>
-        </div>
+        <details className="benchmark-report-raw">
+          <summary>Raw REPORT.md</summary>
+          <pre>{run.reportSummary.reportMarkdown}</pre>
+        </details>
       )}
-    </>
+    </div>
   );
 }
 
-function ArtifactSection({ run }: { run: BenchmarkRun }): JSX.Element {
-  const all = [...run.dataArtifacts, ...run.plotArtifacts.map(p=>({...p,toolKey:"spice_benchmark",stageId:p.domain,algorithmId:run.modelId,cellName:"—",status:"completed" as const,hash:p.name,provenance:run.status,visibility:"public" as const,downloadUrl:p.displayUrl}))];
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Artifact Table                                                      */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+function ArtifactSection({ run }: { run: BenchmarkRun }) {
+  const all = [...run.dataArtifacts.map(a => ({ ...a, kind: "data" as const })), ...run.plotArtifacts.map(p => ({ ...p, kind: "plot" as const }))];
   return (
-    <div className="chart-card">
-      <h2>Artifacts — {run.runId}</h2>
-      <div className="analog-table-wrap" style={{maxHeight:"400px",overflowY:"auto"}}>
-        <table className="analog-table"><thead><tr><th>Name</th><th>Domain</th><th>Format</th><th>Size</th><th>Hash</th><th>Status</th></tr></thead><tbody>
-          {all.map((a,i)=><tr key={i}><td><code>{a.name}</code></td><td>{a.domain}</td><td>{a.format}</td><td>{a.size}</td><td style={{fontSize:"0.68rem"}}><code>{a.hash}</code></td><td><Badge status="completed"/></td></tr>)}
+    <div className="chart-card benchmark-section" id="bm-artifacts">
+      <h2>Artifacts — {run.runId} <span className="hint">({all.length} files)</span></h2>
+      <div className="benchmark-table-wrap" style={{ maxHeight: "400px", overflowY: "auto" }}>
+        <table className="benchmark-table"><thead><tr><th>Name</th><th>Kind</th><th>Domain</th><th>Format</th><th>Size</th><th>Rows</th><th>Hash</th></tr></thead><tbody>
+          {all.map((a, i) => <tr key={i}><td><code>{a.name}</code></td><td>{a.kind}</td><td>{a.domain}</td><td>{a.format}</td><td>{a.size}</td><td>{"rowCount" in a ? (a.rowCount > 0 ? a.rowCount : "—") : "—"}</td><td style={{ fontSize: "0.65rem" }}><code>{("hash" in a ? a.hash : a.name.slice(0, 8))}</code></td></tr>)}
         </tbody></table>
       </div>
     </div>
@@ -492,40 +410,120 @@ function ArtifactSection({ run }: { run: BenchmarkRun }): JSX.Element {
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*  SpiceBenchmarkPage                                                  */
+/*  SpiceBenchmarkPage (single continuous layout, no tabs)              */
 /* ═══════════════════════════════════════════════════════════════════ */
-export function SpiceBenchmarkPage(): JSX.Element {
-  const narrow = useNarrowScreen(640);
+
+export function SpiceBenchmarkPage() {
   const manifest = SPICE_BENCHMARK_MANIFEST;
   const runIds = Object.keys(manifest.runs);
-  const firstRunId = runIds[0] ?? "";
 
-  const [activeTab, setActiveTab] = useState<TabId>("overview");
-  const [explore, setExplore] = useState<SpiceExploreState>({...DEFAULT_SPICE_EXPLORE_STATE,runId:firstRunId,modelId:manifest.runs[firstRunId]?.modelId??"",suiteId:manifest.runs[firstRunId]?.netlistSuite?.suiteId??""});
+  const [runId, setRunId] = useState(runIds[0] ?? "");
+  const [analysis, setAnalysis] = useState<AnalysisDomain>("overview");
+  const [plotAspect, setPlotAspect] = useState<PlotAspectMode>("flexible");
 
-  const run = manifest.runs[explore.runId];
-  if (!run) return <div className="chart-card"><h2>No benchmark data</h2><p className="hint">Run the data generator first.</p></div>;
+  const run = manifest.runs[runId];
+  const hasCompareRuns = runIds.length >= 2;
+  const [compareRunId, setCompareRunId] = useState(hasCompareRuns ? runIds[1] : "");
+  const [comparisonMode, setComparisonMode] = useState<ComparisonMode>("single");
+  const compareRun = comparisonMode !== "single" && compareRunId ? manifest.runs[compareRunId] : null;
 
-  useEffect(() => {
-    if (activeTab!=="explorer") return;
-    const id = requestAnimationFrame(()=>{
-      document.querySelectorAll<HTMLElement>(".plot-host > div.js-plotly-plot").forEach(el=>{void Plotly.Plots.resize(el);});
-    });
-    return ()=>cancelAnimationFrame(id);
-  }, [narrow, activeTab]);
+  // Build run↔model↔suite index for reverse lookup
+  const runByModelSuite = useMemo(() => {
+    const idx: Record<string, Record<string, string>> = {};
+    for (const rid of runIds) {
+      const r = manifest.runs[rid];
+      if (!idx[r.modelId]) idx[r.modelId] = {};
+      idx[r.modelId][r.netlistSuite?.suiteId ?? ""] = rid;
+    }
+    return idx;
+  }, [manifest]);
+
+  const [selectedModelId, setSelectedModelId] = useState(run?.modelId ?? "");
+  const [selectedSuiteId, setSelectedSuiteId] = useState(run?.netlistSuite?.suiteId ?? "");
+
+  // When model or suite changes, find matching run
+  const onModelChange = useCallback((mid: string) => {
+    setSelectedModelId(mid);
+    const matchingRun = runByModelSuite[mid]?.[selectedSuiteId] ?? runByModelSuite[mid]?.[""] ?? Object.values(runByModelSuite[mid] ?? {})[0];
+    if (matchingRun && manifest.runs[matchingRun]) setRunId(matchingRun);
+  }, [runByModelSuite, selectedSuiteId, manifest]);
+  const onSuiteChange = useCallback((sid: string) => {
+    setSelectedSuiteId(sid);
+    const matchingRun = runByModelSuite[selectedModelId]?.[sid] ?? runByModelSuite[selectedModelId]?.[""] ?? Object.values(runByModelSuite[selectedModelId] ?? {})[0];
+    if (matchingRun && manifest.runs[matchingRun]) setRunId(matchingRun);
+  }, [runByModelSuite, selectedModelId, manifest]);
+
+  // Sync selectedModelId/selectedSuiteId when runId changes externally
+  useEffect(() => { if (run) { setSelectedModelId(run.modelId); setSelectedSuiteId(run.netlistSuite?.suiteId ?? ""); } }, [runId]);
+
+  if (!run) return <div className="chart-card"><EmptyState message="No benchmark data. Run generate:spice-benchmark first." icon="📭" /></div>;
+
+  // Datasets filtered by analysis
+  const datasets = useMemo(() => {
+    return run.dataArtifacts.filter(d => analysis === "overview" || d.domain === analysis);
+  }, [run, analysis]);
+
+  // Derive available analysis domains (only show those with data)
+  const availableDomains = useMemo(() => {
+    const set = new Set<AnalysisDomain>();
+    for (const d of run.dataArtifacts) set.add(d.domain);
+    return ANALYSIS_DOMAINS.filter(d => d === "overview" || set.has(d));
+  }, [run]);
 
   return (
-    <div>
-      {/* Tab bar */}
-      <div style={{display:"flex",gap:"0.25rem",flexWrap:"wrap",padding:"0.5rem 0",borderBottom:"1px solid var(--border,#e2e8f0)",marginBottom:"1rem"}}>
-        {TABS.map(tab=><button key={tab.id} onClick={()=>setActiveTab(tab.id)} className="tab-btn" style={{padding:"0.4rem 0.75rem",border:"none",borderRadius:"6px 6px 0 0",cursor:"pointer",fontSize:"0.82rem",fontWeight:activeTab===tab.id?600:400,background:activeTab===tab.id?"var(--accent,#0071e3)":"transparent",color:activeTab===tab.id?"#fff":"var(--text,#334155)",borderBottom:activeTab!==tab.id?"2px solid transparent":"none"}}>{narrow?tab.label.split(" ")[0]:tab.label}</button>)}
+    <div className="benchmark-page">
+      {/* ─── Top Controls Card (Explore metrics style) ─── */}
+      <div className="chart-card benchmark-controls">
+        <h2>Explore benchmark results</h2>
+        <p className="hint">Select a run, model, and analysis domain. Datasets, plots, and verification results update automatically.</p>
+        <div className="benchmark-controls-grid">
+          <label className="axis-picker">Run<select value={runId} onChange={e => setRunId(e.target.value)}>{runIds.map(rid => <option key={rid} value={rid}>{rid}</option>)}</select></label>
+          <label className="axis-picker">Model<select value={selectedModelId} onChange={e => onModelChange(e.target.value)}>{manifest.modelIds.map(mid => <option key={mid} value={mid}>{mid}</option>)}</select></label>
+          <label className="axis-picker">Format<select value={run.modelFormat} onChange={() => {}}>{manifest.modelFormats.map(f => <option key={f}>{f}</option>)}</select></label>
+          <label className="axis-picker">Netlist Suite<select value={selectedSuiteId} onChange={e => onSuiteChange(e.target.value)}>{manifest.suiteIds.map(sid => <option key={sid} value={sid}>{sid}</option>)}</select></label>
+          <label className="axis-picker">Analysis<select value={analysis} onChange={e => setAnalysis(e.target.value as AnalysisDomain)}>{availableDomains.map(d => <option key={d} value={d}>{DOMAIN_LABELS[d]}</option>)}</select></label>
+          <label className="axis-picker">Plot aspect<select value={plotAspect} onChange={e => setPlotAspect(e.target.value as PlotAspectMode)}>{["flexible","16:9","4:3","1:1"].map(a => <option key={a}>{a}</option>)}</select></label>
+        </div>
+        {hasCompareRuns && (
+          <div className="benchmark-controls-grid" style={{ marginTop: "0.5rem" }}>
+            <label className="axis-picker">Comparison<select value={comparisonMode} onChange={e => setComparisonMode(e.target.value as ComparisonMode)}>{["single","compare_models","compare_suites"].map(m => <option key={m} value={m}>{m}</option>)}</select></label>
+            {comparisonMode !== "single" && <label className="axis-picker">Compare Run<select value={compareRunId} onChange={e => setCompareRunId(e.target.value)}>{runIds.filter(rid => rid !== runId).map(rid => <option key={rid} value={rid}>{rid}</option>)}</select></label>}
+          </div>
+        )}
+        <p className="hint benchmark-datasets-summary">{datasets.length} dataset(s) for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
       </div>
 
-      {activeTab==="overview" && <OverviewSection run={run}/>}
-      {activeTab==="explorer" && <ExplorerSection manifest={manifest} run={run} explore={explore} setExplore={setExplore}/>}
-      {activeTab==="gallery" && <PlotGallery run={run}/>}
-      {activeTab==="verification" && <VerificationSection run={run}/>}
-      {activeTab==="artifacts" && <ArtifactSection run={run}/>}
+      {/* ─── Overview ─── */}
+      <OverviewSection run={run} />
+
+      {/* ─── Interactive Datasets ─── */}
+      <div className="benchmark-section" id="bm-datasets">
+        <h2 className="benchmark-section-heading">Interactive Datasets — {DOMAIN_LABELS[analysis]} ({datasets.length})</h2>
+        {datasets.length === 0 ? (
+          <div className="chart-card"><EmptyState message={`No datasets for ${DOMAIN_LABELS[analysis]}. Try Overview or another domain.`} icon="📊" /></div>
+        ) : (
+          datasets.map(d => (
+            <BenchmarkDatasetCard key={d.name} artifact={d} domain={analysis === "overview" ? d.domain : analysis} />
+          ))
+        )}
+      </div>
+
+      {/* ─── Original Plots ─── */}
+      <PlotGallery run={run} />
+
+      {/* ─── Verification Report ─── */}
+      <VerificationSection run={run} />
+
+      {/* ─── Artifacts ─── */}
+      <ArtifactSection run={run} />
+
+      {/* ─── Compare run overlay ─── */}
+      {compareRun && comparisonMode !== "single" && (
+        <div className="chart-card benchmark-section" id="bm-compare">
+          <h2>Compare: {compareRun.runId}</h2>
+          <OverviewSection run={compareRun} />
+        </div>
+      )}
     </div>
   );
 }
