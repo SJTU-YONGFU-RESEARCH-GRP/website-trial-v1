@@ -23,6 +23,25 @@ const CHART_TYPES = [{value:"scatter",label:"Scatter"},{value:"line",label:"Line
 const COMPARISON_MODES: {value:ComparisonMode;label:string}[] = [{value:"single",label:"Single run"},{value:"compare_models",label:"Compare models"},{value:"compare_suites",label:"Compare suites"}];
 const DOMAIN_LABELS: Record<AnalysisDomain, string> = {overview:"Overview",dc:"DC",ac:"AC",transient:"Transient",noise:"Noise"};
 
+/* ─── Domain-based smart defaults for axis columns and chart type ─── */
+const DOMAIN_DEFAULT_X: Record<AnalysisDomain, string[]> = {
+  overview: [],
+  dc: ["Vds","Vgs","Vds(V)","Vbias","temp(C)"],
+  ac: ["freq(Hz)","freq","frequency","frequency(Hz)","Vgs(V)"],
+  transient: ["time(s)","time","t(s)","Vin(V)"],
+  noise: ["freq(Hz)","freq","frequency","frequency(Hz)"],
+};
+const DOMAIN_DEFAULT_Y: Record<AnalysisDomain, string[]> = {
+  overview: [],
+  dc: ["Id(A)","Ids(A)","gm(A/V)","gds(A/V)","I(V)"],
+  ac: ["Cgg(F)","Cgd(F)","Cgs(F)","Cgb(F)","C(F)","mag","dB"],
+  transient: ["Vout(V)","Vout","Vin(V)","Iin(A)","power(W)"],
+  noise: ["Sid(A^2/Hz)","Svg(V^2/Hz)","Sv(V^2/Hz)","PSD"],
+};
+const DOMAIN_DEFAULT_CHART: Record<AnalysisDomain, SpiceExploreState["chartType"]> = {
+  overview: "scatter", dc: "scatter", ac: "scatter", transient: "line", noise: "scatter",
+};
+
 type TabId = "overview" | "explorer" | "gallery" | "verification" | "artifacts";
 const TABS: {id:TabId;label:string}[] = [
   {id:"overview",label:"Benchmark Overview"},
@@ -115,6 +134,14 @@ function DountChart({ pass, fail, na }: {pass:number;fail:number;na:number}): JS
   return <div className="plot-host plot-host--short"><div ref={ref} style={{width:"100%",height:"100%"}}/></div>;
 }
 
+function pickDefault(cols: string[], candidates: string[]): string {
+  for (const c of candidates) { if (cols.includes(c)) return c; }
+  return cols[0] ?? "";
+}
+
+/** Persist loaded CSV rows so we don't re-fetch on every render. */
+const dataCache = new Map<string, Record<string,string>[]>();
+
 function ExplorerSection({ manifest, run, explore, setExplore }: {
   manifest: SpiceBenchmarkManifest; run: BenchmarkRun; explore: SpiceExploreState;
   setExplore: React.Dispatch<React.SetStateAction<SpiceExploreState>>;
@@ -132,71 +159,144 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
   // Filtered datasets for current run
   const datasets = run.dataArtifacts.filter(d => explore.analysis==="overview"||d.domain===explore.analysis);
   const selectedDataset = datasets.find(d => d.name===explore.datasetId) ?? datasets[0];
+  const cols = selectedDataset?.columns ?? [];
 
-  // Chart data from selected dataset
+  // ─── Domain-based smart defaults ───
+  useEffect(() => {
+    if (!selectedDataset || !selectedDataset.columns) return;
+    const domain = selectedDataset.domain as AnalysisDomain;
+    const dx = DOMAIN_DEFAULT_X[domain] ?? [];
+    const dy = DOMAIN_DEFAULT_Y[domain] ?? [];
+    const dChart = DOMAIN_DEFAULT_CHART[domain] ?? "scatter";
+    const newX = explore.xColumn && cols.includes(explore.xColumn) ? null : pickDefault(cols, dx);
+    const newY = explore.yColumn && cols.includes(explore.yColumn) ? null : pickDefault(cols, dy);
+    const newZ = cols.length > 2 ? (explore.zColumn && cols.includes(explore.zColumn) ? null : cols[2]) : null;
+    const updates: Record<string, unknown> = {};
+    if (newX) updates.xColumn = newX;
+    if (newY) updates.yColumn = newY;
+    if (newZ !== null) updates.zColumn = newZ;
+    if (newX && newY) updates.chartType = dChart;
+    else if (cols.length <= 2) updates.chartType = "line";
+    if (Object.keys(updates).length > 0) setExplore(p => ({...p, ...updates}));
+  }, [selectedDataset?.name, selectedDataset?.domain]);
+
+  // ─── Lazy fetch data rows ───
+  const [rows, setRows] = useState<Record<string,string>[] | null>(null);
+  const [rowsErr, setRowsErr] = useState<string | null>(null);
+  useEffect(() => {
+    if (!selectedDataset) { setRows(null); return; }
+    const url = selectedDataset.fetchUrl;
+    const cacheKey = url ?? selectedDataset.name;
+    if (dataCache.has(cacheKey)) { setRows(dataCache.get(cacheKey)!); return; }
+    if (!url) { setRows(null); return; }
+    let cancelled = false;
+    fetch(url).then(r => { if (!r.ok) throw new Error(r.statusText); return r.text(); }).then(text => {
+      if (cancelled) return;
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) { setRows([]); return; }
+      const headers = lines[0].split(",").map(h => h.trim());
+      const data = lines.slice(1).map(line => {
+        const vals = line.split(",");
+        const obj: Record<string,string> = {};
+        headers.forEach((h,i) => obj[h] = vals[i]?.trim() ?? "");
+        return obj;
+      });
+      dataCache.set(cacheKey, data);
+      if (!cancelled) setRows(data);
+    }).catch(err => { if (!cancelled) setRowsErr(err.message); });
+    return () => { cancelled = true; };
+  }, [selectedDataset?.name, selectedDataset?.fetchUrl]);
+
+  const displayRows = useMemo(() => {
+    if (!rows) return null;
+    const maxRows = 500;
+    if (rows.length <= maxRows) return rows;
+    return rows.slice(0, maxRows);
+  }, [rows]);
+
+  // ─── Build Plotly chart from loaded rows ───
   const chart = useMemo(() => {
-    if (!selectedDataset || !selectedDataset.columns) return null;
-    const cols = selectedDataset.columns;
+    if (!selectedDataset || !selectedDataset.columns || !rows) return null;
     const xCol = explore.xColumn || cols[0];
     const yCol = explore.yColumn || cols[1];
     const zCol = explore.zColumn || cols[2];
     const xIdx = cols.indexOf(xCol);
     const yIdx = cols.indexOf(yCol);
     const zIdx = cols.indexOf(zCol);
-    if (xIdx<0||yIdx<0) return null;
+    if (xIdx < 0 || yIdx < 0) return null;
 
-    // Parse values from data artifact (data is small enough to inline from generated manifest)
-    // For real use, data would be lazy-fetched. Here we show column metadata.
-    const xTitle = xCol; const yTitle = yCol; const zTitle = zCol;
+    const xVals = rows.map(r => +r[xCol]);  const yVals = rows.map(r => +r[yCol]);
+    const zVals = zIdx >= 0 ? rows.map(r => +r[zCol]) : [];
 
-    if (explore.chartType==="scatter" || explore.chartType==="line") {
+    const mode = explore.chartType === "line" ? "lines+markers" : "markers";
+
+    if (explore.chartType === "scatter" || explore.chartType === "line") {
       return {
-        data: [{type:"scatter",mode:explore.chartType==="line"?"lines":"markers",
-          x:[],y:[],
-          name:`${selectedDataset.name}`,
-          hovertemplate:`${xTitle}: %{x}<br>${yTitle}: %{y}<extra></extra>`} as Data],
+        data: [{ type: "scatter", mode, x: xVals, y: yVals,
+          name: selectedDataset.name,
+          hovertemplate: `${xCol}: %{x}<br>${yCol}: %{y}<extra></extra>` } as Data],
         layout: {
-          autosize:true, margin:narrow?{l:52,r:16,t:36,b:48}:{l:60,r:24,t:40,b:52},
-          paper_bgcolor:bg, plot_bgcolor:bg,
-          font:plotFont(palette.rgbAxisTitle),
-          title:{text:plotlyBold(`${selectedDataset.name} — ${selectedDataset.domain}`),font:plotFont(palette.rgbAxisTitle)},
-          xaxis:{...frameX,title:{text:xTitle,font:plotAxisFont(palette.rgbAxisTitle,narrow)},tickfont:axTick,type:explore.numericScaleX==="log"?"log":"linear"},
-          yaxis:{...frameY,title:{text:yTitle,font:plotAxisFont(palette.rgbAxisTitle,narrow)},tickfont:axTick,type:explore.numericScaleY==="log"?"log":"linear"},
-          showlegend:true,hovermode:"closest",hoverlabel:hoverLabel,
+          autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
+          paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
+          title: { text: plotlyBold(`${DOMAIN_LABELS[selectedDataset.domain]} — ${selectedDataset.name}`), font: plotFont(palette.rgbAxisTitle) },
+          xaxis: { ...frameX, title: { text: xCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: explore.numericScaleX === "log" ? "log" : "linear" },
+          yaxis: { ...frameY, title: { text: yCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: explore.numericScaleY === "log" ? "log" : "linear" },
+          showlegend: true, hovermode: "closest", hoverlabel: hoverLabel,
         } as Partial<Layout>,
       };
     }
-    if (explore.chartType==="bar") {
+    if (explore.chartType === "bar") {
       return {
-        data: [{type:"bar",x:[],y:[],name:yTitle} as Data],
+        data: [{ type: "bar", x: xVals, y: yVals, name: yCol } as Data],
         layout: {
-          autosize:true, margin:narrow?{l:52,r:16,t:36,b:48}:{l:60,r:24,t:40,b:52},
-          paper_bgcolor:bg,plot_bgcolor:bg,font:plotFont(palette.rgbAxisTitle),
-          title:{text:plotlyBold(selectedDataset.name),font:plotFont(palette.rgbAxisTitle)},
-          xaxis:{...frameX,title:{text:xTitle,font:plotAxisFont(palette.rgbAxisTitle,narrow)},tickfont:axTick},
-          yaxis:{...frameY,title:{text:yTitle,font:plotAxisFont(palette.rgbAxisTitle,narrow)},tickfont:axTick,type:explore.numericScaleY==="log"?"log":"linear"},
-          hovermode:"closest",hoverlabel:hoverLabel,
+          autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
+          paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
+          title: { text: plotlyBold(selectedDataset.name), font: plotFont(palette.rgbAxisTitle) },
+          xaxis: { ...frameX, title: { text: xCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick },
+          yaxis: { ...frameY, title: { text: yCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, type: explore.numericScaleY === "log" ? "log" : "linear" },
+          hovermode: "closest", hoverlabel: hoverLabel,
         } as Partial<Layout>,
       };
     }
-    if (explore.chartType==="heatmap" && zIdx>=0) {
+    if (explore.chartType === "heatmap" && zIdx >= 0) {
       return {
-        data: [{type:"heatmap",z:[[]],x:[],y:[],colorscale:"Viridis",
-          hovertemplate:`${xTitle}: %{x}<br>${yTitle}: %{y}<br>${zTitle}: %{z}<extra></extra>`} as Data],
+        data: [{ type: "heatmap", z: [zVals], x: xVals.map(String), y: [yCol], colorscale: "Viridis",
+          hovertemplate: `${xCol}: %{x}<br>${yCol}: %{y}<br>${zCol}: %{z}<extra></extra>` } as Data],
         layout: {
-          autosize:true, margin:narrow?{l:64,r:16,t:36,b:64}:{l:80,r:24,t:40,b:72},
-          paper_bgcolor:bg,plot_bgcolor:bg,font:plotFont(palette.rgbAxisTitle),
-          title:{text:plotlyBold(`${selectedDataset.name} — heatmap`),font:plotFont(palette.rgbAxisTitle)},
-          xaxis:{...frameX,title:{text:xTitle,font:plotAxisFont(palette.rgbAxisTitle,narrow)},tickfont:axTick},
-          yaxis:{...frameY,title:{text:yTitle,font:plotAxisFont(palette.rgbAxisTitle,narrow)},tickfont:axTick,autorange:"reversed" as const},
-          hovermode:"closest",hoverlabel:hoverLabel,
+          autosize: true, margin: narrow ? { l: 64, r: 16, t: 36, b: 64 } : { l: 80, r: 24, t: 40, b: 72 },
+          paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
+          title: { text: plotlyBold(`${selectedDataset.name} — heatmap`), font: plotFont(palette.rgbAxisTitle) },
+          xaxis: { ...frameX, title: { text: xCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick },
+          yaxis: { ...frameY, title: { text: yCol, font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, autorange: "reversed" as const },
+          hovermode: "closest", hoverlabel: hoverLabel,
         } as Partial<Layout>,
       };
     }
     return null;
-  }, [selectedDataset,explore,narrow,palette,bg,axTick,hoverLabel,frameX,frameY]);
+  }, [selectedDataset, explore, rows, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
 
-  const chartRef = usePlotlyChart(chart?.data??[], chart?.layout??{}, {responsive:true,displayModeBar:false,displaylogo:false} satisfies Partial<Config>);
+  const chartRef = usePlotlyChart(chart?.data ?? [], chart?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
+
+  // ─── CSV download ───
+  const downloadCsv = () => {
+    if (!rows || !cols.length) return;
+    const csv = [cols.join(","), ...rows.map(r => cols.map(c => r[c] ?? "").join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `${selectedDataset?.name ?? "data"}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ─── Series checkboxes ───
+  const allCols = selectedDataset?.columns ?? [];
+  const sel = explore.seriesSelection.length === 0 ? [...allCols] : explore.seriesSelection;
+  const toggleAll = (on: boolean) => setExplore(p => ({ ...p, seriesSelection: on ? [] : allCols.slice() }));
+  const toggleCol = (col: string) => setExplore(p => {
+    const cur = p.seriesSelection.length === 0 ? [...allCols] : [...p.seriesSelection];
+    const idx = cur.indexOf(col);
+    if (idx >= 0) { cur.splice(idx, 1); } else { cur.push(col); }
+    return { ...p, seriesSelection: cur };
+  });
 
   return (
     <div>
@@ -215,13 +315,13 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
         </div>
         <div className="flow-selector-grid" style={{marginBottom:"0.5rem"}}>
           <label className="axis-picker">Comparison<select value={explore.comparisonMode} onChange={e=>setExplore(p=>({...p,comparisonMode:e.target.value as ComparisonMode}))}>{COMPARISON_MODES.map(c=><option key={c.value} value={c.value}>{c.label}</option>)}</select></label>
-          {(selectedDataset?.columns) && <>
-            <label className="axis-picker">X<select value={explore.xColumn} onChange={e=>setExplore(p=>({...p,xColumn:e.target.value}))}>{selectedDataset.columns.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
-            <label className="axis-picker">Y<select value={explore.yColumn} onChange={e=>setExplore(p=>({...p,yColumn:e.target.value}))}>{selectedDataset.columns.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
+          {cols.length > 0 && <>
+            <label className="axis-picker">X<select value={explore.xColumn} onChange={e=>setExplore(p=>({...p,xColumn:e.target.value}))}>{cols.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
+            <label className="axis-picker">Y<select value={explore.yColumn} onChange={e=>setExplore(p=>({...p,yColumn:e.target.value}))}>{cols.map(c=><option key={c} value={c}>{c}</option>)}</select></label>
           </>}
         </div>
         <div className="flow-selector-grid">
-          {selectedDataset?.columns && selectedDataset.columns.length>2 && <label className="axis-picker">Z<select value={explore.zColumn} onChange={e=>setExplore(p=>({...p,zColumn:e.target.value}))}>{selectedDataset.columns.map(c=><option key={c} value={c}>{c}</option>)}</select></label>}
+          {cols.length > 2 && <label className="axis-picker">Z<select value={explore.zColumn} onChange={e=>setExplore(p=>({...p,zColumn:e.target.value}))}>{cols.map(c=><option key={c} value={c}>{c}</option>)}</select></label>}
           <label className="axis-picker">Chart<select value={explore.chartType} onChange={e=>setExplore(p=>({...p,chartType:e.target.value as any}))}>{CHART_TYPES.map(ct=><option key={ct.value} value={ct.value}>{ct.label}</option>)}</select></label>
         </div>
         <div className="flow-selector-grid" style={{marginTop:"0.5rem"}}>
@@ -229,9 +329,29 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
           <label className="axis-picker">Y scale<select value={explore.numericScaleY} onChange={e=>setExplore(p=>({...p,numericScaleY:e.target.value as NumericScaleMode}))}>{NUMERIC_SCALE_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
           <label className="axis-picker">Aspect<select value={explore.plotAspect} onChange={e=>setExplore(p=>({...p,plotAspect:e.target.value as PlotAspectMode}))}>{PLOT_ASPECT_OPTIONS.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>
         </div>
+
+        {/* ─── Series multi-select checkboxes ─── */}
+        {cols.length > 0 && (
+          <div style={{marginTop:"0.5rem",padding:"0.5rem",background:"var(--surface2,#f8fafc)",borderRadius:"6px"}}>
+            <div style={{display:"flex",gap:"0.75rem",marginBottom:"0.3rem",alignItems:"center"}}>
+              <strong style={{fontSize:"0.8rem"}}>Series:</strong>
+              <button className="tab-btn" style={{fontSize:"0.7rem",padding:"0.2rem 0.5rem",border:"1px solid var(--border,#cbd5e1)",borderRadius:"4px",cursor:"pointer",background:"var(--surface,#fff)"}} onClick={()=>toggleAll(true)}>Select all</button>
+              <button className="tab-btn" style={{fontSize:"0.7rem",padding:"0.2rem 0.5rem",border:"1px solid var(--border,#cbd5e1)",borderRadius:"4px",cursor:"pointer",background:"var(--surface,#fff)"}} onClick={()=>toggleAll(false)}>Unselect all</button>
+            </div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:"0.3rem 0.75rem"}}>
+              {allCols.map(c => (
+                <label key={c} style={{display:"flex",alignItems:"center",gap:"0.25rem",fontSize:"0.75rem",cursor:"pointer"}}>
+                  <input type="checkbox" checked={sel.includes(c)} onChange={() => toggleCol(c)} />
+                  {c}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
         {selectedDataset && (
           <p className="hint" style={{marginTop:"0.5rem"}}>
-            Columns: {selectedDataset.columns?.join(", ") ?? "N/A"} &middot; {selectedDataset.rowCount} rows &middot; Hash: <code>{selectedDataset.hash}</code>
+            Columns: {cols.join(", ") ?? "N/A"} &middot; {rows ? `${rows.length} rows loaded` : `${selectedDataset.rowCount} rows available`} &middot; Hash: <code>{selectedDataset.hash}</code>
           </p>
         )}
       </div>
@@ -239,16 +359,22 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
       {/* Chart */}
       {selectedDataset ? (
         <div className="chart-card">
-          <h2>{DOMAIN_LABELS[selectedDataset.domain]} — {selectedDataset.name}</h2>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"0.5rem"}}>
+            <h2>{DOMAIN_LABELS[selectedDataset.domain]} — {selectedDataset.name}</h2>
+            {rows && rows.length > 0 && <button className="tab-btn" onClick={downloadCsv} style={{fontSize:"0.72rem",padding:"0.3rem 0.6rem",border:"1px solid var(--border,#cbd5e1)",borderRadius:"4px",cursor:"pointer",background:"var(--surface,#fff)"}}>⬇ Download CSV ({rows.length} rows)</button>}
+          </div>
           <p className="hint">
-            Interactive Plotly chart. Select X/Y columns and chart type above.
-            {selectedDataset.rowCount > 1000 ? " Large dataset — limited initial points for performance.": ""}
+            Interactive Plotly chart with auto-configured defaults per analysis domain.{" "}
+            {rows && rows.length >= 500 ? `Showing first 500 of ${rows.length} points. Download CSV for full data.` :
+             !rows && selectedDataset.fetchUrl ? "Loading data…" :
+             !selectedDataset.fetchUrl ? "No fetch URL — data must be copied to public/ during generation." : ""}
           </p>
           {chart ? (
             <div className={`plot-host ${aspectCls}`.trim()}>
               <div ref={chartRef} style={{width:"100%",height:"100%"}}/>
             </div>
-          ): <EmptyState message="Select axis columns to render chart" icon="📊"/>}
+          ): !rows ? <EmptyState message="Loading data from server…" icon="⏳"/> : <EmptyState message="Select axis columns to render chart" icon="📊"/>}
+          {rowsErr && <p className="hint" style={{color:"#ef4444"}}>Error loading data: {rowsErr}</p>}
         </div>
       ) : <div className="chart-card"><EmptyState message="No dataset selected for this analysis domain" icon="📊"/></div>}
 
@@ -258,8 +384,13 @@ function ExplorerSection({ manifest, run, explore, setExplore }: {
           <h2>Data Table — {selectedDataset.name}</h2>
           <div className="analog-table-wrap" style={{maxHeight:"350px",overflowY:"auto"}}>
             <table className="analog-table">
-              <thead><tr>{selectedDataset.columns?.map(c=><th key={c}>{c}</th>)}</tr></thead>
-              <tbody><tr><td colSpan={selectedDataset.columns?.length??1} style={{textAlign:"center",color:"var(--muted,#94a3b8)",padding:"1rem"}}>Data is lazy-loaded from generated manifest. {selectedDataset.rowCount} rows available.</td></tr></tbody>
+              <thead><tr>{cols.map(c=><th key={c}>{c}</th>)}</tr></thead>
+              <tbody>
+                {displayRows ? displayRows.map((r,i) => <tr key={i}>{cols.map(c=><td key={c}>{r[c] ?? ""}</td>)}</tr>) :
+                 <tr><td colSpan={cols.length||1} style={{textAlign:"center",color:"var(--muted,#94a3b8)",padding:"1rem"}}>
+                   {rowsErr ? `⚠ ${rowsErr}` : !selectedDataset.fetchUrl ? "No fetch URL. Run generate:spice-benchmark to copy data to public/." : "Loading…"}
+                 </td></tr>}
+              </tbody>
             </table>
           </div>
         </div>

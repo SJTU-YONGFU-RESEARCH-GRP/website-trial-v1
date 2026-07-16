@@ -54,7 +54,20 @@ function detectDelimiter(firstLine) {
   return " ";
 }
 
-function indexDataFile(filePath, domain) {
+function copyDataFile(filePath, runId) {
+  const destDir = resolve(PUBLIC_DIR, runId, "data");
+  mkdirSync(destDir, { recursive: true });
+  const dest = resolve(destDir, basename(filePath));
+  try {
+    copyFileSync(filePath, dest);
+    return `/benchmark/${runId}/data/${basename(filePath)}`;
+  } catch {
+    console.warn(`  ⚠ Could not copy data file: ${filePath}`);
+    return null;
+  }
+}
+
+function indexDataFile(filePath, domain, runId) {
   const name = basename(filePath);
   const ext = extname(filePath).toLowerCase();
   const stat = statSync(filePath);
@@ -62,7 +75,7 @@ function indexDataFile(filePath, domain) {
   const hash = fileHash(filePath);
   const rel = relative(resolve(RUNS_DIR, "..", ".."), filePath);
 
-  let format, columns, rowCount, fetchUrl;
+  let format, columns, rowCount;
   if (ext === ".csv") {
     format = "csv";
     try {
@@ -71,7 +84,6 @@ function indexDataFile(filePath, domain) {
       columns = parsed.columns;
       rowCount = parsed.rowCount;
     } catch { columns = null; rowCount = -1; }
-    fetchUrl = null; // small files get inlined; large files stay in public/
   } else if (ext === ".txt") {
     format = "txt";
     try {
@@ -82,20 +94,20 @@ function indexDataFile(filePath, domain) {
       columns = parsed.columns;
       rowCount = parsed.rowCount;
     } catch { columns = null; rowCount = -1; }
-    fetchUrl = null;
   } else if (ext === ".raw") {
     format = "raw";
     columns = null;
     rowCount = -1;
-    fetchUrl = null;
   } else if (ext === ".json") {
     format = "json";
     columns = null;
     rowCount = -1;
-    fetchUrl = null;
   } else {
     return null;
   }
+
+  // Copy CSV/TXT data files to public/ for lazy fetch
+  const fetchUrl = (ext === ".csv" || ext === ".txt") ? copyDataFile(filePath, runId) : null;
 
   return { name, relPath: rel, domain, format, size, hash, columns, rowCount, fetchUrl };
 }
@@ -243,7 +255,7 @@ function main() {
         const fp = resolve(dataDir, f);
         if (isExcluded(f) || isExcluded(fp.replace(RUNS_DIR, ""))) continue;
         const domain = assignDomain(f);
-        const art = indexDataFile(fp, domain);
+        const art = indexDataFile(fp, domain, runId);
         if (art) dataArtifacts.push(art);
       }
     }
