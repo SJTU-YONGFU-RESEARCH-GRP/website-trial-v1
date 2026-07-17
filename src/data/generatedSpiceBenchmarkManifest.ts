@@ -1,8 +1,8 @@
-// Auto-generated — 2026-07-17T13:58:34.608Z
+// Auto-generated — 2026-07-17T14:14:58.433Z
 // Runs: 2, Models: 2, Suites: 2
 import type { SpiceBenchmarkManifest } from "./SpiceBenchmarkTypes";
 export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
-  "generatedAt": "2026-07-17T13:58:34.604Z",
+  "generatedAt": "2026-07-17T14:14:58.429Z",
   "repoUrl": "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark",
   "runs": {
     "reference_results": {
@@ -36,172 +36,165 @@ export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
       },
       "verificationTests": [
         {
-          "testId": "overview_1",
-          "domain": "overview",
-          "name": "[IV Characteristics](#dc-operating-point-analysis)",
+          "testId": "dc_1",
+          "domain": "dc",
+          "name": "IV Characteristics",
           "status": "pass",
           "detail": "Range: 0.00V to 1.20V, -1.79e-02A to 2.87e-08A"
         },
         {
-          "testId": "overview_2",
-          "domain": "overview",
-          "name": "[Temperature Analysis](#temperature-dependence)",
+          "testId": "dc_2",
+          "domain": "dc",
+          "name": "Temperature Analysis",
           "status": "pass",
           "detail": "Temp Coef: 0.000015 /°C"
         },
         {
-          "testId": "overview_3",
-          "domain": "overview",
-          "name": "[Thermodynamic Analysis](#thermodynamic-analysis)",
+          "testId": "dc_3",
+          "domain": "dc",
+          "name": "Thermodynamic Analysis",
           "status": "pass",
           "detail": "Power: 0.000e+00W to 2.151e-02W"
         },
         {
-          "testId": "overview_4",
-          "domain": "overview",
-          "name": "[Large-Signal Transient](#large-signal-transient)",
+          "testId": "transient_4",
+          "domain": "transient",
+          "name": "Large-Signal Transient",
           "status": "pass",
           "detail": "Max Current: 2.934e-05A, Rise Time: 0.1ps"
         },
         {
-          "testId": "overview_5",
-          "domain": "overview",
-          "name": "[Switching Simulations](#switching-simulations)",
+          "testId": "transient_5",
+          "domain": "transient",
+          "name": "Switching Simulations",
           "status": "pass",
           "detail": "Propagation Delay: 10.7ps"
         },
         {
-          "testId": "overview_6",
-          "domain": "overview",
-          "name": "[Delay Effect](#delay-effect-simulations)",
+          "testId": "transient_6",
+          "domain": "transient",
+          "name": "Delay Effect",
           "status": "pass",
           "detail": "Total Chain Delay: 25.0ps"
         },
         {
-          "testId": "overview_7",
-          "domain": "overview",
-          "name": "[Power Dissipation](#transient-simulations-for-power-dissipation)",
+          "testId": "transient_7",
+          "domain": "transient",
+          "name": "Power Dissipation",
           "status": "pass",
           "detail": "Temp Coeff: -1.718433e-05W/°C"
         },
         {
-          "testId": "overview_8",
-          "domain": "overview",
-          "name": "[Quasi-Static Analysis](#quasi-static-analysis)",
+          "testId": "transient_8",
+          "domain": "transient",
+          "name": "Quasi-Static Analysis",
           "status": "pass",
           "detail": "I-V characteristics analyzed"
         },
         {
-          "testId": "overview_9",
-          "domain": "overview",
-          "name": "[Charge Conservation](#charge-conservation-tests)",
+          "testId": "transient_9",
+          "domain": "transient",
+          "name": "Charge Conservation",
           "status": "pass",
           "detail": "Error: 0.000000%"
         },
         {
-          "testId": "overview_10",
-          "domain": "overview",
-          "name": "[Capacitance-Voltage](#small-signal-analysis)",
+          "testId": "ac_10",
+          "domain": "ac",
+          "name": "Capacitance-Voltage",
           "status": "pass",
           "detail": "Range: 7.08fF to 13.98fF"
         },
         {
-          "testId": "overview_11",
-          "domain": "overview",
-          "name": "[Charge Conservation](#small-signal-analysis)",
+          "testId": "ac_11",
+          "domain": "ac",
+          "name": "Charge Conservation",
           "status": "pass",
           "detail": "Error: 3.8477522766233967e-07%"
         },
         {
-          "testId": "overview_12",
-          "domain": "overview",
-          "name": "[S-Parameter](#high-frequency-analysis)",
+          "testId": "ac_12",
+          "domain": "ac",
+          "name": "S-Parameter",
           "status": "pass",
           "detail": "Frequency: 1.0MHz to 1.0GHz"
         },
         {
-          "testId": "overview_13",
-          "domain": "overview",
-          "name": "[Non-Quasi-Static](#high-frequency-analysis)",
+          "testId": "ac_13",
+          "domain": "ac",
+          "name": "Non-Quasi-Static",
           "status": "pass",
           "detail": "Phase Shift: -176.581"
         },
         {
-          "testId": "overview_14",
-          "domain": "overview",
-          "name": "[Thermal Noise](#thermal-noise-analysis)",
+          "testId": "noise_14",
+          "domain": "noise",
+          "name": "Thermal Noise",
           "status": "pass",
           "detail": "Floor: 2.65e+07 V²/Hz, Range: 2.16e-15 to 1.00e+09 V²/Hz"
         },
         {
-          "testId": "overview_15",
-          "domain": "overview",
-          "name": "[Flicker (1/f) Noise](#flicker-noise-analysis)",
+          "testId": "noise_15",
+          "domain": "noise",
+          "name": "Flicker (1/f) Noise",
           "status": "pass",
           "detail": "Exponent: 0.5075, Corner Freq: 1.12e+00 Hz"
         },
         {
-          "testId": "overview_16",
-          "domain": "overview",
-          "name": "[Shot Noise](#shot-noise-analysis)",
+          "testId": "noise_16",
+          "domain": "noise",
+          "name": "Shot Noise",
           "status": "pass",
           "detail": "Level: 3.79e-09 V²/Hz, Variation: 1.4676"
         },
         {
-          "testId": "overview_17",
-          "domain": "overview",
-          "name": "[Temperature Dependence](#temperature-dependence-1)",
+          "testId": "noise_17",
+          "domain": "noise",
+          "name": "Temperature Dependence",
           "status": "pass",
           "detail": "Coefficient: 2.77e-11 V²/Hz/°C, Range: -40.0°C to 150.0°C"
         },
         {
-          "testId": "overview_18",
-          "domain": "overview",
-          "name": "[Bias Dependence](#detailed-noise-characteristics)",
+          "testId": "noise_18",
+          "domain": "noise",
+          "name": "Bias Dependence",
           "status": "pass",
           "detail": "Analyzed at 6 bias points"
         },
         {
-          "testId": "noise_19",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=0.3V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_19",
+          "domain": "overview",
+          "name": "DC circuit file exists and is readable",
+          "status": "pass",
+          "detail": ""
         },
         {
-          "testId": "noise_20",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=0.6V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_20",
+          "domain": "overview",
+          "name": "Transient circuit file exists and is readable",
+          "status": "pass",
+          "detail": ""
         },
         {
-          "testId": "noise_21",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=0.9V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_21",
+          "domain": "overview",
+          "name": "Noise circuit file exists and is readable",
+          "status": "pass",
+          "detail": ""
         },
         {
-          "testId": "noise_22",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=1.2V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_22",
+          "domain": "overview",
+          "name": "ngspice is properly installed",
+          "status": "pass",
+          "detail": ""
         },
         {
-          "testId": "noise_23",
-          "domain": "noise",
-          "name": "Vgs=0.6V, Vds=0.3V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
-        },
-        {
-          "testId": "noise_24",
-          "domain": "noise",
-          "name": "Vgs=0.6V, Vds=0.6V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_23",
+          "domain": "overview",
+          "name": "Simulation runs without errors",
+          "status": "pass",
+          "detail": ""
         }
       ],
       "dataArtifacts": [
@@ -1265,172 +1258,165 @@ export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
             "overallStatus": "pass",
             "verificationTests": [
               {
-                "testId": "overview_1",
-                "domain": "overview",
-                "name": "[IV Characteristics](#dc-operating-point-analysis)",
+                "testId": "dc_1",
+                "domain": "dc",
+                "name": "IV Characteristics",
                 "status": "pass",
                 "detail": "Range: 0.00V to 1.20V, -1.79e-02A to 2.87e-08A"
               },
               {
-                "testId": "overview_2",
-                "domain": "overview",
-                "name": "[Temperature Analysis](#temperature-dependence)",
+                "testId": "dc_2",
+                "domain": "dc",
+                "name": "Temperature Analysis",
                 "status": "pass",
                 "detail": "Temp Coef: 0.000015 /°C"
               },
               {
-                "testId": "overview_3",
-                "domain": "overview",
-                "name": "[Thermodynamic Analysis](#thermodynamic-analysis)",
+                "testId": "dc_3",
+                "domain": "dc",
+                "name": "Thermodynamic Analysis",
                 "status": "pass",
                 "detail": "Power: 0.000e+00W to 2.151e-02W"
               },
               {
-                "testId": "overview_4",
-                "domain": "overview",
-                "name": "[Large-Signal Transient](#large-signal-transient)",
+                "testId": "transient_4",
+                "domain": "transient",
+                "name": "Large-Signal Transient",
                 "status": "pass",
                 "detail": "Max Current: 2.934e-05A, Rise Time: 0.1ps"
               },
               {
-                "testId": "overview_5",
-                "domain": "overview",
-                "name": "[Switching Simulations](#switching-simulations)",
+                "testId": "transient_5",
+                "domain": "transient",
+                "name": "Switching Simulations",
                 "status": "pass",
                 "detail": "Propagation Delay: 10.7ps"
               },
               {
-                "testId": "overview_6",
-                "domain": "overview",
-                "name": "[Delay Effect](#delay-effect-simulations)",
+                "testId": "transient_6",
+                "domain": "transient",
+                "name": "Delay Effect",
                 "status": "pass",
                 "detail": "Total Chain Delay: 25.0ps"
               },
               {
-                "testId": "overview_7",
-                "domain": "overview",
-                "name": "[Power Dissipation](#transient-simulations-for-power-dissipation)",
+                "testId": "transient_7",
+                "domain": "transient",
+                "name": "Power Dissipation",
                 "status": "pass",
                 "detail": "Temp Coeff: -1.718433e-05W/°C"
               },
               {
-                "testId": "overview_8",
-                "domain": "overview",
-                "name": "[Quasi-Static Analysis](#quasi-static-analysis)",
+                "testId": "transient_8",
+                "domain": "transient",
+                "name": "Quasi-Static Analysis",
                 "status": "pass",
                 "detail": "I-V characteristics analyzed"
               },
               {
-                "testId": "overview_9",
-                "domain": "overview",
-                "name": "[Charge Conservation](#charge-conservation-tests)",
+                "testId": "transient_9",
+                "domain": "transient",
+                "name": "Charge Conservation",
                 "status": "pass",
                 "detail": "Error: 0.000000%"
               },
               {
-                "testId": "overview_10",
-                "domain": "overview",
-                "name": "[Capacitance-Voltage](#small-signal-analysis)",
+                "testId": "ac_10",
+                "domain": "ac",
+                "name": "Capacitance-Voltage",
                 "status": "pass",
                 "detail": "Range: 7.08fF to 13.98fF"
               },
               {
-                "testId": "overview_11",
-                "domain": "overview",
-                "name": "[Charge Conservation](#small-signal-analysis)",
+                "testId": "ac_11",
+                "domain": "ac",
+                "name": "Charge Conservation",
                 "status": "pass",
                 "detail": "Error: 3.8477522766233967e-07%"
               },
               {
-                "testId": "overview_12",
-                "domain": "overview",
-                "name": "[S-Parameter](#high-frequency-analysis)",
+                "testId": "ac_12",
+                "domain": "ac",
+                "name": "S-Parameter",
                 "status": "pass",
                 "detail": "Frequency: 1.0MHz to 1.0GHz"
               },
               {
-                "testId": "overview_13",
-                "domain": "overview",
-                "name": "[Non-Quasi-Static](#high-frequency-analysis)",
+                "testId": "ac_13",
+                "domain": "ac",
+                "name": "Non-Quasi-Static",
                 "status": "pass",
                 "detail": "Phase Shift: -176.581"
               },
               {
-                "testId": "overview_14",
-                "domain": "overview",
-                "name": "[Thermal Noise](#thermal-noise-analysis)",
+                "testId": "noise_14",
+                "domain": "noise",
+                "name": "Thermal Noise",
                 "status": "pass",
                 "detail": "Floor: 2.65e+07 V²/Hz, Range: 2.16e-15 to 1.00e+09 V²/Hz"
               },
               {
-                "testId": "overview_15",
-                "domain": "overview",
-                "name": "[Flicker (1/f) Noise](#flicker-noise-analysis)",
+                "testId": "noise_15",
+                "domain": "noise",
+                "name": "Flicker (1/f) Noise",
                 "status": "pass",
                 "detail": "Exponent: 0.5075, Corner Freq: 1.12e+00 Hz"
               },
               {
-                "testId": "overview_16",
-                "domain": "overview",
-                "name": "[Shot Noise](#shot-noise-analysis)",
+                "testId": "noise_16",
+                "domain": "noise",
+                "name": "Shot Noise",
                 "status": "pass",
                 "detail": "Level: 3.79e-09 V²/Hz, Variation: 1.4676"
               },
               {
-                "testId": "overview_17",
-                "domain": "overview",
-                "name": "[Temperature Dependence](#temperature-dependence-1)",
+                "testId": "noise_17",
+                "domain": "noise",
+                "name": "Temperature Dependence",
                 "status": "pass",
                 "detail": "Coefficient: 2.77e-11 V²/Hz/°C, Range: -40.0°C to 150.0°C"
               },
               {
-                "testId": "overview_18",
-                "domain": "overview",
-                "name": "[Bias Dependence](#detailed-noise-characteristics)",
+                "testId": "noise_18",
+                "domain": "noise",
+                "name": "Bias Dependence",
                 "status": "pass",
                 "detail": "Analyzed at 6 bias points"
               },
               {
-                "testId": "noise_19",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=0.3V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_19",
+                "domain": "overview",
+                "name": "DC circuit file exists and is readable",
+                "status": "pass",
+                "detail": ""
               },
               {
-                "testId": "noise_20",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=0.6V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_20",
+                "domain": "overview",
+                "name": "Transient circuit file exists and is readable",
+                "status": "pass",
+                "detail": ""
               },
               {
-                "testId": "noise_21",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=0.9V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_21",
+                "domain": "overview",
+                "name": "Noise circuit file exists and is readable",
+                "status": "pass",
+                "detail": ""
               },
               {
-                "testId": "noise_22",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=1.2V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_22",
+                "domain": "overview",
+                "name": "ngspice is properly installed",
+                "status": "pass",
+                "detail": ""
               },
               {
-                "testId": "noise_23",
-                "domain": "noise",
-                "name": "Vgs=0.6V, Vds=0.3V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
-              },
-              {
-                "testId": "noise_24",
-                "domain": "noise",
-                "name": "Vgs=0.6V, Vds=0.6V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_23",
+                "domain": "overview",
+                "name": "Simulation runs without errors",
+                "status": "pass",
+                "detail": ""
               }
             ]
           },
@@ -1470,179 +1456,158 @@ export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
       },
       "verificationTests": [
         {
-          "testId": "overview_1",
-          "domain": "overview",
-          "name": "[DC Operating Point Analysis](#dc-operating-point-analysis)",
+          "testId": "dc_1",
+          "domain": "dc",
+          "name": "DC Operating Point Analysis",
           "status": "pass",
           "detail": "VDS: 0.00V to 1.20V, VGS: 0.00V to 1.20V, IDS: -1.79e-02A to 2.87e-08A"
         },
         {
-          "testId": "overview_2",
-          "domain": "overview",
-          "name": "[Bias Point Analysis](#bias-point-analysis)",
+          "testId": "dc_2",
+          "domain": "dc",
+          "name": "Bias Point Analysis",
           "status": "pass",
           "detail": "Points: 9 VDS points, 9 VGS points, Currents: IDS: -1.53e-02A to 2.71e-08A, IG: -3.73e-07A to 1.34e-08A, IS: 1.01e-39A to 1.53e-02A, IB: -1.42e-38A to 3.30e-07A, KCL Error: 0.00%, Power: 0.00e+00W to 1.84e-02W, Temp: -40°C"
         },
         {
-          "testId": "overview_3",
-          "domain": "overview",
-          "name": "[Temperature Analysis](#temperature-analysis)",
+          "testId": "dc_3",
+          "domain": "dc",
+          "name": "Temperature Analysis",
           "status": "pass",
           "detail": "Temp Points: [-40, 0, 25, 50, 100, 150], TC: 0.000015 /°C, IDS: -1.793e-02A to 2.870e-08A"
         },
         {
-          "testId": "overview_4",
-          "domain": "overview",
-          "name": "[Thermodynamic Analysis](#thermodynamic-analysis)",
+          "testId": "dc_4",
+          "domain": "dc",
+          "name": "Thermodynamic Analysis",
           "status": "pass",
           "detail": "Power: 0.000e+00W to 2.151e-02W, Efficiency: 7.992e+00 to 1.622e+10, TC: 8.34e-04/°C"
         },
         {
-          "testId": "overview_5",
-          "domain": "overview",
-          "name": "[Small Signal Analysis](#small-signal-analysis)",
+          "testId": "ac_5",
+          "domain": "ac",
+          "name": "Small Signal Analysis",
           "status": "pass",
           "detail": "Gate capacitance range: 7.08fF to 13.98fF"
         },
         {
-          "testId": "overview_6",
-          "domain": "overview",
-          "name": "[S-Parameter Analysis](#s-parameter-analysis)",
+          "testId": "ac_6",
+          "domain": "ac",
+          "name": "S-Parameter Analysis",
           "status": "pass",
           "detail": "S11 range: -2dB to -1dB, S21 range: -26dB to -22dB"
         },
         {
-          "testId": "overview_7",
-          "domain": "overview",
-          "name": "[Non-Quasi-Static (NQS) Effects Analysis](#non-quasi-static-effects-analysis)",
+          "testId": "ac_7",
+          "domain": "ac",
+          "name": "Non-Quasi-Static (NQS) Effects Analysis",
           "status": "pass",
           "detail": "Max phase shift: 179.997"
         },
         {
-          "testId": "overview_8",
-          "domain": "overview",
-          "name": "[Charge Conservation Analysis](#charge-conservation-analysis)",
+          "testId": "ac_8",
+          "domain": "ac",
+          "name": "Charge Conservation Analysis",
           "status": "pass",
           "detail": "Total charge error: 0.0"
         },
         {
-          "testId": "overview_9",
-          "domain": "overview",
-          "name": "[Large-Signal Transient](#large-signal-transient)",
+          "testId": "transient_9",
+          "domain": "transient",
+          "name": "Large-Signal Transient",
           "status": "pass",
           "detail": "Max Current: 2.934e-05A, Rise Time: 0.1ps"
         },
         {
-          "testId": "overview_10",
-          "domain": "overview",
-          "name": "[Switching Simulations](#switching-simulations)",
+          "testId": "transient_10",
+          "domain": "transient",
+          "name": "Switching Simulations",
           "status": "pass",
           "detail": "Propagation Delay: 10.6ps, Power: 5.659e-03W (max), 1.485e-03W (avg)"
         },
         {
-          "testId": "overview_11",
-          "domain": "overview",
-          "name": "[Delay Effect](#delay-effect-simulations)",
+          "testId": "transient_11",
+          "domain": "transient",
+          "name": "Delay Effect",
           "status": "pass",
           "detail": "Total Chain Delay: 24.9ps"
         },
         {
-          "testId": "overview_12",
-          "domain": "overview",
-          "name": "[Power Dissipation](#transient-simulations-for-power-dissipation)",
+          "testId": "transient_12",
+          "domain": "transient",
+          "name": "Power Dissipation",
           "status": "pass",
           "detail": "Temp Coeff: -3.050468e-05W/°C"
         },
         {
-          "testId": "overview_13",
-          "domain": "overview",
-          "name": "[Quasi-Static Analysis](#quasi-static-analysis)",
+          "testId": "transient_13",
+          "domain": "transient",
+          "name": "Quasi-Static Analysis",
           "status": "pass",
           "detail": "I-V characteristics analyzed: None"
         },
         {
-          "testId": "overview_14",
-          "domain": "overview",
-          "name": "[Charge Conservation](#charge-conservation-tests)",
+          "testId": "transient_14",
+          "domain": "transient",
+          "name": "Charge Conservation",
           "status": "pass",
           "detail": "Error: None"
         },
         {
-          "testId": "overview_15",
-          "domain": "overview",
-          "name": "[Thermal Noise](#thermal-noise-analysis)",
+          "testId": "noise_15",
+          "domain": "noise",
+          "name": "Thermal Noise",
           "status": "pass",
           "detail": "Floor: 2.65e+07 V²/Hz, Range: 2.16e-15 to 1.00e+09 V²/Hz"
         },
         {
-          "testId": "overview_16",
-          "domain": "overview",
-          "name": "[Flicker (1/f) Noise](#flicker-noise-analysis)",
+          "testId": "noise_16",
+          "domain": "noise",
+          "name": "Flicker (1/f) Noise",
           "status": "pass",
           "detail": "Exponent: 0.5075, Corner Freq: 1.12e+00 Hz"
         },
         {
-          "testId": "overview_17",
-          "domain": "overview",
-          "name": "[Shot Noise](#shot-noise-analysis)",
+          "testId": "noise_17",
+          "domain": "noise",
+          "name": "Shot Noise",
           "status": "pass",
           "detail": "Level: 3.79e-09 V²/Hz, Variation: 1.4676"
         },
         {
-          "testId": "overview_18",
-          "domain": "overview",
-          "name": "[Temperature Dependence](#temperature-dependence)",
+          "testId": "noise_18",
+          "domain": "noise",
+          "name": "Temperature Dependence",
           "status": "pass",
           "detail": "Coefficient: 2.77e-11 V²/Hz/°C, Range: -40.0°C to 150.0°C"
         },
         {
-          "testId": "overview_19",
-          "domain": "overview",
-          "name": "[Bias Dependence](#bias-dependence)",
+          "testId": "noise_19",
+          "domain": "noise",
+          "name": "Bias Dependence",
           "status": "pass",
           "detail": "Analyzed at 6 bias points"
         },
         {
-          "testId": "noise_20",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=0.3V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_20",
+          "domain": "overview",
+          "name": "Circuit file exists and is readable",
+          "status": "pass",
+          "detail": ""
         },
         {
-          "testId": "noise_21",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=0.6V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_21",
+          "domain": "overview",
+          "name": "ngspice is properly installed",
+          "status": "pass",
+          "detail": ""
         },
         {
-          "testId": "noise_22",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=0.9V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
-        },
-        {
-          "testId": "noise_23",
-          "domain": "noise",
-          "name": "Vgs=0.3V, Vds=1.2V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
-        },
-        {
-          "testId": "noise_24",
-          "domain": "noise",
-          "name": "Vgs=0.6V, Vds=0.3V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
-        },
-        {
-          "testId": "noise_25",
-          "domain": "noise",
-          "name": "Vgs=0.6V, Vds=0.6V",
-          "status": "unavailable",
-          "detail": "2.16e-15"
+          "testId": "setup_22",
+          "domain": "overview",
+          "name": "Simulation runs without errors",
+          "status": "pass",
+          "detail": ""
         }
       ],
       "dataArtifacts": [
@@ -2698,179 +2663,158 @@ export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
             "overallStatus": "pass",
             "verificationTests": [
               {
-                "testId": "overview_1",
-                "domain": "overview",
-                "name": "[DC Operating Point Analysis](#dc-operating-point-analysis)",
+                "testId": "dc_1",
+                "domain": "dc",
+                "name": "DC Operating Point Analysis",
                 "status": "pass",
                 "detail": "VDS: 0.00V to 1.20V, VGS: 0.00V to 1.20V, IDS: -1.79e-02A to 2.87e-08A"
               },
               {
-                "testId": "overview_2",
-                "domain": "overview",
-                "name": "[Bias Point Analysis](#bias-point-analysis)",
+                "testId": "dc_2",
+                "domain": "dc",
+                "name": "Bias Point Analysis",
                 "status": "pass",
                 "detail": "Points: 9 VDS points, 9 VGS points, Currents: IDS: -1.53e-02A to 2.71e-08A, IG: -3.73e-07A to 1.34e-08A, IS: 1.01e-39A to 1.53e-02A, IB: -1.42e-38A to 3.30e-07A, KCL Error: 0.00%, Power: 0.00e+00W to 1.84e-02W, Temp: -40°C"
               },
               {
-                "testId": "overview_3",
-                "domain": "overview",
-                "name": "[Temperature Analysis](#temperature-analysis)",
+                "testId": "dc_3",
+                "domain": "dc",
+                "name": "Temperature Analysis",
                 "status": "pass",
                 "detail": "Temp Points: [-40, 0, 25, 50, 100, 150], TC: 0.000015 /°C, IDS: -1.793e-02A to 2.870e-08A"
               },
               {
-                "testId": "overview_4",
-                "domain": "overview",
-                "name": "[Thermodynamic Analysis](#thermodynamic-analysis)",
+                "testId": "dc_4",
+                "domain": "dc",
+                "name": "Thermodynamic Analysis",
                 "status": "pass",
                 "detail": "Power: 0.000e+00W to 2.151e-02W, Efficiency: 7.992e+00 to 1.622e+10, TC: 8.34e-04/°C"
               },
               {
-                "testId": "overview_5",
-                "domain": "overview",
-                "name": "[Small Signal Analysis](#small-signal-analysis)",
+                "testId": "ac_5",
+                "domain": "ac",
+                "name": "Small Signal Analysis",
                 "status": "pass",
                 "detail": "Gate capacitance range: 7.08fF to 13.98fF"
               },
               {
-                "testId": "overview_6",
-                "domain": "overview",
-                "name": "[S-Parameter Analysis](#s-parameter-analysis)",
+                "testId": "ac_6",
+                "domain": "ac",
+                "name": "S-Parameter Analysis",
                 "status": "pass",
                 "detail": "S11 range: -2dB to -1dB, S21 range: -26dB to -22dB"
               },
               {
-                "testId": "overview_7",
-                "domain": "overview",
-                "name": "[Non-Quasi-Static (NQS) Effects Analysis](#non-quasi-static-effects-analysis)",
+                "testId": "ac_7",
+                "domain": "ac",
+                "name": "Non-Quasi-Static (NQS) Effects Analysis",
                 "status": "pass",
                 "detail": "Max phase shift: 179.997"
               },
               {
-                "testId": "overview_8",
-                "domain": "overview",
-                "name": "[Charge Conservation Analysis](#charge-conservation-analysis)",
+                "testId": "ac_8",
+                "domain": "ac",
+                "name": "Charge Conservation Analysis",
                 "status": "pass",
                 "detail": "Total charge error: 0.0"
               },
               {
-                "testId": "overview_9",
-                "domain": "overview",
-                "name": "[Large-Signal Transient](#large-signal-transient)",
+                "testId": "transient_9",
+                "domain": "transient",
+                "name": "Large-Signal Transient",
                 "status": "pass",
                 "detail": "Max Current: 2.934e-05A, Rise Time: 0.1ps"
               },
               {
-                "testId": "overview_10",
-                "domain": "overview",
-                "name": "[Switching Simulations](#switching-simulations)",
+                "testId": "transient_10",
+                "domain": "transient",
+                "name": "Switching Simulations",
                 "status": "pass",
                 "detail": "Propagation Delay: 10.6ps, Power: 5.659e-03W (max), 1.485e-03W (avg)"
               },
               {
-                "testId": "overview_11",
-                "domain": "overview",
-                "name": "[Delay Effect](#delay-effect-simulations)",
+                "testId": "transient_11",
+                "domain": "transient",
+                "name": "Delay Effect",
                 "status": "pass",
                 "detail": "Total Chain Delay: 24.9ps"
               },
               {
-                "testId": "overview_12",
-                "domain": "overview",
-                "name": "[Power Dissipation](#transient-simulations-for-power-dissipation)",
+                "testId": "transient_12",
+                "domain": "transient",
+                "name": "Power Dissipation",
                 "status": "pass",
                 "detail": "Temp Coeff: -3.050468e-05W/°C"
               },
               {
-                "testId": "overview_13",
-                "domain": "overview",
-                "name": "[Quasi-Static Analysis](#quasi-static-analysis)",
+                "testId": "transient_13",
+                "domain": "transient",
+                "name": "Quasi-Static Analysis",
                 "status": "pass",
                 "detail": "I-V characteristics analyzed: None"
               },
               {
-                "testId": "overview_14",
-                "domain": "overview",
-                "name": "[Charge Conservation](#charge-conservation-tests)",
+                "testId": "transient_14",
+                "domain": "transient",
+                "name": "Charge Conservation",
                 "status": "pass",
                 "detail": "Error: None"
               },
               {
-                "testId": "overview_15",
-                "domain": "overview",
-                "name": "[Thermal Noise](#thermal-noise-analysis)",
+                "testId": "noise_15",
+                "domain": "noise",
+                "name": "Thermal Noise",
                 "status": "pass",
                 "detail": "Floor: 2.65e+07 V²/Hz, Range: 2.16e-15 to 1.00e+09 V²/Hz"
               },
               {
-                "testId": "overview_16",
-                "domain": "overview",
-                "name": "[Flicker (1/f) Noise](#flicker-noise-analysis)",
+                "testId": "noise_16",
+                "domain": "noise",
+                "name": "Flicker (1/f) Noise",
                 "status": "pass",
                 "detail": "Exponent: 0.5075, Corner Freq: 1.12e+00 Hz"
               },
               {
-                "testId": "overview_17",
-                "domain": "overview",
-                "name": "[Shot Noise](#shot-noise-analysis)",
+                "testId": "noise_17",
+                "domain": "noise",
+                "name": "Shot Noise",
                 "status": "pass",
                 "detail": "Level: 3.79e-09 V²/Hz, Variation: 1.4676"
               },
               {
-                "testId": "overview_18",
-                "domain": "overview",
-                "name": "[Temperature Dependence](#temperature-dependence)",
+                "testId": "noise_18",
+                "domain": "noise",
+                "name": "Temperature Dependence",
                 "status": "pass",
                 "detail": "Coefficient: 2.77e-11 V²/Hz/°C, Range: -40.0°C to 150.0°C"
               },
               {
-                "testId": "overview_19",
-                "domain": "overview",
-                "name": "[Bias Dependence](#bias-dependence)",
+                "testId": "noise_19",
+                "domain": "noise",
+                "name": "Bias Dependence",
                 "status": "pass",
                 "detail": "Analyzed at 6 bias points"
               },
               {
-                "testId": "noise_20",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=0.3V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_20",
+                "domain": "overview",
+                "name": "Circuit file exists and is readable",
+                "status": "pass",
+                "detail": ""
               },
               {
-                "testId": "noise_21",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=0.6V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_21",
+                "domain": "overview",
+                "name": "ngspice is properly installed",
+                "status": "pass",
+                "detail": ""
               },
               {
-                "testId": "noise_22",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=0.9V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
-              },
-              {
-                "testId": "noise_23",
-                "domain": "noise",
-                "name": "Vgs=0.3V, Vds=1.2V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
-              },
-              {
-                "testId": "noise_24",
-                "domain": "noise",
-                "name": "Vgs=0.6V, Vds=0.3V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
-              },
-              {
-                "testId": "noise_25",
-                "domain": "noise",
-                "name": "Vgs=0.6V, Vds=0.6V",
-                "status": "unavailable",
-                "detail": "2.16e-15"
+                "testId": "setup_22",
+                "domain": "overview",
+                "name": "Simulation runs without errors",
+                "status": "pass",
+                "detail": ""
               }
             ]
           },

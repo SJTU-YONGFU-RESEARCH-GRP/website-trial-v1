@@ -18,7 +18,7 @@ import "../benchmark.css";
 
 const BASE = import.meta.env.BASE_URL || "/";
 
-const DOMAIN_LABELS: Record<AnalysisDomain, string> = { overview: "Overview", dc: "DC", ac: "AC", transient: "Transient", noise: "Noise" };
+const DOMAIN_LABELS: Record<AnalysisDomain, string> = { overview: "Overview", dc: "DC Analysis Summary", ac: "AC Analysis Summary", transient: "Transient Analysis Summary", noise: "Noise Analysis Summary" };
 const DOMAIN_DEFAULT_X: Record<AnalysisDomain, string[]> = {
   overview: [], dc: ["Vds", "Vgs", "vds", "vgs", "Vds(V)", "Vbias"], ac: ["freq(Hz)", "freq", "frequency", "Vgs(V)"],
   transient: ["time(s)", "time", "t(s)"], noise: ["freq(Hz)", "freq", "frequency"],
@@ -312,49 +312,6 @@ function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: Data
 /*  Plot Gallery (no tabs, 2-col grid)                                  */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-function PlotGallery({ run }: { run: BenchmarkRun }) {
-  const narrow = useNarrowScreen(640);
-  const [lightbox, setLightbox] = useState<string | null>(null);
-  const grouped = useMemo(() => {
-    const m = new Map<AnalysisDomain, typeof run.plotArtifacts>();
-    for (const p of run.plotArtifacts) { const list = m.get(p.domain) ?? []; list.push(p); m.set(p.domain, list); }
-    return m;
-  }, [run.plotArtifacts]);
-
-  if (run.plotArtifacts.length === 0) return <div className="chart-card benchmark-section" id="bm-gallery"><h2>Original Plots</h2><EmptyState message="No plot images in this run" icon="🖼" /></div>;
-
-  return (
-    <div className="chart-card benchmark-section" id="bm-gallery">
-      {lightbox && (
-        <div className="benchmark-lightbox" onClick={() => setLightbox(null)}>
-          <img src={lightbox} alt="" />
-          <a href={lightbox} download className="benchmark-btn benchmark-lightbox-dl">Download</a>
-        </div>
-      )}
-      <h2>Original Plots <span className="hint">({run.plotArtifacts.length} total)</span></h2>
-      {[...grouped.entries()].map(([domain, plots]) => (
-        <div key={domain} className="benchmark-plot-group">
-          <h3 className="flow-subsection-title">{DOMAIN_LABELS[domain]} — {plots.length} plots</h3>
-          <div className={`benchmark-plot-grid ${narrow ? "benchmark-plot-grid--1col" : "benchmark-plot-grid--2col"}`}>
-            {plots.map(p => p.displayUrl ? (
-              <div key={p.relPath} className="benchmark-plot-card" onClick={() => setLightbox(BASE + p.displayUrl)}>
-                <div className="benchmark-plot-img-wrap">
-                  <img src={BASE + p.displayUrl} alt={p.name} loading="lazy" />
-                </div>
-                <div className="benchmark-plot-info">
-                  <span>{p.name}</span>
-                  <span className="hint">{p.size}</span>
-                </div>
-              </div>
-            ) : (
-              <div key={p.relPath} className="benchmark-plot-card benchmark-plot-card--empty">{p.name}</div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════════ */
 /*  Verification Section                                                */
@@ -407,13 +364,6 @@ function VerificationSection({ run }: { run: BenchmarkRun }) {
         </div>
       )}
 
-      {/* Raw REPORT.md — always visible */}
-      {run.reportSummary.reportMarkdown && (
-        <details className="benchmark-report-raw" open>
-          <summary>Full REPORT.md</summary>
-          <pre>{run.reportSummary.reportMarkdown}</pre>
-        </details>
-      )}
     </div>
   );
 }
@@ -447,6 +397,7 @@ export function SpiceBenchmarkPage() {
   const [runId, setRunId] = useState(runIds[0] ?? "");
   const [analysis, setAnalysis] = useState<AnalysisDomain>("overview");
   const [plotAspect, setPlotAspect] = useState<PlotAspectMode>("flexible");
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   const run = manifest.runs[runId];
   const hasCompareRuns = runIds.length >= 2;
@@ -529,6 +480,12 @@ export function SpiceBenchmarkPage() {
 
   return (
     <div className="benchmark-page">
+      {lightbox && (
+        <div className="benchmark-lightbox" onClick={() => setLightbox(null)}>
+          <img src={lightbox} alt="" />
+          <a href={lightbox} download className="benchmark-btn benchmark-lightbox-dl">Download</a>
+        </div>
+      )}
       {/* ─── Top Controls Card (Explore metrics style) ─── */}
       <div className="chart-card benchmark-controls">
         <h2>Explore benchmark results</h2>
@@ -577,23 +534,50 @@ export function SpiceBenchmarkPage() {
       {/* ─── REPORT.md — top priority ─── */}
       <VerificationSection run={run} />
 
-      {/* ─── Original Plots ─── */}
-      <PlotGallery run={run} />
+      {/* ─── Interleaved Data + Plots by Domain ─── */}
+      {(["dc","ac","transient","noise"] as AnalysisDomain[]).map(domain => {
+        const domainDatasets = datasets.filter(d => d.domain === domain);
+        const domainPlots = run.plotArtifacts.filter(p => p.domain === domain);
+        const visibleDomainDatasets = visibleDatasets.filter(d => d.domain === domain);
+        if (domainDatasets.length === 0 && domainPlots.length === 0) return null;
+        return (
+          <div key={domain} className="benchmark-section">
+            <h2 className="benchmark-section-heading">{DOMAIN_LABELS[domain]} — {domainDatasets.length} datasets, {domainPlots.length} plots</h2>
+
+            {/* Plots for this domain */}
+            {domainPlots.length > 0 && (
+              <div className="benchmark-plot-group">
+                <div className="benchmark-plot-grid benchmark-plot-grid--2col">
+                  {domainPlots.map(p => p.displayUrl ? (
+                    <div key={p.relPath} className="benchmark-plot-card" onClick={() => setLightbox(BASE + p.displayUrl)}>
+                      <div className="benchmark-plot-img-wrap"><img src={BASE + p.displayUrl} alt={p.name} loading="lazy" /></div>
+                      <div className="benchmark-plot-info"><span>{p.name}</span><span className="hint">{p.size}</span></div>
+                    </div>
+                  ) : null)}
+                </div>
+              </div>
+            )}
+
+            {/* Datasets for this domain */}
+            {visibleDomainDatasets.length > 0 && analysis !== "overview" && visibleDomainDatasets.map(d => (
+              <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} plotAspect={plotAspect} />
+            ))}
+          </div>
+        );
+      })}
+
+      {/* ─── Overview datasets (only when analysis=overview) ─── */}
+      {analysis === "overview" && visibleDatasets.length > 0 && (
+        <div className="benchmark-section">
+          <h2 className="benchmark-section-heading">Overview Datasets ({visibleDatasets.length}/{datasets.length})</h2>
+          {visibleDatasets.map(d => (
+            <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} plotAspect={plotAspect} />
+          ))}
+        </div>
+      )}
 
       {/* ─── Overview ─── */}
       <OverviewSection run={run} />
-
-      {/* ─── Interactive Datasets ─── */}
-      <div className="benchmark-section" id="bm-datasets">
-        <h2 className="benchmark-section-heading">Interactive Datasets — {DOMAIN_LABELS[analysis]} ({visibleDatasets.length}/{datasets.length})</h2>
-        {visibleDatasets.length === 0 ? (
-          <div className="chart-card"><EmptyState message={`No datasets selected for ${DOMAIN_LABELS[analysis]}. Use checkboxes above to select datasets to display.`} icon="📊" /></div>
-        ) : (
-          visibleDatasets.map(d => (
-            <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={analysis === "overview" ? d.domain : analysis} plotAspect={plotAspect} />
-          ))
-        )}
-      </div>
 
       {/* ─── Artifacts ─── */}
       <ArtifactSection run={run} />

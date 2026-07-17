@@ -247,11 +247,21 @@ function parseReport(reportPath) {
     if (orM) { const w=orM[1].toUpperCase(); overall=w==="PASS"?"pass":w==="FAIL"?"fail":"unavailable"; }
 
     const tests=[];
-    const sections = md.split(/^##\s+/m);
-    const dm = {"dc analysis":"dc","ac analysis":"ac","transient analysis":"transient","noise analysis":"noise"};
-    for (const sec of sections) {
-      const hn = sec.slice(0,sec.indexOf("\n")).trim().toLowerCase();
-      const dom = dm[hn]||(hn.includes("dc")?"dc":hn.includes("ac")?"ac":hn.includes("tran")?"transient":hn.includes("noise")?"noise":"overview");
+    // Parse Summary tables under ### DC/AC/Transient/Noise Analysis Summary
+    const domainFromHead=(h)=>{
+      const hl=h.toLowerCase().trim();
+      if (/dc analysis summary/i.test(hl)) return "dc";
+      if (/ac analysis summary/i.test(hl)) return "ac";
+      if (/transient analysis summary/i.test(hl)) return "transient";
+      if (/noise analysis summary/i.test(hl)) return "noise";
+      return null;
+    };
+    const cleanName=(n)=>n.replace(/\[([^\]]+)\]\([^)]+\)/g,"$1").trim();
+    const sumSecs = md.split(/^###\s+/m);
+    for (const sec of sumSecs) {
+      const hn = sec.slice(0,sec.indexOf("\n")).trim();
+      const dom = domainFromHead(hn);
+      if (!dom) continue;
       const lines = sec.split("\n"); let inTbl=false, tHdr=null;
       for (const line of lines) {
         const t = line.trim();
@@ -260,15 +270,24 @@ function parseReport(reportPath) {
         if (t.startsWith("|")&&t.endsWith("|")) {
           const cells = t.split("|").slice(1,-1).map(c=>c.trim());
           if (cells.length<2) continue;
+          const fc = cells[0];
+          if (/^vgs\s*=/.test(fc.toLowerCase())||/^vds\s*=/.test(fc.toLowerCase())) continue;
           if (!inTbl) {
-            const f = cells[0].toLowerCase();
-            if (/test|check|metric|name/i.test(f)) { tHdr=cells; inTbl=true; continue; }
+            if (/test type|test|check|metric|name/i.test(fc)) { tHdr=cells; inTbl=true; continue; }
             tHdr=cells; inTbl=true; continue;
           }
           let si=1;
           if (tHdr) { for (let i=0;i<tHdr.length;i++) { if (/status|result|pass/i.test(tHdr[i])) { si=i; break; }}}
-          tests.push({testId:`${dom}_${tests.length+1}`,domain:dom,name:cells[0]||"unnamed",status:parseStatusCell(cells[si]||""),detail:cells[si+1]||cells[2]||""});
+          tests.push({testId:`${dom}_${tests.length+1}`,domain:dom,name:cleanName(fc),status:parseStatusCell(cells[si]||""),detail:cells[si+1]||cells[2]||""});
         }
+      }
+    }
+    // Also collect bullet items from Simulation Setup
+    const setupM = md.match(/##\s*1\.\s*Simulation Setup[\s\S]*?(?=##\s*2\.|$)/i);
+    if (setupM) {
+      const re = /-\s*\[<span[^>]*>([✓✗])<\/span>\]\s*(.+)/g; let m;
+      while ((m=re.exec(setupM[0]))!==null) {
+        tests.push({testId:`setup_${tests.length+1}`,domain:"overview",name:cleanName(m[2].trim()),status:m[1]==="✓"?"pass":"fail",detail:""});
       }
     }
     // Infer overall from tests if not explicitly stated
