@@ -271,6 +271,13 @@ function parseReport(reportPath) {
         }
       }
     }
+    // Infer overall from tests if not explicitly stated
+    if (overall==="unavailable" && tests.length>0) {
+      const failCnt = tests.filter(t=>t.status==="fail").length;
+      const passCnt = tests.filter(t=>t.status==="pass").length;
+      if (failCnt===0 && passCnt>0) overall="pass";
+      else if (failCnt>0) overall="fail";
+    }
     return {reportMarkdown:md,simulator:sim,simulatorVersion:ver,overallStatus:overall,verificationTests:tests};
   } catch { return {reportMarkdown:"",simulator:"unknown",simulatorVersion:"",overallStatus:"unavailable",verificationTests:[]}; }
 }
@@ -391,9 +398,14 @@ function main() {
 
   const allRuns = {}, allModels = {}, allSuites = {};
   const modelIds=[], suiteIds=[], formatsSet=new Set();
-  let availableModels = 0; // models/netlists available but not yet run
+  const indexedPaths = new Set(); // dedup identical paths across sources
+  let availableModels = 0;
 
   for (const src of sources) {
+    // Deduplicate identical source paths
+    const srcKey = src.path;
+    if (indexedPaths.has(srcKey)) { console.log(`  ⏭ Skipping duplicate source: ${src.label}`); continue; }
+    indexedPaths.add(srcKey);
     console.log(`\n📂 ${src.label}: ${src.path}`);
     const roots = findResultRoots(src.path);
     console.log(`  Result roots: ${roots.length}`);

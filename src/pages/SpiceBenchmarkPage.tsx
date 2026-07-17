@@ -13,7 +13,6 @@ import type {
   NumericScaleMode, PlotAspectMode, DataArtifact,
 } from "../data/SpiceBenchmarkTypes";
 import { ANALYSIS_DOMAINS } from "../data/SpiceBenchmarkTypes";
-import { Badge } from "./flow/Badge";
 import { EmptyState } from "./flow/EmptyState";
 import "../benchmark.css";
 
@@ -250,7 +249,7 @@ function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: Data
 
       {/* Controls */}
       <div className="benchmark-dataset-controls">
-        <label className="axis-picker">X<select value={xCol} onChange={e => setXCol(e.target.value)}>{cols.map(c => <option key={c}>{c}</option>)}</select></label>
+        <label className="axis-picker">X<select value={xCol} onChange={e => setXCol(e.target.value)}>{cols.map((c,i) => <option key={`${i}-${c}`}>{c}</option>)}</select></label>
         <label className="axis-picker">Chart<select value={chartType} onChange={e => setChartType(e.target.value)}>{["scatter","line","bar","heatmap"].map(t => <option key={t}>{t}</option>)}</select></label>
         <label className="axis-picker">X scale<select value={xScale} onChange={e => setXScale(e.target.value as NumericScaleMode)}>{["linear","log"].map(s => <option key={s}>{s}</option>)}</select></label>
         <label className="axis-picker">Y scale<select value={yScale} onChange={e => setYScale(e.target.value as NumericScaleMode)}>{["linear","log"].map(s => <option key={s}>{s}</option>)}</select></label>
@@ -261,8 +260,8 @@ function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: Data
         <div className="benchmark-series">
           <span className="hint">Y series:</span>
           <div className="benchmark-series-checkboxes">
-            {cols.filter(c => c !== xCol).map(c => (
-              <label key={c} className="benchmark-series-item"><input type="checkbox" checked={yCols.includes(c)} onChange={() => toggleYCol(c)} />{c}</label>
+            {cols.filter(c => c !== xCol).map((c,i) => (
+              <label key={`${i}-${c}`} className="benchmark-series-item"><input type="checkbox" checked={yCols.includes(c)} onChange={() => toggleYCol(c)} />{c}</label>
             ))}
           </div>
         </div>
@@ -363,35 +362,55 @@ function PlotGallery({ run }: { run: BenchmarkRun }) {
 
 function VerificationSection({ run }: { run: BenchmarkRun }) {
   const ts = run.verificationTests;
-  const grouped = useMemo(() => {
-    const m = new Map<string, typeof ts>();
-    for (const t of ts) { const list = m.get(t.domain) ?? []; list.push(t); m.set(t.domain, list); }
-    return m;
-  }, [ts]);
   const passCount = ts.filter(t => t.status === "pass").length;
   const failCount = ts.filter(t => t.status === "fail").length;
   const naCount = ts.filter(t => t.status === "unavailable").length;
+  const allPass = failCount === 0 && passCount > 0;
 
   return (
     <div className="chart-card benchmark-section" id="bm-verify">
-      <h2>Verification Report</h2>
+      <h2>
+        REPORT.md — {run.runId}{" "}
+        {allPass ? <span style={{color:"var(--ok,#22c55e)"}}>All ✓ ({passCount} tests)</span>
+         : failCount > 0 ? <span style={{color:"var(--fail,#ef4444)"}}>✗ {failCount} failures</span>
+         : <span style={{color:"var(--muted)"}}>No results</span>}
+      </h2>
+
+      {/* Test status cards with ✓/✗ symbols */}
       <div className="benchmark-verify-summary">
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Overall</div><div className="flow-kpi-card__value"><Badge status={run.reportSummary.overallStatus === "pass" ? "completed" : run.reportSummary.overallStatus === "fail" ? "failed" : "pending"} /></div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Pass</div><div className="flow-kpi-card__value" style={{ color: "var(--ok,#22c55e)" }}>{passCount}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Fail</div><div className="flow-kpi-card__value" style={{ color: "var(--fail,#ef4444)" }}>{failCount}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">N/A</div><div className="flow-kpi-card__value" style={{ color: "var(--muted)" }}>{naCount}</div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Total</div><div className="flow-kpi-card__value">{ts.length}</div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">✓ Pass</div><div className="flow-kpi-card__value" style={{color:"var(--ok,#22c55e)"}}>{passCount}</div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">✗ Fail</div><div className="flow-kpi-card__value" style={{color:"var(--fail,#ef4444)"}}>{failCount}</div></div>
+        <div className="flow-kpi-card"><div className="flow-kpi-card__label">N/A</div><div className="flow-kpi-card__value" style={{color:"var(--muted)"}}>{naCount}</div></div>
       </div>
-      {[...grouped.entries()].map(([domain, tests]) => (
-        <div key={domain} className="benchmark-verify-domain">
-          <h3 className="flow-subsection-title">{DOMAIN_LABELS[domain as AnalysisDomain] ?? domain} — {tests.length} tests</h3>
-          <div className="benchmark-table-wrap"><table className="benchmark-table"><thead><tr><th>Test</th><th>Status</th><th>Detail</th></tr></thead><tbody>
-            {tests.map(t => <tr key={t.testId}><td>{t.name}</td><td><Badge status={t.status === "pass" ? "completed" : t.status === "fail" ? "failed" : "pending"} /></td><td className="benchmark-test-detail">{t.detail}</td></tr>)}
-          </tbody></table></div>
+
+      {/* Per-domain test table with ✓/✗ symbols */}
+      {ts.length > 0 && (
+        <div className="benchmark-table-wrap" style={{marginBottom:"0.75rem"}}>
+          <table className="benchmark-table">
+            <thead><tr><th>Test Type</th><th>Status</th><th>Domain</th><th>Key Findings</th></tr></thead>
+            <tbody>
+              {ts.map(t => (
+                <tr key={t.testId}>
+                  <td><strong>{t.name}</strong></td>
+                  <td style={{fontSize:"1rem",textAlign:"center"}}>
+                    {t.status === "pass" ? <span title="Pass" style={{color:"var(--ok,#22c55e)"}}>✓</span>
+                     : t.status === "fail" ? <span title="Fail" style={{color:"var(--fail,#ef4444)"}}>✗</span>
+                     : <span title="Unavailable" style={{color:"var(--muted)"}}>—</span>}
+                  </td>
+                  <td><span className="benchmark-domain-badge" style={{fontSize:"0.6rem"}}>{t.domain}</span></td>
+                  <td className="benchmark-test-detail">{t.detail}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      ))}
+      )}
+
+      {/* Raw REPORT.md — always visible */}
       {run.reportSummary.reportMarkdown && (
-        <details className="benchmark-report-raw">
-          <summary>Raw REPORT.md</summary>
+        <details className="benchmark-report-raw" open>
+          <summary>Full REPORT.md</summary>
           <pre>{run.reportSummary.reportMarkdown}</pre>
         </details>
       )}
@@ -555,6 +574,12 @@ export function SpiceBenchmarkPage() {
         <p className="hint benchmark-datasets-summary">{visibleDatasets.length}/{datasets.length} dataset(s) shown for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
       </div>
 
+      {/* ─── REPORT.md — top priority ─── */}
+      <VerificationSection run={run} />
+
+      {/* ─── Original Plots ─── */}
+      <PlotGallery run={run} />
+
       {/* ─── Overview ─── */}
       <OverviewSection run={run} />
 
@@ -569,12 +594,6 @@ export function SpiceBenchmarkPage() {
           ))
         )}
       </div>
-
-      {/* ─── Original Plots ─── */}
-      <PlotGallery run={run} />
-
-      {/* ─── Verification Report ─── */}
-      <VerificationSection run={run} />
 
       {/* ─── Artifacts ─── */}
       <ArtifactSection run={run} />
