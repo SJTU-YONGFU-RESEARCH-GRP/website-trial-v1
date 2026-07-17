@@ -1,16 +1,10 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import type { Config, Data, Layout } from "plotly.js";
-import { useNarrowScreen } from "../hooks/useNarrowScreen";
-import { useTheme } from "../theme/ThemeContext";
-import {
-  getChartPalette, plotInsetBackground, plotAxisFont, plotFont,
-  plotlyAxisFrameX, plotlyAxisFrameY, plotlyBold, plotlyHoverLabel,
-} from "../theme/chartPalette";
 import { usePlotlyChart } from "../hooks/usePlotlyChart";
 import { SPICE_BENCHMARK_MANIFEST } from "../data/generatedSpiceBenchmarkManifest";
 import type {
   BenchmarkRun, AnalysisDomain, ComparisonMode,
-  NumericScaleMode, PlotAspectMode, DataArtifact,
+  PlotAspectMode, DataArtifact,
 } from "../data/SpiceBenchmarkTypes";
 import { ANALYSIS_DOMAINS } from "../data/SpiceBenchmarkTypes";
 import { EmptyState } from "./flow/EmptyState";
@@ -19,19 +13,35 @@ import "../benchmark.css";
 const BASE = import.meta.env.BASE_URL || "/";
 
 const DOMAIN_LABELS: Record<AnalysisDomain, string> = { overview: "Overview", dc: "DC Analysis Summary", ac: "AC Analysis Summary", transient: "Transient Analysis Summary", noise: "Noise Analysis Summary" };
-const DOMAIN_DEFAULT_X: Record<AnalysisDomain, string[]> = {
-  overview: [], dc: ["Vds", "Vgs", "vds", "vgs", "Vds(V)", "Vbias"], ac: ["freq(Hz)", "freq", "frequency", "Vgs(V)"],
-  transient: ["time(s)", "time", "t(s)"], noise: ["freq(Hz)", "freq", "frequency"],
-};
-const DOMAIN_DEFAULT_Y: Record<AnalysisDomain, string[]> = {
-  overview: [], dc: ["Id(A)", "Id", "Ids(A)", "gm(A/V)", "I(V)"], ac: ["Cgg(F)", "Cgd(F)", "Cgs(F)", "mag"],
-  transient: ["Vout(V)", "Vout", "Vin(V)", "Iin(A)", "power(W)"], noise: ["Sid(A^2/Hz)", "Svg(V^2/Hz)", "Sv(V^2/Hz)"],
-};
-const DOMAIN_CHART: Record<AnalysisDomain, string> = { overview: "scatter", dc: "scatter", ac: "scatter", transient: "line", noise: "scatter" };
 
-function pickDefault(cols: string[], candidates: string[]): string {
-  for (const c of candidates) { if (cols.includes(c)) return c; }
-  return cols[0] ?? "";
+/** Map plot filename to human-readable label derived from test types. */
+function plotLabel(name: string): { title: string; detail: string } {
+  const n = name.toLowerCase();
+  if (n.includes("iv_characteristics")||n.includes("iv_character")) return {title:"IV Characteristics",detail:"Id-Vd and Id-Vg curves across bias points"};
+  if (n.includes("kcl_verification")) return {title:"KCL Verification",detail:"Sum of terminal currents across operating range"};
+  if (n.includes("temperature_analysis")) return {title:"Temperature Analysis",detail:"DC characteristics at -40°C to 150°C"};
+  if (n.includes("cv_characteristics")||n.includes("cv_character")) return {title:"Capacitance-Voltage",detail:"C-V curves across frequency and bias"};
+  if (n.includes("cv_components")) return {title:"C-V Components",detail:"Cgg, Cgs, Cgd decomposition"};
+  if (n.includes("cv_multifreq")) return {title:"Multi-Frequency C-V",detail:"C-V at multiple frequencies"};
+  if (n.includes("nqs_effects")||n.includes("cv_nqs")) return {title:"Non-Quasi-Static Effects",detail:"Phase shift and frequency dependence"};
+  if (n.includes("sparameter")) return {title:"S-Parameter Analysis",detail:"S11 and S21 vs frequency"};
+  if (n.includes("charge_conservation")) return {title:"Charge Conservation",detail:"Total charge error verification"};
+  if (n.includes("switching_response")) return {title:"Switching Response",detail:"Input pulse → output switching waveform"};
+  if (n.includes("large_signal_transient")||n.includes("large_signal")) return {title:"Large-Signal Transient",detail:"Full-scale switching analysis"};
+  if (n.includes("delay_effect")) return {title:"Delay Effect",detail:"Propagation delay through chain"};
+  if (n.includes("power_dissipation")) return {title:"Power Dissipation",detail:"Dynamic and static power vs temperature"};
+  if (n.includes("energy_consumption")) return {title:"Energy Consumption",detail:"Energy per switching event"};
+  if (n.includes("quasi_static_iv")||n.includes("quasi_static_time")) return {title:"Quasi-Static Analysis",detail:"I-V and time-domain quasi-static response"};
+  if (n.includes("thermal_noise_vds")) return {title:"Thermal Noise — Vds Comparison",detail:"Noise PSD at different Vds biases"};
+  if (n.includes("thermal_noise")) return {title:"Thermal Noise",detail:"Noise power spectral density"};
+  if (n.includes("flicker_noise")) return {title:"Flicker (1/f) Noise",detail:"Low-frequency noise characterization"};
+  if (n.includes("shot_noise")) return {title:"Shot Noise",detail:"Current shot noise level and variation"};
+  if (n.includes("noise_components")) return {title:"Noise Components",detail:"Thermal + Flicker + Shot decomposition"};
+  if (n.includes("noise_vs_temperature")) return {title:"Noise vs Temperature",detail:"Noise PSD across -40°C to 150°C"};
+  if (n.includes("total_charge")) return {title:"Total Charge",detail:"Integrated charge vs time"};
+  // Fallback: clean up the hash suffix
+  const base = name.replace(/_[a-f0-9]{8}\.(png|svg)$/i,"").replace(/[_-]/g," ");
+  return {title:base,detail:""};
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
@@ -142,85 +152,12 @@ function OverviewSection({ run }: { run: BenchmarkRun }) {
 /*  BenchmarkDatasetCard — one per dataset                              */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 10;
 
-function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: DataArtifact; domain: AnalysisDomain; plotAspect: PlotAspectMode }) {
-  const aspectCls = plotAspect === "16:9" ? "plot-host--aspect-16x9" : plotAspect === "4:3" ? "plot-host--aspect-4x3" : plotAspect === "1:1" ? "plot-host--aspect-1x1" : "";
-  const narrow = useNarrowScreen(640);
-  const { theme } = useTheme();
-  const palette = getChartPalette(theme);
-  const bg = plotInsetBackground(theme);
-  const axTick = plotAxisFont(palette.axisValueLabelRgb, narrow);
-  const hoverLabel = plotlyHoverLabel(palette, narrow);
-  const frameX = plotlyAxisFrameX(palette);
-  const frameY = plotlyAxisFrameY(palette);
-
+function BenchmarkDatasetCard({ artifact, domain }: { artifact: DataArtifact; domain: AnalysisDomain }) {
   const cols = artifact.columns ?? [];
   const { rows, error } = useLazyData(artifact);
-
-  const [xCol, setXCol] = useState("");
-  const [yCols, setYCols] = useState<string[]>([]);
-  const [chartType, setChartType] = useState("scatter");
-  const [xScale, setXScale] = useState<NumericScaleMode>("linear");
-  const [yScale, setYScale] = useState<NumericScaleMode>("linear");
   const [tablePage, setTablePage] = useState(0);
-
-  // Auto-configure defaults when data loads
-  useEffect(() => {
-    if (cols.length === 0) return;
-    const dx = DOMAIN_DEFAULT_X[domain] ?? [];
-    const dy = DOMAIN_DEFAULT_Y[domain] ?? [];
-    setXCol(pickDefault(cols, dx));
-    setYCols([pickDefault(cols, dy)]);
-    setChartType(DOMAIN_CHART[domain] ?? "scatter");
-    if (domain === "noise" || (cols[0] && /freq/i.test(cols[0]))) setXScale("log");
-    if (domain === "noise") setYScale("log");
-  }, [artifact.name, domain]);
-
-  // Build chart
-  const chart = useMemo(() => {
-    if (!rows || !xCol || yCols.length === 0) return null;
-    const xVals = rows.map(r => +r[xCol]);
-
-    if (chartType === "scatter" || chartType === "line") {
-      const traces: Data[] = yCols.map(yc => {
-        const yVals = rows.map(r => +r[yc]);
-        return { type: "scatter", mode: chartType === "line" ? "lines+markers" : "markers", x: xVals, y: yVals, name: yc,
-          marker: { size: 5 }, line: { width: 1.5 },
-          hovertemplate: `${xCol}: %{x}<br>${yc}: %{y}<extra></extra>` } as Data;
-      });
-      return {
-        data: traces,
-        layout: {
-          autosize: true, margin: narrow ? { l: 48, r: 12, t: 24, b: 44 } : { l: 56, r: 20, t: 28, b: 48 },
-          paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-          title: { text: plotlyBold(`${artifact.name}`), font: plotFont(palette.rgbAxisTitle) },
-          xaxis: { ...frameX, title: xCol, tickfont: axTick, type: xScale === "log" ? "log" : "linear" },
-          yaxis: { ...frameY, title: yCols.join(" / "), tickfont: axTick, type: yScale === "log" ? "log" : "linear", gridcolor: palette.axisGridGreyRgb },
-          showlegend: yCols.length > 1, legend: narrow ? { orientation: "h", y: -0.3 } : { x: 1.02 },
-          hovermode: "closest", hoverlabel: hoverLabel,
-        } as Partial<Layout>,
-      };
-    }
-    if (chartType === "heatmap" && cols.length >= 3) {
-      const zVals = yCols.map(yc => rows.map(r => +r[yc]));
-      return {
-        data: [{ type: "heatmap", z: zVals, x: xVals.map(String), y: yCols, colorscale: "Viridis",
-          hovertemplate: `${xCol}: %{x}<br>%{y}: %{z}<extra></extra>` } as Data],
-        layout: {
-          autosize: true, margin: narrow ? { l: 56, r: 12, t: 24, b: 64 } : { l: 72, r: 20, t: 28, b: 68 },
-          paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-          title: { text: plotlyBold(`${artifact.name} — heatmap`), font: plotFont(palette.rgbAxisTitle) },
-          xaxis: { ...frameX, title: xCol, tickfont: axTick },
-          yaxis: { ...frameY, tickfont: axTick, autorange: "reversed" as const },
-          hovermode: "closest", hoverlabel: hoverLabel,
-        } as Partial<Layout>,
-      };
-    }
-    return null;
-  }, [rows, xCol, yCols, chartType, xScale, yScale, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
-
-  const chartRef = usePlotlyChart(chart?.data ?? [], chart?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
 
   const displayRows = rows && rows.length > 0 ? rows : null;
   const totalPages = displayRows ? Math.ceil(displayRows.length / PAGE_SIZE) : 0;
@@ -233,11 +170,6 @@ function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: Data
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${artifact.name}.csv`; a.click();
   };
 
-  const toggleYCol = (col: string) => setYCols(prev => {
-    const next = prev.includes(col) ? prev.filter(c => c !== col) : [...prev, col];
-    return next.length === 0 ? prev : next;
-  });
-
   return (
     <div className="chart-card benchmark-dataset-card">
       <div className="benchmark-dataset-header">
@@ -247,43 +179,9 @@ function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: Data
         {rows && rows.length > 0 && <button className="benchmark-btn" onClick={downloadCsv}>⬇ CSV ({rows.length} rows)</button>}
       </div>
 
-      {/* Controls */}
-      <div className="benchmark-dataset-controls">
-        <label className="axis-picker">X<select value={xCol} onChange={e => setXCol(e.target.value)}>{cols.map((c,i) => <option key={`${i}-${c}`}>{c}</option>)}</select></label>
-        <label className="axis-picker">Chart<select value={chartType} onChange={e => setChartType(e.target.value)}>{["scatter","line","bar","heatmap"].map(t => <option key={t}>{t}</option>)}</select></label>
-        <label className="axis-picker">X scale<select value={xScale} onChange={e => setXScale(e.target.value as NumericScaleMode)}>{["linear","log"].map(s => <option key={s}>{s}</option>)}</select></label>
-        <label className="axis-picker">Y scale<select value={yScale} onChange={e => setYScale(e.target.value as NumericScaleMode)}>{["linear","log"].map(s => <option key={s}>{s}</option>)}</select></label>
-      </div>
-
-      {/* Y series multi-select */}
-      {cols.length > 1 && (
-        <div className="benchmark-series">
-          <span className="hint">Y series:</span>
-          <div className="benchmark-series-checkboxes">
-            {cols.filter(c => c !== xCol).map((c,i) => (
-              <label key={`${i}-${c}`} className="benchmark-series-item"><input type="checkbox" checked={yCols.includes(c)} onChange={() => toggleYCol(c)} />{c}</label>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Chart */}
-      {chart ? (
-        <div className={`plot-host plot-host--tall ${aspectCls}`}>
-          <div ref={chartRef} style={{ width: "100%", height: "100%" }} />
-        </div>
-      ) : rows === null && artifact.fetchUrl ? (
-        <EmptyState message="Loading data…" icon="⏳" />
-      ) : rows && rows.length === 0 ? (
-        <EmptyState message="No data rows" icon="📭" />
-      ) : artifact.fetchUrl ? (
-        <EmptyState message="Select X and Y columns to plot" icon="📊" />
-      ) : (
-        <EmptyState message={`${artifact.format} — download available (no inline chart)`} icon="📁" />
-      )}
       {error && <p className="hint benchmark-error">{error}</p>}
 
-      {/* Paginated data table */}
+      {/* Paginated data table — no inline chart */}
       {displayRows && displayRows.length > 0 && (
         <div className="benchmark-table-section">
           <div className="benchmark-table-header">
@@ -304,6 +202,9 @@ function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: Data
           </div>
         </div>
       )}
+      {rows === null && artifact.fetchUrl && !error && (
+        <EmptyState message="Loading data…" icon="⏳" />
+      )}
     </div>
   );
 }
@@ -322,23 +223,17 @@ function VerificationSection({ run }: { run: BenchmarkRun }) {
   const passCount = ts.filter(t => t.status === "pass").length;
   const failCount = ts.filter(t => t.status === "fail").length;
   const naCount = ts.filter(t => t.status === "unavailable").length;
-  const allPass = failCount === 0 && passCount > 0;
 
   return (
     <div className="chart-card benchmark-section" id="bm-verify">
-      <h2>
-        REPORT.md — {run.runId}{" "}
-        {allPass ? <span style={{color:"var(--ok,#22c55e)"}}>All ✓ ({passCount} tests)</span>
-         : failCount > 0 ? <span style={{color:"var(--fail,#ef4444)"}}>✗ {failCount} failures</span>
-         : <span style={{color:"var(--muted)"}}>No results</span>}
-      </h2>
+      <h2>Summary</h2>
 
-      {/* Test status cards with ✓/✗ symbols */}
-      <div className="benchmark-verify-summary">
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">Total</div><div className="flow-kpi-card__value">{ts.length}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">✓ Pass</div><div className="flow-kpi-card__value" style={{color:"var(--ok,#22c55e)"}}>{passCount}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">✗ Fail</div><div className="flow-kpi-card__value" style={{color:"var(--fail,#ef4444)"}}>{failCount}</div></div>
-        <div className="flow-kpi-card"><div className="flow-kpi-card__label">N/A</div><div className="flow-kpi-card__value" style={{color:"var(--muted)"}}>{naCount}</div></div>
+      {/* Centered KPI cards */}
+      <div className="benchmark-verify-summary" style={{justifyContent:"center"}}>
+        <div className="flow-kpi-card" style={{textAlign:"center"}}><div className="flow-kpi-card__label">Total</div><div className="flow-kpi-card__value">{ts.length}</div></div>
+        <div className="flow-kpi-card" style={{textAlign:"center"}}><div className="flow-kpi-card__label">✓ Pass</div><div className="flow-kpi-card__value" style={{color:"var(--ok,#22c55e)"}}>{passCount}</div></div>
+        <div className="flow-kpi-card" style={{textAlign:"center"}}><div className="flow-kpi-card__label">✗ Fail</div><div className="flow-kpi-card__value" style={{color:"var(--fail,#ef4444)"}}>{failCount}</div></div>
+        <div className="flow-kpi-card" style={{textAlign:"center"}}><div className="flow-kpi-card__label">N/A</div><div className="flow-kpi-card__value" style={{color:"var(--muted)"}}>{naCount}</div></div>
       </div>
 
       {/* Per-domain test table with ✓/✗ symbols */}
@@ -449,7 +344,9 @@ export function SpiceBenchmarkPage() {
   }, [analysis, runId]);
 
   const toggleAllDatasets = useCallback((on: boolean) => {
-    setSelectedDatasetNames(on ? [] : datasets.map(d => d.name));
+    // Select all: empty array = all datasets visible
+    // Unselect all: keep only first dataset (at least one visible)
+    setSelectedDatasetNames(on ? [] : (datasets.length > 0 ? [datasets[0].name] : []));
   }, [datasets]);
 
   const toggleDataset = useCallback((name: string) => {
@@ -548,19 +445,25 @@ export function SpiceBenchmarkPage() {
             {domainPlots.length > 0 && (
               <div className="benchmark-plot-group">
                 <div className="benchmark-plot-grid benchmark-plot-grid--2col">
-                  {domainPlots.map(p => p.displayUrl ? (
-                    <div key={p.relPath} className="benchmark-plot-card" onClick={() => setLightbox(BASE + p.displayUrl)}>
-                      <div className="benchmark-plot-img-wrap"><img src={BASE + p.displayUrl} alt={p.name} loading="lazy" /></div>
-                      <div className="benchmark-plot-info"><span>{p.name}</span><span className="hint">{p.size}</span></div>
+                  {domainPlots.filter(p => p.displayUrl).map(p => {
+                    const label = plotLabel(p.name);
+                    return (
+                    <div key={p.relPath} className="benchmark-plot-card" onClick={() => setLightbox(BASE + p.displayUrl!)}>
+                      <div className="benchmark-plot-img-wrap"><img src={BASE + p.displayUrl!} alt={label.title} loading="lazy" /></div>
+                      <div className="benchmark-plot-info" style={{flexDirection:"column",alignItems:"center",textAlign:"center",padding:"0.5rem"}}>
+                        <strong style={{fontSize:"0.8rem"}}>{label.title}</strong>
+                        {label.detail && <span className="hint" style={{fontSize:"0.65rem"}}>{label.detail}</span>}
+                      </div>
                     </div>
-                  ) : null)}
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             {/* Datasets for this domain */}
             {visibleDomainDatasets.length > 0 && analysis !== "overview" && visibleDomainDatasets.map(d => (
-              <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} plotAspect={plotAspect} />
+              <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} />
             ))}
           </div>
         );
@@ -571,7 +474,7 @@ export function SpiceBenchmarkPage() {
         <div className="benchmark-section">
           <h2 className="benchmark-section-heading">Overview Datasets ({visibleDatasets.length}/{datasets.length})</h2>
           {visibleDatasets.map(d => (
-            <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} plotAspect={plotAspect} />
+            <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} />
           ))}
         </div>
       )}
