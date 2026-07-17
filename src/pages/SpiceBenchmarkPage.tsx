@@ -51,13 +51,34 @@ function useLazyData(artifact: DataArtifact | null): { rows: Record<string, stri
     const fullUrl = BASE + url;
     if (dataCache.has(fullUrl)) { setRows(dataCache.get(fullUrl)!); return; }
     let cancelled = false;
-    fetch(fullUrl).then(r => { if (!r.ok) throw new Error(`${r.status} ${r.statusText}`); return r.text(); }).then(text => {
+    const isJson = url.endsWith(".json");
+    fetch(fullUrl).then(r => { if (!r.ok) throw new Error(`${r.status} ${r.statusText}`); return isJson ? r.json() : r.text(); }).then(data => {
       if (cancelled) return;
-      const lines = text.trim().split(/\r?\n/).filter(Boolean);
-      const headers = lines[0].split(",").map(h => h.trim());
-      const data = lines.slice(1).map(l => { const v = l.split(","); const o: Record<string, string> = {}; headers.forEach((h, i) => o[h] = v[i]?.trim() ?? ""); return o; });
-      dataCache.set(fullUrl, data);
-      if (!cancelled) setRows(data);
+      if (isJson) {
+        // Normalized JSON: { columns: string[], rows: string[][] }
+        const parsed = data as { columns: string[]; rows: string[][] };
+        const records = parsed.rows.map(row => {
+          const obj: Record<string, string> = {};
+          parsed.columns.forEach((c, i) => obj[c] = String(row[i] ?? ""));
+          return obj;
+        });
+        dataCache.set(fullUrl, records);
+        setRows(records);
+      } else {
+        // Raw CSV/TXT fallback
+        const text = data as string;
+        const lines = text.trim().split(/\r?\n/).filter(Boolean);
+        if (lines.length < 2) { setRows([]); return; }
+        const headers = lines[0].split(",").map((h: string) => h.trim());
+        const records = lines.slice(1).map((l: string) => {
+          const v = l.split(",");
+          const obj: Record<string, string> = {};
+          headers.forEach((h: string, i: number) => obj[h] = v[i]?.trim() ?? "");
+          return obj;
+        });
+        dataCache.set(fullUrl, records);
+        setRows(records);
+      }
     }).catch(err => { if (!cancelled) setError(err.message); });
     return () => { cancelled = true; };
   }, [artifact?.fetchUrl]);

@@ -1,8 +1,8 @@
-// Auto-generated — 2026-07-17T05:42:23.796Z
+// Auto-generated — 2026-07-17T05:50:37.009Z
 // Runs: 1, Models: 1, Suites: 1
 import type { SpiceBenchmarkManifest } from "./SpiceBenchmarkTypes";
 export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
-  "generatedAt": "2026-07-17T05:42:23.795Z",
+  "generatedAt": "2026-07-17T05:50:37.008Z",
   "repoUrl": "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark",
   "runs": {
     "freepdk45_nmos_example": {
