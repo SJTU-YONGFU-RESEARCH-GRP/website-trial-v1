@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import Plotly from "plotly.js-dist-min";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import type { Config, Data, Layout } from "plotly.js";
 import { useNarrowScreen } from "../hooks/useNarrowScreen";
 import { useTheme } from "../theme/ThemeContext";
@@ -7,6 +6,7 @@ import {
   getChartPalette, plotInsetBackground, plotAxisFont, plotFont,
   plotlyAxisFrameX, plotlyAxisFrameY, plotlyBold, plotlyHoverLabel,
 } from "../theme/chartPalette";
+import { usePlotlyChart } from "../hooks/usePlotlyChart";
 import { SPICE_BENCHMARK_MANIFEST } from "../data/generatedSpiceBenchmarkManifest";
 import type {
   BenchmarkRun, AnalysisDomain, ComparisonMode,
@@ -33,20 +33,6 @@ const DOMAIN_CHART: Record<AnalysisDomain, string> = { overview: "scatter", dc: 
 function pickDefault(cols: string[], candidates: string[]): string {
   for (const c of candidates) { if (cols.includes(c)) return c; }
   return cols[0] ?? "";
-}
-
-/** Shared Plotly helper — reads from the project hook pattern. */
-function usePlotlyChart(data: Data[], layout: Partial<Layout>, config: Partial<Config>) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current; if (!el) return;
-    let cancelled = false;
-    void Plotly.newPlot(el, data, layout, config).then(() => { if (!cancelled) void Plotly.Plots.resize(el); });
-    const ro = new ResizeObserver(() => { if (el && !cancelled) void Plotly.Plots.resize(el); });
-    ro.observe(el);
-    return () => { cancelled = true; ro.disconnect(); void Plotly.purge(el); };
-  }, [data, layout, config]);
-  return ref;
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
@@ -463,6 +449,36 @@ export function SpiceBenchmarkPage() {
     return run.dataArtifacts.filter(d => analysis === "overview" || d.domain === analysis);
   }, [run, analysis]);
 
+  // Top-level dataset selection — defaults to all datasets for current analysis
+  const [selectedDatasetNames, setSelectedDatasetNames] = useState<string[]>([]);
+  // When analysis changes, reset to all datasets
+  useEffect(() => {
+    setSelectedDatasetNames(datasets.map(d => d.name));
+  }, [analysis, runId]);
+
+  const toggleAllDatasets = useCallback((on: boolean) => {
+    setSelectedDatasetNames(on ? [] : datasets.map(d => d.name));
+  }, [datasets]);
+
+  const toggleDataset = useCallback((name: string) => {
+    setSelectedDatasetNames(prev => {
+      const next = prev.length === 0 ? [...datasets.map(d => d.name)] : [...prev];
+      const idx = next.indexOf(name);
+      if (idx >= 0) {
+        if (next.length <= 1) return next;
+        next.splice(idx, 1);
+      } else {
+        next.push(name);
+      }
+      return next;
+    });
+  }, [datasets]);
+
+  const visibleDatasets = useMemo(() => {
+    const sel = selectedDatasetNames.length === 0 ? new Set(datasets.map(d => d.name)) : new Set(selectedDatasetNames);
+    return datasets.filter(d => sel.has(d.name));
+  }, [datasets, selectedDatasetNames]);
+
   // Derive available analysis domains (only show those with data)
   const availableDomains = useMemo(() => {
     const set = new Set<AnalysisDomain>();
@@ -490,7 +506,28 @@ export function SpiceBenchmarkPage() {
             {comparisonMode !== "single" && <label className="axis-picker">Compare Run<select value={compareRunId} onChange={e => setCompareRunId(e.target.value)}>{runIds.filter(rid => rid !== runId).map(rid => <option key={rid} value={rid}>{rid}</option>)}</select></label>}
           </div>
         )}
-        <p className="hint benchmark-datasets-summary">{datasets.length} dataset(s) for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
+
+        {/* Datasets to include — top-level multi-select */}
+        {datasets.length > 0 && (
+          <div className="benchmark-series" style={{marginTop:"0.5rem"}}>
+            <span className="hint">Datasets to include:</span>
+            <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.2rem"}}>
+              <button className="benchmark-btn" onClick={() => toggleAllDatasets(true)}>Select all</button>
+              <button className="benchmark-btn" onClick={() => toggleAllDatasets(false)}>Unselect all</button>
+            </div>
+            <div className="benchmark-series-checkboxes" style={{maxHeight:"150px",overflowY:"auto"}}>
+              {datasets.map(d => (
+                <label key={d.name} className="benchmark-series-item">
+                  <input type="checkbox" checked={visibleDatasets.some(v => v.name === d.name)} onChange={() => toggleDataset(d.name)} />
+                  <span className="benchmark-domain-badge" style={{fontSize:"0.6rem",padding:"0.05rem 0.25rem"}}>{DOMAIN_LABELS[d.domain]}</span>
+                  {d.name}
+                  <span className="hint">({d.rowCount > 0 ? d.rowCount : "?"} rows)</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+        <p className="hint benchmark-datasets-summary">{visibleDatasets.length}/{datasets.length} dataset(s) shown for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
       </div>
 
       {/* ─── Overview ─── */}
@@ -498,11 +535,11 @@ export function SpiceBenchmarkPage() {
 
       {/* ─── Interactive Datasets ─── */}
       <div className="benchmark-section" id="bm-datasets">
-        <h2 className="benchmark-section-heading">Interactive Datasets — {DOMAIN_LABELS[analysis]} ({datasets.length})</h2>
-        {datasets.length === 0 ? (
-          <div className="chart-card"><EmptyState message={`No datasets for ${DOMAIN_LABELS[analysis]}. Try Overview or another domain.`} icon="📊" /></div>
+        <h2 className="benchmark-section-heading">Interactive Datasets — {DOMAIN_LABELS[analysis]} ({visibleDatasets.length}/{datasets.length})</h2>
+        {visibleDatasets.length === 0 ? (
+          <div className="chart-card"><EmptyState message={`No datasets selected for ${DOMAIN_LABELS[analysis]}. Use checkboxes above to select datasets to display.`} icon="📊" /></div>
         ) : (
-          datasets.map(d => (
+          visibleDatasets.map(d => (
             <BenchmarkDatasetCard key={d.name} artifact={d} domain={analysis === "overview" ? d.domain : analysis} />
           ))
         )}
