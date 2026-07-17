@@ -375,7 +375,6 @@ export function SpiceBenchmarkPage() {
     setSelectedDatasetNames(prev => {
       const idx = prev.indexOf(name);
       if (idx >= 0) {
-        if (prev.length <= 1) return prev; // keep at least one
         const next = [...prev];
         next.splice(idx, 1);
         return next;
@@ -429,9 +428,9 @@ export function SpiceBenchmarkPage() {
 
         {/* Datasets to include — top-level multi-select */}
         {datasets.length > 0 && (
-          <div className="benchmark-series" style={{marginTop:"0.5rem"}}>
-            <span className="hint">Datasets to include:</span>
-            <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.2rem"}}>
+          <div className="benchmark-series" style={{marginTop:"0.5rem",display:"block"}}>
+            <div style={{fontWeight:600,fontSize:"0.78rem",marginBottom:"0.25rem"}}>Datasets to include:</div>
+            <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",marginBottom:"0.3rem"}}>
               <button className="benchmark-btn" onClick={() => toggleAllDatasets(true)}>Select all</button>
               <button className="benchmark-btn" onClick={() => toggleAllDatasets(false)}>Unselect all</button>
             </div>
@@ -459,8 +458,14 @@ export function SpiceBenchmarkPage() {
         <p className="hint benchmark-datasets-summary">{visibleDatasets.length}/{datasets.length} dataset(s) shown for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
       </div>
 
-      {/* ─── REPORT.md — top priority ─── */}
+      {/* ─── Summary ─── */}
       <VerificationSection run={run} />
+
+      {/* ─── Overview ─── */}
+      <OverviewSection run={run} />
+
+      {/* ─── Artifacts ─── */}
+      <ArtifactSection run={run} />
 
       {/* ─── Interleaved Data + Plots by Domain ─── */}
       {(["dc","ac","transient","noise"] as AnalysisDomain[]).map(domain => {
@@ -491,22 +496,18 @@ export function SpiceBenchmarkPage() {
               const visiblePairDatasets = pairDatasets.filter(d => visibleDatasets.some(v => v.name === d.name));
               return (
                 <div key={plot.relPath} className="chart-card">
-                  <div style={{display:"flex",gap:"1rem",flexWrap:"wrap",alignItems:"flex-start"}}>
-                    <div className="benchmark-plot-card" style={{flex:"0 0 320px",maxWidth:"100%"}} onClick={() => setLightbox(BASE + plot.displayUrl!)}>
-                      <div className="benchmark-plot-img-wrap"><img src={BASE + plot.displayUrl!} alt={label.title} loading="lazy" /></div>
-                      <div className="benchmark-plot-info" style={{flexDirection:"column",alignItems:"center",textAlign:"center",padding:"0.5rem"}}>
-                        <strong style={{fontSize:"0.8rem"}}>{label.title}</strong>
-                        {label.detail && <span className="hint" style={{fontSize:"0.65rem"}}>{label.detail}</span>}
-                      </div>
-                    </div>
-                    <div style={{flex:"1 1 300px",minWidth:0}}>
-                      {visiblePairDatasets.length > 0 ? visiblePairDatasets.map(d => (
-                        <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} />
-                      )) : (
-                        <EmptyState message="Dataset not selected — enable in Datasets to include above" icon="📊" />
-                      )}
-                    </div>
+                  {/* Plot — full width */}
+                  <h3 className="flow-subsection-title">{label.title}</h3>
+                  {label.detail && <p className="hint" style={{marginBottom:"0.5rem"}}>{label.detail}</p>}
+                  <div className="benchmark-plot-card" onClick={() => setLightbox(BASE + plot.displayUrl!)} style={{marginBottom:"0.75rem"}}>
+                    <div className="benchmark-plot-img-wrap"><img src={BASE + plot.displayUrl!} alt={label.title} loading="lazy" style={{width:"100%"}} /></div>
                   </div>
+                  {/* Data below plot */}
+                  {visiblePairDatasets.length > 0 ? visiblePairDatasets.map(d => (
+                    <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} />
+                  )) : (
+                    <EmptyState message="Dataset not selected — enable in Datasets to include above" icon="📊" />
+                  )}
                 </div>
               );
             })}
@@ -531,12 +532,6 @@ export function SpiceBenchmarkPage() {
           ))}
         </div>
       )}
-
-      {/* ─── Overview ─── */}
-      <OverviewSection run={run} />
-
-      {/* ─── Artifacts ─── */}
-      <ArtifactSection run={run} />
 
       {/* ─── Compare run overlay ─── */}
       {compareRun && comparisonMode !== "single" && (
