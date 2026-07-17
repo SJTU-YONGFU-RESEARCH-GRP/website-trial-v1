@@ -124,7 +124,8 @@ function OverviewSection({ run }: { run: BenchmarkRun }) {
 
 const PAGE_SIZE = 50;
 
-function BenchmarkDatasetCard({ artifact, domain }: { artifact: DataArtifact; domain: AnalysisDomain }) {
+function BenchmarkDatasetCard({ artifact, domain, plotAspect }: { artifact: DataArtifact; domain: AnalysisDomain; plotAspect: PlotAspectMode }) {
+  const aspectCls = plotAspect === "16:9" ? "plot-host--aspect-16x9" : plotAspect === "4:3" ? "plot-host--aspect-4x3" : plotAspect === "1:1" ? "plot-host--aspect-1x1" : "";
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const palette = getChartPalette(theme);
@@ -248,7 +249,7 @@ function BenchmarkDatasetCard({ artifact, domain }: { artifact: DataArtifact; do
 
       {/* Chart */}
       {chart ? (
-        <div className="plot-host plot-host--tall">
+        <div className={`plot-host plot-host--tall ${aspectCls}`}>
           <div ref={chartRef} style={{ width: "100%", height: "100%" }} />
         </div>
       ) : rows === null && artifact.fetchUrl ? (
@@ -494,8 +495,11 @@ export function SpiceBenchmarkPage() {
         <p className="hint">Select a run, model, and analysis domain. Datasets, plots, and verification results update automatically.</p>
         <div className="benchmark-controls-grid">
           <label className="axis-picker">Run<select value={runId} onChange={e => setRunId(e.target.value)}>{runIds.map(rid => <option key={rid} value={rid}>{rid}</option>)}</select></label>
-          <label className="axis-picker">Model<select value={selectedModelId} onChange={e => onModelChange(e.target.value)}>{manifest.modelIds.map(mid => <option key={mid} value={mid}>{mid}</option>)}</select></label>
-          <label className="axis-picker">Format<select value={run.modelFormat} onChange={() => {}}>{manifest.modelFormats.map(f => <option key={f}>{f}</option>)}</select></label>
+          <label className="axis-picker">Model<select value={selectedModelId} onChange={e => onModelChange(e.target.value)}>
+            <optgroup label="Completed runs">{manifest.modelIds.map(mid => <option key={mid} value={mid}>{mid}</option>)}</optgroup>
+            <optgroup label="Available but not run"><option value="" disabled>{(manifest.availableModels||0)} model(s) configured</option></optgroup>
+          </select></label>
+          <label className="axis-picker">Format<span className="benchmark-readonly">{run.modelFormat}</span></label>
           <label className="axis-picker">Netlist Suite<select value={selectedSuiteId} onChange={e => onSuiteChange(e.target.value)}>{manifest.suiteIds.map(sid => <option key={sid} value={sid}>{sid}</option>)}</select></label>
           <label className="axis-picker">Analysis<select value={analysis} onChange={e => setAnalysis(e.target.value as AnalysisDomain)}>{availableDomains.map(d => <option key={d} value={d}>{DOMAIN_LABELS[d]}</option>)}</select></label>
           <label className="axis-picker">Plot aspect<select value={plotAspect} onChange={e => setPlotAspect(e.target.value as PlotAspectMode)}>{["flexible","16:9","4:3","1:1"].map(a => <option key={a}>{a}</option>)}</select></label>
@@ -540,7 +544,7 @@ export function SpiceBenchmarkPage() {
           <div className="chart-card"><EmptyState message={`No datasets selected for ${DOMAIN_LABELS[analysis]}. Use checkboxes above to select datasets to display.`} icon="📊" /></div>
         ) : (
           visibleDatasets.map(d => (
-            <BenchmarkDatasetCard key={d.name} artifact={d} domain={analysis === "overview" ? d.domain : analysis} />
+            <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={analysis === "overview" ? d.domain : analysis} plotAspect={plotAspect} />
           ))
         )}
       </div>

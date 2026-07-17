@@ -53,12 +53,18 @@ export interface DataArtifact {
   columns: string[] | null;
   /** Row count, or -1 for large/raw files. */
   rowCount: number;
-  /** Public URL for lazy fetch (served from public/). */
+  /** Public JSON URL for lazy fetch (normalized data, served from public/). */
   fetchUrl: string | null;
-  /** Text preview (first 200 chars). */
-  preview?: string;
-  /** First few parsed rows. */
-  rowPreview?: string[][];
+  /** Public raw CSV/TXT URL. */
+  rawUrl?: string | null;
+  /** Numeric column names. */
+  numericColumns?: string[];
+  /** Group-by column info. */
+  groups?: { byColumn: string; uniqueValues: string[] } | null;
+  /** Extra metadata. */
+  metadata?: Record<string, unknown>;
+  /** Unique artifact key: relPath. */
+  artifactId?: string;
 }
 
 /* ─── Plot artifact — a plot image in the run ─── */
@@ -74,11 +80,13 @@ export interface PlotArtifact {
 
 /* ─── Report summary ─── */
 export interface ReportSummary {
-  reportPath: string;
+  reportPath?: string;
   reportMarkdown: string;
   simulator: string;
   simulatorVersion: string;
   overallStatus: VerificationStatus;
+  /** Parsed verification tests from the report. */
+  verificationTests?: VerificationTest[];
 }
 
 /* ─── Verification test ─── */
@@ -90,10 +98,18 @@ export interface VerificationTest {
   detail: string;
 }
 
+/* ─── Other artifact (reports, logs, netlists, unknown) ─── */
+export interface OtherArtifact {
+  name: string; relPath: string; size: string; hash: string;
+  kind: "report" | "log" | "netlist" | "other";
+  format?: string; report?: ReportSummary;
+}
+
 /* ─── Benchmark run — one evaluation ─── */
 export interface BenchmarkRun {
   runId: string;
   status: RunStatus;
+  pdkId: string;
   modelId: string;
   modelPath: string;
   modelFormat: ModelFormat;
@@ -104,10 +120,12 @@ export interface BenchmarkRun {
   simulatorVersion: string;
   generatedAt: string;
   commitSha: string;
+  metadataSource: string;
   reportSummary: ReportSummary;
   verificationTests: VerificationTest[];
   dataArtifacts: DataArtifact[];
   plotArtifacts: PlotArtifact[];
+  otherArtifacts: OtherArtifact[];
   reportPath: string;
 }
 
@@ -127,6 +145,8 @@ export interface SpiceBenchmarkManifest {
   netlistSuites: Record<string, NetlistSuite>;
   /** Unique model format values */
   modelFormats: ModelFormat[];
+  /** Models/netlists available but not yet run */
+  availableModels: number;
 }
 
 /* ─── Helper types for page state ─── */
