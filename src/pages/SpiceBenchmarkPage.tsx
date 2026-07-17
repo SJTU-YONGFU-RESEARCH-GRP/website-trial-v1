@@ -14,6 +14,30 @@ const BASE = import.meta.env.BASE_URL || "/";
 
 const DOMAIN_LABELS: Record<AnalysisDomain, string> = { overview: "Overview", dc: "DC Analysis Summary", ac: "AC Analysis Summary", transient: "Transient Analysis Summary", noise: "Noise Analysis Summary" };
 
+/** Match a data filename to a plot by keyword overlap. Returns scores (higher = better match). */
+function matchScore(plotName: string, dataName: string): number {
+  const pn = plotName.toLowerCase().replace(/_[a-f0-9]{8}/, "");
+  const dn = dataName.toLowerCase();
+  let score = 0;
+  const keywords = [
+    ["iv_characteristics","iv_data"],["kcl","kcl"],["temperature_analysis","iv_data"],
+    ["cv_characteristics","cv_data"],["cv_components","cv_data"],["cv_multifreq","cv_data"],
+    ["nqs_effects","nqs_effects"],["sparameter","sparams"],
+    ["charge_conservation","charge_conservation"],["total_charge","tran_charge"],
+    ["switching_response","tran_switching"],["switching_power","tran_switching_power"],
+    ["large_signal","tran_large_signal"],["delay_effect","tran_delay"],
+    ["power_dissipation","tran_power"],["energy_consumption","tran_power"],
+    ["quasi_static","tran_quasi_static"],["thermal_noise","thermal_noise"],
+    ["flicker_noise","flicker_noise"],["shot_noise","shot_noise"],
+    ["noise_components","noise_components"],["noise_vs_temperature","noise_temp"],
+  ];
+  for (const [pk, dk] of keywords) {
+    if (pn.includes(pk) && dn.includes(dk)) score += 10;
+  }
+  // Same domain? +5
+  return score;
+}
+
 /** Map plot filename to human-readable label derived from test types. */
 function plotLabel(name: string): { title: string; detail: string } {
   const n = name.toLowerCase();
@@ -152,7 +176,7 @@ function OverviewSection({ run }: { run: BenchmarkRun }) {
 /*  BenchmarkDatasetCard — one per dataset                              */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 function BenchmarkDatasetCard({ artifact, domain }: { artifact: DataArtifact; domain: AnalysisDomain }) {
   const cols = artifact.columns ?? [];
@@ -196,8 +220,8 @@ function BenchmarkDatasetCard({ artifact, domain }: { artifact: DataArtifact; do
           </div>
           <div className="analog-table-wrap benchmark-table-wrap">
             <table className="benchmark-table">
-              <thead><tr>{cols.map(c => <th key={c}>{c}</th>)}</tr></thead>
-              <tbody>{pageRows?.map((r, i) => <tr key={i}>{cols.map(c => <td key={c}>{r[c] ?? ""}</td>)}</tr>)}</tbody>
+              <thead><tr>{cols.map((c,i) => <th key={`${i}-${c}`}>{c}</th>)}</tr></thead>
+              <tbody>{pageRows?.map((r, i) => <tr key={i}>{cols.map((c,j) => <td key={`${j}-${c}`}>{r[c] ?? ""}</td>)}</tr>)}</tbody>
             </table>
           </div>
         </div>
@@ -338,33 +362,31 @@ export function SpiceBenchmarkPage() {
 
   // Top-level dataset selection — defaults to all datasets for current analysis
   const [selectedDatasetNames, setSelectedDatasetNames] = useState<string[]>([]);
-  // When analysis changes, reset to all datasets
+  // When analysis/run changes, select all datasets
   useEffect(() => {
     setSelectedDatasetNames(datasets.map(d => d.name));
   }, [analysis, runId]);
 
   const toggleAllDatasets = useCallback((on: boolean) => {
-    // Select all: empty array = all datasets visible
-    // Unselect all: keep only first dataset (at least one visible)
-    setSelectedDatasetNames(on ? [] : (datasets.length > 0 ? [datasets[0].name] : []));
+    setSelectedDatasetNames(on ? datasets.map(d => d.name) : []);
   }, [datasets]);
 
   const toggleDataset = useCallback((name: string) => {
     setSelectedDatasetNames(prev => {
-      const next = prev.length === 0 ? [...datasets.map(d => d.name)] : [...prev];
-      const idx = next.indexOf(name);
+      const idx = prev.indexOf(name);
       if (idx >= 0) {
-        if (next.length <= 1) return next;
+        if (prev.length <= 1) return prev; // keep at least one
+        const next = [...prev];
         next.splice(idx, 1);
+        return next;
       } else {
-        next.push(name);
+        return [...prev, name];
       }
-      return next;
     });
-  }, [datasets]);
+  }, []);
 
   const visibleDatasets = useMemo(() => {
-    const sel = selectedDatasetNames.length === 0 ? new Set(datasets.map(d => d.name)) : new Set(selectedDatasetNames);
+    const sel = new Set(selectedDatasetNames);
     return datasets.filter(d => sel.has(d.name));
   }, [datasets, selectedDatasetNames]);
 
@@ -413,17 +435,26 @@ export function SpiceBenchmarkPage() {
               <button className="benchmark-btn" onClick={() => toggleAllDatasets(true)}>Select all</button>
               <button className="benchmark-btn" onClick={() => toggleAllDatasets(false)}>Unselect all</button>
             </div>
-            <div className="benchmark-series-checkboxes" style={{maxHeight:"150px",overflowY:"auto"}}>
-              {datasets.map(d => (
-                <label key={d.name} className="benchmark-series-item">
-                  <input type="checkbox" checked={visibleDatasets.some(v => v.name === d.name)} onChange={() => toggleDataset(d.name)} />
-                  <span className="benchmark-domain-badge" style={{fontSize:"0.6rem",padding:"0.05rem 0.25rem"}}>{DOMAIN_LABELS[d.domain]}</span>
-                  {d.name}
-                  <span className="hint">({d.rowCount > 0 ? d.rowCount : "?"} rows)</span>
-                </label>
-              ))}
+            {/* Datasets grouped by domain */}
+            {(["dc","ac","transient","noise","overview"] as AnalysisDomain[]).map(dom => {
+              const domDatasets = datasets.filter(d => d.domain === dom);
+              if (domDatasets.length === 0) return null;
+              return (
+                <div key={dom} style={{marginBottom:"0.3rem"}}>
+                  <div className="hint" style={{fontWeight:600,fontSize:"0.7rem",marginBottom:"0.15rem",color:"var(--muted)"}}>{DOMAIN_LABELS[dom]}</div>
+                  <div className="benchmark-series-checkboxes">
+                    {domDatasets.map(d => (
+                      <label key={d.name} className="benchmark-series-item">
+                        <input type="checkbox" checked={visibleDatasets.some(v => v.name === d.name)} onChange={() => toggleDataset(d.name)} />
+                        {d.name}
+                        <span className="hint">({d.rowCount > 0 ? d.rowCount : "?"})</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
             </div>
-          </div>
         )}
         <p className="hint benchmark-datasets-summary">{visibleDatasets.length}/{datasets.length} dataset(s) shown for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
       </div>
@@ -435,35 +466,57 @@ export function SpiceBenchmarkPage() {
       {(["dc","ac","transient","noise"] as AnalysisDomain[]).map(domain => {
         const domainDatasets = datasets.filter(d => d.domain === domain);
         const domainPlots = run.plotArtifacts.filter(p => p.domain === domain);
-        const visibleDomainDatasets = visibleDatasets.filter(d => d.domain === domain);
         if (domainDatasets.length === 0 && domainPlots.length === 0) return null;
+
+        // Match each plot to its best dataset(s)
+        const plotDataPairs = domainPlots.filter(p => p.displayUrl).map(p => {
+          const best = domainDatasets
+            .map(d => ({dataset:d, score: matchScore(p.name, d.name)}))
+            .filter(x => x.score > 0)
+            .sort((a,b) => b.score - a.score);
+          return { plot: p, datasets: best.map(x => x.dataset) };
+        });
+
+        // Datasets not matched to any plot
+        const matchedNames = new Set(plotDataPairs.flatMap(p => p.datasets.map(d => d.name)));
+        const unmatchedDatasets = domainDatasets.filter(d => !matchedNames.has(d.name));
+
         return (
           <div key={domain} className="benchmark-section">
-            <h2 className="benchmark-section-heading">{DOMAIN_LABELS[domain]} — {domainDatasets.length} datasets, {domainPlots.length} plots</h2>
+            <h2 className="benchmark-section-heading">{DOMAIN_LABELS[domain]}</h2>
 
-            {/* Plots for this domain */}
-            {domainPlots.length > 0 && (
-              <div className="benchmark-plot-group">
-                <div className="benchmark-plot-grid benchmark-plot-grid--2col">
-                  {domainPlots.filter(p => p.displayUrl).map(p => {
-                    const label = plotLabel(p.name);
-                    return (
-                    <div key={p.relPath} className="benchmark-plot-card" onClick={() => setLightbox(BASE + p.displayUrl!)}>
-                      <div className="benchmark-plot-img-wrap"><img src={BASE + p.displayUrl!} alt={label.title} loading="lazy" /></div>
+            {/* Plot + its matched data */}
+            {plotDataPairs.map(({plot, datasets: pairDatasets}) => {
+              const label = plotLabel(plot.name);
+              const visiblePairDatasets = pairDatasets.filter(d => visibleDatasets.some(v => v.name === d.name));
+              return (
+                <div key={plot.relPath} className="chart-card">
+                  <div style={{display:"flex",gap:"1rem",flexWrap:"wrap",alignItems:"flex-start"}}>
+                    <div className="benchmark-plot-card" style={{flex:"0 0 320px",maxWidth:"100%"}} onClick={() => setLightbox(BASE + plot.displayUrl!)}>
+                      <div className="benchmark-plot-img-wrap"><img src={BASE + plot.displayUrl!} alt={label.title} loading="lazy" /></div>
                       <div className="benchmark-plot-info" style={{flexDirection:"column",alignItems:"center",textAlign:"center",padding:"0.5rem"}}>
                         <strong style={{fontSize:"0.8rem"}}>{label.title}</strong>
                         {label.detail && <span className="hint" style={{fontSize:"0.65rem"}}>{label.detail}</span>}
                       </div>
                     </div>
-                    );
-                  })}
+                    <div style={{flex:"1 1 300px",minWidth:0}}>
+                      {visiblePairDatasets.length > 0 ? visiblePairDatasets.map(d => (
+                        <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} />
+                      )) : (
+                        <EmptyState message="Dataset not selected — enable in Datasets to include above" icon="📊" />
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })}
 
-            {/* Datasets for this domain */}
-            {visibleDomainDatasets.length > 0 && analysis !== "overview" && visibleDomainDatasets.map(d => (
-              <BenchmarkDatasetCard key={d.relPath} artifact={d} domain={d.domain} />
+            {/* Unmatched datasets (no corresponding plot) */}
+            {unmatchedDatasets.filter(d => visibleDatasets.some(v => v.name === d.name)).map(d => (
+              <div key={d.relPath} className="chart-card">
+                <p className="hint" style={{marginBottom:"0.25rem"}}>📄 {d.name} — no matching plot</p>
+                <BenchmarkDatasetCard artifact={d} domain={d.domain} />
+              </div>
             ))}
           </div>
         );
