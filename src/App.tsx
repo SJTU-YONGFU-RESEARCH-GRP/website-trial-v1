@@ -16,6 +16,9 @@ const ToolFlowPage = lazy(async () => ({
 const SpiceBenchmarkPage = lazy(async () => ({
   default: (await import("./pages/SpiceBenchmarkPage")).SpiceBenchmarkPage,
 }));
+const SpiceTranslatorPage = lazy(async () => ({
+  default: (await import("./pages/SpiceTranslatorPage")).SpiceTranslatorPage,
+}));
 
 export default function App(): ReactElement {
   return (
@@ -47,6 +50,12 @@ export default function App(): ReactElement {
           Benchmark
         </NavLink>
         <NavLink
+          to="/translator"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          Translator
+        </NavLink>
+        <NavLink
           to="/plotly"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
@@ -71,6 +80,7 @@ export default function App(): ReactElement {
             <Route path="/" element={<HomePage />} />
             <Route path="/flow" element={<ToolFlowPage />} />
             <Route path="/benchmark" element={<SpiceBenchmarkPage />} />
+            <Route path="/translator" element={<SpiceTranslatorPage />} />
             <Route path="/plotly" element={<PlotlyPage />} />
             <Route path="/analog" element={<AnalogPage />} />
           </Routes>

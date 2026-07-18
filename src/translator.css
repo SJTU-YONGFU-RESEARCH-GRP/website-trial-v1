@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Spice Translator Report page                                        */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.tr-page { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ─── Hero ─── */
+.tr-hero { text-align: center; padding: 2.5rem 1.5rem; }
+.tr-hero-title { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 700; margin: 0 0 0.25rem; color: var(--text,#1e293b); }
+.tr-hero-subtitle { font-size: 1rem; color: var(--muted,#64748b); margin: 0 0 1.5rem; }
+.tr-hero-kpis { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-bottom: 1rem; }
+.tr-kpi { background: var(--surface,#fff); border: 1px solid var(--border,#e2e8f0); border-radius: 10px; padding: 1rem 1.25rem; min-width: 120px; text-align: center; }
+.tr-kpi-value { font-size: 1.4rem; font-weight: 700; color: var(--accent,#0071e3); line-height: 1.2; }
+.tr-kpi-label { font-size: 0.72rem; color: var(--muted,#64748b); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.tr-hero-meta { display: flex; gap: 1.5rem; justify-content: center; font-size: 0.78rem; color: var(--muted); flex-wrap: wrap; }
+
+/* ─── Sections ─── */
+.tr-section { padding: 1.25rem; }
+.tr-section-heading { font-size: 1.2rem; font-weight: 600; margin: 0 0 0.5rem; color: var(--text); border-bottom: 2px solid var(--accent,#0071e3); padding-bottom: 0.35rem; }
+.tr-subsection-title { font-size: 0.95rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--text); }
+
+/* ─── Markdown body ─── */
+.tr-md { max-width: 56rem; line-height: 1.65; font-size: 0.9rem; color: var(--text,#334155); }
+.tr-md h1 { font-size: 1.6rem; font-weight: 700; margin: 1.5rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+.tr-md h2 { font-size: 1.3rem; font-weight: 600; margin: 1.25rem 0 0.4rem; }
+.tr-md h3 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.3rem; }
+.tr-md h4, .tr-md h5, .tr-md h6 { font-size: 1rem; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+.tr-md p { margin: 0.5rem 0; }
+.tr-md ul, .tr-md ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+.tr-md li { margin: 0.15rem 0; }
+.tr-md code { font-size: 0.82em; background: var(--surface2,#f1f5f9); padding: 0.1rem 0.3rem; border-radius: 3px; }
+.tr-md pre code { display: block; padding: 0.75rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.45; }
+.tr-md a { color: var(--accent,#0071e3); }
+.tr-md hr { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+.tr-md strong { font-weight: 600; }
+
+/* ─── Tables ─── */
+.tr-table-wrap { overflow-x: auto; margin: 0.5rem 0; }
+.tr-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.tr-table th { position: sticky; top: 0; background: var(--surface2,#f8fafc); font-weight: 600; text-align: left; padding: 0.35rem 0.5rem; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 1; }
+.tr-table td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border,#e2e8f0); }
+.tr-table tbody tr:hover { background: var(--surface2,#f8fafc); }
+.tr-num { text-align: right; font-variant-numeric: tabular-nums; }
+.tr-row-ok { background:rgba(34,197,94,0.06); }
+.tr-row-fail { background:rgba(239,68,68,0.06); }
+
+/* ─── Code blocks ─── */
+.tr-code-block { margin: 0.5rem 0; }
+.tr-code-block summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); padding: 0.3rem 0.5rem; background: var(--surface2); border-radius: 4px; }
+.tr-code-block pre { margin-top: 0.25rem; }
+
+/* ─── Plot gallery ─── */
+.tr-plot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+@media (max-width: 900px) { .tr-plot-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .tr-plot-grid { grid-template-columns: 1fr; } }
+.tr-plot-card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: pointer; transition: box-shadow 0.15s; }
+.tr-plot-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.tr-plot-img-wrap { aspect-ratio: 16/10; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
+.tr-plot-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.tr-plot-info { padding: 0.4rem 0.6rem; font-size: 0.72rem; background: var(--surface2); }
+
+/* ─── Lightbox ─── */
+.tr-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-direction: column; gap: 0.5rem; }
+.tr-lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
+.tr-lightbox-dl { color: #fff !important; border-color: rgba(255,255,255,0.3) !important; background: transparent !important; }

@@ -9,6 +9,15 @@ const TOOLS = [
       "End-to-end design flow connecting layout generation, parasitic extraction, and timing characterization for digital standard cells.",
   },
   {
+    title: "SPICE Translator",
+    subtitle: "HSPICE/Spectre → ngspice model translation",
+    repo: "new-spice-translator",
+    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/new-spice-translator",
+    flowPath: "/#/translator",
+    description:
+      "Multi-PDK SPICE model translator: 17 PDKs, 322 source files, 224 successful translations, full verification report.",
+  },
+  {
     title: "SPICE Model Benchmark",
     subtitle: "DC / AC / Transient / Noise verification",
     repo: "spice_model_benchmark",

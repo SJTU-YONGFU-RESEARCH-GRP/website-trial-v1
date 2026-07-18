@@ -7,9 +7,11 @@
     "dev": "vite --host 0.0.0.0 --port 3000",
     "generate:data": "node scripts/generate-design-data.mjs",
     "generate:spice-benchmark": "node scripts/generate-spice-benchmark-data.mjs",
+    "generate:translator": "node scripts/generate-spice-translator-data.mjs",
     "validate:flow-data": "node scripts/validate-flow-data.mjs",
     "validate:spice-benchmark-data": "node scripts/validate-spice-benchmark-data.mjs",
-    "build": "npm run generate:data && npm run generate:spice-benchmark && npm run validate:flow-data && npm run validate:spice-benchmark-data && tsc --noEmit && vite build",
+    "validate:translator": "node scripts/validate-spice-translator-data.mjs",
+    "build": "npm run generate:data && npm run generate:spice-benchmark && npm run generate:translator && npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:translator && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
