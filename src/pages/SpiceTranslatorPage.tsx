@@ -94,10 +94,37 @@ function Lightbox({ plots, index, onClose }: { plots: PlotArtifact[]; index: num
 function ReportSection({ title, content, defaultOpen, plots }: { title: string; content: string; defaultOpen?: boolean; plots?: PlotArtifact[] }) {
   const [open, setOpen] = useState(defaultOpen||false);
   const preview = content.slice(0, 250);
+
+  // Match relevant plots to this section by keyword overlap
+  const sectionPlots = useMemo(() => {
+    if (!plots || !title) return [];
+    const tl = title.toLowerCase();
+    const kw = {
+      "executive summary": [],
+      "translation metrics": ["summary","coverage","verification_summary"],
+      "verification results": ["verification_summary","verification","_verif"],
+      "failure": ["failure","error","_fail"],
+      "dc analysis": ["idvgs","idvds","_iv","diode","resistor","gummel","bjt"],
+      "ac analysis": ["sparameter","_sp","_cv","capacitance"],
+      "transient": ["transient","_tran","switch"],
+      "noise": ["noise","psd","flicker"],
+    };
+    const matched: string[] = [];
+    for (const [section, words] of Object.entries(kw)) {
+      if (tl.includes(section)) { matched.push(...words); break; }
+    }
+    if (matched.length===0) return [];
+    return plots.filter(p => {
+      const pn = p.name.toLowerCase();
+      return matched.some(w => pn.includes(w));
+    }).slice(0, 3);
+  }, [title, plots]);
+
   return (
     <div className="tr-report-section">
       <h3 className="tr-report-section-title" onClick={()=>setOpen(!open)}>
         <span className="tr-accordion-icon">{open?"▾":"▸"}</span> {title}
+        {sectionPlots.length>0 && <span className="hint" style={{marginLeft:"0.5rem",fontWeight:400}}>({sectionPlots.length} related plot{sectionPlots.length>1?"s":""})</span>}
       </h3>
       {!open && <div className="tr-md"><ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw,rehypeSanitize]}>{preview+"\n\n..."}</ReactMarkdown></div>}
       {open && <div className="tr-md"><ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw,rehypeSanitize]}
@@ -107,7 +134,13 @@ function ReportSection({ title, content, defaultOpen, plots }: { title: string; 
           code:({className,children}:any)=>className?.includes("language-")?<details className="tr-code-block"><summary>{className.replace("language-","")||"code"}</summary><pre><code className={className}>{children}</code></pre></details>:<code>{children}</code>,
           img:({src,alt}:any)=>{const pt=plots?.find(x=>src?.includes(x.name));return <img src={pt?.displayUrl?BASE+pt.displayUrl:src} alt={alt||""} loading="lazy" style={{maxWidth:"100%"}}/>;},
           a:({href,children}:any)=>{const pt=plots?.find(x=>href?.includes(x.name));return <a href={pt?.displayUrl?BASE+pt.displayUrl:href} target="_blank" rel="noopener">{children}</a>;},
-        }}>{content}</ReactMarkdown></div>}
+        }}>{content}</ReactMarkdown>
+        {/* Inline related plots */}
+        {sectionPlots.length>0 && <div style={{marginTop:"0.75rem",borderTop:"1px solid var(--border)",paddingTop:"0.5rem"}}>
+          <p className="hint" style={{marginBottom:"0.4rem"}}>📊 Related verification plots for this section:</p>
+          <div className="tr-plot-gallery">{sectionPlots.map(p=><PlotCard key={`${p.scope||""}-${p.relPath}`} plot={p} onClick={()=>{}}/>)}</div>
+        </div>}
+      </div>}
       {!open && <button className="benchmark-btn tr-read-more" onClick={()=>setOpen(true)}>Read full section</button>}
     </div>
   );
@@ -115,18 +148,40 @@ function ReportSection({ title, content, defaultOpen, plots }: { title: string; 
 
 /* ─── Selector ─── */
 function Selector({ results, selectedId, onSelect }: { results: TranslatorResult[]; selectedId: string; onSelect: (id: string) => void }) {
-  const batchR = results.filter(r=>r.kind==="batch"), pdkR = results.filter(r=>r.kind==="pdk_target"), unassignedR = results.filter(r=>r.kind==="unassigned");
+  const batchR = results.filter(r=>r.kind==="batch"), pdkR = results.filter(r=>r.kind==="pdk_target"&&r.level===1), fileR = results.filter(r=>r.level===2);
+  const sel = results.find(r=>r.resultId===selectedId);
+
+  // Cascading: PDK → source/target → file
+  const [cascadePdk, setCascadePdk] = useState(sel?.pdk||"");
+  const [cascadeDir, setCascadeDir] = useState(sel?.kind==="pdk_target"?`${sel.sourceFormat}→${sel.targetFormat}`:"");
+  const pdkList = [...new Set(pdkR.map(r=>r.pdk))].sort();
+  const dirList = [...new Set(pdkR.filter(r=>r.pdk===cascadePdk).map(r=>`${r.sourceFormat}→${r.targetFormat}`))].sort();
+  const fileList = fileR.filter(r=>r.pdk===cascadePdk);
+
+  const onDirChange = (dir: string) => {
+    setCascadeDir(dir);
+    const match = pdkR.find(r=>r.pdk===cascadePdk&&`${r.sourceFormat}→${r.targetFormat}`===dir);
+    if (match) onSelect(match.resultId);
+  };
+
   return (
     <div className="chart-card tr-selector">
       <h2>Explore translation results</h2>
-      <p className="hint">Select a result — reports, plots, and tables update below.</p>
+      <p className="hint">Select a result level, PDK, and direction — reports, plots, and tables update below.</p>
       <div className="tr-selector-grid">
-        <label className="axis-picker">Result<select value={selectedId} onChange={e=>onSelect(e.target.value)}>
-          {batchR.length>0&&<optgroup label="Batch Summary">{batchR.map(r=><option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
-          {pdkR.length>0&&<optgroup label="PDK / Target Results">{pdkR.map(r=><option key={r.resultId} value={r.resultId}>{r.pdk}: {r.sourceFormat} → {r.targetFormat} ({r.plots.length} plots)</option>)}</optgroup>}
-          {unassignedR.length>0&&<optgroup label="Unassigned">{unassignedR.map(r=><option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
-        </select></label>
-        <span className="hint" style={{alignSelf:"center"}}>{results.length} results · {results.reduce((s,r)=>s+r.plots.length,0)} plots</span>
+        <label className="axis-picker">Result Level
+          <select value={sel?.kind==="batch"?"batch":sel?.level===2?"file":"pdk"} onChange={e=>{
+            if(e.target.value==="batch") onSelect(batchR[0]?.resultId||"");
+            else {const first=pdkR[0]; if(first){setCascadePdk(first.pdk);setCascadeDir(`${first.sourceFormat}→${first.targetFormat}`);onSelect(first.resultId);}}
+          }}>
+            {batchR.length>0&&<option value="batch">Full Batch</option>}
+            <option value="pdk">PDK / Target</option>
+            {fileList.length>0&&<option value="file">Translation File</option>}
+          </select>
+        </label>
+        {sel?.kind!=="batch"&&<label className="axis-picker">PDK<select value={cascadePdk} onChange={e=>{setCascadePdk(e.target.value);const d=pdkR.find(r=>r.pdk===e.target.value);if(d){setCascadeDir(`${d.sourceFormat}→${d.targetFormat}`);onSelect(d.resultId);}}}>{pdkList.map(p=><option key={p} value={p}>{p}</option>)}</select></label>}
+        {sel?.kind==="pdk_target"&&sel.level===1&&<label className="axis-picker">Direction<select value={cascadeDir} onChange={e=>onDirChange(e.target.value)}>{dirList.map(d=><option key={d} value={d}>{d}</option>)}</select></label>}
+        {sel?.level===2&&<span className="hint" style={{alignSelf:"center"}}>{sel.title} · {sel.summary.totalPlots} plots</span>}
       </div>
       <div className="tr-anchor-nav">
         <a href="#tr-highlights">Highlights</a> <a href="#tr-report">Report</a> <a href="#tr-tables">Tables</a> <a href="#tr-plots">Plots</a> <a href="#tr-artifacts">Artifacts</a>
@@ -202,7 +257,7 @@ export function SpiceTranslatorPage() {
       {featured.length>0 && <div className="chart-card tr-section" id="tr-highlights">
         <h2 className="tr-section-heading">Visual Highlights</h2>
         <div className={`tr-featured-grid ${featured.length<=2?"tr-featured-grid--2":""}`}>
-          {featured.map(p=><PlotCard key={p.relPath} plot={p} featured onClick={()=>setLightboxIdx(result.plots.indexOf(p))}/>)}
+          {featured.map(p=><PlotCard key={`${p.scope||""}-${p.relPath}`} plot={p} featured onClick={()=>setLightboxIdx(result.plots.indexOf(p))}/>)}
         </div>
       </div>}
 
@@ -230,7 +285,7 @@ export function SpiceTranslatorPage() {
       {result.plots.length>0 && <div className="chart-card tr-section" id="tr-plots">
         <h2 className="tr-section-heading">Complete Plot Gallery <span className="hint">({result.plots.length})</span></h2>
         <div className="tr-plot-gallery">
-          {result.plots.map(p=><PlotCard key={p.relPath} plot={p} onClick={()=>setLightboxIdx(result.plots.indexOf(p))}/>)}
+          {result.plots.map(p=><PlotCard key={`${p.scope||""}-${p.relPath}`} plot={p} onClick={()=>setLightboxIdx(result.plots.indexOf(p))}/>)}
         </div>
       </div>}
 

@@ -61,6 +61,27 @@ function main() {
   const totalReports = results.reduce((s, r) => s + (r.reports?.length || 0), 0);
   ok(`Total: ${totalReports} reports, ${totalPlots} plots across ${results.length} results`);
 
+  // Compare with plot_inventory.csv if available
+  const batch = results.find(r=>r.kind==="batch");
+  const inventoryCsv = batch?.dataArtifacts?.find(a=>a.name==="plot_inventory.csv");
+  if (inventoryCsv && inventoryCsv.rowCount) {
+    const inventoryCount = inventoryCsv.rowCount;
+    // Count unique plots across all results (excluding unassigned)
+    const allPlotHashes = new Set();
+    for (const r of results.filter(r=>r.kind!=="unassigned")) {
+      for (const p of (r.plots||[])) { allPlotHashes.add(p.hash); }
+    }
+    if (Math.abs(inventoryCount - allPlotHashes.size) <= 5)
+      ok(`Plot inventory: ${inventoryCount} CSV entries ≈ ${allPlotHashes.size} manifest plots (within tolerance)`);
+    else
+      warn(`Plot inventory mismatch: ${inventoryCount} CSV entries vs ${allPlotHashes.size} manifest plots`);
+  }
+
+  // Check for unassigned plots
+  const unassigned = results.find(r=>r.kind==="unassigned");
+  if (unassigned && (unassigned.plots?.length||0)>0)
+    warn(`${unassigned.plots.length} unassigned plot(s) — may indicate incomplete scope matching`);
+
   console.log(`\n${errors > 0 ? "❌" : "✅"} Validation: ${errors} error(s), ${warnings} warning(s)\n`);
   process.exit(errors > 0 ? 1 : 0);
 }

@@ -46,6 +46,10 @@ jobs:
           path: external/new-spice-translator
           sparse-checkout: |
             docs/finalbatchrun2
+            output/**/plots/**/*.png
+            output/**/plots/**/*.svg
+            output/**/verification_summary.png
+            output/verification_summary.png
             README.md
           sparse-checkout-cone-mode: false
 

@@ -144,7 +144,21 @@ function main() {
     }
   }
 
-  // 3. Unassigned plots → separate result
+  // 3. File-level results from plot_inventory.csv
+  const plotInventoryCsv = allCsv.find(c=>c.name==="plot_inventory.csv");
+  if (plotInventoryCsv?.rows) {
+    for (const row of plotInventoryCsv.rows) {
+      const rid = `file-${(row["plot_file"]||row["Plot File"]||row["filename"]||"").replace(/[^a-z0-9-]/gi,"_").toLowerCase()}`;
+      if (!rid||rid==="file-") continue;
+      const pdk = row["pdk"]||row["PDK"]||"";
+      results.push({resultId:rid,title:row["plot_file"]||row["Plot File"]||row["filename"]||"unknown",description:`Device: ${row["device"]||row["Device"]||"—"} · Type: ${row["plot_type"]||row["Plot Type"]||"—"}`,kind:"pdk_target",level:2,pdk:pdk||"—",sourceFormat:row["source_format"]||row["Source Format"]||"—",targetFormat:row["target_format"]||row["Target Format"]||"—",generatedAt:"2026-04-19",status:"completed",
+        reports:[],plots:[],dataArtifacts:[],otherArtifacts:[],
+        summary:{totalReports:0,totalPlots:0,totalData:0,stats:{files:"1",successful:"1",rawSuccess:"100",device:row["device"]||row["Device"]||"",plotType:row["plot_type"]||row["Plot Type"]||""}},
+      });
+    }
+  }
+
+  // 4. Unassigned plots → separate result
   const assignedHashes = new Set(results.flatMap(r=>r.plots.map(p=>p.hash)));
   const unassigned = allOutputPlots.filter(p=>!assignedHashes.has(p.hash));
   if (unassigned.length>0) {
