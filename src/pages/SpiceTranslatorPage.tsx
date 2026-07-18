@@ -1,364 +1,247 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 import { TRANSLATOR_MANIFEST } from "../data/generatedSpiceTranslatorManifest";
-import type { TranslatorResult } from "../data/SpiceTranslatorTypes";
+import type { TranslatorResult, PlotArtifact, PlotCaption } from "../data/SpiceTranslatorTypes";
 import "../translator.css";
 
 const BASE = import.meta.env.BASE_URL || "/";
-
-/* ─── Text cache for lazy-loaded markdown ─── */
 const mdCache = new Map<string, string>();
+const PAGE = 5;
 
-/* ═══════════════════════════════════════════════════════════════════ */
-/*  Result Selector                                                    */
-/* ═══════════════════════════════════════════════════════════════════ */
+/* ─── Paginated table ─── */
+function PagedTable({ columns, rows }: { columns: string[]; rows: Record<string,string>[] }) {
+  const [pg, setPg] = useState(0);
+  const total = Math.ceil(rows.length / PAGE);
+  const slice = rows.slice(pg * PAGE, (pg + 1) * PAGE);
+  return (
+    <div className="tr-paged-table">
+      <div className="tr-paged-header"><span>Showing {slice.length} of {rows.length} rows</span>
+        <div className="tr-paged-nav">
+          <button className="benchmark-btn" disabled={pg===0} onClick={()=>setPg(0)}>««</button>
+          <button className="benchmark-btn" disabled={pg===0} onClick={()=>setPg(p=>p-1)}>«</button>
+          <span className="hint">Page {pg+1}/{total||1}</span>
+          <button className="benchmark-btn" disabled={pg>=total-1} onClick={()=>setPg(p=>p+1)}>»</button>
+          <button className="benchmark-btn" disabled={pg>=total-1} onClick={()=>setPg(total-1)}>»»</button>
+        </div>
+      </div>
+      <div className="tr-table-wrap"><table className="tr-table">
+        <thead><tr>{columns.map(c=><th key={c}>{c}</th>)}</tr></thead>
+        <tbody>{slice.map((r,i)=><tr key={i}>{columns.map(c=><td key={c} className={/^[\d.\-%]+$/.test(r[c]||"")?"tr-num":""}>{r[c]||""}</td>)}</tr>)}</tbody>
+      </table></div>
+    </div>
+  );
+}
 
-function ResultSelector({ results, selectedId, onSelect, filters, setFilter }: {
-  results: TranslatorResult[]; selectedId: string; onSelect: (id: string) => void;
-  filters: Record<string, string>; setFilter: (k: string, v: string) => void;
-}) {
-  const manifest = TRANSLATOR_MANIFEST;
-  const batchResults = results.filter(r => r.kind === "batch");
-  const pdkResults = results.filter(r => r.kind === "pdk_target");
-  const verifResults = results.filter(r => r.kind === "verification");
+/* ─── Plot card with caption ─── */
+function PlotCard({ plot, featured, onClick }: { plot: PlotArtifact; featured?: boolean; onClick: () => void }) {
+  const c = plot.caption as PlotCaption | undefined;
+  const wide = plot.aspectRatio && plot.aspectRatio > 1.8;
+  return (
+    <div className={`tr-plot-card ${featured?"tr-plot-card--featured":""} ${wide?"tr-plot-card--wide":""}`} onClick={onClick}>
+      <div className="tr-plot-img"><img src={BASE + plot.displayUrl!} alt={c?.title || plot.name} loading="lazy" /></div>
+      <div className="tr-plot-body">
+        <strong className="tr-plot-title">{c?.title || plot.name}</strong>
+        {c && <p className="tr-plot-what">{c.what}</p>}
+        {c && <p className="tr-plot-why hint">{c.why}</p>}
+        <div className="tr-plot-meta">
+          {plot.scope && <span className="tr-badge">{plot.scope}</span>}
+          <span className="hint">{plot.format?.toUpperCase()} · {plot.size} · {plot.width}×{plot.height}</span>
+        </div>
+        <details className="tr-plot-detail"><summary>Details</summary><code>{plot.relPath}</code> · hash: <code>{plot.hash}</code></details>
+      </div>
+    </div>
+  );
+}
 
-  const set = (k: string, v: string) => setFilter(k, v);
+/* ─── Lightbox ─── */
+function Lightbox({ plots, index, onClose }: { plots: PlotArtifact[]; index: number; onClose: () => void }) {
+  const [idx, setIdx] = useState(index); const [zoom, setZoom] = useState(1);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key==="Escape") onClose();
+      if (e.key==="ArrowRight") setIdx(p=>Math.min(p+1,plots.length-1));
+      if (e.key==="ArrowLeft") setIdx(p=>Math.max(p-1,0));
+      if (e.key==="+"||e.key==="=") setZoom(z=>+(z+0.25).toFixed(2));
+      if (e.key==="-") setZoom(z=>Math.max(0.25,+(z-0.25).toFixed(2)));
+      if (e.key==="0") setZoom(1);
+    };
+    window.addEventListener("keydown",onKey); return ()=>window.removeEventListener("keydown",onKey);
+  }, [plots.length, onClose]);
+  const p = plots[idx]; if (!p?.displayUrl) return null;
+  return (
+    <div className="tr-lightbox" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <button className="tr-lightbox-close" onClick={onClose}>×</button>
+      <div className="tr-lightbox-nav">
+        <button disabled={idx===0} onClick={e=>{e.stopPropagation();setIdx(x=>Math.max(0,x-1));}}>‹</button>
+        <span>{idx+1}/{plots.length}</span>
+        <button disabled={idx>=plots.length-1} onClick={e=>{e.stopPropagation();setIdx(x=>Math.min(plots.length-1,x+1));}}>›</button>
+      </div>
+      <div className="tr-lightbox-zoom">
+        <button onClick={()=>setZoom(z=>+(z-0.25).toFixed(2))}>−</button>
+        <button onClick={()=>setZoom(1)}>{Math.round(zoom*100)}%</button>
+        <button onClick={()=>setZoom(z=>+(z+0.25).toFixed(2))}>+</button>
+      </div>
+      <img src={BASE+p.displayUrl} alt={p.name} style={{transform:`scale(${zoom})`,cursor:zoom>1?"zoom-out":"zoom-in"}} onClick={e=>{e.stopPropagation();setZoom(z=>z>1?1:2);}} />
+      <div className="tr-lightbox-info"><strong>{(p.caption as PlotCaption)?.title||p.name}</strong><a href={BASE+p.displayUrl} download className="benchmark-btn">Download</a></div>
+    </div>
+  );
+}
 
+/* ─── Accordion report section ─── */
+function ReportSection({ title, content, defaultOpen, plots }: { title: string; content: string; defaultOpen?: boolean; plots?: PlotArtifact[] }) {
+  const [open, setOpen] = useState(defaultOpen||false);
+  const preview = content.slice(0, 250);
+  return (
+    <div className="tr-report-section">
+      <h3 className="tr-report-section-title" onClick={()=>setOpen(!open)}>
+        <span className="tr-accordion-icon">{open?"▾":"▸"}</span> {title}
+      </h3>
+      {!open && <div className="tr-md"><ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw,rehypeSanitize]}>{preview+"\n\n..."}</ReactMarkdown></div>}
+      {open && <div className="tr-md"><ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw,rehypeSanitize]}
+        components={{
+          table:({children})=><div className="tr-table-wrap"><table className="tr-table">{children}</table></div>,
+          th:({children})=><th>{children}</th>, td:({children})=><td>{children}</td>,
+          code:({className,children}:any)=>className?.includes("language-")?<details className="tr-code-block"><summary>{className.replace("language-","")||"code"}</summary><pre><code className={className}>{children}</code></pre></details>:<code>{children}</code>,
+          img:({src,alt}:any)=>{const pt=plots?.find(x=>src?.includes(x.name));return <img src={pt?.displayUrl?BASE+pt.displayUrl:src} alt={alt||""} loading="lazy" style={{maxWidth:"100%"}}/>;},
+          a:({href,children}:any)=>{const pt=plots?.find(x=>href?.includes(x.name));return <a href={pt?.displayUrl?BASE+pt.displayUrl:href} target="_blank" rel="noopener">{children}</a>;},
+        }}>{content}</ReactMarkdown></div>}
+      {!open && <button className="benchmark-btn tr-read-more" onClick={()=>setOpen(true)}>Read full section</button>}
+    </div>
+  );
+}
+
+/* ─── Selector ─── */
+function Selector({ results, selectedId, onSelect }: { results: TranslatorResult[]; selectedId: string; onSelect: (id: string) => void }) {
+  const batchR = results.filter(r=>r.kind==="batch"), pdkR = results.filter(r=>r.kind==="pdk_target"), unassignedR = results.filter(r=>r.kind==="unassigned");
   return (
     <div className="chart-card tr-selector">
       <h2>Explore translation results</h2>
-      <p className="hint">Select a result to view its complete report and original plots.</p>
+      <p className="hint">Select a result — reports, plots, and tables update below.</p>
       <div className="tr-selector-grid">
-        <label className="axis-picker">Result
-          <select value={selectedId} onChange={e => onSelect(e.target.value)}>
-            {batchResults.length > 0 && <optgroup label="Batch Summary">{batchResults.map(r => <option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
-            {pdkResults.length > 0 && <optgroup label="PDK / Target Results">{pdkResults.map(r => <option key={r.resultId} value={r.resultId}>{r.pdk}: {r.sourceFormat} → {r.targetFormat}</option>)}</optgroup>}
-            {verifResults.length > 0 && <optgroup label="Verification Results">{verifResults.map(r => <option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
-          </select>
-        </label>
-        <label className="axis-picker">PDK<select value={filters.pdk || ""} onChange={e => set("pdk", e.target.value)}><option value="">All</option>{manifest.allPdks.map(p => <option key={p} value={p}>{p}</option>)}</select></label>
-        <label className="axis-picker">Source<select value={filters.source || ""} onChange={e => set("source", e.target.value)}><option value="">All</option>{manifest.allSourceFormats.map(s => <option key={s} value={s}>{s}</option>)}</select></label>
-        <label className="axis-picker">Target<select value={filters.target || ""} onChange={e => set("target", e.target.value)}><option value="">All</option>{manifest.allTargetFormats.map(s => <option key={s} value={s}>{s}</option>)}</select></label>
-        <label className="axis-picker">Type<select value={filters.kind || ""} onChange={e => set("kind", e.target.value)}><option value="">All</option><option value="batch">Batch Summary</option><option value="pdk_target">PDK / Target</option><option value="verification">Verification</option></select></label>
-        <label className="axis-picker">Search<input type="text" value={filters.search || ""} onChange={e => set("search", e.target.value)} placeholder="Search..." className="tr-search-input" /></label>
+        <label className="axis-picker">Result<select value={selectedId} onChange={e=>onSelect(e.target.value)}>
+          {batchR.length>0&&<optgroup label="Batch Summary">{batchR.map(r=><option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
+          {pdkR.length>0&&<optgroup label="PDK / Target Results">{pdkR.map(r=><option key={r.resultId} value={r.resultId}>{r.pdk}: {r.sourceFormat} → {r.targetFormat} ({r.plots.length} plots)</option>)}</optgroup>}
+          {unassignedR.length>0&&<optgroup label="Unassigned">{unassignedR.map(r=><option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
+        </select></label>
+        <span className="hint" style={{alignSelf:"center"}}>{results.length} results · {results.reduce((s,r)=>s+r.plots.length,0)} plots</span>
       </div>
-
-      {/* Anchor nav */}
       <div className="tr-anchor-nav">
-        <a href="#tr-reports" onClick={e => { e.preventDefault(); document.getElementById("tr-reports")?.scrollIntoView({ behavior: "smooth" }); }}>Reports</a>
-        <a href="#tr-plots" onClick={e => { e.preventDefault(); document.getElementById("tr-plots")?.scrollIntoView({ behavior: "smooth" }); }}>Plots</a>
-        <a href="#tr-artifacts" onClick={e => { e.preventDefault(); document.getElementById("tr-artifacts")?.scrollIntoView({ behavior: "smooth" }); }}>Artifacts</a>
+        <a href="#tr-highlights">Highlights</a> <a href="#tr-report">Report</a> <a href="#tr-tables">Tables</a> <a href="#tr-plots">Plots</a> <a href="#tr-artifacts">Artifacts</a>
       </div>
     </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════ */
-/*  Lightbox (prev/next, keyboard, zoom)                                */
-/* ═══════════════════════════════════════════════════════════════════ */
-
-function Lightbox({ plots, index, onClose }: { plots: { displayUrl: string | null; name: string }[]; index: number; onClose: () => void }) {
-  const [idx, setIdx] = useState(index);
-  const [zoom, setZoom] = useState(1);
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") setIdx(p => Math.min(p + 1, plots.length - 1));
-      if (e.key === "ArrowLeft") setIdx(p => Math.max(p - 1, 0));
-      if (e.key === "+" || e.key === "=") setZoom(z => +(z + 0.25).toFixed(2));
-      if (e.key === "-") setZoom(z => Math.max(0.25, +(z - 0.25).toFixed(2)));
-      if (e.key === "0") setZoom(1);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [plots.length, onClose]);
-
-  const plot = plots[idx];
-  if (!plot?.displayUrl) return null;
-
-  return (
-    <div className="tr-lightbox" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <button className="tr-lightbox-close" onClick={onClose}>×</button>
-      <div className="tr-lightbox-nav">
-        <button disabled={idx === 0} onClick={e => { e.stopPropagation(); setIdx(p => Math.max(0, p - 1)); }}>‹</button>
-        <span>{idx + 1} / {plots.length}</span>
-        <button disabled={idx >= plots.length - 1} onClick={e => { e.stopPropagation(); setIdx(p => Math.min(plots.length - 1, p + 1)); }}>›</button>
-      </div>
-      <div className="tr-lightbox-zoom">
-        <button onClick={() => setZoom(z => +(z - 0.25).toFixed(2))}>−</button>
-        <button onClick={() => setZoom(1)}>{Math.round(zoom * 100)}%</button>
-        <button onClick={() => setZoom(z => +(z + 0.25).toFixed(2))}>+</button>
-        <button onClick={() => imgRef.current?.requestFullscreen?.()}>⛶</button>
-      </div>
-      <img ref={imgRef} src={BASE + plot.displayUrl} alt={plot.name} style={{ transform: `scale(${zoom})`, cursor: zoom > 1 ? "zoom-out" : "zoom-in" }}
-        onClick={e => { e.stopPropagation(); setZoom(z => z > 1 ? 1 : 2); }} />
-      <div className="tr-lightbox-info">
-        <strong>{plot.name}</strong>
-        <a href={BASE + plot.displayUrl} download className="benchmark-btn">Download</a>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════ */
-/*  Markdown report (with react-markdown)                               */
-/* ═══════════════════════════════════════════════════════════════════ */
-
-function isHeading(part: string): boolean { return /^#{1,6}\s/.test(part); }
-
-function TOC({ content }: { content: string }) {
-  const headings = content.split("\n").filter(isHeading).map(h => {
-    const m = h.match(/^(#{1,6})\s+(.+)/);
-    if (!m) return null;
-    const lvl = m[1].length;
-    const title = m[2];
-    const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    return { lvl, title, id };
-  }).filter(Boolean) as { lvl: number; title: string; id: string }[];
-
-  if (headings.length === 0) return null;
-  return (
-    <details className="tr-toc-mobile">
-      <summary>Table of Contents</summary>
-      <ul className="tr-toc-list">
-        {headings.map(h => (
-          <li key={h.id} style={{ paddingLeft: `${(h.lvl - 1) * 0.75}rem` }}>
-            <a href={`#${h.id}`}>{h.title}</a>
-          </li>
-        ))}
-      </ul>
-    </details>
-  );
-}
-
-function MarkdownReport({ report, result }: { report: TranslatorResult["reports"][0]; result: TranslatorResult }) {
-  const [content, setContent] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!report.fetchUrl) { setContent(null); return; }
-    const url = BASE + report.fetchUrl;
-    if (mdCache.has(url)) { setContent(mdCache.get(url)!); return; }
-    let cancelled = false;
-    fetch(url).then(r => { if (!r.ok) throw new Error(`${r.status}`); return r.text(); }).then(t => {
-      if (!cancelled) { mdCache.set(url, t); setContent(t); }
-    }).catch(e => { if (!cancelled) setError(e.message); });
-    return () => { cancelled = true; };
-  }, [report.fetchUrl]);
-
-  if (error) return <div className="tr-report-error">⚠ Failed to load: {error}</div>;
-  if (content === null) return <div className="tr-report-loading">Loading report…</div>;
-
-  return (
-    <div className="tr-report-doc">
-      <TOC content={content} />
-      <div className="tr-md">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            table: ({ children }) => <div className="tr-table-wrap"><table className="tr-table">{children}</table></div>,
-            th: ({ children }) => <th>{children}</th>,
-            td: ({ children }) => <td>{children}</td>,
-            code: ({ className, children }: any) => {
-              const isBlock = /language-/.test(className || "");
-              if (isBlock) {
-                const lang = (className || "").replace("language-", "");
-                return (
-                  <details className="tr-code-block">
-                    <summary>{lang || "code"}</summary>
-                    <pre><code className={className}>{children}</code></pre>
-                  </details>
-                );
-              }
-              return <code>{children}</code>;
-            },
-            a: ({ href, children }: any) => {
-              // Rewrite relative image links to public URLs
-              if (href && /\.(png|svg|jpg|jpeg)$/i.test(href) && !href.startsWith("http")) {
-                const plot = result.plots.find(p => href.includes(p.name) || p.relPath.includes(href));
-                const url = plot?.displayUrl ? BASE + plot.displayUrl : href;
-                return <a href={url} target="_blank" rel="noopener">{children}</a>;
-              }
-              return <a href={href} target="_blank" rel="noopener">{children}</a>;
-            },
-            img: ({ src, alt }: any) => {
-              if (src && !src.startsWith("http")) {
-                const plot = result.plots.find(p => src.includes(p.name) || p.relPath.includes(src));
-                src = plot?.displayUrl ? BASE + plot.displayUrl : src;
-              }
-              return <img src={src} alt={alt || ""} loading="lazy" style={{ maxWidth: "100%" }} />;
-            },
-          }}
-        >
-          {content}
-        </ReactMarkdown>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════ */
-/*  Plot Gallery                                                       */
-/* ═══════════════════════════════════════════════════════════════════ */
-
-function PlotGalleryBlock({ result }: { result: TranslatorResult }) {
-  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  if (result.plots.length === 0) return <p className="hint" style={{ padding: "1rem" }}>No plot images for this result.</p>;
-
-  return (
-    <>
-      {lightboxIdx !== null && (
-        <Lightbox plots={result.plots.map(p => ({ displayUrl: p.displayUrl, name: p.name }))} index={lightboxIdx} onClose={() => setLightboxIdx(null)} />
-      )}
-      <div className="tr-plot-gallery">
-        {result.plots.map((p, i) => {
-          const isWide = p.aspectRatio && p.aspectRatio > 1.8;
-          return (
-            <div key={p.relPath} className={`tr-plot-card ${isWide ? "tr-plot-card--wide" : ""}`} onClick={() => setLightboxIdx(i)}>
-              <div className="tr-plot-card-header">
-                <strong className="tr-plot-card-title">{p.name}</strong>
-                <span className="hint">{p.format?.toUpperCase()} · {p.size} · {p.width}×{p.height}</span>
-              </div>
-              <div className="tr-plot-card-img">
-                {p.displayUrl ? <img src={BASE + p.displayUrl} alt={p.name} loading="lazy" /> : <span className="hint">No preview</span>}
-              </div>
-              <details className="tr-plot-card-detail">
-                <summary>Details</summary>
-                <div className="hint"><code>{p.relPath}</code><br />Hash: <code>{p.hash}</code></div>
-              </details>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════ */
-/*  KPI card                                                           */
-/* ═══════════════════════════════════════════════════════════════════ */
-
-function KpiCard({ label, value }: { label: string; value: string }) {
-  return <div className="tr-kpi"><div className="tr-kpi-value">{value}</div><div className="tr-kpi-label">{label}</div></div>;
-}
-
-/* ═══════════════════════════════════════════════════════════════════ */
-/*  Main Page                                                          */
-/* ═══════════════════════════════════════════════════════════════════ */
+/* ─── Main ─── */
+function Kpi({label,v}:{label:string;v:string}){return <div className="tr-kpi-sm"><span className="tr-kpi-sm-value">{v}</span><span className="tr-kpi-sm-label">{label}</span></div>;}
 
 export function SpiceTranslatorPage() {
   const manifest = TRANSLATOR_MANIFEST;
-  const [selectedId, setSelectedId] = useState(manifest.defaultResultId || manifest.results[0]?.resultId || "");
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [selectedId, setSelectedId] = useState(manifest.defaultResultId);
+  const [lightboxIdx, setLightboxIdx] = useState<number|null>(null);
+  const [expandAll, setExpandAll] = useState(false);
 
-  // Apply filters
-  const filteredResults = useMemo(() => {
-    let list = manifest.results;
-    if (filters.pdk) list = list.filter(r => r.pdk === filters.pdk || r.pdk === "all");
-    if (filters.source) list = list.filter(r => r.sourceFormat === filters.source || r.sourceFormat === "all");
-    if (filters.target) list = list.filter(r => r.targetFormat === filters.target || r.targetFormat === "all");
-    if (filters.kind) list = list.filter(r => r.kind === filters.kind);
-    if (filters.search) { const s = filters.search.toLowerCase(); list = list.filter(r => r.title.toLowerCase().includes(s) || r.pdk.toLowerCase().includes(s)); }
-    return list;
-  }, [manifest.results, filters]);
+  const result = manifest.results.find(r=>r.resultId===selectedId);
+  if (!result) return <div className="tr-page"><Selector results={manifest.results} selectedId={selectedId} onSelect={setSelectedId} /><div className="chart-card"><p className="hint">No result selected.</p></div></div>;
 
-  const result = manifest.results.find(r => r.resultId === selectedId);
-  if (!result) {
-    return (
-      <div className="tr-page">
-        <ResultSelector results={filteredResults} selectedId={selectedId} onSelect={setSelectedId} filters={filters} setFilter={(k, v) => setFilters(p => ({ ...p, [k]: v }))} />
-        <div className="chart-card"><p className="hint">No result selected. Choose a result above to view its reports and plots.</p></div>
-      </div>
-    );
-  }
+  const hasReport = result.reports.length>0 && result.reports[0].fetchUrl;
+  const [mdContent, setMdContent] = useState<string|null>(hasReport?null:"");
+  useEffect(() => {
+    if (!hasReport) { setMdContent(""); return; }
+    const url = BASE + result.reports[0].fetchUrl!;
+    if (mdCache.has(url)) { setMdContent(mdCache.get(url)!); return; }
+    let cancelled = false;
+    fetch(url).then(r=>r.text()).then(t=>{if(!cancelled){mdCache.set(url,t);setMdContent(t);}});
+    return ()=>{cancelled=true;};
+  }, [selectedId]);
 
-  const hero = result.summary.hero || {};
-  const pdks = hero.pdks || (result.pdk !== "all" ? "" : "17");
+  const sections = useMemo(() => {
+    if (!mdContent) return [];
+    const secs: {title:string;content:string}[] = [];
+    let t="Preamble", c="";
+    for (const l of mdContent.split("\n")) { const h=l.match(/^##\s+(.+)/); if(h){if(c.trim())secs.push({title:t,content:c.trim()});t=h[1];c="";continue;} c+=l+"\n"; }
+    if(c.trim())secs.push({title:t,content:c.trim()});
+    return secs;
+  }, [mdContent]);
+
+  const featured = useMemo(() => {
+    const v = result.plots.filter(x=>x.name.toLowerCase().includes("verification_summary"));
+    const iv = result.plots.filter(x=>x.name.toLowerCase().includes("idvgs")||x.name.toLowerCase().includes("idvds"));
+    return [...v.slice(0,2),...iv.slice(0,2)].slice(0,4);
+  }, [result.plots]);
+
+  const stats = result.summary.stats;
+  const hero = result.summary.hero;
 
   return (
     <div className="tr-page">
-      {/* 1. Selector */}
-      <ResultSelector results={filteredResults} selectedId={selectedId} onSelect={setSelectedId} filters={filters} setFilter={(k, v) => setFilters(p => ({ ...p, [k]: v }))} />
+      <Selector results={manifest.results} selectedId={selectedId} onSelect={setSelectedId} />
 
-      {/* 2. Hero/Summary */}
-      <div className="chart-card tr-hero">
-        <h1 className="tr-hero-title">{result.title}</h1>
-        <p className="tr-hero-subtitle">{result.description}</p>
-        <div className="tr-hero-kpis">
-          {result.kind === "batch" && (
-            <>
-              {pdks && <KpiCard label="PDKs" value={pdks} />}
-              {hero.sourceFiles && <KpiCard label="Source Files" value={hero.sourceFiles} />}
-              {hero.successfulTranslations && <KpiCard label="Successful" value={hero.successfulTranslations} />}
-              {hero.modelsTranslated && <KpiCard label="Models" value={hero.modelsTranslated} />}
-              {hero.verification && <KpiCard label="Verification" value={hero.verification} />}
-              {hero.roundTrip && <KpiCard label="Round-Trip" value={hero.roundTrip} />}
-              {hero.monteCarlo && <KpiCard label="Monte Carlo" value={hero.monteCarlo} />}
-            </>
-          )}
-          {result.kind === "pdk_target" && (
-            <>
-              <KpiCard label="PDK" value={result.pdk} />
-              <KpiCard label="Source" value={result.sourceFormat} />
-              <KpiCard label="Target" value={result.targetFormat} />
-            </>
-          )}
-          <KpiCard label="Reports" value={String(result.summary.totalReports)} />
-          <KpiCard label="Plots" value={String(result.summary.totalPlots)} />
-          <KpiCard label="Data Files" value={String(result.summary.totalData)} />
+      {/* Compact header */}
+      <div className="chart-card tr-compact-header">
+        <div className="tr-compact-row">
+          <div><h1 className="tr-compact-title">{result.title}</h1><p className="hint">{result.description}</p></div>
+          <span className={`tr-badge tr-badge--${result.status}`}>{result.status}</span>
         </div>
-        <div className="tr-hero-meta">
+        <div className="tr-compact-kpis">
+          {result.kind==="batch"&&<>{hero?.pdks&&<Kpi label="PDKs" v={hero.pdks}/>}{hero?.sourceFiles&&<Kpi label="Files" v={hero.sourceFiles}/>}{hero?.successfulTranslations&&<Kpi label="Successful" v={hero.successfulTranslations}/>}{hero?.modelsTranslated&&<Kpi label="Models" v={hero.modelsTranslated}/>}{hero?.verification&&<Kpi label="Verification" v={hero.verification}/>}</>}
+          {result.kind==="pdk_target"&&stats&&<>{stats.files&&<Kpi label="Files" v={stats.files}/>}{stats.successful&&<Kpi label="Successful" v={stats.successful}/>}{stats.rawSuccess&&<Kpi label="Raw Success" v={stats.rawSuccess+"%"}/>}{stats.effectiveSuccess&&<Kpi label="Effective" v={stats.effectiveSuccess+"%"}/>}{stats.modelsOut&&<Kpi label="Models Out" v={stats.modelsOut}/>}</>}
+          <Kpi label="Reports" v={String(result.summary.totalReports)}/> <Kpi label="Plots" v={String(result.summary.totalPlots)}/>
+        </div>
+        <div className="tr-compact-meta">
+          {result.pdk!=="all"&&<span>PDK: <code>{result.pdk}</code></span>}
+          {result.kind==="pdk_target"&&<span>{result.sourceFormat} → {result.targetFormat}</span>}
           <span><span className="tr-badge">{result.kind}</span></span>
-          {result.pdk !== "all" && <span>PDK: <code>{result.pdk}</code></span>}
-          <span>Status: {result.status}</span>
-          <span>Generated: {result.generatedAt}</span>
         </div>
       </div>
 
-      {/* 3. Full Reports */}
-      <div className="chart-card tr-section" id="tr-reports">
-        <h2 className="tr-section-heading">Full Reports <span className="hint">({result.reports.length})</span></h2>
-        {result.reports.length === 0 ? (
-          <p className="hint" style={{ padding: "1rem" }}>No source Markdown report available for this result.</p>
-        ) : (
-          result.reports.map((rpt, _i) => (
-            <div key={rpt.relPath} className="tr-report-entry">
-              {result.reports.length > 1 && (
-                <div className="tr-report-separator">
-                  <strong>{rpt.name}</strong>
-                  <span className="hint">{rpt.size} · <code>{rpt.hash}</code></span>
-                </div>
-              )}
-              <MarkdownReport report={rpt} result={result} />
-            </div>
-          ))
-        )}
+      {/* Visual Highlights FIRST */}
+      {featured.length>0 && <div className="chart-card tr-section" id="tr-highlights">
+        <h2 className="tr-section-heading">Visual Highlights</h2>
+        <div className={`tr-featured-grid ${featured.length<=2?"tr-featured-grid--2":""}`}>
+          {featured.map(p=><PlotCard key={p.relPath} plot={p} featured onClick={()=>setLightboxIdx(result.plots.indexOf(p))}/>)}
+        </div>
+      </div>}
+
+      {/* Report with accordion */}
+      <div className="chart-card tr-section" id="tr-report">
+        <div className="tr-report-header">
+          <h2 className="tr-section-heading">{result.reports.length>0&&result.reports[0].isOriginal?"Original Report":"Generated Result Summary"}</h2>
+          {sections.length>0&&<button className="benchmark-btn" onClick={()=>setExpandAll(e=>!e)}>{expandAll?"Collapse all":"Expand all report"}</button>}
+          {hasReport&&<a href={BASE+result.reports[0].fetchUrl!} download className="benchmark-btn">⬇ Download MD</a>}
+        </div>
+        {hasReport&&mdContent===null?<p className="hint">Loading…</p>:
+         hasReport&&mdContent===""?<p className="hint">Failed to load.</p>:
+         hasReport&&sections.length>0?sections.map((s,i)=><ReportSection key={i} title={s.title} content={s.content} defaultOpen={expandAll||i===0} plots={result.plots}/>):
+         !hasReport&&result.kind==="pdk_target"&&stats?<div className="tr-generated-summary"><p className="hint">⚠ No source Markdown report. Summary generated from CSV/JSON.</p><div className="tr-table-wrap"><table className="tr-table"><tbody>{Object.entries(stats).filter(([,v])=>v&&v!=="-").map(([k,v])=><tr key={k}><td style={{fontWeight:600}}>{k}</td><td>{v}</td></tr>)}</tbody></table></div></div>:
+         <p className="hint">No report content.</p>}
       </div>
 
-      {/* 4. Original Plots */}
-      <div className="chart-card tr-section" id="tr-plots">
-        <h2 className="tr-section-heading">Original Plots <span className="hint">({result.plots.length})</span></h2>
-        <PlotGalleryBlock result={result} />
+      {/* Paginated tables */}
+      <div className="chart-card tr-section" id="tr-tables">
+        <h2 className="tr-section-heading">Data Tables</h2>
+        {result.dataArtifacts.filter(d=>d.columns&&d.columns.length>0&&d.rows&&d.rows.length>0).slice(0,3).map(d=><PagedTable key={d.relPath} columns={d.columns!} rows={d.rows||[]}/>)}
       </div>
 
-      {/* 5. Artifacts */}
+      {/* Complete gallery */}
+      {result.plots.length>0 && <div className="chart-card tr-section" id="tr-plots">
+        <h2 className="tr-section-heading">Complete Plot Gallery <span className="hint">({result.plots.length})</span></h2>
+        <div className="tr-plot-gallery">
+          {result.plots.map(p=><PlotCard key={p.relPath} plot={p} onClick={()=>setLightboxIdx(result.plots.indexOf(p))}/>)}
+        </div>
+      </div>}
+
+      {/* Artifacts */}
       <div className="chart-card tr-section" id="tr-artifacts">
         <h2 className="tr-section-heading">Artifacts</h2>
-        <div className="tr-table-wrap">
-          <table className="tr-table">
-            <thead><tr><th>Name</th><th>Type</th><th>Path</th><th>Size</th><th>Hash</th></tr></thead>
-            <tbody>
-              {result.reports.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>report</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-              {result.dataArtifacts.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>{f.format}</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-              {result.plots.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>plot</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-              {result.otherArtifacts.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>{f.format || "other"}</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-            </tbody>
-          </table>
-        </div>
+        <PagedTable columns={["Name","Type","Path","Size","Hash"]}
+          rows={[...result.reports.map(f=>({Name:f.name,Type:"report",Path:f.relPath,Size:f.size,Hash:f.hash})),...result.dataArtifacts.map(f=>({Name:f.name,Type:f.format,Path:f.relPath,Size:f.size,Hash:f.hash})),...result.plots.slice(0,20).map(f=>({Name:f.name,Type:"plot",Path:f.relPath,Size:f.size,Hash:f.hash}))]}/>
       </div>
+
+      {lightboxIdx!==null && <Lightbox plots={result.plots} index={lightboxIdx} onClose={()=>setLightboxIdx(null)}/>}
     </div>
   );
 }

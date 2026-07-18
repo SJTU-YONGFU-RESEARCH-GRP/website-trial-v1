@@ -9,15 +9,20 @@ export interface TranslatorHero {
 
 export interface ReportArtifact {
   name: string; relPath: string; size: string; hash: string;
-  /** Public fetch URL for lazy loading markdown content. */
   fetchUrl: string | null;
+  isOriginal?: boolean;
+}
+
+export interface PlotCaption {
+  title: string; what: string; why: string; device: string; plotType: string;
 }
 
 export interface PlotArtifact {
   name: string; relPath: string; format: string; size: string; hash: string;
   displayUrl: string | null;
-  /** Original image dimensions (from generator image-size probe). */
   width?: number; height?: number; aspectRatio?: number;
+  caption?: PlotCaption;
+  scope?: string;
 }
 
 export interface DataArtifact {
@@ -29,9 +34,17 @@ export interface OtherArtifact {
   name: string; relPath: string; size: string; hash: string; format?: string;
 }
 
+export interface ResultStats {
+  files?: string; successful?: string; failed?: string;
+  rawSuccess?: string; effectiveSuccess?: string;
+  modelsOut?: string; duration?: string;
+  failureReason?: string; notes?: string;
+}
+
 export interface ResultSummary {
   totalReports: number; totalPlots: number; totalData: number;
   hero?: TranslatorHero;
+  stats?: ResultStats;
 }
 
 export interface TranslatorResult {
@@ -39,6 +52,7 @@ export interface TranslatorResult {
   title: string;
   description: string;
   kind: ResultKind;
+  level: number;
   pdk: string;
   sourceFormat: string;
   targetFormat: string;
