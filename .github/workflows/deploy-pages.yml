@@ -39,6 +39,16 @@ jobs:
             README.md
           sparse-checkout-cone-mode: false
 
+      - name: Checkout new-spice-translator (docs only)
+        uses: actions/checkout@v4
+        with:
+          repository: SJTU-YONGFU-RESEARCH-GRP/new-spice-translator
+          path: external/new-spice-translator
+          sparse-checkout: |
+            docs/finalbatchrun2
+            README.md
+          sparse-checkout-cone-mode: false
+
       # Optional: add npm cache after package-lock.json is stable in git:
       #   with:
       #     cache: npm

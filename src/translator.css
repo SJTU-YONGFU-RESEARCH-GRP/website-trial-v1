@@ -63,3 +63,16 @@
 .tr-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-direction: column; gap: 0.5rem; }
 .tr-lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
 .tr-lightbox-dl { color: #fff !important; border-color: rgba(255,255,255,0.3) !important; background: transparent !important; }
+
+/* ─── Filter bar ─── */
+.tr-filter { padding: 0.75rem 1rem; }
+.tr-filter-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
+@media (max-width: 900px) { .tr-filter-row { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .tr-filter-row { grid-template-columns: 1fr; } }
+
+/* ─── TOC ─── */
+.tr-toc { background: var(--surface2,#f8fafc); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; }
+.tr-toc ul { padding-left: 1.25rem; margin: 0.25rem 0; list-style: none; }
+.tr-toc li { margin: 0.15rem 0; }
+.tr-toc a { color: var(--accent,#0071e3); text-decoration: none; }
+.tr-toc a:hover { text-decoration: underline; }
