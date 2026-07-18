@@ -1,11147 +1,1887 @@
-// Auto-generated: 2026-07-18T09:11:32.969Z
+// Auto-generated: 2026-07-18T09:27:21.819Z
 import type { SpiceTranslatorManifest } from "./SpiceTranslatorTypes";
 export const TRANSLATOR_MANIFEST: SpiceTranslatorManifest = {
-  "generatedAt": "2026-07-18T09:11:32.964Z",
-  "sourceDir": "/data1/duhaochen/new-spice-translator",
-  "reportMarkdown": "# FINALBATCHRUN2\n\nScope: Clean full rerun from empty output folder, including full 17-PDK translation and full verification.\n\n## Executive Summary\n\n- Translation pipeline processed **17/17 PDKs**\n- Source files discovered: **322**\n- Successful translations: **224**\n- Models translated: **6,638**\n- Verification plots: **207 generated in latest plot run** (**211 PNG files present under output/**)\n- Weighted raw translation success: **34.8%**\n- Weighted effective model-deck success (excluding wrappers/testbenches/helpers): **44.1%**\n- Verification pipeline covered **15 ngspice-targeted PDK outputs**\n- Verification result: **587/587 passed (100.0%)**\n- Round-trip consistency: **52/52 passed**\n- Monte Carlo stability: **52/52 passed**\n\n## Full Process Commands Used\n\n```bash\nfind output -mindepth 1 -maxdepth 1 -exec rm -rf {} +\n/home/shennilee/newproject2026/proj1/new-spice-translator/.venv/bin/python batch_translate_all.py --no-plots | tee /tmp/finalbatchrun2/translate.log\n/home/shennilee/newproject2026/proj1/new-spice-translator/.venv/bin/python batch_verify.py --mc-runs 10 --roundtrip | tee /tmp/finalbatchrun2/verify.log\npython generate_verification_plots.py output/ | tee /tmp/finalbatchrun2/plots.log\n```\n\n## Translation Metrics (All 17 PDKs)\n\n| PDK | Source | Target | Files | Successful | Failed | Success % | Models Out | Duration (ms) | Problems / Notes / Sections |\n|---|---|---:|---:|---:|---:|---:|---:|---:|---|\n| asap7 | hspice | ngspice | 6 | 6 | 0 | 100.0% | 48 | 98.9 | No blocking translation issues |\n| asap7 | hspice | spectre | 6 | 6 | 0 | 100.0% | 48 | 77.9 | No blocking translation issues |\n| cadence14 | spectre | ngspice | 6 | 5 | 1 | 83.3% | 24 | 116.1 | `Invalid models provided`; section/file: `cds_ff_mpt.scs` (top wrapper deck) |\n| cadence14 | spectre | hspice | 6 | 5 | 1 | 83.3% | 24 | 45.1 | `Invalid models provided`; section/file: `cds_ff_mpt.scs` (top wrapper deck) |\n| cadence180 | spectre | ngspice | 14 | 11 | 3 | 78.6% | 29 | 56.6 | `Invalid models provided`; files: `cmodel.scs`, `gpdk.scs`, `snacapacitor.scs` |\n| cadence180 | spectre | hspice | 14 | 11 | 3 | 78.6% | 29 | 35.0 | `Invalid models provided`; files: `cmodel.scs`, `gpdk.scs`, `snacapacitor.scs` |\n| cadence45 | spectre | ngspice | 9 | 7 | 2 | 77.8% | 49 | 4051.5 | `Invalid models provided`; files: `gpdk045.scs`, `gpdk045_soa.scs` |\n| cadence45 | spectre | hspice | 9 | 7 | 2 | 77.8% | 49 | 1346.8 | `Invalid models provided`; files: `gpdk045.scs`, `gpdk045_soa.scs` |\n| cadence90 | spectre | ngspice | 9 | 8 | 1 | 88.9% | 57 | 96.8 | `Invalid models provided`; file: `gpdk090.scs` (top wrapper deck) |\n| cadence90 | spectre | hspice | 9 | 8 | 1 | 88.9% | 57 | 47.5 | `Invalid models provided`; file: `gpdk090.scs` (top wrapper deck) |\n| freepdk15 | hspice | ngspice | 6 | 6 | 0 | 100.0% | 12 | 18.0 | No blocking translation issues |\n| freepdk15 | hspice | spectre | 6 | 6 | 0 | 100.0% | 12 | 18.0 | No blocking translation issues |\n| freepdk3 | hspice | ngspice | 1 | 1 | 0 | 100.0% | 2 | 3.0 | No blocking translation issues |\n| freepdk3 | hspice | spectre | 1 | 1 | 0 | 100.0% | 2 | 2.9 | No blocking translation issues |\n| freepdk45 | hspice | ngspice | 12 | 12 | 0 | 100.0% | 96 | 214.0 | No blocking translation issues |\n| freepdk45 | hspice | spectre | 12 | 12 | 0 | 100.0% | 96 | 246.2 | No blocking translation issues |\n| gf180 | ngspice | hspice | 56 | 0 | 56 | 0.0% | 0 | 6256.0 | `Invalid models provided`; corpus dominated by regression/testbench netlists (`npn.spice`, `pnp.spice`, `run_npn_beta.spice`, ...) |\n| gf180 | ngspice | spectre | 56 | 0 | 56 | 0.0% | 0 | 33.3 | `Invalid models provided`; corpus dominated by regression/testbench netlists (`npn.spice`, `pnp.spice`, `run_npn_beta.spice`, ...) |\n| hlmc40lp | hspice | ngspice | 4 | 2 | 2 | 50.0% | 227 | 700.1 | `Invalid models provided`; files: `topusage_hlmc40lp_v1d2_p2_shrink0d9.lib`, `topusage_hlmc40rf_v1d2_p2_shrink0d9.lib` |\n| hlmc40lp | hspice | spectre | 4 | 2 | 2 | 50.0% | 227 | 639.5 | `Invalid models provided`; files: `topusage_hlmc40lp_v1d2_p2_shrink0d9.lib`, `topusage_hlmc40rf_v1d2_p2_shrink0d9.lib` |\n| hlmc55lp | hspice | ngspice | 9 | 1 | 8 | 11.1% | 48 | 211.3 | `Invalid models provided`; corner-wrapper set (`HLMC_55LP_V1P9_CORNER.LIB`, `HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB`, `ff.lib`, `fs.lib`, `mc.lib`, ...) |\n| hlmc55lp | hspice | spectre | 9 | 1 | 8 | 11.1% | 48 | 200.9 | `Invalid models provided`; corner-wrapper set (`HLMC_55LP_V1P9_CORNER.LIB`, `HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB`, `ff.lib`, `fs.lib`, `mc.lib`, ...) |\n| sky130 | ngspice | hspice | 147 | 13 | 134 | 8.8% | 80 | 5191.9 | `Invalid models provided`; mixed corpus includes many aggregate/support decks (`all.spice`, cap model wrappers, etc.) |\n| sky130 | ngspice | spectre | 147 | 13 | 134 | 8.8% | 80 | 3618.8 | `Invalid models provided`; mixed corpus includes many aggregate/support decks (`all.spice`, cap model wrappers, etc.) |\n| smic180 | hspice | ngspice | 22 | 22 | 0 | 100.0% | 216 | 930.7 | No blocking translation issues |\n| smic180 | hspice | spectre | 22 | 22 | 0 | 100.0% | 216 | 807.8 | No blocking translation issues |\n| smic180HV | hspice | ngspice | 16 | 15 | 1 | 93.8% | 1174 | 3216.0 | `Invalid models provided`; file: `soa.mdl` (SOA helper deck) |\n| smic180HV | hspice | spectre | 16 | 15 | 1 | 93.8% | 1174 | 3391.3 | `Invalid models provided`; file: `soa.mdl` (SOA helper deck) |\n| synopsys14 | hspice | ngspice | 1 | 1 | 0 | 100.0% | 18 | 146.4 | No blocking translation issues |\n| synopsys14 | hspice | spectre | 1 | 1 | 0 | 100.0% | 18 | 125.9 | No blocking translation issues |\n| synopsys28 | hspice | ngspice | 1 | 1 | 0 | 100.0% | 17 | 53.0 | No blocking translation issues |\n| synopsys28 | hspice | spectre | 1 | 1 | 0 | 100.0% | 17 | 51.5 | No blocking translation issues |\n| tsmc65lp | hspice | ngspice | 3 | 1 | 2 | 33.3% | 1222 | 5017.7 | `Invalid models provided`; files: `crn65lp_2d5_lk_v1d7_usage.l`, `toplevel.l` (usage/toplevel wrappers) |\n| tsmc65lp | hspice | spectre | 3 | 1 | 2 | 33.3% | 1222 | 4502.0 | `Invalid models provided`; files: `crn65lp_2d5_lk_v1d7_usage.l`, `toplevel.l` (usage/toplevel wrappers) |\n\n## Derived Fair-Comparison Metric (Raw vs Effective)\n\nTo make cross-PDK comparison fairer, this run adds a second metric:\n\n- **Raw success %**: `successful / total_files`\n- **Effective model-deck success %**: `model_deck_successful / model_deck_files`\n- **Excluded files** from effective metric: known wrapper/testbench/helper decks (for example: `topusage*`, `*_usage.*`, `toplevel.*`, `all.spice`, regression netlists under `testing/`)\n\nThis resolves a major reporting distortion: many low raw-success rows are low because the corpus contains orchestration/test files, not because model-card translation failed.\n\n| PDK | Target | Raw Success % | Effective Model-Deck Success % | Excluded Files | Model-Deck Failures | Interpretation |\n|---|---|---:|---:|---:|---:|---|\n| cadence14 | hspice | 83.3 | 100.0 | 1/6 | 0 | Wrapper-only failure (`cds_ff_mpt.scs`) |\n| cadence14 | ngspice | 83.3 | 100.0 | 1/6 | 0 | Wrapper-only failure (`cds_ff_mpt.scs`) |\n| cadence180 | hspice | 78.6 | 100.0 | 3/14 | 0 | Top-level support decks excluded |\n| cadence180 | ngspice | 78.6 | 100.0 | 3/14 | 0 | Top-level support decks excluded |\n| cadence45 | hspice | 77.8 | 87.5 | 1/9 | 1 | One true model-deck failure remains |\n| cadence45 | ngspice | 77.8 | 87.5 | 1/9 | 1 | One true model-deck failure remains |\n| cadence90 | hspice | 88.9 | 100.0 | 1/9 | 0 | Wrapper-only failure (`gpdk090.scs`) |\n| cadence90 | ngspice | 88.9 | 100.0 | 1/9 | 0 | Wrapper-only failure (`gpdk090.scs`) |\n| hlmc40lp | ngspice | 50.0 | 100.0 | 2/4 | 0 | `topusage*` wrappers dominate raw failures |\n| hlmc40lp | spectre | 50.0 | 100.0 | 2/4 | 0 | `topusage*` wrappers dominate raw failures |\n| hlmc55lp | ngspice | 11.1 | 11.1 | 0/9 | 8 | Real model-deck parsing/support gap |\n| hlmc55lp | spectre | 11.1 | 11.1 | 0/9 | 8 | Real model-deck parsing/support gap |\n| sky130 | hspice | 8.8 | 8.9 | 1/147 | 133 | Mostly non-translatable mixed deck corpus |\n| sky130 | spectre | 8.8 | 8.9 | 1/147 | 133 | Mostly non-translatable mixed deck corpus |\n| tsmc65lp | ngspice | 33.3 | 100.0 | 2/3 | 0 | Usage/toplevel wrappers removed from denominator |\n| tsmc65lp | spectre | 33.3 | 100.0 | 2/3 | 0 | Usage/toplevel wrappers removed from denominator |\n| gf180 | hspice | 0.0 | 0.0 | 56/56 | 0 | Input set is testbench/regression corpus |\n| gf180 | spectre | 0.0 | 0.0 | 56/56 | 0 | Input set is testbench/regression corpus |\n\n### Failure-Run Analysis Highlights\n\n- Rows with raw success below 90%: **18/34**\n- Of those, rows that recover to >=90% under effective metric: **10/18**\n- Largest metric gaps (raw -> effective):\n\t- `tsmc65lp` (both targets): **33.3% -> 100.0%**\n\t- `hlmc40lp` (both targets): **50.0% -> 100.0%**\n\t- `cadence180` (both targets): **78.6% -> 100.0%**\n- Remaining true low-effective cases requiring translator/parser extension:\n\t- `hlmc55lp` (both targets): **11.1% effective**\n\t- `sky130` (both targets): **8.9% effective**\n\n## Successful-Run Importance (Report-Ready)\n\nThe successful runs are significant not only by count, but by complexity and verification depth:\n\n- High-volume successful translation examples:\n\t- `tsmc65lp`: **1222 models out** (both targets)\n\t- `smic180HV`: **1174 models out** (both targets)\n\t- `smic180`: **216 models out** (both targets)\n\t- `hlmc40lp`: **227 models out** (both targets)\n- Stable high-success families under both raw and effective views:\n\t- `asap7`, `freepdk15`, `freepdk3`, `freepdk45`, `smic180`, `synopsys14`, `synopsys28`\n- Verification credibility on translated subset remains strong:\n\t- **15 PDKs**, **52 files**, **587/587 tests passed**\n\t- Round-trip: **52/52 passed**\n\t- Monte Carlo: **52/52 passed**\n\nThese points support two report claims:\n\n1. The pipeline is robust on model-deck-centric corpora across multiple PDK families and targets.\n2. Lower raw percentages in mixed corpora are often dataset-composition effects; the effective model-deck metric should be reported alongside raw success to avoid underestimating translator capability.\n\n## PDK Confidence Tier Ranking\n\nThis run adds a three-tier confidence ranking to support publication-ready interpretation:\n\n- **Production-ready**: effective model-deck success >= 95%, zero model-deck failures, and clean verification where available.\n- **Wrapper-biased**: raw success distorted by wrapper/testbench/support corpus composition.\n- **Needs parser extension**: true model-deck failures remain after wrapper/testbench exclusions.\n\nTier counts (17 PDK families):\n\n- Production-ready: **13**\n- Wrapper-biased: **1**\n- Needs parser extension: **3**\n\nPDK-to-tier mapping:\n\n- Production-ready: `asap7`, `cadence14`, `cadence180`, `cadence90`, `freepdk15`, `freepdk3`, `freepdk45`, `hlmc40lp`, `smic180`, `smic180HV`, `synopsys14`, `synopsys28`, `tsmc65lp`\n- Wrapper-biased: `gf180`\n- Needs parser extension: `cadence45`, `hlmc55lp`, `sky130`\n\n### One-Page Figure-Ready Summary Table\n\nFor direct insertion into the paper, use:\n\n- `finalbatchrun2/reports/pdk_confidence_tier_table.tex`\n\nSupporting machine-readable data:\n\n- `finalbatchrun2/reports/pdk_confidence_tiers.csv`\n\nThe LaTeX table is single-page oriented and sorted by tier to present deployment readiness first, then wrapper-biased interpretation cases, then parser-extension priorities.\n\n## Plot Generation Update\n\n- Plot generation command completed successfully.\n- Latest plot-run summary: **207 generated verification plots**\n- Total PNG artifacts currently under `output/`: **211**\n- Copied summary figure: `finalbatchrun2/plots/verification_summary.png`\n- Per-scope plot counts: `finalbatchrun2/reports/plot_inventory.csv`\n\n## Verification Metrics (All 15 Verified PDKs)\n\n| PDK | Files | Tests | Passed | Failed | Pass % | BSIM4 Errors |\n|---|---:|---:|---:|---:|---:|---:|\n| asap7 | 6 | 70 | 70 | 0 | 100.0% | 0 |\n| cadence14 | 5 | 47 | 47 | 0 | 100.0% | 0 |\n| cadence180 | 11 | 38 | 38 | 0 | 100.0% | 0 |\n| cadence45 | 7 | 49 | 49 | 0 | 100.0% | 0 |\n| cadence90 | 8 | 44 | 44 | 0 | 100.0% | 0 |\n| freepdk15 | 6 | 50 | 50 | 0 | 100.0% | 0 |\n| freepdk3 | 1 | 10 | 10 | 0 | 100.0% | 0 |\n| freepdk45 | 6 | 70 | 70 | 0 | 100.0% | 0 |\n| hlmc40lp | 2 | 28 | 28 | 0 | 100.0% | 0 |\n| hlmc55lp | 1 | 14 | 14 | 0 | 100.0% | 0 |\n| smic180 | 22 | 67 | 67 | 0 | 100.0% | 0 |\n| smic180HV | 14 | 58 | 58 | 0 | 100.0% | 0 |\n| synopsys14 | 1 | 14 | 14 | 0 | 100.0% | 0 |\n| synopsys28 | 1 | 14 | 14 | 0 | 100.0% | 0 |\n| tsmc65lp | 1 | 14 | 14 | 0 | 100.0% | 0 |\n\n## Key Observations\n\n- Verification quality gate is satisfied with 587/587 passing tests.\n- The verification dataset is a validated subset of the full translation corpus (15 verified PDKs vs 17 processed PDKs).\n- Translation throughput varies significantly by source library structure and unsupported-content density.\n- Effective model-deck success percentage provides a fairer comparison for mixed corpora and should be reported alongside raw success.\n- Detailed per-file timing and outcomes are preserved in the raw JSON and logs for auditability.\n\n## Residual Risks and Limitations\n\n- Translation success rate and verification pass rate are different metrics and should not be conflated.\n- Certain PDK/source combinations can be partially translatable due to unsupported constructs or unresolved dependencies.\n- Simulator support boundaries can affect downstream plotting/simulation even when translation succeeds syntactically.\n\n## Artifact List\n\n- `finalbatchrun2/raw/batch_all_summary.json`\n- `finalbatchrun2/raw/verification_report.json`\n- `finalbatchrun2/raw/translate.log`\n- `finalbatchrun2/raw/verify.log`\n- `finalbatchrun2/raw/plots.log`\n- `finalbatchrun2/reports/pdk_translation_summary.csv`\n- `finalbatchrun2/reports/pdk_translation_effective_summary.csv`\n- `finalbatchrun2/reports/pdk_confidence_tiers.csv`\n- `finalbatchrun2/reports/pdk_confidence_tier_table.tex`\n- `finalbatchrun2/reports/pdk_verification_summary.csv`\n- `finalbatchrun2/reports/plot_inventory.csv`\n- `finalbatchrun2/plots/verification_summary.png`\n",
-  "reportHash": "2d05eb4e",
-  "hero": {
-    "pdks": "17",
-    "sourceFiles": "322",
-    "successfulTranslations": "224",
-    "modelsTranslated": "6,638",
-    "verification": "587",
-    "roundTrip": "52",
-    "monteCarlo": "52"
-  },
-  "markdowns": [
+  "generatedAt": "2026-07-18T09:27:21.817Z",
+  "results": [
     {
-      "name": "FINALBATCHRUN2.md",
-      "relPath": "FINALBATCHRUN2.md",
-      "size": "13.7 KB",
-      "hash": "2d05eb4e"
-    }
-  ],
-  "jsons": [
-    {
-      "name": "batch_all_summary.json",
-      "relPath": "raw/batch_all_summary.json",
-      "size": "364.2 KB",
-      "hash": "4d8f7ab5",
-      "parsed": {
-        "timestamp": "2026-04-19T23:34:51.457742",
-        "pdks_processed": 17,
-        "results": [
-          {
-            "pdk": "asap7",
-            "source_format": "hspice",
-            "total_files": 6,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 6,
-                "failed": 0,
-                "models_out": 48,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/ff.lib",
-                    "output_file": "output/asap7_hspice-ngspice/ff.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 16.632795333862305
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/fs.lib",
-                    "output_file": "output/asap7_hspice-ngspice/fs.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.438888549804688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/mc.lib",
-                    "output_file": "output/asap7_hspice-ngspice/mc.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 13.795614242553711
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/sf.lib",
-                    "output_file": "output/asap7_hspice-ngspice/sf.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 14.217615127563477
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/ss.lib",
-                    "output_file": "output/asap7_hspice-ngspice/ss.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 16.836881637573242
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/tt.lib",
-                    "output_file": "output/asap7_hspice-ngspice/tt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 19.962787628173828
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 6,
-                "failed": 0,
-                "models_out": 48,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/ff.lib",
-                    "output_file": "output/asap7_hspice-spectre/ff.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.975019454956055
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/fs.lib",
-                    "output_file": "output/asap7_hspice-spectre/fs.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 14.796018600463867
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/mc.lib",
-                    "output_file": "output/asap7_hspice-spectre/mc.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 11.797428131103516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/sf.lib",
-                    "output_file": "output/asap7_hspice-spectre/sf.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 12.31074333190918
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/ss.lib",
-                    "output_file": "output/asap7_hspice-spectre/ss.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 10.166645050048828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/asap7/hspice/tt.lib",
-                    "output_file": "output/asap7_hspice-spectre/tt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 9.866952896118164
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "cadence14",
-            "source_format": "spectre",
-            "total_files": 6,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 5,
-                "failed": 1,
-                "models_out": 24,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "cds_ff_mpt.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0688304901123047
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_bipolar.scs",
-                    "output_file": "output/cadence14_spectre-ngspice/cds_ff_mpt_bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 5.387783050537109
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_diode.scs",
-                    "output_file": "output/cadence14_spectre-ngspice/cds_ff_mpt_diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 2.6307106018066406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_mimcap.scs",
-                    "output_file": "output/cadence14_spectre-ngspice/cds_ff_mpt_mimcap.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.355813980102539
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_mosfet.scs",
-                    "output_file": "output/cadence14_spectre-ngspice/cds_ff_mpt_mosfet.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 79.81610298156738
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_resistor.scs",
-                    "output_file": "output/cadence14_spectre-ngspice/cds_ff_mpt_resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 24.872779846191406
-                  }
-                ]
-              },
-              "hspice": {
-                "format": "hspice",
-                "successful": 5,
-                "failed": 1,
-                "models_out": 24,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "cds_ff_mpt.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0132789611816406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_bipolar.scs",
-                    "output_file": "output/cadence14_spectre-hspice/cds_ff_mpt_bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 2.1402835845947266
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_diode.scs",
-                    "output_file": "output/cadence14_spectre-hspice/cds_ff_mpt_diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 3.104686737060547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_mimcap.scs",
-                    "output_file": "output/cadence14_spectre-hspice/cds_ff_mpt_mimcap.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.074003219604492
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_mosfet.scs",
-                    "output_file": "output/cadence14_spectre-hspice/cds_ff_mpt_mosfet.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 22.567272186279297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence14/spectre/cds_ff_mpt_resistor.scs",
-                    "output_file": "output/cadence14_spectre-hspice/cds_ff_mpt_resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 14.215469360351562
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "cadence180",
-            "source_format": "spectre",
-            "total_files": 14,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 11,
-                "failed": 3,
-                "models_out": 29,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "cmodel.scs",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gpdk.scs",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "snacapacitor.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/bipolar.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 1.4476776123046875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/capacitor.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/capacitor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.1615028381347656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/cmodel.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.4706382751464844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/diode.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.1684894561767578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/gpdk.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7460117340087891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/mcxjvar_w40.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/mcxjvar_w40.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.8982162475585938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/mos25gen.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/mos25gen.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.7735958099365234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/nmos1.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/nmos1.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 15.323638916015625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/pmos1.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/pmos1.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 14.038324356079102
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/resistor.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 11,
-                    "error": null,
-                    "duration_ms": 8.085966110229492
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/rfmos.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/rfmos.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.813100814819336
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/snacapacitor.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7271766662597656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/xjvar_nf36.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/xjvar_nf36.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.3031234741210938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/xjvar_w40.scs",
-                    "output_file": "output/cadence180_spectre-ngspice/xjvar_w40.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.666473388671875
-                  }
-                ]
-              },
-              "hspice": {
-                "format": "hspice",
-                "successful": 11,
-                "failed": 3,
-                "models_out": 29,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "cmodel.scs",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gpdk.scs",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "snacapacitor.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/bipolar.scs",
-                    "output_file": "output/cadence180_spectre-hspice/bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 1.256704330444336
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/capacitor.scs",
-                    "output_file": "output/cadence180_spectre-hspice/capacitor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.4116764068603516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/cmodel.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5629062652587891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/diode.scs",
-                    "output_file": "output/cadence180_spectre-hspice/diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.1203289031982422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/gpdk.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7848739624023438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/mcxjvar_w40.scs",
-                    "output_file": "output/cadence180_spectre-hspice/mcxjvar_w40.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.4276504516601562
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/mos25gen.scs",
-                    "output_file": "output/cadence180_spectre-hspice/mos25gen.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.6512870788574219
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/nmos1.scs",
-                    "output_file": "output/cadence180_spectre-hspice/nmos1.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 8.36491584777832
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/pmos1.scs",
-                    "output_file": "output/cadence180_spectre-hspice/pmos1.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 8.18324089050293
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/resistor.scs",
-                    "output_file": "output/cadence180_spectre-hspice/resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 11,
-                    "error": null,
-                    "duration_ms": 5.321979522705078
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/rfmos.scs",
-                    "output_file": "output/cadence180_spectre-hspice/rfmos.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.6658306121826172
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/snacapacitor.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5402565002441406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/xjvar_nf36.scs",
-                    "output_file": "output/cadence180_spectre-hspice/xjvar_nf36.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.3735294342041016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence180/spectre/xjvar_w40.scs",
-                    "output_file": "output/cadence180_spectre-hspice/xjvar_w40.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.3060569763183594
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "cadence45",
-            "source_format": "spectre",
-            "total_files": 9,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 7,
-                "failed": 2,
-                "models_out": 49,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "gpdk045.scs",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gpdk045_soa.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.9093284606933594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_bipolar.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 6.832122802734375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_diode.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 10,
-                    "error": null,
-                    "duration_ms": 3.287076950073242
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_inductor.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_inductor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.9919872283935547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_mimcap.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_mimcap.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.3937225341796875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_mos.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_mos.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 20,
-                    "error": null,
-                    "duration_ms": 3820.2407360076904
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_moscap.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_moscap.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 4,
-                    "error": null,
-                    "duration_ms": 188.98391723632812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_resistor.scs",
-                    "output_file": "output/cadence45_spectre-ngspice/gpdk045_resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 25.812625885009766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_soa.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0807514190673828
-                  }
-                ]
-              },
-              "hspice": {
-                "format": "hspice",
-                "successful": 7,
-                "failed": 2,
-                "models_out": 49,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "gpdk045.scs",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gpdk045_soa.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0366439819335938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_bipolar.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 3.301382064819336
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_diode.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 10,
-                    "error": null,
-                    "duration_ms": 3.4198760986328125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_inductor.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_inductor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.6040802001953125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_mimcap.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_mimcap.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 1.8391609191894531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_mos.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_mos.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 20,
-                    "error": null,
-                    "duration_ms": 1117.915391921997
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_moscap.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_moscap.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 4,
-                    "error": null,
-                    "duration_ms": 200.12831687927246
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_resistor.scs",
-                    "output_file": "output/cadence45_spectre-hspice/gpdk045_resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 16.518831253051758
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence45/spectre/gpdk045_soa.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.047372817993164
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "cadence90",
-            "source_format": "spectre",
-            "total_files": 9,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 8,
-                "failed": 1,
-                "models_out": 57,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "gpdk090.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8733272552490234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_bipolar.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 12.477874755859375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_capacitor.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_capacitor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.4867782592773438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_diode.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 9,
-                    "error": null,
-                    "duration_ms": 9.763240814208984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_mos.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_mos.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 40.18712043762207
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_mos_age.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_mos_age.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 7.518291473388672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_mos_iso.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_mos_iso.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.7316341400146484
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_moscap.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_moscap.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 6,
-                    "error": null,
-                    "duration_ms": 9.520769119262695
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_resistor.scs",
-                    "output_file": "output/cadence90_spectre-ngspice/gpdk090_resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 18,
-                    "error": null,
-                    "duration_ms": 13.242244720458984
-                  }
-                ]
-              },
-              "hspice": {
-                "format": "hspice",
-                "successful": 8,
-                "failed": 1,
-                "models_out": 57,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "gpdk090.scs",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090.scs",
-                    "output_file": null,
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8680820465087891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_bipolar.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_bipolar.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 5.136251449584961
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_capacitor.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_capacitor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.955270767211914
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_diode.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_diode.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 9,
-                    "error": null,
-                    "duration_ms": 5.0678253173828125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_mos.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_mos.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 10.179996490478516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_mos_age.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_mos_age.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 6.800174713134766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_mos_iso.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_mos_iso.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.2052059173583984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_moscap.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_moscap.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 6,
-                    "error": null,
-                    "duration_ms": 6.713628768920898
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/cadence90/spectre/gpdk090_resistor.scs",
-                    "output_file": "output/cadence90_spectre-hspice/gpdk090_resistor.lib",
-                    "source_format": "spectre",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 18,
-                    "error": null,
-                    "duration_ms": 9.621620178222656
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "freepdk15",
-            "source_format": "hspice",
-            "total_files": 6,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 6,
-                "failed": 0,
-                "models_out": 12,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/ff.lib",
-                    "output_file": "output/freepdk15_hspice-ngspice/ff.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 3.2837390899658203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/fs.lib",
-                    "output_file": "output/freepdk15_hspice-ngspice/fs.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.9823780059814453
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/mc.lib",
-                    "output_file": "output/freepdk15_hspice-ngspice/mc.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.8944015502929688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/sf.lib",
-                    "output_file": "output/freepdk15_hspice-ngspice/sf.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.9129981994628906
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/ss.lib",
-                    "output_file": "output/freepdk15_hspice-ngspice/ss.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 3.1812191009521484
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/tt.lib",
-                    "output_file": "output/freepdk15_hspice-ngspice/tt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.695798873901367
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 6,
-                "failed": 0,
-                "models_out": 12,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/ff.lib",
-                    "output_file": "output/freepdk15_hspice-spectre/ff.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.8226375579833984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/fs.lib",
-                    "output_file": "output/freepdk15_hspice-spectre/fs.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.8481483459472656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/mc.lib",
-                    "output_file": "output/freepdk15_hspice-spectre/mc.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.9501914978027344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/sf.lib",
-                    "output_file": "output/freepdk15_hspice-spectre/sf.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 3.5970211029052734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/ss.lib",
-                    "output_file": "output/freepdk15_hspice-spectre/ss.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.923727035522461
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk15/hspice/tt.lib",
-                    "output_file": "output/freepdk15_hspice-spectre/tt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.8564929962158203
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "freepdk3",
-            "source_format": "hspice",
-            "total_files": 1,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 1,
-                "failed": 0,
-                "models_out": 2,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk3/hspice/fet.lib",
-                    "output_file": "output/freepdk3_hspice-ngspice/fet.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.9778480529785156
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 1,
-                "failed": 0,
-                "models_out": 2,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk3/hspice/fet.lib",
-                    "output_file": "output/freepdk3_hspice-spectre/fet.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 2,
-                    "error": null,
-                    "duration_ms": 2.9158592224121094
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "freepdk45",
-            "source_format": "hspice",
-            "total_files": 12,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 12,
-                "failed": 0,
-                "models_out": 96,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/ff.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/ff.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.28653907775879
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/fs.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/fs.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.565011978149414
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/mc.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/mc.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.043590545654297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/sf.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/sf.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.980098724365234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/ss.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/ss.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.458127975463867
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/tt.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/tt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.51565933227539
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/ff.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/ff.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.271446228027344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/fs.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/fs.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.419265747070312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/mc.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/mc.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.945289611816406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/sf.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/sf.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.71204376220703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/ss.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/ss.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.603397369384766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/tt.lib",
-                    "output_file": "output/freepdk45_hspice-ngspice/tt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.2274112701416
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 12,
-                "failed": 0,
-                "models_out": 96,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/ff.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/ff.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 17.816543579101562
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/fs.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/fs.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.654584884643555
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/mc.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/mc.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.963336944580078
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/sf.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/sf.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 25.91252326965332
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/ss.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/ss.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 21.789073944091797
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/hspice/tt.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/tt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 19.75846290588379
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/ff.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/ff.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 23.38385581970215
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/fs.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/fs.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 19.275426864624023
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/mc.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/mc.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.840789794921875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/sf.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/sf.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 18.37158203125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/ss.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/ss.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 21.640300750732422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/freepdk45/ngspice/tt.lib",
-                    "output_file": "output/freepdk45_hspice-spectre/tt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 8,
-                    "error": null,
-                    "duration_ms": 21.776437759399414
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "gf180",
-            "source_format": "ngspice",
-            "total_files": 56,
-            "targets": {
-              "hspice": {
-                "format": "hspice",
-                "successful": 0,
-                "failed": 56,
-                "models_out": 0,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "npn.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "run_npn_beta.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "damping_test.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn_CBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn_CSJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn_EBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp_CBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp_EBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "run_npn_vcic.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mimcap.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_nat_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_nat_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_nat_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "moscap.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "2term_res_a.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "2term_res_b.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "3term_res_a.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "3term_res_b.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__inv_1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__inv_1_run.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__nand2_1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__nand2_1_run.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__or3_1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__or3_1_run.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "inv_ng.spice",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_beta/device_netlists/npn.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.64849853515625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_beta/device_netlists/pnp.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.579833984375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_beta/device_netlists/run_npn_beta.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6902217864990234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/damping_test.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6837844848632812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/npn_CBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6663799285888672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/npn_CSJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7143020629882812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/npn_EBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.9207725524902344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/pnp_CBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7827281951904297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/pnp_EBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8821487426757812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_iv/device_netlists/npn.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8041858673095703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_iv/device_netlists/pnp.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7691383361816406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_iv/device_netlists/run_npn_vcic.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8175373077392578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/diode/device_netlists/cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8242130279541016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/diode/device_netlists/iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7319450378417969
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mimcap_c/device_netlists/mimcap.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7612705230712891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgc/nmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6337165832519531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgc/pmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6632804870605469
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgd/nmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.640869140625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgd/pmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6248950958251953
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgs/nmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7033348083496094
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgs/pmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 2.1202564239501953
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/nmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 10.153055191040039
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/nmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6604194641113281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/nmos_6p0_nat_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6854534149169922
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/pmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6952285766601562
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/pmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8456707000732422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6451606750488281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6074905395507812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5812644958496094
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_6p0_nat_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5931854248046875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.576019287109375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5757808685302734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6053447723388672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6949901580810547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.74005126953125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8153915405273438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.714488983154297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 7.453680038452148
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_6p0_nat_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7512569427490234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 6196.301698684692
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8118152618408203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6000995635986328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5927085876464844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6437301635742188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/moscap_c/device_netlists/moscap.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.45752525329589844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/2term_res_a.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5617141723632812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/2term_res_b.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5769729614257812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/3term_res_a.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7402896881103516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/3term_res_b.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.67901611328125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__inv_1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8792877197265625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__inv_1_run.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6804466247558594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__nand2_1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6716251373291016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__nand2_1_run.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7455348968505859
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__or3_1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7181167602539062
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__or3_1_run.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5993843078613281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/smoke_test/inv_ng.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6561279296875
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 0,
-                "failed": 56,
-                "models_out": 0,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "npn.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "run_npn_beta.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "damping_test.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn_CBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn_CSJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn_EBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp_CBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp_EBJ.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "npn.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pnp.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "run_npn_vcic.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mimcap.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_cv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_nat_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_nat_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_nat_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_3p3_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "pmos_6p0_sab_iv.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "moscap.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "2term_res_a.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "2term_res_b.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "3term_res_a.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "3term_res_b.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__inv_1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__inv_1_run.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__nand2_1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__nand2_1_run.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__or3_1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "gf180mcu_fd_sc_mcu7t5v0__or3_1_run.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "inv_ng.spice",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_beta/device_netlists/npn.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6034374237060547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_beta/device_netlists/pnp.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6198883056640625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_beta/device_netlists/run_npn_beta.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5750656127929688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/damping_test.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.48089027404785156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/npn_CBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7297992706298828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/npn_CSJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.54931640625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/npn_EBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5097389221191406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/pnp_CBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5578994750976562
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_cj/device_netlists/pnp_EBJ.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5474090576171875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_iv/device_netlists/npn.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5898475646972656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_iv/device_netlists/pnp.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5314350128173828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/bjt_iv/device_netlists/run_npn_vcic.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5428791046142578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/diode/device_netlists/cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5495548248291016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/diode/device_netlists/iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5252361297607422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mimcap_c/device_netlists/mimcap.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5853176116943359
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgc/nmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6363391876220703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgc/pmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6492137908935547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgd/nmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6542205810546875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgd/pmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6341934204101562
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgs/nmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6306171417236328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_cv/device_netlists_Cgs/pmos_3p3_cv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6325244903564453
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/nmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.621795654296875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/nmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6175041198730469
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/nmos_6p0_nat_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5769729614257812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/pmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5323886871337891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vbs/device_netlists_Id/pmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5326271057128906
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5626678466796875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5083084106445312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5843639373779297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_6p0_nat_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5533695220947266
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/nmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5369186401367188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5998611450195312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5555152893066406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5817413330078125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Id/pmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5350112915039062
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6124973297119141
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6074905395507812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5970001220703125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_6p0_nat_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6349086761474609
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/nmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5917549133300781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_3p3_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5888938903808594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_3p3_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5822181701660156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_6p0_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5517005920410156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/mos_iv_vgs/device_netlists_Rds/pmos_6p0_sab_iv.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6539821624755859
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/moscap_c/device_netlists/moscap.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5419254302978516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/2term_res_a.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5629062652587891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/2term_res_b.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5605220794677734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/3term_res_a.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5736351013183594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/regression/resistor_r/device_netlists/3term_res_b.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6089210510253906
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__inv_1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7996559143066406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__inv_1_run.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6954669952392578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__nand2_1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7109642028808594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__nand2_1_run.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6165504455566406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__or3_1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6468296051025391
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/sc_regression/gf180mcu_fd_sc_mcu7t5v0/device_netlists/gf180mcu_fd_sc_mcu7t5v0__or3_1_run.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.64849853515625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/gf180/ngspice/testing/smoke_test/inv_ng.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6313323974609375
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "hlmc40lp",
-            "source_format": "hspice",
-            "total_files": 4,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 2,
-                "failed": 2,
-                "models_out": 227,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "topusage_hlmc40lp_v1d2_p2_shrink0d9.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/hlmc40lp_v1d2_p2.lib",
-                    "output_file": "output/hlmc40lp_hspice-ngspice/hlmc40lp_v1d2_p2.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 69,
-                    "error": null,
-                    "duration_ms": 251.81221961975098
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/hlmc40rf_v1d2_p2.lib",
-                    "output_file": "output/hlmc40lp_hspice-ngspice/hlmc40rf_v1d2_p2.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 158,
-                    "error": null,
-                    "duration_ms": 370.6073760986328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/topusage_hlmc40lp_v1d2_p2_shrink0d9.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 45.81618309020996
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 31.852006912231445
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 2,
-                "failed": 2,
-                "models_out": 227,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "topusage_hlmc40lp_v1d2_p2_shrink0d9.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/hlmc40lp_v1d2_p2.lib",
-                    "output_file": "output/hlmc40lp_hspice-spectre/hlmc40lp_v1d2_p2.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 69,
-                    "error": null,
-                    "duration_ms": 248.3193874359131
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/hlmc40rf_v1d2_p2.lib",
-                    "output_file": "output/hlmc40lp_hspice-spectre/hlmc40rf_v1d2_p2.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 158,
-                    "error": null,
-                    "duration_ms": 353.3940315246582
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/topusage_hlmc40lp_v1d2_p2_shrink0d9.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 20.887374877929688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc40lp/hspice/topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 16.867399215698242
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "hlmc55lp",
-            "source_format": "hspice",
-            "total_files": 9,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 1,
-                "failed": 8,
-                "models_out": 48,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "HLMC_55LP_V1P9_CORNER.LIB",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fs.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mc.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sf.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.lib",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/HLMC_55LP_V1P9.LIB",
-                    "output_file": "output/hlmc55lp_hspice-ngspice/HLMC_55LP_V1P9.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 48,
-                    "error": null,
-                    "duration_ms": 150.38704872131348
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/HLMC_55LP_V1P9_CORNER.LIB",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 14.608621597290039
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 15.86771011352539
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/ff.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.541873931884766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/fs.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.934072494506836
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/mc.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.635810852050781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/sf.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 6.561756134033203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/ss.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.7817230224609375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/tt.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.953622817993164
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 1,
-                "failed": 8,
-                "models_out": 48,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "HLMC_55LP_V1P9_CORNER.LIB",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fs.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mc.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sf.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.lib",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.lib",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/HLMC_55LP_V1P9.LIB",
-                    "output_file": "output/hlmc55lp_hspice-spectre/HLMC_55LP_V1P9.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 48,
-                    "error": null,
-                    "duration_ms": 144.54126358032227
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/HLMC_55LP_V1P9_CORNER.LIB",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 15.068769454956055
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 15.0909423828125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/ff.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.568338394165039
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/fs.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.197597503662109
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/mc.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 3.710508346557617
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/sf.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 5.459785461425781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/ss.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.008293151855469
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/hlmc55lp/hspice/tt.lib",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4.282951354980469
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "sky130",
-            "source_format": "ngspice",
-            "total_files": 147,
-            "targets": {
-              "hspice": {
-                "format": "hspice",
-                "successful": 13,
-                "failed": 134,
-                "models_out": 80,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "all.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_mim.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_var.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp_only_p.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp_only_pq.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fs.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leak.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leak.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leak_discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leakrf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "wafer.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl2.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl3.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl4.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "custom.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "head.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "critical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fast.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fast_70p.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "invariant.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "lod.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "montecarlo.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "slow.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "slow_70p.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__diodes_pw2dn.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__res_po.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__rf_diode_ps2nw.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__rf_diode_pw2dn.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_high.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_high__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_low.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_low__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_high.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_high__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_low.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_low__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_typical__cap_typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_typical__cap_typical__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130.lib.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__diode_pd2nw_11v0.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__diode_pw2nd_11v0.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__inductors.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__linear.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__pnp.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "end_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "end_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "end_of_life.spice",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/all.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.1992454528808594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_mim.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6246566772460938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_var.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7719993591308594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8945465087890625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.42438507080078125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp_only_p.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6487369537353516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp_only_pq.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5900859832763672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7510185241699219
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7691383361816406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6256103515625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.3813972473144531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7052421569824219
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6310939788818359
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7233619689941406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6420612335205078
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6043910980224609
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.1169910430908203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6456375122070312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7102489471435547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6604194641113281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6999969482421875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5948543548583984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.2440681457519531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7655620574951172
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6976127624511719
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8611679077148438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6973743438720703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.1060237884521484
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6673336029052734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6046295166015625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6377696990966797
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6778240203857422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6098747253417969
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0285377502441406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7874965667724609
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6732940673828125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7381439208984375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/leak.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6306171417236328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/leak_discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6127357482910156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/leakrf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5769729614257812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6275177001953125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5471706390380859
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.1210441589355469
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6802082061767578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7195472717285156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7233619689941406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6368160247802734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.3396739959716797
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.881195068359375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7185935974121094
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl2.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7050037384033203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl3.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7228851318359375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl4.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6663799285888672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/custom.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6659030914306641
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/head.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5748271942138672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/critical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7903575897216797
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/fast.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 25.80428123474121
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/fast_70p.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 26.581764221191406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/invariant.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 30.056238174438477
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/lod.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7917881011962891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/montecarlo.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 73.28391075134277
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/slow.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 25.837182998657227
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/slow_70p.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 25.683879852294922
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 27.8012752532959
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2dn.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_ps2dn.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.6841163635253906
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2dn__extended_drain.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_ps2dn__extended_drain.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.0940303802490234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2nw.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_ps2nw.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.5478134155273438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2nw_noresistor.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_ps2nw_noresistor.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.0203590393066406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_pw2dn.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_pw2dn.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.8159618377685547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_pw2dn__extended_drain.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_pw2dn__extended_drain.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.1817684173583984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_pw2dn_noresistor.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__parasitic__diode_pw2dn_noresistor.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.6388893127441406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diodes_pw2dn.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5800724029541016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__res_po.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7028579711914062
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__rf_diode_ps2nw.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.583648681640625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__rf_diode_pw2dn.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6132125854492188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_high.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5953311920166016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_high__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6823539733886719
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_low.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5841255187988281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_low__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6868839263916016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_high.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6079673767089844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_high__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8428096771240234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_low.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5815029144287109
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_low__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6787776947021484
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_typical__cap_typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5815029144287109
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_typical__cap_typical__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6568431854248047
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c.mrp1monte.spice",
-                    "output_file": "output/sky130_ngspice-hspice/r+c.mrp1monte.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.3780593872070312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130.lib.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.9421577453613281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__diode_pd2nw_11v0.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5991458892822266
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__diode_pw2nd_11v0.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5669593811035156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__inductors.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5230903625488281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__linear.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6833076477050781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__pnp.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5404949188232422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__r+c.model.spice",
-                    "output_file": "output/sky130_ngspice-hspice/sky130_fd_pr__model__r+c.model.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 64,
-                    "error": null,
-                    "duration_ms": 4.538536071777344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5850791931152344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5750656127929688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5824565887451172
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5514621734619141
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5593299865722656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5431175231933594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5369186401367188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/typical/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5366802215576172
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/typical/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5373954772949219
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life/mm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5774497985839844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7073879241943359
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8535385131835938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-hspice/begin_of_life.pm3.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 5.527734756469727
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7252693176269531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7524490356445312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7233619689941406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7138252258300781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7081031799316406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/typical/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6849765777587891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/typical/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6971359252929688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life/mm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5354881286621094
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7169246673583984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6947517395019531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-hspice/begin_of_life.pm3.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 6.0176849365234375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 4826.525926589966
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8013248443603516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5834102630615234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5822181701660156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6680488586425781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/typical/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6287097930908203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/typical/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6492137908935547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5085468292236328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.54931640625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5624294281005859
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6277561187744141
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7746219635009766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.60272216796875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6313323974609375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6504058837890625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6430149078369141
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-hspice/begin_of_life.pm3.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.9976367950439453
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6363391876220703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6461143493652344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7207393646240234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6825923919677734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6704330444335938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6067752838134766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6003379821777344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-hspice/begin_of_life.pm3.lib",
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 6.465673446655273
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6616115570068359
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6699562072753906
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6034374237060547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.74005126953125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "hspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8387565612792969
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 13,
-                "failed": 134,
-                "models_out": 80,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "all.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_mim.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_var.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp_only_p.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__cap_vpp_only_pq.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fs.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leak.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leak.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leak_discrete.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "leakrf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "subvtmm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "nonfet.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "rf.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "specialized_cells.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "wafer.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl1.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl2.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl3.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "correl4.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "custom.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "head.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "critical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fast.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "fast_70p.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "invariant.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "lod.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "montecarlo.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "slow.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "slow_70p.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__diodes_pw2dn.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__res_po.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__rf_diode_ps2nw.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__parasitic__rf_diode_pw2dn.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_high.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_high__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_low.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_high__cap_low__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_high.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_high__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_low.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_low__cap_low__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_typical__cap_typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "res_typical__cap_typical__lin.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130.lib.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__diode_pd2nw_11v0.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__diode_pw2nd_11v0.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__inductors.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__linear.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "sky130_fd_pr__model__pnp.model.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "mm.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ss.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "tt.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "end_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "end_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "worst.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "begin_of_life.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "ff.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "typical.spice",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "end_of_life.spice",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/all.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7886886596679688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_mim.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6425380706787109
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_var.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5838871002197266
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6763935089111328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5726814270019531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp_only_p.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6785392761230469
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/capacitors/sky130_fd_pr__model__cap_vpp_only_pq.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5502700805664062
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6721019744873047
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7083415985107422
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5471706390380859
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0838508605957031
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6537437438964844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6203651428222656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6659030914306641
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6411075592041016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.51116943359375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0421276092529297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6380081176757812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/fs.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8559226989746094
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7507801055908203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6780624389648438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5977153778076172
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0099411010742188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/leak.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6377696990966797
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6296634674072266
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6403923034667969
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6730556488037109
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.087188720703125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6532669067382812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/sf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6427764892578125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6213188171386719
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.621795654296875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5900859832763672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0204315185546875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6382465362548828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6639957427978516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6515979766845703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/leak.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7953643798828125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/leak_discrete.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.682830810546875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/leakrf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6334781646728516
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7207393646240234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5705356597900391
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.0530948638916016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt/subvtmm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7276535034179688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6308555603027344
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer/nonfet.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6268024444580078
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer/rf.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5886554718017578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer/specialized_cells.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.2333393096923828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/corners/wafer.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7429122924804688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl1.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8287429809570312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl2.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6694793701171875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl3.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6856918334960938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/correl4.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7658004760742188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/custom.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8847713470458984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/head.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6079673767089844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/critical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7596015930175781
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/fast.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 26.48186683654785
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/fast_70p.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 26.117563247680664
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/invariant.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 30.80439567565918
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/lod.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8847713470458984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/montecarlo.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 87.43882179260254
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/slow.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 25.700092315673828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/slow_70p.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 25.515079498291016
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parameters/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 25.77495574951172
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2dn.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_ps2dn.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.8949508666992188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2dn__extended_drain.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_ps2dn__extended_drain.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.71661376953125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2nw.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_ps2nw.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.1703243255615234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_ps2nw_noresistor.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_ps2nw_noresistor.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.8620491027832031
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_pw2dn.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_pw2dn.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.8744468688964844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_pw2dn__extended_drain.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_pw2dn__extended_drain.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.130746841430664
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diode_pw2dn_noresistor.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__parasitic__diode_pw2dn_noresistor.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.190828323364258
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__diodes_pw2dn.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6382465362548828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__res_po.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6589889526367188
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__rf_diode_ps2nw.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6725788116455078
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/parasitics/sky130_fd_pr__model__parasitic__rf_diode_pw2dn.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7734298706054688
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_high.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8859634399414062
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_high__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8847713470458984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_low.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7436275482177734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_high__cap_low__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8485317230224609
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_high.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7030963897705078
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_high__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8299350738525391
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_low.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8015632629394531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_low__cap_low__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.9400844573974609
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_typical__cap_typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8006095886230469
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c/res_typical__cap_typical__lin.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.812530517578125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/r+c.mrp1monte.spice",
-                    "output_file": "output/sky130_ngspice-spectre/r+c.mrp1monte.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.4147758483886719
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130.lib.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 2.5691986083984375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__diode_pd2nw_11v0.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7672309875488281
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__diode_pw2nd_11v0.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6582736968994141
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__inductors.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6074905395507812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__linear.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7119178771972656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__pnp.model.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6053447723388672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sky130_fd_pr__model__r+c.model.spice",
-                    "output_file": "output/sky130_ngspice-spectre/sky130_fd_pr__model__r+c.model.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 64,
-                    "error": null,
-                    "duration_ms": 6.33549690246582
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6594657897949219
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5066394805908203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5133152008056641
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 3239.6132946014404
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8990764617919922
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.48279762268066406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5028247833251953
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/typical/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.492095947265625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos/end_of_life/typical/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.49114227294921875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life/mm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5238056182861328
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6535053253173828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7979869842529297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-spectre/begin_of_life.pm3.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 5.798578262329102
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7266998291015625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.61798095703125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6682872772216797
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6413459777832031
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.390695571899414
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/typical/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.9150505065917969
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_e/end_of_life/typical/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.896453857421875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life/mm.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7698535919189453
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7870197296142578
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7441043853759766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-spectre/begin_of_life.pm3.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 3,
-                    "error": null,
-                    "duration_ms": 6.009340286254883
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7812976837158203
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7331371307373047
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 1.013040542602539
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7348060607910156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7119178771972656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/typical/ss.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7066726684570312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_p/end_of_life/typical/tt.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8196830749511719
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5400180816650391
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5433559417724609
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5538463592529297
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5359649658203125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5340576171875
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.545501708984375
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see/end_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5033016204833984
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6036758422851562
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6277561187744141
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-spectre/begin_of_life.pm3.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 3.1409263610839844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6697177886962891
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.675201416015625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.7882118225097656
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.9889602661132812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_e/end_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.8592605590820312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6628036499023438
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life/worst.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.9262561798095703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life.pm3.spice",
-                    "output_file": "output/sky130_ngspice-spectre/begin_of_life.pm3.scs",
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.980947494506836
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/begin_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6103515625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6380081176757812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life/typical/ff.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.5879402160644531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life/typical.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6034374237060547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/sky130/spice/sonos_see_p/end_of_life.spice",
-                    "output_file": null,
-                    "source_format": "ngspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 0.6728172302246094
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "smic180",
-            "source_format": "hspice",
-            "total_files": 22,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 22,
-                "failed": 0,
-                "models_out": 216,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npn50a100.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/npn50a100.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.3169517517089844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npn50a25.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/npn50a25.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.960205078125
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npnhva100.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/npnhva100.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.4881362915039062
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npnhva25.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/npnhva25.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.8519630432128906
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp18a100.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnp18a100.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.317190170288086
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp18a25.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnp18a25.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.446413040161133
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp18a4.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnp18a4.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.0928382873535156
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp50a100.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnp50a100.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 3.500223159790039
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp50a25.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnp50a25.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 3.039121627807617
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnphva100.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnphva100.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.889394760131836
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnphva25.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/pnphva25.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 3.0965805053710938
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1.lib",
-                    "output_file": "output/smic180_hspice-ngspice/d18_v3e_bcd_v1p0_rev1.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 78,
-                    "error": null,
-                    "duration_ms": 306.6563606262207
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_dio.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/d18_v3e_bcd_v1p0_rev1_dio.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 16,
-                    "error": null,
-                    "duration_ms": 9.785890579223633
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_esd_mos.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/d18_v3e_bcd_v1p0_rev1_esd_mos.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 5,
-                    "error": null,
-                    "duration_ms": 31.559467315673828
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_ldmos.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/d18_v3e_bcd_v1p0_rev1_ldmos.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 22,
-                    "error": null,
-                    "duration_ms": 113.61145973205566
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_mis.mdl",
-                    "output_file": "output/smic180_hspice-ngspice/d18_v3e_bcd_v1p0_rev1_mis.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 52.59227752685547
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/ff.lib",
-                    "output_file": "output/smic180_hspice-ngspice/ff.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 63.445091247558594
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/fs.lib",
-                    "output_file": "output/smic180_hspice-ngspice/fs.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 61.029672622680664
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/mc.lib",
-                    "output_file": "output/smic180_hspice-ngspice/mc.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 64.65888023376465
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/sf.lib",
-                    "output_file": "output/smic180_hspice-ngspice/sf.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 64.81194496154785
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/ss.lib",
-                    "output_file": "output/smic180_hspice-ngspice/ss.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 70.65320014953613
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/tt.lib",
-                    "output_file": "output/smic180_hspice-ngspice/tt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 61.89846992492676
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 22,
-                "failed": 0,
-                "models_out": 216,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npn50a100.mdl",
-                    "output_file": "output/smic180_hspice-spectre/npn50a100.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.9121170043945312
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npn50a25.mdl",
-                    "output_file": "output/smic180_hspice-spectre/npn50a25.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.8935203552246094
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npnhva100.mdl",
-                    "output_file": "output/smic180_hspice-spectre/npnhva100.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.091646194458008
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/npnhva25.mdl",
-                    "output_file": "output/smic180_hspice-spectre/npnhva25.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.3317337036132812
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp18a100.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnp18a100.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.9996166229248047
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp18a25.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnp18a25.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.0911693572998047
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp18a4.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnp18a4.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.8086433410644531
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp50a100.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnp50a100.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.0487308502197266
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnp50a25.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnp50a25.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 2.103567123413086
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnphva100.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnphva100.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.9643306732177734
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/bjt/pnphva25.mdl",
-                    "output_file": "output/smic180_hspice-spectre/pnphva25.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1,
-                    "error": null,
-                    "duration_ms": 1.9214153289794922
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1.lib",
-                    "output_file": "output/smic180_hspice-spectre/d18_v3e_bcd_v1p0_rev1.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 78,
-                    "error": null,
-                    "duration_ms": 252.27880477905273
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_dio.mdl",
-                    "output_file": "output/smic180_hspice-spectre/d18_v3e_bcd_v1p0_rev1_dio.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 16,
-                    "error": null,
-                    "duration_ms": 7.2174072265625
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_esd_mos.mdl",
-                    "output_file": "output/smic180_hspice-spectre/d18_v3e_bcd_v1p0_rev1_esd_mos.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 5,
-                    "error": null,
-                    "duration_ms": 24.39427375793457
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_ldmos.mdl",
-                    "output_file": "output/smic180_hspice-spectre/d18_v3e_bcd_v1p0_rev1_ldmos.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 22,
-                    "error": null,
-                    "duration_ms": 79.4060230255127
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/d18_v3e_bcd_v1p0_rev1_mis.mdl",
-                    "output_file": "output/smic180_hspice-spectre/d18_v3e_bcd_v1p0_rev1_mis.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 51.03468894958496
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/ff.lib",
-                    "output_file": "output/smic180_hspice-spectre/ff.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 63.207149505615234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/fs.lib",
-                    "output_file": "output/smic180_hspice-spectre/fs.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 63.05885314941406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/mc.lib",
-                    "output_file": "output/smic180_hspice-spectre/mc.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 64.36634063720703
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/sf.lib",
-                    "output_file": "output/smic180_hspice-spectre/sf.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 62.33572959899902
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/ss.lib",
-                    "output_file": "output/smic180_hspice-spectre/ss.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 58.875083923339844
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180/hspice/tt.lib",
-                    "output_file": "output/smic180_hspice-spectre/tt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 12,
-                    "error": null,
-                    "duration_ms": 59.50188636779785
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "smic180HV",
-            "source_format": "hspice",
-            "total_files": 16,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 15,
-                "failed": 1,
-                "models_out": 1174,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "soa.mdl",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 478,
-                    "error": null,
-                    "duration_ms": 1144.6266174316406
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 6,
-                    "error": null,
-                    "duration_ms": 27.74643898010254
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_bjt.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_bjt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 51,
-                    "error": null,
-                    "duration_ms": 42.9081916809082
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_dio.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_dio.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 121,
-                    "error": null,
-                    "duration_ms": 39.453983306884766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_ggmos.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_ggmos.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 9,
-                    "error": null,
-                    "duration_ms": 5.010128021240234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_hvmos.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_hvmos.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 123,
-                    "error": null,
-                    "duration_ms": 518.3019638061523
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_mis.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_mis.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 39,
-                    "error": null,
-                    "duration_ms": 155.3511619567871
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_parasitic_bjt.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_parasitic_bjt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 48,
-                    "error": null,
-                    "duration_ms": 63.611745834350586
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_res.mdl",
-                    "output_file": "output/smic180HV_hspice-ngspice/bc018_auto_v1p3_rev0_res.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 29,
-                    "error": null,
-                    "duration_ms": 5.044460296630859
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/ff.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/ff.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 224.48492050170898
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/fs.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/fs.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 195.42288780212402
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/mc.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/mc.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 196.00749015808105
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/sf.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/sf.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 186.0508918762207
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/soa.mdl",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 28.819799423217773
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/ss.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/ss.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 186.03205680847168
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/tt.lib",
-                    "output_file": "output/smic180HV_hspice-ngspice/tt.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 197.0963478088379
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 15,
-                "failed": 1,
-                "models_out": 1174,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "soa.mdl",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 478,
-                    "error": null,
-                    "duration_ms": 1063.863754272461
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 6,
-                    "error": null,
-                    "duration_ms": 28.668642044067383
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_bjt.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_bjt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 51,
-                    "error": null,
-                    "duration_ms": 38.51819038391113
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_dio.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_dio.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 121,
-                    "error": null,
-                    "duration_ms": 47.785282135009766
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_ggmos.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_ggmos.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 9,
-                    "error": null,
-                    "duration_ms": 6.429910659790039
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_hvmos.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_hvmos.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 123,
-                    "error": null,
-                    "duration_ms": 507.112979888916
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_mis.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_mis.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 39,
-                    "error": null,
-                    "duration_ms": 173.59399795532227
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_parasitic_bjt.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_parasitic_bjt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 48,
-                    "error": null,
-                    "duration_ms": 42.48833656311035
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/bc018_auto_v1p3_rev0_res.mdl",
-                    "output_file": "output/smic180HV_hspice-spectre/bc018_auto_v1p3_rev0_res.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 29,
-                    "error": null,
-                    "duration_ms": 4.673957824707031
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/ff.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/ff.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 259.8099708557129
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/fs.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/fs.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 280.7297706604004
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/mc.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/mc.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 257.36117362976074
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/sf.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/sf.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 208.24503898620605
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/soa.mdl",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 31.835079193115234
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/ss.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/ss.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 222.70488739013672
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/smic180HV/hspice/tt.lib",
-                    "output_file": "output/smic180HV_hspice-spectre/tt.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 45,
-                    "error": null,
-                    "duration_ms": 217.43416786193848
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "synopsys14",
-            "source_format": "hspice",
-            "total_files": 1,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 1,
-                "failed": 0,
-                "models_out": 18,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/synopsys14/hspice/saed14nm.lib",
-                    "output_file": "output/synopsys14_hspice-ngspice/saed14nm.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 18,
-                    "error": null,
-                    "duration_ms": 146.35944366455078
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 1,
-                "failed": 0,
-                "models_out": 18,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/synopsys14/hspice/saed14nm.lib",
-                    "output_file": "output/synopsys14_hspice-spectre/saed14nm.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 18,
-                    "error": null,
-                    "duration_ms": 125.93746185302734
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "synopsys28",
-            "source_format": "hspice",
-            "total_files": 1,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 1,
-                "failed": 0,
-                "models_out": 17,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/synopsys28/hspice/saed32nm.lib",
-                    "output_file": "output/synopsys28_hspice-ngspice/saed32nm.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 17,
-                    "error": null,
-                    "duration_ms": 52.95252799987793
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 1,
-                "failed": 0,
-                "models_out": 17,
-                "plots_generated": 0,
-                "errors": [],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/synopsys28/hspice/saed32nm.lib",
-                    "output_file": "output/synopsys28_hspice-spectre/saed32nm.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 17,
-                    "error": null,
-                    "duration_ms": 51.53298377990723
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "pdk": "tsmc65lp",
-            "source_format": "hspice",
-            "total_files": 3,
-            "targets": {
-              "ngspice": {
-                "format": "ngspice",
-                "successful": 1,
-                "failed": 2,
-                "models_out": 1222,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "crn65lp_2d5_lk_v1d7_usage.l",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "toplevel.l",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/tsmc65lp/hspice/crn65lp_2d5_lk_v1d7.l",
-                    "output_file": "output/tsmc65lp_hspice-ngspice/crn65lp_2d5_lk_v1d7.lib",
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": true,
-                    "models_out": 1222,
-                    "error": null,
-                    "duration_ms": 4834.19394493103
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/tsmc65lp/hspice/crn65lp_2d5_lk_v1d7_usage.l",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 93.87850761413574
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/tsmc65lp/hspice/toplevel.l",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "ngspice",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 89.60890769958496
-                  }
-                ]
-              },
-              "spectre": {
-                "format": "spectre",
-                "successful": 1,
-                "failed": 2,
-                "models_out": 1222,
-                "plots_generated": 0,
-                "errors": [
-                  {
-                    "file": "crn65lp_2d5_lk_v1d7_usage.l",
-                    "error": "Invalid models provided"
-                  },
-                  {
-                    "file": "toplevel.l",
-                    "error": "Invalid models provided"
-                  }
-                ],
-                "files": [
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/tsmc65lp/hspice/crn65lp_2d5_lk_v1d7.l",
-                    "output_file": "output/tsmc65lp_hspice-spectre/crn65lp_2d5_lk_v1d7.scs",
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": true,
-                    "models_out": 1222,
-                    "error": null,
-                    "duration_ms": 4296.307563781738
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/tsmc65lp/hspice/crn65lp_2d5_lk_v1d7_usage.l",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 108.96754264831543
-                  },
-                  {
-                    "file": "/home/shennilee/newproject2026/proj1/new-spice-translator/tools/spice-libraries/private-models/tsmc65lp/hspice/toplevel.l",
-                    "output_file": null,
-                    "source_format": "hspice",
-                    "target_format": "spectre",
-                    "success": false,
-                    "models_out": 0,
-                    "error": "Invalid models provided",
-                    "duration_ms": 96.74453735351562
-                  }
-                ]
-              }
-            }
-          }
-        ],
-        "summary": {
-          "total_files": 322,
-          "total_translations": 224,
-          "total_models": 6638,
-          "total_plots": 0
+      "resultId": "full-batch",
+      "title": "Full Batch Translation Result",
+      "description": "17 PDKs, full translation pipeline with verification. FINALBATCHRUN2 complete report.",
+      "kind": "batch",
+      "pdk": "all",
+      "sourceFormat": "all",
+      "targetFormat": "all",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [
+        {
+          "name": "FINALBATCHRUN2.md",
+          "relPath": "FINALBATCHRUN2.md",
+          "size": "13.7 KB",
+          "hash": "2d05eb4e",
+          "fetchUrl": "translator/reports/FINALBATCHRUN2_2d05eb4e.md"
+        }
+      ],
+      "plots": [
+        {
+          "name": "verification_summary.png",
+          "relPath": "plots/verification_summary.png",
+          "format": "png",
+          "size": "241.9 KB",
+          "hash": "c82c558f",
+          "displayUrl": "translator/plots/verification_summary_c82c558f.png",
+          "width": 2209,
+          "height": 1183,
+          "aspectRatio": 1.867
+        }
+      ],
+      "dataArtifacts": [
+        {
+          "name": "pdk_confidence_tiers.csv",
+          "relPath": "reports/pdk_confidence_tiers.csv",
+          "format": "csv",
+          "size": "2.8 KB",
+          "hash": "d81dd533",
+          "rowCount": 17,
+          "columns": [
+            "pdk",
+            "tier",
+            "min_raw_success_percent",
+            "min_effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "total_files",
+            "excluded_ratio_percent",
+            "model_deck_failed",
+            "models_out_total",
+            "verified",
+            "verified_files",
+            "verified_tests",
+            "verified_pass_rate_percent",
+            "rationale"
+          ]
+        },
+        {
+          "name": "pdk_translation_effective_summary.csv",
+          "relPath": "reports/pdk_translation_effective_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 34,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        },
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 34,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        },
+        {
+          "name": "pdk_verification_summary.csv",
+          "relPath": "reports/pdk_verification_summary.csv",
+          "format": "csv",
+          "size": "505 B",
+          "hash": "3691d89c",
+          "rowCount": 15,
+          "columns": [
+            "pdk",
+            "total_files",
+            "total_tests",
+            "passed",
+            "failed",
+            "pass_rate_percent",
+            "bsim4_errors"
+          ]
+        },
+        {
+          "name": "plot_inventory.csv",
+          "relPath": "reports/plot_inventory.csv",
+          "format": "csv",
+          "size": "498 B",
+          "hash": "6b60bd82",
+          "rowCount": 17,
+          "columns": [
+            "pdk_or_scope",
+            "png_count"
+          ]
+        },
+        {
+          "name": "batch_all_summary.json",
+          "relPath": "raw/batch_all_summary.json",
+          "format": "json",
+          "size": "364.2 KB",
+          "hash": "4d8f7ab5"
+        },
+        {
+          "name": "verification_report.json",
+          "relPath": "raw/verification_report.json",
+          "format": "json",
+          "size": "12.5 KB",
+          "hash": "8a41e8e2"
+        }
+      ],
+      "otherArtifacts": [
+        {
+          "name": "pdk_confidence_tier_table.tex",
+          "relPath": "reports/pdk_confidence_tier_table.tex",
+          "size": "3.0 KB",
+          "hash": "19eb8fcb",
+          "format": "tex"
+        }
+      ],
+      "summary": {
+        "totalReports": 1,
+        "totalPlots": 1,
+        "totalData": 7,
+        "hero": {
+          "sourceFiles": "322",
+          "successfulTranslations": "224",
+          "modelsTranslated": "6,638",
+          "verification": "587",
+          "roundTrip": "52",
+          "monteCarlo": "52",
+          "pdks": "17"
         }
       }
     },
     {
-      "name": "verification_report.json",
-      "relPath": "raw/verification_report.json",
-      "size": "12.5 KB",
-      "hash": "8a41e8e2",
-      "parsed": {
-        "timestamp": "2026-04-19T23:38:02.859469",
-        "mode": "full",
-        "pdks": {
-          "asap7": {
-            "files": [
-              {
-                "name": "ff.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "fs.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "mc.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "sf.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "ss.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 6,
-              "total_tests": 70,
-              "passed": 70,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "cadence14": {
-            "files": [
-              {
-                "name": "cds_ff_mpt_bipolar.lib",
-                "tests": 5,
-                "passed": 5,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "cds_ff_mpt_diode.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "cds_ff_mpt_mimcap.lib",
-                "tests": 8,
-                "passed": 8,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "cds_ff_mpt_mosfet.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "cds_ff_mpt_resistor.lib",
-                "tests": 9,
-                "passed": 9,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 5,
-              "total_tests": 47,
-              "passed": 47,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "cadence180": {
-            "files": [
-              {
-                "name": "bipolar.lib",
-                "tests": 7,
-                "passed": 7,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "capacitor.lib",
-                "tests": 3,
-                "passed": 3,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "diode.lib",
-                "tests": 7,
-                "passed": 7,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "mcxjvar_w40.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "mos25gen.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 11,
-              "total_tests": 38,
-              "passed": 38,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "cadence45": {
-            "files": [
-              {
-                "name": "gpdk045_bipolar.lib",
-                "tests": 6,
-                "passed": 6,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk045_diode.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk045_inductor.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk045_mimcap.lib",
-                "tests": 8,
-                "passed": 8,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk045_mos.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 7,
-              "total_tests": 49,
-              "passed": 49,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "cadence90": {
-            "files": [
-              {
-                "name": "gpdk090_bipolar.lib",
-                "tests": 6,
-                "passed": 6,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk090_capacitor.lib",
-                "tests": 3,
-                "passed": 3,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk090_diode.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk090_mos.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "gpdk090_mos_age.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 8,
-              "total_tests": 44,
-              "passed": 44,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "freepdk15": {
-            "files": [
-              {
-                "name": "ff.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "fs.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "mc.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "sf.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "ss.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 6,
-              "total_tests": 50,
-              "passed": 50,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "freepdk3": {
-            "files": [
-              {
-                "name": "fet.lib",
-                "tests": 10,
-                "passed": 10,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 1,
-              "total_tests": 10,
-              "passed": 10,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "freepdk45": {
-            "files": [
-              {
-                "name": "ff.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "fs.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "mc.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "sf.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "ss.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 6,
-              "total_tests": 70,
-              "passed": 70,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "hlmc40lp": {
-            "files": [
-              {
-                "name": "hlmc40lp_v1d2_p2.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "hlmc40rf_v1d2_p2.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 2,
-              "total_tests": 28,
-              "passed": 28,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "hlmc55lp": {
-            "files": [
-              {
-                "name": "HLMC_55LP_V1P9.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 1,
-              "total_tests": 14,
-              "passed": 14,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "smic180HV": {
-            "files": [
-              {
-                "name": "bc018_auto_v1p3_rev0.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "bc018_auto_v1p3_rev0_bjt.lib",
-                "tests": 8,
-                "passed": 8,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "bc018_auto_v1p3_rev0_dio.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "bc018_auto_v1p3_rev0_ggmos.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "bc018_auto_v1p3_rev0_hvmos.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 14,
-              "total_tests": 58,
-              "passed": 58,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "smic180": {
-            "files": [
-              {
-                "name": "d18_v3e_bcd_v1p0_rev1.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "d18_v3e_bcd_v1p0_rev1_dio.lib",
-                "tests": 11,
-                "passed": 11,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "d18_v3e_bcd_v1p0_rev1_esd_mos.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "d18_v3e_bcd_v1p0_rev1_ldmos.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              },
-              {
-                "name": "d18_v3e_bcd_v1p0_rev1_mis.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 22,
-              "total_tests": 67,
-              "passed": 67,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "synopsys14": {
-            "files": [
-              {
-                "name": "saed14nm.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 1,
-              "total_tests": 14,
-              "passed": 14,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "synopsys28": {
-            "files": [
-              {
-                "name": "saed32nm.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 1,
-              "total_tests": 14,
-              "passed": 14,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          },
-          "tsmc65lp": {
-            "files": [
-              {
-                "name": "crn65lp_2d5_lk_v1d7.lib",
-                "tests": 14,
-                "passed": 14,
-                "failed": 0,
-                "pass_rate": 1,
-                "failures": []
-              }
-            ],
-            "summary": {
-              "total_files": 1,
-              "total_tests": 14,
-              "passed": 14,
-              "failed": 0,
-              "bsim4_errors": 0
-            }
-          }
-        },
-        "summary": {
-          "total_pdks": 15,
-          "total_files": 52,
-          "total_tests": 587,
-          "passed": 587,
-          "failed": 0,
-          "skipped": 0,
-          "roundtrip_passed": 52,
-          "roundtrip_failed": 0,
-          "monte_carlo_passed": 52,
-          "monte_carlo_failed": 0
+      "resultId": "pdk-asap7-hspice-ngspice",
+      "title": "asap7: hspice → ngspice",
+      "description": "6 files, 6 successful, 100.0% success rate, 48 models out.",
+      "kind": "pdk_target",
+      "pdk": "asap7",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
         }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-asap7-hspice-spectre",
+      "title": "asap7: hspice → spectre",
+      "description": "6 files, 6 successful, 100.0% success rate, 48 models out.",
+      "kind": "pdk_target",
+      "pdk": "asap7",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence14-spectre-hspice",
+      "title": "cadence14: spectre → hspice",
+      "description": "6 files, 5 successful, 83.3% success rate, 24 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence14",
+      "sourceFormat": "spectre",
+      "targetFormat": "hspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence14-spectre-ngspice",
+      "title": "cadence14: spectre → ngspice",
+      "description": "6 files, 5 successful, 83.3% success rate, 24 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence14",
+      "sourceFormat": "spectre",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence180-spectre-hspice",
+      "title": "cadence180: spectre → hspice",
+      "description": "14 files, 11 successful, 78.6% success rate, 29 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence180",
+      "sourceFormat": "spectre",
+      "targetFormat": "hspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence180-spectre-ngspice",
+      "title": "cadence180: spectre → ngspice",
+      "description": "14 files, 11 successful, 78.6% success rate, 29 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence180",
+      "sourceFormat": "spectre",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence45-spectre-hspice",
+      "title": "cadence45: spectre → hspice",
+      "description": "9 files, 7 successful, 77.8% success rate, 49 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence45",
+      "sourceFormat": "spectre",
+      "targetFormat": "hspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence45-spectre-ngspice",
+      "title": "cadence45: spectre → ngspice",
+      "description": "9 files, 7 successful, 77.8% success rate, 49 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence45",
+      "sourceFormat": "spectre",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence90-spectre-hspice",
+      "title": "cadence90: spectre → hspice",
+      "description": "9 files, 8 successful, 88.9% success rate, 57 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence90",
+      "sourceFormat": "spectre",
+      "targetFormat": "hspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-cadence90-spectre-ngspice",
+      "title": "cadence90: spectre → ngspice",
+      "description": "9 files, 8 successful, 88.9% success rate, 57 models out.",
+      "kind": "pdk_target",
+      "pdk": "cadence90",
+      "sourceFormat": "spectre",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-freepdk15-hspice-ngspice",
+      "title": "freepdk15: hspice → ngspice",
+      "description": "6 files, 6 successful, 100.0% success rate, 12 models out.",
+      "kind": "pdk_target",
+      "pdk": "freepdk15",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-freepdk15-hspice-spectre",
+      "title": "freepdk15: hspice → spectre",
+      "description": "6 files, 6 successful, 100.0% success rate, 12 models out.",
+      "kind": "pdk_target",
+      "pdk": "freepdk15",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-freepdk3-hspice-ngspice",
+      "title": "freepdk3: hspice → ngspice",
+      "description": "1 files, 1 successful, 100.0% success rate, 2 models out.",
+      "kind": "pdk_target",
+      "pdk": "freepdk3",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-freepdk3-hspice-spectre",
+      "title": "freepdk3: hspice → spectre",
+      "description": "1 files, 1 successful, 100.0% success rate, 2 models out.",
+      "kind": "pdk_target",
+      "pdk": "freepdk3",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-freepdk45-hspice-ngspice",
+      "title": "freepdk45: hspice → ngspice",
+      "description": "12 files, 12 successful, 100.0% success rate, 96 models out.",
+      "kind": "pdk_target",
+      "pdk": "freepdk45",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-freepdk45-hspice-spectre",
+      "title": "freepdk45: hspice → spectre",
+      "description": "12 files, 12 successful, 100.0% success rate, 96 models out.",
+      "kind": "pdk_target",
+      "pdk": "freepdk45",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-gf180-ngspice-hspice",
+      "title": "gf180: ngspice → hspice",
+      "description": "56 files, 0 successful, 0.0% success rate, 0 models out.",
+      "kind": "pdk_target",
+      "pdk": "gf180",
+      "sourceFormat": "ngspice",
+      "targetFormat": "hspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-gf180-ngspice-spectre",
+      "title": "gf180: ngspice → spectre",
+      "description": "56 files, 0 successful, 0.0% success rate, 0 models out.",
+      "kind": "pdk_target",
+      "pdk": "gf180",
+      "sourceFormat": "ngspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-hlmc40lp-hspice-ngspice",
+      "title": "hlmc40lp: hspice → ngspice",
+      "description": "4 files, 2 successful, 50.0% success rate, 227 models out.",
+      "kind": "pdk_target",
+      "pdk": "hlmc40lp",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-hlmc40lp-hspice-spectre",
+      "title": "hlmc40lp: hspice → spectre",
+      "description": "4 files, 2 successful, 50.0% success rate, 227 models out.",
+      "kind": "pdk_target",
+      "pdk": "hlmc40lp",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-hlmc55lp-hspice-ngspice",
+      "title": "hlmc55lp: hspice → ngspice",
+      "description": "9 files, 1 successful, 11.1% success rate, 48 models out.",
+      "kind": "pdk_target",
+      "pdk": "hlmc55lp",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-hlmc55lp-hspice-spectre",
+      "title": "hlmc55lp: hspice → spectre",
+      "description": "9 files, 1 successful, 11.1% success rate, 48 models out.",
+      "kind": "pdk_target",
+      "pdk": "hlmc55lp",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-sky130-ngspice-hspice",
+      "title": "sky130: ngspice → hspice",
+      "description": "147 files, 13 successful, 8.8% success rate, 80 models out.",
+      "kind": "pdk_target",
+      "pdk": "sky130",
+      "sourceFormat": "ngspice",
+      "targetFormat": "hspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-sky130-ngspice-spectre",
+      "title": "sky130: ngspice → spectre",
+      "description": "147 files, 13 successful, 8.8% success rate, 80 models out.",
+      "kind": "pdk_target",
+      "pdk": "sky130",
+      "sourceFormat": "ngspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-smic180-hspice-ngspice",
+      "title": "smic180: hspice → ngspice",
+      "description": "22 files, 22 successful, 100.0% success rate, 216 models out.",
+      "kind": "pdk_target",
+      "pdk": "smic180",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-smic180-hspice-spectre",
+      "title": "smic180: hspice → spectre",
+      "description": "22 files, 22 successful, 100.0% success rate, 216 models out.",
+      "kind": "pdk_target",
+      "pdk": "smic180",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-smic180hv-hspice-ngspice",
+      "title": "smic180HV: hspice → ngspice",
+      "description": "16 files, 15 successful, 93.8% success rate, 1174 models out.",
+      "kind": "pdk_target",
+      "pdk": "smic180HV",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-smic180hv-hspice-spectre",
+      "title": "smic180HV: hspice → spectre",
+      "description": "16 files, 15 successful, 93.8% success rate, 1174 models out.",
+      "kind": "pdk_target",
+      "pdk": "smic180HV",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-synopsys14-hspice-ngspice",
+      "title": "synopsys14: hspice → ngspice",
+      "description": "1 files, 1 successful, 100.0% success rate, 18 models out.",
+      "kind": "pdk_target",
+      "pdk": "synopsys14",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-synopsys14-hspice-spectre",
+      "title": "synopsys14: hspice → spectre",
+      "description": "1 files, 1 successful, 100.0% success rate, 18 models out.",
+      "kind": "pdk_target",
+      "pdk": "synopsys14",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-synopsys28-hspice-ngspice",
+      "title": "synopsys28: hspice → ngspice",
+      "description": "1 files, 1 successful, 100.0% success rate, 17 models out.",
+      "kind": "pdk_target",
+      "pdk": "synopsys28",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-synopsys28-hspice-spectre",
+      "title": "synopsys28: hspice → spectre",
+      "description": "1 files, 1 successful, 100.0% success rate, 17 models out.",
+      "kind": "pdk_target",
+      "pdk": "synopsys28",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "completed",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-tsmc65lp-hspice-ngspice",
+      "title": "tsmc65lp: hspice → ngspice",
+      "description": "3 files, 1 successful, 33.3% success rate, 1222 models out.",
+      "kind": "pdk_target",
+      "pdk": "tsmc65lp",
+      "sourceFormat": "hspice",
+      "targetFormat": "ngspice",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
+      }
+    },
+    {
+      "resultId": "pdk-tsmc65lp-hspice-spectre",
+      "title": "tsmc65lp: hspice → spectre",
+      "description": "3 files, 1 successful, 33.3% success rate, 1222 models out.",
+      "kind": "pdk_target",
+      "pdk": "tsmc65lp",
+      "sourceFormat": "hspice",
+      "targetFormat": "spectre",
+      "generatedAt": "2026-04-19",
+      "status": "partial",
+      "reports": [],
+      "plots": [],
+      "dataArtifacts": [
+        {
+          "name": "pdk_translation_summary.csv",
+          "relPath": "reports/pdk_translation_summary.csv",
+          "format": "csv",
+          "size": "6.7 KB",
+          "hash": "131aa723",
+          "rowCount": 0,
+          "columns": [
+            "pdk",
+            "source_format",
+            "target",
+            "successful",
+            "failed",
+            "models_out",
+            "total_files",
+            "success_rate_percent",
+            "effective_model_deck_success_percent",
+            "excluded_non_model_files",
+            "model_deck_files",
+            "model_deck_successful",
+            "model_deck_failed",
+            "dominant_exclusion_class",
+            "total_duration_ms",
+            "failure_reason",
+            "failed_sections",
+            "notes"
+          ]
+        }
+      ],
+      "otherArtifacts": [],
+      "summary": {
+        "totalReports": 0,
+        "totalPlots": 0,
+        "totalData": 1
       }
     }
   ],
-  "csvs": [
-    {
-      "name": "pdk_confidence_tiers.csv",
-      "relPath": "reports/pdk_confidence_tiers.csv",
-      "size": "2.8 KB",
-      "hash": "d81dd533",
-      "rows": [
-        {
-          "pdk": "asap7",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "12",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "96",
-          "verified": "yes",
-          "verified_files": "6",
-          "verified_tests": "70",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "cadence14",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "83.3",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "total_files": "12",
-          "excluded_ratio_percent": "16.7",
-          "model_deck_failed": "0",
-          "models_out_total": "48",
-          "verified": "yes",
-          "verified_files": "5",
-          "verified_tests": "47",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "cadence180",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "78.6",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "6",
-          "total_files": "28",
-          "excluded_ratio_percent": "21.4",
-          "model_deck_failed": "0",
-          "models_out_total": "58",
-          "verified": "yes",
-          "verified_files": "11",
-          "verified_tests": "38",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "cadence45",
-          "tier": "Needs parser extension",
-          "min_raw_success_percent": "77.8",
-          "min_effective_model_deck_success_percent": "87.5",
-          "excluded_non_model_files": "2",
-          "total_files": "18",
-          "excluded_ratio_percent": "11.1",
-          "model_deck_failed": "2",
-          "models_out_total": "98",
-          "verified": "yes",
-          "verified_files": "7",
-          "verified_tests": "49",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Non-wrapper model-deck failures remain; parser/semantic coverage expansion required"
-        },
-        {
-          "pdk": "cadence90",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "88.9",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "total_files": "18",
-          "excluded_ratio_percent": "11.1",
-          "model_deck_failed": "0",
-          "models_out_total": "114",
-          "verified": "yes",
-          "verified_files": "8",
-          "verified_tests": "44",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "freepdk15",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "12",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "24",
-          "verified": "yes",
-          "verified_files": "6",
-          "verified_tests": "50",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "freepdk3",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "2",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "4",
-          "verified": "yes",
-          "verified_files": "1",
-          "verified_tests": "10",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "freepdk45",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "24",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "192",
-          "verified": "yes",
-          "verified_files": "6",
-          "verified_tests": "70",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "gf180",
-          "tier": "Wrapper-biased",
-          "min_raw_success_percent": "0.0",
-          "min_effective_model_deck_success_percent": "0.0",
-          "excluded_non_model_files": "112",
-          "total_files": "112",
-          "excluded_ratio_percent": "100.0",
-          "model_deck_failed": "0",
-          "models_out_total": "0",
-          "verified": "no",
-          "verified_files": "0",
-          "verified_tests": "0",
-          "verified_pass_rate_percent": "-",
-          "rationale": "Input corpus is mostly regression/testbench/support files rather than model decks"
-        },
-        {
-          "pdk": "hlmc40lp",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "50.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "4",
-          "total_files": "8",
-          "excluded_ratio_percent": "50.0",
-          "model_deck_failed": "0",
-          "models_out_total": "454",
-          "verified": "yes",
-          "verified_files": "2",
-          "verified_tests": "28",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "hlmc55lp",
-          "tier": "Needs parser extension",
-          "min_raw_success_percent": "11.1",
-          "min_effective_model_deck_success_percent": "11.1",
-          "excluded_non_model_files": "0",
-          "total_files": "18",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "16",
-          "models_out_total": "96",
-          "verified": "yes",
-          "verified_files": "1",
-          "verified_tests": "14",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Non-wrapper model-deck failures remain; parser/semantic coverage expansion required"
-        },
-        {
-          "pdk": "sky130",
-          "tier": "Needs parser extension",
-          "min_raw_success_percent": "8.8",
-          "min_effective_model_deck_success_percent": "8.9",
-          "excluded_non_model_files": "2",
-          "total_files": "294",
-          "excluded_ratio_percent": "0.7",
-          "model_deck_failed": "266",
-          "models_out_total": "160",
-          "verified": "no",
-          "verified_files": "0",
-          "verified_tests": "0",
-          "verified_pass_rate_percent": "-",
-          "rationale": "Non-wrapper model-deck failures remain; parser/semantic coverage expansion required"
-        },
-        {
-          "pdk": "smic180",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "44",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "432",
-          "verified": "yes",
-          "verified_files": "22",
-          "verified_tests": "67",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "smic180HV",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "93.8",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "total_files": "32",
-          "excluded_ratio_percent": "6.2",
-          "model_deck_failed": "0",
-          "models_out_total": "2348",
-          "verified": "yes",
-          "verified_files": "14",
-          "verified_tests": "58",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "synopsys14",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "2",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "36",
-          "verified": "yes",
-          "verified_files": "1",
-          "verified_tests": "14",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "synopsys28",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "100.0",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "total_files": "2",
-          "excluded_ratio_percent": "0.0",
-          "model_deck_failed": "0",
-          "models_out_total": "34",
-          "verified": "yes",
-          "verified_files": "1",
-          "verified_tests": "14",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        },
-        {
-          "pdk": "tsmc65lp",
-          "tier": "Production-ready",
-          "min_raw_success_percent": "33.3",
-          "min_effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "4",
-          "total_files": "6",
-          "excluded_ratio_percent": "66.7",
-          "model_deck_failed": "0",
-          "models_out_total": "2444",
-          "verified": "yes",
-          "verified_files": "1",
-          "verified_tests": "14",
-          "verified_pass_rate_percent": "100.0",
-          "rationale": "Model-deck translation stable; no model-deck failures; verification clean where available"
-        }
-      ]
-    },
-    {
-      "name": "pdk_translation_effective_summary.csv",
-      "relPath": "reports/pdk_translation_effective_summary.csv",
-      "size": "6.7 KB",
-      "hash": "131aa723",
-      "rows": [
-        {
-          "pdk": "asap7",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "48",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "98.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "asap7",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "48",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "77.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "cadence14",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "5",
-          "failed": "1",
-          "models_out": "24",
-          "total_files": "6",
-          "success_rate_percent": "83.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "5",
-          "model_deck_successful": "5",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "45.1",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cds_ff_mpt.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence14",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "5",
-          "failed": "1",
-          "models_out": "24",
-          "total_files": "6",
-          "success_rate_percent": "83.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "5",
-          "model_deck_successful": "5",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "116.1",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cds_ff_mpt.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence180",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "11",
-          "failed": "3",
-          "models_out": "29",
-          "total_files": "14",
-          "success_rate_percent": "78.6",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "3",
-          "model_deck_files": "11",
-          "model_deck_successful": "11",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "35.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cmodel.scs; gpdk.scs; snacapacitor.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence180",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "11",
-          "failed": "3",
-          "models_out": "29",
-          "total_files": "14",
-          "success_rate_percent": "78.6",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "3",
-          "model_deck_files": "11",
-          "model_deck_successful": "11",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "56.6",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cmodel.scs; gpdk.scs; snacapacitor.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence45",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "7",
-          "failed": "2",
-          "models_out": "49",
-          "total_files": "9",
-          "success_rate_percent": "77.8",
-          "effective_model_deck_success_percent": "87.5",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "7",
-          "model_deck_failed": "1",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "1346.8",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk045.scs; gpdk045_soa.scs",
-          "notes": "Primary failures are top-level wrappers without standalone model cards"
-        },
-        {
-          "pdk": "cadence45",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "7",
-          "failed": "2",
-          "models_out": "49",
-          "total_files": "9",
-          "success_rate_percent": "77.8",
-          "effective_model_deck_success_percent": "87.5",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "7",
-          "model_deck_failed": "1",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "4051.5",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk045.scs; gpdk045_soa.scs",
-          "notes": "Primary failures are top-level wrappers without standalone model cards"
-        },
-        {
-          "pdk": "cadence90",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "8",
-          "failed": "1",
-          "models_out": "57",
-          "total_files": "9",
-          "success_rate_percent": "88.9",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "8",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "47.5",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk090.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence90",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "8",
-          "failed": "1",
-          "models_out": "57",
-          "total_files": "9",
-          "success_rate_percent": "88.9",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "8",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "96.8",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk090.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "freepdk15",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "12",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "18.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk15",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "12",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "18.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk3",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "2",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "3.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk3",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "2",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "2.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk45",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "12",
-          "failed": "0",
-          "models_out": "96",
-          "total_files": "12",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "12",
-          "model_deck_successful": "12",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "214.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk45",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "12",
-          "failed": "0",
-          "models_out": "96",
-          "total_files": "12",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "12",
-          "model_deck_successful": "12",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "246.2",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "gf180",
-          "source_format": "ngspice",
-          "target": "hspice",
-          "successful": "0",
-          "failed": "56",
-          "models_out": "0",
-          "total_files": "56",
-          "success_rate_percent": "0.0",
-          "effective_model_deck_success_percent": "0.0",
-          "excluded_non_model_files": "56",
-          "model_deck_files": "0",
-          "model_deck_successful": "0",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "6256.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "npn.spice; pnp.spice; run_npn_beta.spice; damping_test.spice; npn_CBJ.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "gf180",
-          "source_format": "ngspice",
-          "target": "spectre",
-          "successful": "0",
-          "failed": "56",
-          "models_out": "0",
-          "total_files": "56",
-          "success_rate_percent": "0.0",
-          "effective_model_deck_success_percent": "0.0",
-          "excluded_non_model_files": "56",
-          "model_deck_files": "0",
-          "model_deck_successful": "0",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "33.3",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "npn.spice; pnp.spice; run_npn_beta.spice; damping_test.spice; npn_CBJ.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "hlmc40lp",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "2",
-          "failed": "2",
-          "models_out": "227",
-          "total_files": "4",
-          "success_rate_percent": "50.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "2",
-          "model_deck_successful": "2",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "700.1",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "topusage_hlmc40lp_v1d2_p2_shrink0d9.lib; topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "hlmc40lp",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "2",
-          "failed": "2",
-          "models_out": "227",
-          "total_files": "4",
-          "success_rate_percent": "50.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "2",
-          "model_deck_successful": "2",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "639.5",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "topusage_hlmc40lp_v1d2_p2_shrink0d9.lib; topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "hlmc55lp",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "8",
-          "models_out": "48",
-          "total_files": "9",
-          "success_rate_percent": "11.1",
-          "effective_model_deck_success_percent": "11.1",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "9",
-          "model_deck_successful": "1",
-          "model_deck_failed": "8",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "211.3",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "HLMC_55LP_V1P9_CORNER.LIB; HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB; ff.lib; fs.lib; mc.lib",
-          "notes": "Partial model-deck failures require parser/semantic support expansion"
-        },
-        {
-          "pdk": "hlmc55lp",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "8",
-          "models_out": "48",
-          "total_files": "9",
-          "success_rate_percent": "11.1",
-          "effective_model_deck_success_percent": "11.1",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "9",
-          "model_deck_successful": "1",
-          "model_deck_failed": "8",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "200.9",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "HLMC_55LP_V1P9_CORNER.LIB; HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB; ff.lib; fs.lib; mc.lib",
-          "notes": "Partial model-deck failures require parser/semantic support expansion"
-        },
-        {
-          "pdk": "sky130",
-          "source_format": "ngspice",
-          "target": "hspice",
-          "successful": "13",
-          "failed": "134",
-          "models_out": "80",
-          "total_files": "147",
-          "success_rate_percent": "8.8",
-          "effective_model_deck_success_percent": "8.9",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "146",
-          "model_deck_successful": "13",
-          "model_deck_failed": "133",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "5191.9",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "all.spice; sky130_fd_pr__model__cap_mim.model.spice; sky130_fd_pr__model__cap_var.model.spice; sky130_fd_pr__model__cap_vpp.model.spice; sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "sky130",
-          "source_format": "ngspice",
-          "target": "spectre",
-          "successful": "13",
-          "failed": "134",
-          "models_out": "80",
-          "total_files": "147",
-          "success_rate_percent": "8.8",
-          "effective_model_deck_success_percent": "8.9",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "146",
-          "model_deck_successful": "13",
-          "model_deck_failed": "133",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "3618.8",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "all.spice; sky130_fd_pr__model__cap_mim.model.spice; sky130_fd_pr__model__cap_var.model.spice; sky130_fd_pr__model__cap_vpp.model.spice; sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "smic180",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "22",
-          "failed": "0",
-          "models_out": "216",
-          "total_files": "22",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "22",
-          "model_deck_successful": "22",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "930.7",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "smic180",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "22",
-          "failed": "0",
-          "models_out": "216",
-          "total_files": "22",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "22",
-          "model_deck_successful": "22",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "807.8",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "smic180HV",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "15",
-          "failed": "1",
-          "models_out": "1174",
-          "total_files": "16",
-          "success_rate_percent": "93.8",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "15",
-          "model_deck_successful": "15",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "3216.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "soa.mdl",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "smic180HV",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "15",
-          "failed": "1",
-          "models_out": "1174",
-          "total_files": "16",
-          "success_rate_percent": "93.8",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "15",
-          "model_deck_successful": "15",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "3391.3",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "soa.mdl",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "synopsys14",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "18",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "146.4",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "synopsys14",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "18",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "125.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "synopsys28",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "17",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "53.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "synopsys28",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "17",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "51.5",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "tsmc65lp",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "2",
-          "models_out": "1222",
-          "total_files": "3",
-          "success_rate_percent": "33.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "5017.7",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "crn65lp_2d5_lk_v1d7_usage.l; toplevel.l",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "tsmc65lp",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "2",
-          "models_out": "1222",
-          "total_files": "3",
-          "success_rate_percent": "33.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "4502.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "crn65lp_2d5_lk_v1d7_usage.l; toplevel.l",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        }
-      ]
-    },
-    {
-      "name": "pdk_translation_summary.csv",
-      "relPath": "reports/pdk_translation_summary.csv",
-      "size": "6.7 KB",
-      "hash": "131aa723",
-      "rows": [
-        {
-          "pdk": "asap7",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "48",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "98.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "asap7",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "48",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "77.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "cadence14",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "5",
-          "failed": "1",
-          "models_out": "24",
-          "total_files": "6",
-          "success_rate_percent": "83.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "5",
-          "model_deck_successful": "5",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "45.1",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cds_ff_mpt.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence14",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "5",
-          "failed": "1",
-          "models_out": "24",
-          "total_files": "6",
-          "success_rate_percent": "83.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "5",
-          "model_deck_successful": "5",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "116.1",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cds_ff_mpt.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence180",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "11",
-          "failed": "3",
-          "models_out": "29",
-          "total_files": "14",
-          "success_rate_percent": "78.6",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "3",
-          "model_deck_files": "11",
-          "model_deck_successful": "11",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "35.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cmodel.scs; gpdk.scs; snacapacitor.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence180",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "11",
-          "failed": "3",
-          "models_out": "29",
-          "total_files": "14",
-          "success_rate_percent": "78.6",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "3",
-          "model_deck_files": "11",
-          "model_deck_successful": "11",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "56.6",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "cmodel.scs; gpdk.scs; snacapacitor.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence45",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "7",
-          "failed": "2",
-          "models_out": "49",
-          "total_files": "9",
-          "success_rate_percent": "77.8",
-          "effective_model_deck_success_percent": "87.5",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "7",
-          "model_deck_failed": "1",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "1346.8",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk045.scs; gpdk045_soa.scs",
-          "notes": "Primary failures are top-level wrappers without standalone model cards"
-        },
-        {
-          "pdk": "cadence45",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "7",
-          "failed": "2",
-          "models_out": "49",
-          "total_files": "9",
-          "success_rate_percent": "77.8",
-          "effective_model_deck_success_percent": "87.5",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "7",
-          "model_deck_failed": "1",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "4051.5",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk045.scs; gpdk045_soa.scs",
-          "notes": "Primary failures are top-level wrappers without standalone model cards"
-        },
-        {
-          "pdk": "cadence90",
-          "source_format": "spectre",
-          "target": "hspice",
-          "successful": "8",
-          "failed": "1",
-          "models_out": "57",
-          "total_files": "9",
-          "success_rate_percent": "88.9",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "8",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "47.5",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk090.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "cadence90",
-          "source_format": "spectre",
-          "target": "ngspice",
-          "successful": "8",
-          "failed": "1",
-          "models_out": "57",
-          "total_files": "9",
-          "success_rate_percent": "88.9",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "8",
-          "model_deck_successful": "8",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "top_wrapper_no_model_cards",
-          "total_duration_ms": "96.8",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "gpdk090.scs",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "freepdk15",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "12",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "18.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk15",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "6",
-          "failed": "0",
-          "models_out": "12",
-          "total_files": "6",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "6",
-          "model_deck_successful": "6",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "18.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk3",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "2",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "3.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk3",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "2",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "2.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk45",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "12",
-          "failed": "0",
-          "models_out": "96",
-          "total_files": "12",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "12",
-          "model_deck_successful": "12",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "214.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "freepdk45",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "12",
-          "failed": "0",
-          "models_out": "96",
-          "total_files": "12",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "12",
-          "model_deck_successful": "12",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "246.2",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "gf180",
-          "source_format": "ngspice",
-          "target": "hspice",
-          "successful": "0",
-          "failed": "56",
-          "models_out": "0",
-          "total_files": "56",
-          "success_rate_percent": "0.0",
-          "effective_model_deck_success_percent": "0.0",
-          "excluded_non_model_files": "56",
-          "model_deck_files": "0",
-          "model_deck_successful": "0",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "6256.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "npn.spice; pnp.spice; run_npn_beta.spice; damping_test.spice; npn_CBJ.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "gf180",
-          "source_format": "ngspice",
-          "target": "spectre",
-          "successful": "0",
-          "failed": "56",
-          "models_out": "0",
-          "total_files": "56",
-          "success_rate_percent": "0.0",
-          "effective_model_deck_success_percent": "0.0",
-          "excluded_non_model_files": "56",
-          "model_deck_files": "0",
-          "model_deck_successful": "0",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "33.3",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "npn.spice; pnp.spice; run_npn_beta.spice; damping_test.spice; npn_CBJ.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "hlmc40lp",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "2",
-          "failed": "2",
-          "models_out": "227",
-          "total_files": "4",
-          "success_rate_percent": "50.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "2",
-          "model_deck_successful": "2",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "700.1",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "topusage_hlmc40lp_v1d2_p2_shrink0d9.lib; topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "hlmc40lp",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "2",
-          "failed": "2",
-          "models_out": "227",
-          "total_files": "4",
-          "success_rate_percent": "50.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "2",
-          "model_deck_successful": "2",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "639.5",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "topusage_hlmc40lp_v1d2_p2_shrink0d9.lib; topusage_hlmc40rf_v1d2_p2_shrink0d9.lib",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "hlmc55lp",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "8",
-          "models_out": "48",
-          "total_files": "9",
-          "success_rate_percent": "11.1",
-          "effective_model_deck_success_percent": "11.1",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "9",
-          "model_deck_successful": "1",
-          "model_deck_failed": "8",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "211.3",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "HLMC_55LP_V1P9_CORNER.LIB; HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB; ff.lib; fs.lib; mc.lib",
-          "notes": "Partial model-deck failures require parser/semantic support expansion"
-        },
-        {
-          "pdk": "hlmc55lp",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "8",
-          "models_out": "48",
-          "total_files": "9",
-          "success_rate_percent": "11.1",
-          "effective_model_deck_success_percent": "11.1",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "9",
-          "model_deck_successful": "1",
-          "model_deck_failed": "8",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "200.9",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "HLMC_55LP_V1P9_CORNER.LIB; HLMC_55LP_V1P9_CORNER_SCALE_D9.LIB; ff.lib; fs.lib; mc.lib",
-          "notes": "Partial model-deck failures require parser/semantic support expansion"
-        },
-        {
-          "pdk": "sky130",
-          "source_format": "ngspice",
-          "target": "hspice",
-          "successful": "13",
-          "failed": "134",
-          "models_out": "80",
-          "total_files": "147",
-          "success_rate_percent": "8.8",
-          "effective_model_deck_success_percent": "8.9",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "146",
-          "model_deck_successful": "13",
-          "model_deck_failed": "133",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "5191.9",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "all.spice; sky130_fd_pr__model__cap_mim.model.spice; sky130_fd_pr__model__cap_var.model.spice; sky130_fd_pr__model__cap_vpp.model.spice; sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "sky130",
-          "source_format": "ngspice",
-          "target": "spectre",
-          "successful": "13",
-          "failed": "134",
-          "models_out": "80",
-          "total_files": "147",
-          "success_rate_percent": "8.8",
-          "effective_model_deck_success_percent": "8.9",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "146",
-          "model_deck_successful": "13",
-          "model_deck_failed": "133",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "3618.8",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "all.spice; sky130_fd_pr__model__cap_mim.model.spice; sky130_fd_pr__model__cap_var.model.spice; sky130_fd_pr__model__cap_vpp.model.spice; sky130_fd_pr__model__cap_vpp_only_mos.model.spice",
-          "notes": "\"Low raw success is mainly corpus composition (wrappers/testbenches/helpers)"
-        },
-        {
-          "pdk": "smic180",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "22",
-          "failed": "0",
-          "models_out": "216",
-          "total_files": "22",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "22",
-          "model_deck_successful": "22",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "930.7",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "smic180",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "22",
-          "failed": "0",
-          "models_out": "216",
-          "total_files": "22",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "22",
-          "model_deck_successful": "22",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "807.8",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "smic180HV",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "15",
-          "failed": "1",
-          "models_out": "1174",
-          "total_files": "16",
-          "success_rate_percent": "93.8",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "15",
-          "model_deck_successful": "15",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "3216.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "soa.mdl",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "smic180HV",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "15",
-          "failed": "1",
-          "models_out": "1174",
-          "total_files": "16",
-          "success_rate_percent": "93.8",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "1",
-          "model_deck_files": "15",
-          "model_deck_successful": "15",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "3391.3",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "soa.mdl",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "synopsys14",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "18",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "146.4",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "synopsys14",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "18",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "125.9",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "synopsys28",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "17",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "53.0",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "synopsys28",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "0",
-          "models_out": "17",
-          "total_files": "1",
-          "success_rate_percent": "100.0",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "0",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "-",
-          "total_duration_ms": "51.5",
-          "failure_reason": "-",
-          "failed_sections": "-",
-          "notes": "No blocking translation issues"
-        },
-        {
-          "pdk": "tsmc65lp",
-          "source_format": "hspice",
-          "target": "ngspice",
-          "successful": "1",
-          "failed": "2",
-          "models_out": "1222",
-          "total_files": "3",
-          "success_rate_percent": "33.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "5017.7",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "crn65lp_2d5_lk_v1d7_usage.l; toplevel.l",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        },
-        {
-          "pdk": "tsmc65lp",
-          "source_format": "hspice",
-          "target": "spectre",
-          "successful": "1",
-          "failed": "2",
-          "models_out": "1222",
-          "total_files": "3",
-          "success_rate_percent": "33.3",
-          "effective_model_deck_success_percent": "100.0",
-          "excluded_non_model_files": "2",
-          "model_deck_files": "1",
-          "model_deck_successful": "1",
-          "model_deck_failed": "0",
-          "dominant_exclusion_class": "known_wrapper_testbench_helper_pattern",
-          "total_duration_ms": "4502.0",
-          "failure_reason": "Invalid models provided",
-          "failed_sections": "crn65lp_2d5_lk_v1d7_usage.l; toplevel.l",
-          "notes": "All model-deck files translated; failures concentrated in excluded wrapper/helper files"
-        }
-      ]
-    },
-    {
-      "name": "pdk_verification_summary.csv",
-      "relPath": "reports/pdk_verification_summary.csv",
-      "size": "505 B",
-      "hash": "3691d89c",
-      "rows": [
-        {
-          "pdk": "asap7",
-          "total_files": "6",
-          "total_tests": "70",
-          "passed": "70",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "cadence14",
-          "total_files": "5",
-          "total_tests": "47",
-          "passed": "47",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "cadence180",
-          "total_files": "11",
-          "total_tests": "38",
-          "passed": "38",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "cadence45",
-          "total_files": "7",
-          "total_tests": "49",
-          "passed": "49",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "cadence90",
-          "total_files": "8",
-          "total_tests": "44",
-          "passed": "44",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "freepdk15",
-          "total_files": "6",
-          "total_tests": "50",
-          "passed": "50",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "freepdk3",
-          "total_files": "1",
-          "total_tests": "10",
-          "passed": "10",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "freepdk45",
-          "total_files": "6",
-          "total_tests": "70",
-          "passed": "70",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "hlmc40lp",
-          "total_files": "2",
-          "total_tests": "28",
-          "passed": "28",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "hlmc55lp",
-          "total_files": "1",
-          "total_tests": "14",
-          "passed": "14",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "smic180",
-          "total_files": "22",
-          "total_tests": "67",
-          "passed": "67",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "smic180HV",
-          "total_files": "14",
-          "total_tests": "58",
-          "passed": "58",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "synopsys14",
-          "total_files": "1",
-          "total_tests": "14",
-          "passed": "14",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "synopsys28",
-          "total_files": "1",
-          "total_tests": "14",
-          "passed": "14",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        },
-        {
-          "pdk": "tsmc65lp",
-          "total_files": "1",
-          "total_tests": "14",
-          "passed": "14",
-          "failed": "0",
-          "pass_rate_percent": "100.0",
-          "bsim4_errors": "0"
-        }
-      ]
-    },
-    {
-      "name": "plot_inventory.csv",
-      "relPath": "reports/plot_inventory.csv",
-      "size": "498 B",
-      "hash": "6b60bd82",
-      "rows": [
-        {
-          "pdk_or_scope": "cadence14_spectre-hspice",
-          "png_count": "6"
-        },
-        {
-          "pdk_or_scope": "cadence14_spectre-ngspice",
-          "png_count": "12"
-        },
-        {
-          "pdk_or_scope": "cadence180_spectre-hspice",
-          "png_count": "14"
-        },
-        {
-          "pdk_or_scope": "cadence180_spectre-ngspice",
-          "png_count": "19"
-        },
-        {
-          "pdk_or_scope": "cadence45_spectre-hspice",
-          "png_count": "12"
-        },
-        {
-          "pdk_or_scope": "cadence45_spectre-ngspice",
-          "png_count": "22"
-        },
-        {
-          "pdk_or_scope": "cadence90_spectre-hspice",
-          "png_count": "8"
-        },
-        {
-          "pdk_or_scope": "cadence90_spectre-ngspice",
-          "png_count": "18"
-        },
-        {
-          "pdk_or_scope": "freepdk45_hspice-ngspice",
-          "png_count": "6"
-        },
-        {
-          "pdk_or_scope": "hlmc40lp_hspice-ngspice",
-          "png_count": "9"
-        },
-        {
-          "pdk_or_scope": "hlmc55lp_hspice-ngspice",
-          "png_count": "9"
-        },
-        {
-          "pdk_or_scope": "output_root",
-          "png_count": "1"
-        },
-        {
-          "pdk_or_scope": "smic180HV_hspice-ngspice",
-          "png_count": "30"
-        },
-        {
-          "pdk_or_scope": "smic180_hspice-ngspice",
-          "png_count": "24"
-        },
-        {
-          "pdk_or_scope": "synopsys14_hspice-ngspice",
-          "png_count": "6"
-        },
-        {
-          "pdk_or_scope": "synopsys28_hspice-ngspice",
-          "png_count": "6"
-        },
-        {
-          "pdk_or_scope": "tsmc65lp_hspice-ngspice",
-          "png_count": "9"
-        }
-      ]
-    }
+  "defaultResultId": "full-batch",
+  "allPdks": [
+    "all",
+    "asap7",
+    "cadence14",
+    "cadence180",
+    "cadence45",
+    "cadence90",
+    "freepdk15",
+    "freepdk3",
+    "freepdk45",
+    "gf180",
+    "hlmc40lp",
+    "hlmc55lp",
+    "sky130",
+    "smic180",
+    "smic180HV",
+    "synopsys14",
+    "synopsys28",
+    "tsmc65lp"
   ],
-  "texs": [
-    {
-      "name": "pdk_confidence_tier_table.tex",
-      "relPath": "reports/pdk_confidence_tier_table.tex",
-      "size": "3.0 KB",
-      "hash": "19eb8fcb"
-    }
+  "allSourceFormats": [
+    "all",
+    "hspice",
+    "spectre",
+    "ngspice"
   ],
-  "plots": [
-    {
-      "name": "verification_summary.png",
-      "relPath": "plots/verification_summary.png",
-      "format": "png",
-      "size": "241.9 KB",
-      "hash": "c82c558f",
-      "displayUrl": "translator/plots/verification_summary_c82c558f.png"
-    }
-  ],
-  "others": [],
-  "totalPlots": 1,
-  "totalDataFiles": 8
+  "allTargetFormats": [
+    "all",
+    "ngspice",
+    "spectre",
+    "hspice"
+  ]
 };

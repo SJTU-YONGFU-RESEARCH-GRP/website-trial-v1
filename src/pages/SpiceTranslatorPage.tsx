@@ -1,508 +1,364 @@
-import { useState, useMemo } from "react";
-import type { Config, Data, Layout } from "plotly.js";
-import { usePlotlyChart } from "../hooks/usePlotlyChart";
-import { useTheme } from "../theme/ThemeContext";
-import { useNarrowScreen } from "../hooks/useNarrowScreen";
-import {
-  getChartPalette, plotInsetBackground, plotAxisFont, plotFont,
-  plotlyAxisFrameX, plotlyAxisFrameY, plotlyBold, plotlyHoverLabel,
-} from "../theme/chartPalette";
+import { useState, useEffect, useMemo, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { TRANSLATOR_MANIFEST } from "../data/generatedSpiceTranslatorManifest";
-import type { SpiceTranslatorManifest, TranslatorCsvArtifact } from "../data/SpiceTranslatorTypes";
+import type { TranslatorResult } from "../data/SpiceTranslatorTypes";
 import "../translator.css";
 
 const BASE = import.meta.env.BASE_URL || "/";
 
-/* ─── Parse report into named sections ─── */
-interface ReportSection { id: string; title: string; level: number; content: string; subsections: ReportSection[]; }
+/* ─── Text cache for lazy-loaded markdown ─── */
+const mdCache = new Map<string, string>();
 
-function parseSections(md: string): ReportSection[] {
-  const lines = md.split("\n");
-  const sections: ReportSection[] = [];
-  const stack: ReportSection[] = [];
-  let buf = "";
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Result Selector                                                    */
+/* ═══════════════════════════════════════════════════════════════════ */
 
-  for (let i = 0; i < lines.length; i++) {
-    const t = lines[i].trim();
-    const h = t.match(/^(#{1,6})\s+(.+)/);
-    if (h) {
-      // Flush buffer into current section
-      if (stack.length > 0) stack[stack.length - 1].content += buf;
-      buf = "";
-
-      const lvl = h[1].length;
-      const title = h[2];
-      const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-      const sec: ReportSection = { id, title, level: lvl, content: "", subsections: [] };
-
-      // Pop stack until we find a parent
-      while (stack.length > 0 && stack[stack.length - 1].level >= lvl) stack.pop();
-      if (stack.length === 0) sections.push(sec);
-      else stack[stack.length - 1].subsections.push(sec);
-      stack.push(sec);
-    } else {
-      buf += lines[i] + "\n";
-    }
-  }
-  if (stack.length > 0) stack[stack.length - 1].content += buf;
-  return sections;
-}
-
-/* ─── Safe Markdown → HTML renderer ─── */
-function esc(s: string) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-function renderInline(t: string): string {
-  t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-  t = t.replace(/\*(.+?)\*/g, "<em>$1</em>");
-  t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
-  t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-  return t;
-}
-
-function renderMarkdown(md: string): string {
-  const lines = md.split("\n");
-  let out = "";
-  let inCode = false, codeBuf = "", codeLang = "";
-  let inTable = false, tableRows: string[] = [];
-
-  const flushTable = () => {
-    if (!inTable) return;
-    out += '<div class="tr-table-wrap"><table class="tr-table">';
-    tableRows.forEach((row, ri) => {
-      const cells = row.split("|").slice(1, -1).map(c => c.trim());
-      const tag = ri === 0 ? "th" : "td";
-      out += "<tr>" + cells.map(c => {
-        const isNum = /^[\d.,%+\-eE]+$/.test(c);
-        return `<${tag}${isNum ? ' class="tr-num"' : ''}>${renderInline(c)}</${tag}>`;
-      }).join("") + "</tr>";
-    });
-    out += "</table></div>";
-    tableRows = []; inTable = false;
-  };
-
-  const flushCode = () => {
-    out += `<details class="tr-code-block"><summary>${codeLang || "code"} (${codeBuf.split("\\n").length} lines)</summary><pre><code>${esc(codeBuf)}</code></pre></details>`;
-    codeBuf = ""; codeLang = ""; inCode = false;
-  };
-
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i]; const t = line.trim();
-
-    if (t.startsWith("```")) {
-      flushTable();
-      if (inCode) { flushCode(); i++; continue; }
-      inCode = true; codeLang = t.slice(3).trim(); i++; continue;
-    }
-    if (inCode) { codeBuf += (codeBuf ? "\n" : "") + line; i++; continue; }
-
-    if (t.startsWith("|") && t.endsWith("|")) {
-      if (/^\|[-:\s|]+\|$/.test(t)) { i++; continue; }
-      if (!inTable) { flushTable(); inTable = true; }
-      tableRows.push(t); i++; continue;
-    } else { flushTable(); }
-
-    const h = t.match(/^(#{1,6})\s+(.+)/);
-    if (h) {
-      const id = h[2].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-      out += `<h${h[1].length} id="${id}">${renderInline(h[2])}</h${h[1].length}>\n`;
-      i++; continue;
-    }
-
-    if (/^[-*_]{3,}$/.test(t)) { out += "<hr/>\n"; i++; continue; }
-
-    if (/^[-*+]\s+/.test(t)) {
-      out += "<ul>\n";
-      while (i < lines.length && /^[-*+]\s+/.test(lines[i].trim())) {
-        out += `<li>${renderInline(lines[i].trim().replace(/^[-*+]\s+/, ""))}</li>\n`;
-        i++;
-      }
-      out += "</ul>\n"; continue;
-    }
-
-    if (/^\d+\.\s+/.test(t)) {
-      out += "<ol>\n";
-      while (i < lines.length && /^\d+\.\s+/.test(lines[i].trim())) {
-        out += `<li>${renderInline(lines[i].trim().replace(/^\d+\.\s+/, ""))}</li>\n`;
-        i++;
-      }
-      out += "</ol>\n"; continue;
-    }
-
-    if (t) out += `<p>${renderInline(t)}</p>\n`;
-    i++;
-  }
-  flushTable(); flushCode();
-  return out;
-}
-
-/* ─── TOC Generator ─── */
-function TOC({ sections }: { sections: ReportSection[] }) {
-  const render = (secs: ReportSection[], depth: number): string => {
-    if (secs.length === 0) return "";
-    return "<ul>" + secs.map(s => {
-      const subToc = s.subsections.length > 0 ? render(s.subsections, depth + 1) : "";
-      return `<li><a href="#${s.id}">${s.title}</a>${subToc}</li>`;
-    }).join("") + "</ul>";
-  };
-  const html = render(sections, 0);
-  return <div className="tr-toc" dangerouslySetInnerHTML={{ __html: html }} />;
-}
-
-/* ─── Filter bar ─── */
-function FilterBar({ csvs, filters, setFilters }: {
-  csvs: TranslatorCsvArtifact[]; filters: Record<string, string>; setFilters: (f: Record<string, string>) => void;
+function ResultSelector({ results, selectedId, onSelect, filters, setFilter }: {
+  results: TranslatorResult[]; selectedId: string; onSelect: (id: string) => void;
+  filters: Record<string, string>; setFilter: (k: string, v: string) => void;
 }) {
-  const summaryCsv = csvs.find(c => c.name === "pdk_translation_summary.csv");
-  const pdks = [...new Set((summaryCsv?.rows || []).map(r => r["PDK"] || "").filter(Boolean))];
-  const sources = [...new Set((summaryCsv?.rows || []).map(r => r["Source"] || "").filter(Boolean))];
-  const targets = [...new Set((summaryCsv?.rows || []).map(r => r["Target"] || "").filter(Boolean))];
+  const manifest = TRANSLATOR_MANIFEST;
+  const batchResults = results.filter(r => r.kind === "batch");
+  const pdkResults = results.filter(r => r.kind === "pdk_target");
+  const verifResults = results.filter(r => r.kind === "verification");
 
-  const set = (k: string, v: string) => setFilters({ ...filters, [k]: v });
+  const set = (k: string, v: string) => setFilter(k, v);
 
   return (
-    <div className="chart-card tr-filter">
-      <div className="tr-filter-row">
-        <label className="axis-picker">PDK<select value={filters.pdk || ""} onChange={e => set("pdk", e.target.value)}><option value="">All</option>{pdks.map(p => <option key={p} value={p}>{p}</option>)}</select></label>
-        <label className="axis-picker">Source<select value={filters.source || ""} onChange={e => set("source", e.target.value)}><option value="">All</option>{sources.map(s => <option key={s} value={s}>{s}</option>)}</select></label>
-        <label className="axis-picker">Target<select value={filters.target || ""} onChange={e => set("target", e.target.value)}><option value="">All</option>{targets.map(s => <option key={s} value={s}>{s}</option>)}</select></label>
-        <label className="axis-picker">Confidence<select value={filters.confidence || ""} onChange={e => set("confidence", e.target.value)}><option value="">All</option>{["S","A","B","C","D","F"].map(t => <option key={t} value={t}>{t}</option>)}</select></label>
-        <label className="axis-picker">Result<select value={filters.result || ""} onChange={e => set("result", e.target.value)}><option value="">All</option><option value="pass">Success</option><option value="fail">Failed</option></select></label>
-        <label className="axis-picker">Search<input type="text" value={filters.search || ""} onChange={e => set("search", e.target.value)} placeholder="File name..." style={{padding:"0.25rem 0.4rem",fontSize:"0.8rem",width:"100%",border:"1px solid var(--border)",borderRadius:"4px"}} /></label>
+    <div className="chart-card tr-selector">
+      <h2>Explore translation results</h2>
+      <p className="hint">Select a result to view its complete report and original plots.</p>
+      <div className="tr-selector-grid">
+        <label className="axis-picker">Result
+          <select value={selectedId} onChange={e => onSelect(e.target.value)}>
+            {batchResults.length > 0 && <optgroup label="Batch Summary">{batchResults.map(r => <option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
+            {pdkResults.length > 0 && <optgroup label="PDK / Target Results">{pdkResults.map(r => <option key={r.resultId} value={r.resultId}>{r.pdk}: {r.sourceFormat} → {r.targetFormat}</option>)}</optgroup>}
+            {verifResults.length > 0 && <optgroup label="Verification Results">{verifResults.map(r => <option key={r.resultId} value={r.resultId}>{r.title}</option>)}</optgroup>}
+          </select>
+        </label>
+        <label className="axis-picker">PDK<select value={filters.pdk || ""} onChange={e => set("pdk", e.target.value)}><option value="">All</option>{manifest.allPdks.map(p => <option key={p} value={p}>{p}</option>)}</select></label>
+        <label className="axis-picker">Source<select value={filters.source || ""} onChange={e => set("source", e.target.value)}><option value="">All</option>{manifest.allSourceFormats.map(s => <option key={s} value={s}>{s}</option>)}</select></label>
+        <label className="axis-picker">Target<select value={filters.target || ""} onChange={e => set("target", e.target.value)}><option value="">All</option>{manifest.allTargetFormats.map(s => <option key={s} value={s}>{s}</option>)}</select></label>
+        <label className="axis-picker">Type<select value={filters.kind || ""} onChange={e => set("kind", e.target.value)}><option value="">All</option><option value="batch">Batch Summary</option><option value="pdk_target">PDK / Target</option><option value="verification">Verification</option></select></label>
+        <label className="axis-picker">Search<input type="text" value={filters.search || ""} onChange={e => set("search", e.target.value)} placeholder="Search..." className="tr-search-input" /></label>
+      </div>
+
+      {/* Anchor nav */}
+      <div className="tr-anchor-nav">
+        <a href="#tr-reports" onClick={e => { e.preventDefault(); document.getElementById("tr-reports")?.scrollIntoView({ behavior: "smooth" }); }}>Reports</a>
+        <a href="#tr-plots" onClick={e => { e.preventDefault(); document.getElementById("tr-plots")?.scrollIntoView({ behavior: "smooth" }); }}>Plots</a>
+        <a href="#tr-artifacts" onClick={e => { e.preventDefault(); document.getElementById("tr-artifacts")?.scrollIntoView({ behavior: "smooth" }); }}>Artifacts</a>
       </div>
     </div>
   );
 }
 
-function applyFilters(csv: TranslatorCsvArtifact | undefined, filters: Record<string, string>) {
-  if (!csv) return [];
-  let rows = csv.rows;
-  if (filters.pdk) rows = rows.filter(r => r["PDK"] === filters.pdk);
-  if (filters.source) rows = rows.filter(r => r["Source"] === filters.source);
-  if (filters.target) rows = rows.filter(r => r["Target"] === filters.target);
-  if (filters.result === "pass") rows = rows.filter(r => parseFloat(r["Success %"] || "0") >= 100);
-  if (filters.result === "fail") rows = rows.filter(r => parseFloat(r["Success %"] || "0") < 100);
-  return rows;
-}
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Lightbox (prev/next, keyboard, zoom)                                */
+/* ═══════════════════════════════════════════════════════════════════ */
 
-/* ─── Derived charts (Plotly) ─── */
-function DerivedCharts({ manifest, filters }: { manifest: SpiceTranslatorManifest; filters: Record<string, string> }) {
-  const narrow = useNarrowScreen(640);
-  const { theme } = useTheme();
-  const palette = getChartPalette(theme);
-  const bg = plotInsetBackground(theme);
-  const axTick = plotAxisFont(palette.axisValueLabelRgb, narrow);
-  const hoverLabel = plotlyHoverLabel(palette, narrow);
-  const frameX = plotlyAxisFrameX(palette);
-  const frameY = plotlyAxisFrameY(palette);
+function Lightbox({ plots, index, onClose }: { plots: { displayUrl: string | null; name: string }[]; index: number; onClose: () => void }) {
+  const [idx, setIdx] = useState(index);
+  const [zoom, setZoom] = useState(1);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  const summaryCsv = manifest.csvs.find(c => c.name === "pdk_translation_summary.csv");
-  const effCsv = manifest.csvs.find(c => c.name === "pdk_translation_effective_summary.csv");
-  const filtered = applyFilters(summaryCsv, filters);
-
-  // Grouped bar: PDK × target success %
-  const barChart = useMemo(() => {
-    if (!summaryCsv) return null;
-    const rows = filtered.length > 0 ? filtered : summaryCsv.rows;
-    const pdks = [...new Set(rows.map(r => r["PDK"]))];
-    const targets = [...new Set(rows.map(r => r["Target"]))];
-    const traces: Data[] = targets.map(tg => ({
-      type: "bar", name: tg,
-      x: pdks, y: pdks.map(p => parseFloat(rows.find(r => r["PDK"] === p && r["Target"] === tg)?.["Success %"] || "0")),
-      hovertemplate: `%{x} → ${tg}: %{y:.1f}%<extra></extra>`,
-    } as Data));
-
-    return {
-      data: traces,
-      layout: {
-        autosize: true, barmode: "group",
-        margin: narrow ? { l: 52, r: 16, t: 36, b: 80 } : { l: 60, r: 24, t: 40, b: 80 },
-        paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-        title: { text: plotlyBold("PDK × Target Translation Success %"), font: plotFont(palette.rgbAxisTitle) },
-        xaxis: { ...frameX, tickfont: axTick, tickangle: -45 },
-        yaxis: { ...frameY, title: { text: "Success %", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, gridcolor: palette.axisGridGreyRgb },
-        showlegend: true, legend: narrow ? { orientation: "h", y: -0.4 } : { x: 1.02 },
-        hovermode: "closest", hoverlabel: hoverLabel,
-      } as Partial<Layout>,
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setIdx(p => Math.min(p + 1, plots.length - 1));
+      if (e.key === "ArrowLeft") setIdx(p => Math.max(p - 1, 0));
+      if (e.key === "+" || e.key === "=") setZoom(z => +(z + 0.25).toFixed(2));
+      if (e.key === "-") setZoom(z => Math.max(0.25, +(z - 0.25).toFixed(2)));
+      if (e.key === "0") setZoom(1);
     };
-  }, [filtered, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [plots.length, onClose]);
 
-  // Raw vs effective scatter
-  const rawVsEffChart = useMemo(() => {
-    if (!effCsv) return null;
-    const rows = effCsv.rows;
-    return {
-      data: [{
-        type: "scatter", mode: "text+markers" as const,
-        x: rows.map(r => parseFloat(r["Raw Success %"] || "0")),
-        y: rows.map(r => parseFloat(r["Effective Model-Deck Success %"] || "0")),
-        text: rows.map(r => `${r["PDK"]}→${r["Target"]}`),
-        textposition: "top center",
-        marker: { size: 10, color: rows.map(r => parseFloat(r["Effective Model-Deck Success %"] || "0") >= 100 ? "#22c55e" : "#ef4444") },
-        hovertemplate: "%{text}<br>Raw: %{x:.1f}%<br>Effective: %{y:.1f}%<extra></extra>",
-      } as Data],
-      layout: {
-        autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
-        paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-        title: { text: plotlyBold("Raw vs Effective Model-Deck Success %"), font: plotFont(palette.rgbAxisTitle) },
-        xaxis: { ...frameX, title: { text: "Raw Success %", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, range: [-5, 105] },
-        yaxis: { ...frameY, title: { text: "Effective Success %", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, range: [-5, 105], gridcolor: palette.axisGridGreyRgb },
-        hovermode: "closest", hoverlabel: hoverLabel,
-      } as Partial<Layout>,
-    };
-  }, [effCsv, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
-
-  // Models out vs duration scatter
-  const modelsOutChart = useMemo(() => {
-    if (!summaryCsv) return null;
-    const rows = filtered.length > 0 ? filtered : summaryCsv.rows;
-    return {
-      data: [{
-        type: "scatter", mode: "markers",
-        x: rows.map(r => parseFloat(r["Duration (ms)"] || "0")),
-        y: rows.map(r => parseFloat(r["Models Out"] || "0")),
-        text: rows.map(r => `${r["PDK"]}→${r["Target"]}`),
-        marker: { size: 8 },
-        hovertemplate: "%{text}<br>Duration: %{x:.0f}ms<br>Models: %{y}<extra></extra>",
-      } as Data],
-      layout: {
-        autosize: true, margin: narrow ? { l: 52, r: 16, t: 36, b: 48 } : { l: 60, r: 24, t: 40, b: 52 },
-        paper_bgcolor: bg, plot_bgcolor: bg, font: plotFont(palette.rgbAxisTitle),
-        title: { text: plotlyBold("Models Out vs Duration"), font: plotFont(palette.rgbAxisTitle) },
-        xaxis: { ...frameX, title: { text: "Duration (ms)", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick },
-        yaxis: { ...frameY, title: { text: "Models Out", font: plotAxisFont(palette.rgbAxisTitle, narrow) }, tickfont: axTick, gridcolor: palette.axisGridGreyRgb },
-        hovermode: "closest", hoverlabel: hoverLabel,
-      } as Partial<Layout>,
-    };
-  }, [filtered, narrow, palette, bg, axTick, hoverLabel, frameX, frameY]);
-
-  const barRef = usePlotlyChart(barChart?.data ?? [], barChart?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
-  const rveRef = usePlotlyChart(rawVsEffChart?.data ?? [], rawVsEffChart?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
-  const moRef = usePlotlyChart(modelsOutChart?.data ?? [], modelsOutChart?.layout ?? {}, { responsive: true, displayModeBar: false, displaylogo: false } satisfies Partial<Config>);
+  const plot = plots[idx];
+  if (!plot?.displayUrl) return null;
 
   return (
-    <div className="chart-card tr-section" id="derived-charts">
-      <h2 className="tr-section-heading">Derived Visualizations</h2>
-      <p className="hint">⚠ Charts below are derived from <code>batch_all_summary.json</code> and report CSVs — they supplement but do not replace original tool output.</p>
+    <div className="tr-lightbox" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <button className="tr-lightbox-close" onClick={onClose}>×</button>
+      <div className="tr-lightbox-nav">
+        <button disabled={idx === 0} onClick={e => { e.stopPropagation(); setIdx(p => Math.max(0, p - 1)); }}>‹</button>
+        <span>{idx + 1} / {plots.length}</span>
+        <button disabled={idx >= plots.length - 1} onClick={e => { e.stopPropagation(); setIdx(p => Math.min(plots.length - 1, p + 1)); }}>›</button>
+      </div>
+      <div className="tr-lightbox-zoom">
+        <button onClick={() => setZoom(z => +(z - 0.25).toFixed(2))}>−</button>
+        <button onClick={() => setZoom(1)}>{Math.round(zoom * 100)}%</button>
+        <button onClick={() => setZoom(z => +(z + 0.25).toFixed(2))}>+</button>
+        <button onClick={() => imgRef.current?.requestFullscreen?.()}>⛶</button>
+      </div>
+      <img ref={imgRef} src={BASE + plot.displayUrl} alt={plot.name} style={{ transform: `scale(${zoom})`, cursor: zoom > 1 ? "zoom-out" : "zoom-in" }}
+        onClick={e => { e.stopPropagation(); setZoom(z => z > 1 ? 1 : 2); }} />
+      <div className="tr-lightbox-info">
+        <strong>{plot.name}</strong>
+        <a href={BASE + plot.displayUrl} download className="benchmark-btn">Download</a>
+      </div>
+    </div>
+  );
+}
 
-      {barChart && <div className="plot-host plot-host--tall"><div ref={barRef} style={{ width: "100%", height: "100%" }} /></div>}
-      {rawVsEffChart && <div className="plot-host plot-host--tall"><div ref={rveRef} style={{ width: "100%", height: "100%" }} /></div>}
-      {modelsOutChart && <div className="plot-host plot-host--tall"><div ref={moRef} style={{ width: "100%", height: "100%" }} /></div>}
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Markdown report (with react-markdown)                               */
+/* ═══════════════════════════════════════════════════════════════════ */
 
-      {/* Filtered table */}
-      {summaryCsv && (
-        <div style={{ marginTop: "0.75rem" }}>
-          <h3 className="tr-subsection-title">Filtered Translation Table ({filtered.length || summaryCsv.rows.length} rows)</h3>
-          <div className="tr-table-wrap">
-            <table className="tr-table">
-              <thead><tr>{["PDK","Source","Target","Files","Successful","Failed","Success %","Models Out","Duration (ms)"].map(h => <th key={h}>{h}</th>)}</tr></thead>
-              <tbody>
-                {(filtered.length > 0 ? filtered : summaryCsv.rows).map((r, i) => (
-                  <tr key={i} className={parseFloat(r["Success %"] || "0") >= 100 ? "tr-row-ok" : parseFloat(r["Success %"] || "0") === 0 ? "tr-row-fail" : ""}>
-                    <td><code>{r["PDK"]}</code></td><td>{r["Source"]}</td><td>{r["Target"]}</td>
-                    <td className="tr-num">{r["Files"]}</td><td className="tr-num">{r["Successful"]}</td>
-                    <td className="tr-num">{r["Success %"]}</td><td className="tr-num">{r["Models Out"]}</td>
-                    <td className="tr-num">{r["Duration (ms)"]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+function isHeading(part: string): boolean { return /^#{1,6}\s/.test(part); }
+
+function TOC({ content }: { content: string }) {
+  const headings = content.split("\n").filter(isHeading).map(h => {
+    const m = h.match(/^(#{1,6})\s+(.+)/);
+    if (!m) return null;
+    const lvl = m[1].length;
+    const title = m[2];
+    const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return { lvl, title, id };
+  }).filter(Boolean) as { lvl: number; title: string; id: string }[];
+
+  if (headings.length === 0) return null;
+  return (
+    <details className="tr-toc-mobile">
+      <summary>Table of Contents</summary>
+      <ul className="tr-toc-list">
+        {headings.map(h => (
+          <li key={h.id} style={{ paddingLeft: `${(h.lvl - 1) * 0.75}rem` }}>
+            <a href={`#${h.id}`}>{h.title}</a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+function MarkdownReport({ report, result }: { report: TranslatorResult["reports"][0]; result: TranslatorResult }) {
+  const [content, setContent] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!report.fetchUrl) { setContent(null); return; }
+    const url = BASE + report.fetchUrl;
+    if (mdCache.has(url)) { setContent(mdCache.get(url)!); return; }
+    let cancelled = false;
+    fetch(url).then(r => { if (!r.ok) throw new Error(`${r.status}`); return r.text(); }).then(t => {
+      if (!cancelled) { mdCache.set(url, t); setContent(t); }
+    }).catch(e => { if (!cancelled) setError(e.message); });
+    return () => { cancelled = true; };
+  }, [report.fetchUrl]);
+
+  if (error) return <div className="tr-report-error">⚠ Failed to load: {error}</div>;
+  if (content === null) return <div className="tr-report-loading">Loading report…</div>;
+
+  return (
+    <div className="tr-report-doc">
+      <TOC content={content} />
+      <div className="tr-md">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            table: ({ children }) => <div className="tr-table-wrap"><table className="tr-table">{children}</table></div>,
+            th: ({ children }) => <th>{children}</th>,
+            td: ({ children }) => <td>{children}</td>,
+            code: ({ className, children }: any) => {
+              const isBlock = /language-/.test(className || "");
+              if (isBlock) {
+                const lang = (className || "").replace("language-", "");
+                return (
+                  <details className="tr-code-block">
+                    <summary>{lang || "code"}</summary>
+                    <pre><code className={className}>{children}</code></pre>
+                  </details>
+                );
+              }
+              return <code>{children}</code>;
+            },
+            a: ({ href, children }: any) => {
+              // Rewrite relative image links to public URLs
+              if (href && /\.(png|svg|jpg|jpeg)$/i.test(href) && !href.startsWith("http")) {
+                const plot = result.plots.find(p => href.includes(p.name) || p.relPath.includes(href));
+                const url = plot?.displayUrl ? BASE + plot.displayUrl : href;
+                return <a href={url} target="_blank" rel="noopener">{children}</a>;
+              }
+              return <a href={href} target="_blank" rel="noopener">{children}</a>;
+            },
+            img: ({ src, alt }: any) => {
+              if (src && !src.startsWith("http")) {
+                const plot = result.plots.find(p => src.includes(p.name) || p.relPath.includes(src));
+                src = plot?.displayUrl ? BASE + plot.displayUrl : src;
+              }
+              return <img src={src} alt={alt || ""} loading="lazy" style={{ maxWidth: "100%" }} />;
+            },
+          }}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Plot Gallery                                                       */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+function PlotGalleryBlock({ result }: { result: TranslatorResult }) {
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  if (result.plots.length === 0) return <p className="hint" style={{ padding: "1rem" }}>No plot images for this result.</p>;
+
+  return (
+    <>
+      {lightboxIdx !== null && (
+        <Lightbox plots={result.plots.map(p => ({ displayUrl: p.displayUrl, name: p.name }))} index={lightboxIdx} onClose={() => setLightboxIdx(null)} />
       )}
-    </div>
+      <div className="tr-plot-gallery">
+        {result.plots.map((p, i) => {
+          const isWide = p.aspectRatio && p.aspectRatio > 1.8;
+          return (
+            <div key={p.relPath} className={`tr-plot-card ${isWide ? "tr-plot-card--wide" : ""}`} onClick={() => setLightboxIdx(i)}>
+              <div className="tr-plot-card-header">
+                <strong className="tr-plot-card-title">{p.name}</strong>
+                <span className="hint">{p.format?.toUpperCase()} · {p.size} · {p.width}×{p.height}</span>
+              </div>
+              <div className="tr-plot-card-img">
+                {p.displayUrl ? <img src={BASE + p.displayUrl} alt={p.name} loading="lazy" /> : <span className="hint">No preview</span>}
+              </div>
+              <details className="tr-plot-card-detail">
+                <summary>Details</summary>
+                <div className="hint"><code>{p.relPath}</code><br />Hash: <code>{p.hash}</code></div>
+              </details>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
-/* ─── Hero ─── */
-function HeroSection({ manifest }: { manifest: SpiceTranslatorManifest }) {
-  const h = manifest.hero;
-  return (
-    <div className="tr-hero chart-card">
-      <h1 className="tr-hero-title">SPICE Model Translator</h1>
-      <p className="tr-hero-subtitle">Final Translation & Verification Report</p>
-      <div className="tr-hero-kpis">
-        <KpiCard label="PDKs Processed" value={h.pdks || "—"} />
-        <KpiCard label="Source Files" value={h.sourceFiles || "—"} />
-        <KpiCard label="Successful Translations" value={h.successfulTranslations || "—"} />
-        <KpiCard label="Models Translated" value={h.modelsTranslated || "—"} />
-        <KpiCard label="Verification" value={h.verification ? `${h.verification} passed` : "—"} />
-        <KpiCard label="Round-Trip" value={h.roundTrip ? `${h.roundTrip} passed` : "—"} />
-        <KpiCard label="Monte Carlo" value={h.monteCarlo ? `${h.monteCarlo} passed` : "—"} />
-      </div>
-      <div className="tr-hero-meta">
-        <span>Source: <code>{manifest.sourceDir.split("/").slice(-1)[0]}</code></span>
-        <span>Generated: {new Date(manifest.generatedAt).toLocaleDateString()}</span>
-      </div>
-    </div>
-  );
-}
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  KPI card                                                           */
+/* ═══════════════════════════════════════════════════════════════════ */
 
 function KpiCard({ label, value }: { label: string; value: string }) {
   return <div className="tr-kpi"><div className="tr-kpi-value">{value}</div><div className="tr-kpi-label">{label}</div></div>;
 }
 
-/* ─── Section renderer ─── */
-function SectionBlock({ section }: { section: ReportSection }) {
-  const html = useMemo(() => renderMarkdown(section.content), [section.content]);
-  return (
-    <div id={section.id} className="tr-md-section">
-      {html ? <div className="tr-md" dangerouslySetInnerHTML={{ __html: html }} /> : null}
-      {section.subsections.length > 0 && section.subsections.map(s => <SectionBlock key={s.id} section={s} />)}
-    </div>
-  );
-}
-
-/* ─── Plot Gallery ─── */
-function PlotGallery({ manifest }: { manifest: SpiceTranslatorManifest }) {
-  const [lightbox, setLightbox] = useState<string | null>(null);
-  if (manifest.plots.length === 0) return null;
-  return (
-    <div className="chart-card tr-section" id="verification-plots">
-      {lightbox && (
-        <div className="tr-lightbox" onClick={() => setLightbox(null)}>
-          <img src={lightbox} alt="" />
-          <a href={lightbox} download className="benchmark-btn tr-lightbox-dl">Download Original</a>
-        </div>
-      )}
-      <h2 className="tr-section-heading">Original Verification Plots <span className="hint">({manifest.plots.length})</span></h2>
-      <div className="tr-plot-grid">
-        {manifest.plots.map(p => p.displayUrl ? (
-          <div key={p.relPath} className="tr-plot-card" onClick={() => setLightbox(BASE + p.displayUrl)}>
-            <div className="tr-plot-img-wrap"><img src={BASE + p.displayUrl} alt={p.name} loading="lazy" /></div>
-            <div className="tr-plot-info">
-              <div><strong>{p.name}</strong></div>
-              <div className="hint">{p.size} · {p.format.toUpperCase()} · <code>{p.hash}</code></div>
-              <div className="hint"><code>{p.relPath}</code></div>
-            </div>
-          </div>
-        ) : null)}
-      </div>
-    </div>
-  );
-}
-
-/* ─── Artifacts table ─── */
-function ArtifactTable({ manifest }: { manifest: SpiceTranslatorManifest }) {
-  return (
-    <div className="chart-card tr-section" id="artifacts">
-      <h2 className="tr-section-heading">Artifacts & Reproducibility</h2>
-      <p className="hint">Report hash: <code>{manifest.reportHash}</code>. All artifacts from <code>docs/finalbatchrun2/</code>.</p>
-      <div className="tr-table-wrap">
-        <table className="tr-table">
-          <thead><tr><th>Name</th><th>Type</th><th>Path</th><th>Size</th><th>Hash</th></tr></thead>
-          <tbody>
-            {manifest.markdowns.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>report</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-            {manifest.csvs.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>CSV</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-            {manifest.jsons.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>JSON</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-            {manifest.plots.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>plot</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-            {manifest.texs.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>TEX</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
 /* ═══════════════════════════════════════════════════════════════════ */
 /*  Main Page                                                          */
 /* ═══════════════════════════════════════════════════════════════════ */
+
 export function SpiceTranslatorPage() {
   const manifest = TRANSLATOR_MANIFEST;
-  const sections = useMemo(() => parseSections(manifest.reportMarkdown), [manifest.reportMarkdown]);
+  const [selectedId, setSelectedId] = useState(manifest.defaultResultId || manifest.results[0]?.resultId || "");
   const [filters, setFilters] = useState<Record<string, string>>({});
 
-  // Find named sub-sections for interleaving
-  const execSummary = sections.find(s => s.title.toLowerCase().includes("executive summary"));
-  const translationMetrics = sections.find(s => s.title.toLowerCase().includes("translation metrics"));
-  const rawVsEffective = sections.find(s => s.title.toLowerCase().includes("raw vs effective") || s.title.toLowerCase().includes("fair-comparison"));
-  const verification = sections.find(s => s.title.toLowerCase().includes("verification results") || s.title.toLowerCase().includes("verification metrics"));
-  const confidence = sections.find(s => s.title.toLowerCase().includes("confidence tier"));
-  const failure = sections.find(s => s.title.toLowerCase().includes("failure analysis") || s.title.toLowerCase().includes("failure summary"));
+  // Apply filters
+  const filteredResults = useMemo(() => {
+    let list = manifest.results;
+    if (filters.pdk) list = list.filter(r => r.pdk === filters.pdk || r.pdk === "all");
+    if (filters.source) list = list.filter(r => r.sourceFormat === filters.source || r.sourceFormat === "all");
+    if (filters.target) list = list.filter(r => r.targetFormat === filters.target || r.targetFormat === "all");
+    if (filters.kind) list = list.filter(r => r.kind === filters.kind);
+    if (filters.search) { const s = filters.search.toLowerCase(); list = list.filter(r => r.title.toLowerCase().includes(s) || r.pdk.toLowerCase().includes(s)); }
+    return list;
+  }, [manifest.results, filters]);
 
-  // Remaining sections not explicitly placed
-  const placed = new Set([execSummary, translationMetrics, rawVsEffective, verification, confidence, failure].filter(Boolean).map(s => s!.id));
-  const remaining = sections.filter(s => !placed.has(s.id));
-  const restContent = remaining.map(s => `\n## ${s.title}\n${s.content}`).join("\n");
+  const result = manifest.results.find(r => r.resultId === selectedId);
+  if (!result) {
+    return (
+      <div className="tr-page">
+        <ResultSelector results={filteredResults} selectedId={selectedId} onSelect={setSelectedId} filters={filters} setFilter={(k, v) => setFilters(p => ({ ...p, [k]: v }))} />
+        <div className="chart-card"><p className="hint">No result selected. Choose a result above to view its reports and plots.</p></div>
+      </div>
+    );
+  }
+
+  const hero = result.summary.hero || {};
+  const pdks = hero.pdks || (result.pdk !== "all" ? "" : "17");
 
   return (
     <div className="tr-page">
-      {/* 1. Hero */}
-      <HeroSection manifest={manifest} />
+      {/* 1. Selector */}
+      <ResultSelector results={filteredResults} selectedId={selectedId} onSelect={setSelectedId} filters={filters} setFilter={(k, v) => setFilters(p => ({ ...p, [k]: v }))} />
 
-      {/* Filter bar */}
-      <FilterBar csvs={manifest.csvs} filters={filters} setFilters={setFilters} />
-
-      {/* 2. Executive Summary */}
-      {execSummary && (
-        <div className="chart-card tr-section" id="executive-summary">
-          <h2 className="tr-section-heading">1. Executive Summary</h2>
-          <SectionBlock section={execSummary} />
+      {/* 2. Hero/Summary */}
+      <div className="chart-card tr-hero">
+        <h1 className="tr-hero-title">{result.title}</h1>
+        <p className="tr-hero-subtitle">{result.description}</p>
+        <div className="tr-hero-kpis">
+          {result.kind === "batch" && (
+            <>
+              {pdks && <KpiCard label="PDKs" value={pdks} />}
+              {hero.sourceFiles && <KpiCard label="Source Files" value={hero.sourceFiles} />}
+              {hero.successfulTranslations && <KpiCard label="Successful" value={hero.successfulTranslations} />}
+              {hero.modelsTranslated && <KpiCard label="Models" value={hero.modelsTranslated} />}
+              {hero.verification && <KpiCard label="Verification" value={hero.verification} />}
+              {hero.roundTrip && <KpiCard label="Round-Trip" value={hero.roundTrip} />}
+              {hero.monteCarlo && <KpiCard label="Monte Carlo" value={hero.monteCarlo} />}
+            </>
+          )}
+          {result.kind === "pdk_target" && (
+            <>
+              <KpiCard label="PDK" value={result.pdk} />
+              <KpiCard label="Source" value={result.sourceFormat} />
+              <KpiCard label="Target" value={result.targetFormat} />
+            </>
+          )}
+          <KpiCard label="Reports" value={String(result.summary.totalReports)} />
+          <KpiCard label="Plots" value={String(result.summary.totalPlots)} />
+          <KpiCard label="Data Files" value={String(result.summary.totalData)} />
         </div>
-      )}
-
-      {/* 3. Translation Coverage */}
-      <div className="chart-card tr-section" id="translation-coverage">
-        <h2 className="tr-section-heading">2. Translation Coverage</h2>
-        <DerivedCharts manifest={manifest} filters={filters} />
+        <div className="tr-hero-meta">
+          <span><span className="tr-badge">{result.kind}</span></span>
+          {result.pdk !== "all" && <span>PDK: <code>{result.pdk}</code></span>}
+          <span>Status: {result.status}</span>
+          <span>Generated: {result.generatedAt}</span>
+        </div>
       </div>
 
-      {/* 4. PDK Translation Results */}
-      {translationMetrics && (
-        <div className="chart-card tr-section" id="pdk-translation-results">
-          <h2 className="tr-section-heading">3. PDK Translation Results</h2>
-          <SectionBlock section={translationMetrics} />
+      {/* 3. Full Reports */}
+      <div className="chart-card tr-section" id="tr-reports">
+        <h2 className="tr-section-heading">Full Reports <span className="hint">({result.reports.length})</span></h2>
+        {result.reports.length === 0 ? (
+          <p className="hint" style={{ padding: "1rem" }}>No source Markdown report available for this result.</p>
+        ) : (
+          result.reports.map((rpt, _i) => (
+            <div key={rpt.relPath} className="tr-report-entry">
+              {result.reports.length > 1 && (
+                <div className="tr-report-separator">
+                  <strong>{rpt.name}</strong>
+                  <span className="hint">{rpt.size} · <code>{rpt.hash}</code></span>
+                </div>
+              )}
+              <MarkdownReport report={rpt} result={result} />
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* 4. Original Plots */}
+      <div className="chart-card tr-section" id="tr-plots">
+        <h2 className="tr-section-heading">Original Plots <span className="hint">({result.plots.length})</span></h2>
+        <PlotGalleryBlock result={result} />
+      </div>
+
+      {/* 5. Artifacts */}
+      <div className="chart-card tr-section" id="tr-artifacts">
+        <h2 className="tr-section-heading">Artifacts</h2>
+        <div className="tr-table-wrap">
+          <table className="tr-table">
+            <thead><tr><th>Name</th><th>Type</th><th>Path</th><th>Size</th><th>Hash</th></tr></thead>
+            <tbody>
+              {result.reports.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>report</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
+              {result.dataArtifacts.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>{f.format}</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
+              {result.plots.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>plot</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
+              {result.otherArtifacts.map(f => <tr key={f.relPath}><td><code>{f.name}</code></td><td>{f.format || "other"}</td><td><code>{f.relPath}</code></td><td>{f.size}</td><td><code>{f.hash}</code></td></tr>)}
+            </tbody>
+          </table>
         </div>
-      )}
-
-      {/* 5. Raw vs Effective Success */}
-      {rawVsEffective && (
-        <div className="chart-card tr-section" id="raw-vs-effective">
-          <h2 className="tr-section-heading">4. Raw vs Effective Success</h2>
-          <SectionBlock section={rawVsEffective} />
-        </div>
-      )}
-
-      {/* 6. Verification Results */}
-      {verification && (
-        <div className="chart-card tr-section" id="verification-results">
-          <h2 className="tr-section-heading">5. Verification Results</h2>
-          <SectionBlock section={verification} />
-        </div>
-      )}
-
-      {/* 7. Confidence Tier Ranking */}
-      {confidence && (
-        <div className="chart-card tr-section" id="confidence-tier">
-          <h2 className="tr-section-heading">6. Confidence Tier Ranking</h2>
-          <SectionBlock section={confidence} />
-        </div>
-      )}
-
-      {/* 8. Failure Analysis */}
-      {failure && (
-        <div className="chart-card tr-section" id="failure-analysis">
-          <h2 className="tr-section-heading">7. Failure Analysis</h2>
-          <SectionBlock section={failure} />
-        </div>
-      )}
-
-      {/* 9. Original Verification Plots */}
-      <PlotGallery manifest={manifest} />
-
-      {/* 10. Full Original Report (remaining sections) */}
-      {restContent && (
-        <div className="tr-report chart-card" id="full-report">
-          <h2 className="tr-section-heading">8. Full Original Report</h2>
-          <TOC sections={sections} />
-          <div className="tr-md">
-            {<div dangerouslySetInnerHTML={{ __html: renderMarkdown(manifest.reportMarkdown) }} />}
-          </div>
-        </div>
-      )}
-
-      {/* 11. Artifacts */}
-      <ArtifactTable manifest={manifest} />
+      </div>
     </div>
   );
 }
