@@ -1,8 +1,8 @@
-// Auto-generated — 2026-07-18T09:50:37.826Z
+// Auto-generated — 2026-07-19T05:06:04.832Z
 // Runs: 2, Models: 2, Suites: 2
 import type { SpiceBenchmarkManifest } from "./SpiceBenchmarkTypes";
 export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
-  "generatedAt": "2026-07-18T09:50:37.823Z",
+  "generatedAt": "2026-07-19T05:06:04.828Z",
   "repoUrl": "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark",
   "runs": {
     "reference_results": {
@@ -2871,6 +2871,6 @@ export const SPICE_BENCHMARK_MANIFEST: SpiceBenchmarkManifest = {
   "modelFormats": [
     "ngspice"
   ],
-  "availableModels": 10
+  "availableModels": 14
 };
 export const SOURCE_INVENTORY = {"dataFiles":66,"plotFiles":45,"reportFiles":2,"logFiles":0,"netlistFiles":0,"otherFiles":0,"totalArtifacts":113};
