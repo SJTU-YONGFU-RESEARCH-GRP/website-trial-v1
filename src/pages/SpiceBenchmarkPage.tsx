@@ -412,9 +412,9 @@ export function SpiceBenchmarkPage() {
           <label className="axis-picker">Run<select value={runId} onChange={e => setRunId(e.target.value)}>{runIds.map(rid => <option key={rid} value={rid}>{rid}</option>)}</select></label>
           <label className="axis-picker">Model<select value={selectedModelId} onChange={e => onModelChange(e.target.value)}>
             <optgroup label="Completed runs">{manifest.modelIds.map(mid => <option key={mid} value={mid}>{mid}</option>)}</optgroup>
-            <optgroup label="Available but not run"><option value="" disabled>{(manifest.availableModels||0)} model(s) configured</option></optgroup>
+            <optgroup label="Available but not run"><option value="" disabled>{(manifest.availableModels||0)} model(s) configured — run benchmarks to populate</option></optgroup>
           </select></label>
-          <label className="axis-picker">Format<span className="benchmark-readonly">{run.modelFormat}</span></label>
+          <label className="axis-picker">Simulator<span className="benchmark-readonly">{run.modelFormat} ({run.simulator} v{run.simulatorVersion})</span></label>
           <label className="axis-picker">Netlist Suite<select value={selectedSuiteId} onChange={e => onSuiteChange(e.target.value)}>{manifest.suiteIds.map(sid => <option key={sid} value={sid}>{sid}</option>)}</select></label>
           <label className="axis-picker">Analysis<select value={analysis} onChange={e => setAnalysis(e.target.value as AnalysisDomain)}>{availableDomains.map(d => <option key={d} value={d}>{DOMAIN_LABELS[d]}</option>)}</select></label>
           <label className="axis-picker">Plot aspect<select value={plotAspect} onChange={e => setPlotAspect(e.target.value as PlotAspectMode)}>{["flexible","16:9","4:3","1:1"].map(a => <option key={a}>{a}</option>)}</select></label>
@@ -456,6 +456,23 @@ export function SpiceBenchmarkPage() {
             </div>
         )}
         <p className="hint benchmark-datasets-summary">{visibleDatasets.length}/{datasets.length} dataset(s) shown for {DOMAIN_LABELS[analysis]} · {run.plotArtifacts.filter(p => analysis === "overview" || p.domain === analysis).length} plot(s)</p>
+
+        {/* Simulator status overview */}
+        {manifest.modelFormats.length > 1 && (
+          <div className="benchmark-series" style={{marginTop:"0.5rem",display:"block"}}>
+            <div style={{fontWeight:600,fontSize:"0.78rem",marginBottom:"0.25rem"}}>Simulator Status:</div>
+            {manifest.modelFormats.map(f => {
+              const runsForFormat = Object.values(manifest.runs).filter(r => r.modelFormat === f);
+              const hasResults = runsForFormat.length > 0;
+              return (
+                <span key={f} style={{marginRight:"0.75rem",fontSize:"0.75rem"}}>
+                  <span className={`tr-badge tr-badge--${hasResults ? "completed" : "partial"}`} style={{marginRight:"0.25rem"}}>{f}</span>
+                  {hasResults ? `${runsForFormat.length} run(s) complete` : "no results yet"}
+                </span>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* ─── Summary ─── */}

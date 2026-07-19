@@ -440,6 +440,10 @@ function main() {
           let st; try { st=statSync(fp); } catch { continue; }
           if (st.isDirectory()) {
             if (["models",".git","node_modules","__pycache__","results","plots","data"].includes(e)) continue;
+            const dl = e.toLowerCase();
+            if (dl==="spectre"||dl.includes("spectre")) formatsSet.add("spectre");
+            else if (dl==="hspice"||dl.includes("hspice")) formatsSet.add("hspice");
+            else if (dl==="ngspice"||dl.includes("ngspice")) formatsSet.add("ngspice");
             scanForModels(fp);
             continue;
           }
@@ -447,6 +451,14 @@ function main() {
           if (/\.(cir|sp|inc|lib|scs)$/i.test(ext)) {
             const pd = p.replace(src.path,"").split("/").filter(Boolean)[0]||"unknown";
             if (!COVERAGE.pdks.includes(pd)) COVERAGE.pdks.push(pd);
+            if (ext===".scs") formatsSet.add("spectre");
+            else if (ext===".sp") formatsSet.add("hspice");
+            else if (ext===".cir") formatsSet.add("ngspice");
+            else {
+              const parentDir = p.split("/").pop()?.toLowerCase()||"";
+              if (parentDir.includes("spectre")) formatsSet.add("spectre");
+              else if (parentDir.includes("hspice")) formatsSet.add("hspice");
+            }
             availableFound++;
           }
         }
