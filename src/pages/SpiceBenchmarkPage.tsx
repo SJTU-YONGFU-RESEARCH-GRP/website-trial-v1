@@ -414,7 +414,16 @@ export function SpiceBenchmarkPage() {
             <optgroup label="Completed runs">{manifest.modelIds.map(mid => <option key={mid} value={mid}>{mid}</option>)}</optgroup>
             <optgroup label="Available but not run"><option value="" disabled>{(manifest.availableModels||0)} model(s) configured — run benchmarks to populate</option></optgroup>
           </select></label>
-          <label className="axis-picker">Simulator<span className="benchmark-readonly">{run.modelFormat} ({run.simulator} v{run.simulatorVersion})</span></label>
+          <label className="axis-picker">Simulator<select value={run.modelFormat} onChange={e => {
+            const matching = Object.values(manifest.runs).find(r => r.modelFormat === e.target.value);
+            if (matching) setRunId(matching.runId);
+          }}>
+            {manifest.modelFormats.map(f => {
+              const runsForF = Object.values(manifest.runs).filter(r => r.modelFormat === f);
+              const r0 = runsForF[0];
+              return <option key={f} value={f} disabled={!r0}>{f}{r0 ? ` (${r0.simulator} v${r0.simulatorVersion}, ${runsForF.length} runs)` : " — no results yet"}</option>;
+            })}
+          </select></label>
           <label className="axis-picker">Netlist Suite<select value={selectedSuiteId} onChange={e => onSuiteChange(e.target.value)}>{manifest.suiteIds.map(sid => <option key={sid} value={sid}>{sid}</option>)}</select></label>
           <label className="axis-picker">Analysis<select value={analysis} onChange={e => setAnalysis(e.target.value as AnalysisDomain)}>{availableDomains.map(d => <option key={d} value={d}>{DOMAIN_LABELS[d]}</option>)}</select></label>
           <label className="axis-picker">Plot aspect<select value={plotAspect} onChange={e => setPlotAspect(e.target.value as PlotAspectMode)}>{["flexible","16:9","4:3","1:1"].map(a => <option key={a}>{a}</option>)}</select></label>

@@ -241,7 +241,12 @@ function parseReport(reportPath) {
   try {
     const md = readFileSync(reportPath,"utf-8");
     const simM = md.match(/\*\*Simulator:\*\*\s*(\S+)\s*(\S*)/)||md.match(/Simulator:\s*(\S+)\s*(\S*)/i);
-    const sim = simM?simM[1]:"ngspice", ver = simM?simM[2]||"unknown":"unknown";
+    const verM = md.match(/Version:\s*(\S+)\s*(\S*)/i)||md.match(/version:\s*(\S+)/i);
+    let sim = simM?simM[1]:"ngspice", ver = simM?simM[2]||"unknown":"unknown";
+    if (ver==="unknown" && verM) {
+      const v = verM[1].replace(/^ngspice-?/i,"");
+      if (v && v!=="unknown") { sim = "ngspice"; ver = v; }
+    }
     const orM = md.match(/##\s*Overall Result:?\s*(\w+)/i);
     let overall = "unavailable";
     if (orM) { const w=orM[1].toUpperCase(); overall=w==="PASS"?"pass":w==="FAIL"?"fail":"unavailable"; }
