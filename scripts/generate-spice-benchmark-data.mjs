@@ -421,7 +421,7 @@ function main() {
   console.log(`  Sources: ${sources.map(s=>s.label).join(", ") || "none"}`);
 
   const allRuns = {}, allModels = {}, allSuites = {};
-  const modelIds=[], suiteIds=[], formatsSet=new Set();
+  const modelIds=[], suiteIds=[], formatsSet=new Set(["ngspice","hspice","spectre"]);
   const indexedPaths = new Set(); // dedup identical paths across sources
   let availableModels = 0;
 
