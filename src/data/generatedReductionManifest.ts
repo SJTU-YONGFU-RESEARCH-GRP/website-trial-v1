@@ -1,7 +1,7 @@
-// Auto-generated: 2026-07-20T12:06:09.969Z
+// Auto-generated: 2026-07-20T12:11:12.967Z
 import type { ReductionManifest } from "./ReductionTypes";
 export const REDUCTION_MANIFEST: ReductionManifest = {
-  "generatedAt": "2026-07-20T12:06:09.961Z",
+  "generatedAt": "2026-07-20T12:11:12.952Z",
   "results": [
     {
       "resultId": "bsim-reduction",
