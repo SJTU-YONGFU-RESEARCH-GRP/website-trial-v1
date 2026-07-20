@@ -9,6 +9,14 @@ const TOOLS = [
       "End-to-end design flow connecting layout generation, parasitic extraction, and timing characterization for digital standard cells.",
   },
   {
+    title: "Model Reduction",
+    subtitle: "BSIM parameter reduction & optimization",
+    repo: "spice_model_reduction",
+    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_reduction",
+    flowPath: "/#/reduction",
+    description: "BSIM model reduction: 62→12 parameters, 80.6% reduction, accuracy preserved within tolerance. DC IV validation with full convergence analysis.",
+  },
+  {
     title: "SPICE Translator",
     subtitle: "HSPICE/Spectre → ngspice model translation",
     repo: "new-spice-translator",

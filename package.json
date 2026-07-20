@@ -8,10 +8,12 @@
     "generate:data": "node scripts/generate-design-data.mjs",
     "generate:spice-benchmark": "node scripts/generate-spice-benchmark-data.mjs",
     "generate:translator": "node scripts/generate-spice-translator-data.mjs",
+    "generate:reduction": "node scripts/generate-reduction-data.mjs",
+    "validate:reduction": "node scripts/validate-reduction-data.mjs",
     "validate:flow-data": "node scripts/validate-flow-data.mjs",
     "validate:spice-benchmark-data": "node scripts/validate-spice-benchmark-data.mjs",
     "validate:translator": "node scripts/validate-spice-translator-data.mjs",
-    "build": "npm run generate:data && npm run generate:spice-benchmark && npm run generate:translator && npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:translator && tsc --noEmit && vite build",
+    "build": "npm run generate:data && npm run generate:spice-benchmark && npm run generate:translator && npm run generate:reduction && npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:translator && npm run validate:reduction && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
