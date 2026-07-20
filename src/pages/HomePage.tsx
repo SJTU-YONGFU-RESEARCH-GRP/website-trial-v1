@@ -9,6 +9,14 @@ const TOOLS = [
       "End-to-end design flow connecting layout generation, parasitic extraction, and timing characterization for digital standard cells.",
   },
   {
+    title: "Model Expansion",
+    subtitle: "TT → T/S/F corners + Monte Carlo",
+    repo: "spice_model_expansion",
+    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_expansion",
+    flowPath: "/#/expansion",
+    description: "Single TT model expanded to Typical/Slow/Fast corners with full Monte Carlo characterization. IV/CV comparison, parameter distributions, and design margin analysis.",
+  },
+  {
     title: "Model Reduction",
     subtitle: "BSIM parameter reduction & optimization",
     repo: "spice_model_reduction",
