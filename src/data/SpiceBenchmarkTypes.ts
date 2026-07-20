@@ -149,6 +149,17 @@ export interface SpiceBenchmarkManifest {
   availableModels: number;
 }
 
+/* ─── Cross-simulator comparison ─── */
+export interface SimulatorComparisonEntry {
+  mode: string;           // DC, AC, Transient, Noise
+  simulator: string;      // ngspice, spectre, hspice
+  status: "pass" | "fail" | "partial" | "not_run";
+  durationSec?: number;   // execution time in seconds
+  peakMemoryMB?: number;  // peak memory in MB
+  dataFileCount?: number;
+  plotCount?: number;
+}
+
 /* ─── Helper types for page state ─── */
 
 export type NumericScaleMode = "linear" | "log";

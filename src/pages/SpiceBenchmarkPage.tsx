@@ -291,6 +291,138 @@ function VerificationSection({ run }: { run: BenchmarkRun }) {
 /*  Artifact Table                                                      */
 /* ═══════════════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Cross-Simulator Comparison                                          */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+function SimulatorComparisonSection({ runs, modelFormats }: { runs: BenchmarkRun[]; modelFormats: string[] }) {
+  if (runs.length < 2 && modelFormats.length <= 1) return null;
+
+  // Build comparison matrix: mode × simulator
+  const modes = ["DC","AC","Transient","Noise"];
+  const comparisonData: {mode:string; simulator:string; status:string; durationSec?:number; peakMemoryMB?:number; dataFiles:number; plotCount:number}[] = [];
+
+  for (const run of runs) {
+    const sim = run.modelFormat || run.simulator;
+    // Count artifacts per mode
+    const dcData = run.dataArtifacts.filter(a => a.domain==="dc").length;
+    const acData = run.dataArtifacts.filter(a => a.domain==="ac").length;
+    const trData = run.dataArtifacts.filter(a => a.domain==="transient").length;
+    const noData = run.dataArtifacts.filter(a => a.domain==="noise").length;
+    const dcPlots = run.plotArtifacts.filter(a => a.domain==="dc").length;
+    const acPlots = run.plotArtifacts.filter(a => a.domain==="ac").length;
+    const trPlots = run.plotArtifacts.filter(a => a.domain==="transient").length;
+    const noPlots = run.plotArtifacts.filter(a => a.domain==="noise").length;
+
+    // Extract timing from data artifacts metadata
+    const runtime = run.dataArtifacts.reduce((sum, a) => sum + ((a.metadata as any)?.durationSec || 0), 0) || undefined;
+
+    comparisonData.push({mode:"DC",simulator:sim,status:dcData>0?"pass":"not_run",durationSec:runtime,dataFiles:dcData,plotCount:dcPlots});
+    comparisonData.push({mode:"AC",simulator:sim,status:acData>0?"pass":"not_run",dataFiles:acData,plotCount:acPlots});
+    comparisonData.push({mode:"Transient",simulator:sim,status:trData>0?"pass":"not_run",dataFiles:trData,plotCount:trPlots});
+    comparisonData.push({mode:"Noise",simulator:sim,status:noData>0?"pass":"not_run",dataFiles:noData,plotCount:noPlots});
+  }
+
+  // Add known-but-not-run simulators
+  for (const fmt of modelFormats) {
+    const hasRun = runs.some(r => (r.modelFormat||r.simulator) === fmt);
+    if (!hasRun) {
+      for (const m of modes) {
+        comparisonData.push({mode:m,simulator:fmt,status:"not_run",dataFiles:0,plotCount:0});
+      }
+    }
+  }
+
+  return (
+    <div className="chart-card benchmark-section">
+      <h2>Cross-Simulator Comparison</h2>
+      <p className="hint">Per-mode comparison across simulators. Time and memory data populated when benchmarks run with instrumentation.</p>
+
+      {/* Status matrix */}
+      <div className="tr-table-wrap" style={{marginBottom:"0.75rem"}}>
+        <table className="benchmark-table">
+          <thead><tr><th>Mode</th>{modelFormats.map(f => <th key={f} style={{textAlign:"center"}}>{f}</th>)}<th style={{textAlign:"center"}}>Winner</th></tr></thead>
+          <tbody>
+            {modes.map(mode => {
+              const entries = comparisonData.filter(c => c.mode===mode);
+              const best = entries.filter(e => e.status==="pass").sort((a,b) => (a.durationSec||999) - (b.durationSec||999))[0];
+              return (
+                <tr key={mode}>
+                  <td><strong>{mode}</strong></td>
+                  {modelFormats.map(fmt => {
+                    const e = entries.find(x => x.simulator===fmt);
+                    if (!e || e.status==="not_run") return <td key={fmt} style={{textAlign:"center",color:"var(--muted)"}}>—</td>;
+                    return (
+                      <td key={fmt} style={{textAlign:"center"}}>
+                        <span style={{color:e.status==="pass"?"var(--ok,#22c55e)":"var(--fail,#ef4444)"}}>
+                          {e.status==="pass"?"✓":"✗"}
+                        </span>
+                        <span className="hint" style={{fontSize:"0.65rem",display:"block"}}>
+                          {e.dataFiles} data · {e.plotCount} plots
+                          {e.durationSec ? ` · ${e.durationSec}s` : ""}
+                        </span>
+                      </td>
+                    );
+                  })}
+                  <td style={{textAlign:"center",fontSize:"0.75rem"}}>
+                    {best ? <span className="tr-badge tr-badge--completed">{best.simulator}</span> : "—"}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Performance comparison placeholder */}
+      <h3 className="flow-subsection-title">Performance Comparison</h3>
+      <p className="hint">
+        Cross-simulator execution time and peak memory comparison.
+        <strong> Current data:</strong> only ngspice results available ({runs.filter(r=>r.status==="completed").length} runs).
+        {modelFormats.filter(f=>!runs.some(r=>(r.modelFormat||r.simulator)===f)).length > 0 &&
+          <> <strong>Pending:</strong> {modelFormats.filter(f=>!runs.some(r=>(r.modelFormat||r.simulator)===f)).join(", ")} benchmarks not yet executed.</>
+        }
+      </p>
+      <div className="tr-table-wrap">
+        <table className="benchmark-table">
+          <thead><tr><th>Simulator</th><th>DC</th><th>AC</th><th>Transient</th><th>Noise</th><th>Total Time</th><th>Peak Memory</th></tr></thead>
+          <tbody>
+            {modelFormats.map(fmt => {
+              const simRuns = runs.filter(r => (r.modelFormat||r.simulator) === fmt);
+              if (simRuns.length === 0) {
+                return (
+                  <tr key={fmt}>
+                    <td><code>{fmt}</code> <span className="tr-badge tr-badge--partial">not run</span></td>
+                    <td colSpan={6} style={{color:"var(--muted)",fontSize:"0.75rem"}}>
+                      Netlists configured — run <code>spice-benchmark --simulator {fmt}</code> to populate
+                    </td>
+                  </tr>
+                );
+              }
+              const r = simRuns[0];
+              const dcN = r.dataArtifacts.filter(a=>a.domain==="dc").length;
+              const acN = r.dataArtifacts.filter(a=>a.domain==="ac").length;
+              const trN = r.dataArtifacts.filter(a=>a.domain==="transient").length;
+              const noN = r.dataArtifacts.filter(a=>a.domain==="noise").length;
+              return (
+                <tr key={fmt}>
+                  <td><code>{fmt}</code> <span className="tr-badge tr-badge--completed">v{r.simulatorVersion}</span></td>
+                  <td className="tr-num">{dcN} files</td>
+                  <td className="tr-num">{acN} files</td>
+                  <td className="tr-num">{trN} files</td>
+                  <td className="tr-num">{noN} files</td>
+                  <td className="tr-num">— s</td>
+                  <td className="tr-num">— MB</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function ArtifactSection({ run }: { run: BenchmarkRun }) {
   const all = [...run.dataArtifacts.map(a => ({ ...a, kind: "data" as const })), ...run.plotArtifacts.map(p => ({ ...p, kind: "plot" as const }))];
   return (
@@ -489,6 +621,9 @@ export function SpiceBenchmarkPage() {
 
       {/* ─── Overview ─── */}
       <OverviewSection run={run} />
+
+      {/* ─── Cross-Simulator Comparison ─── */}
+      <SimulatorComparisonSection runs={Object.values(manifest.runs)} modelFormats={manifest.modelFormats} />
 
       {/* ─── Artifacts ─── */}
       <ArtifactSection run={run} />

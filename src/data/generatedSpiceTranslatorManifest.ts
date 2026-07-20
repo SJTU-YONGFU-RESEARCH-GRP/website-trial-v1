@@ -1,7 +1,7 @@
-// Auto-generated: 2026-07-19T05:51:06.808Z
+// Auto-generated: 2026-07-20T03:19:37.216Z
 import type { SpiceTranslatorManifest } from "./SpiceTranslatorTypes";
 export const TRANSLATOR_MANIFEST: SpiceTranslatorManifest = {
-  "generatedAt": "2026-07-19T05:51:06.796Z",
+  "generatedAt": "2026-07-20T03:19:37.203Z",
   "defaultResultId": "full-batch",
   "allPdks": [
     "all",
