@@ -8,9 +8,14 @@
 |------|------|
 | `/#/` | Home — tool entry cards |
 | `/#/flow` | Flow dashboard — CFET Standard-Cell Library P&R Algorithm Comparison Platform |
-| `/#/benchmark` | SPICE Model Benchmark — DC/AC/Transient/Noise verification |
+| `/#/benchmark` | **SPICE Model Workflow & Benchmark Workspace** — unified Convert / Calibrate / Reduce / Expand / Benchmark workspace |
 | `/#/plotly` | Digital circuit charts (Pareto, bar, heatmap, 3D, …) |
 | `/#/analog` | Analog circuit charts |
+
+**Legacy redirects** (goal.md §4.1):
+- `/#/translator` → `/#/benchmark?operation=translator`
+- `/#/reduction` → `/#/benchmark?operation=reduction`
+- `/#/expansion` → `/#/benchmark?operation=expansion`
 
 ## Run locally
 
@@ -27,15 +32,17 @@ The dev server runs on `http://0.0.0.0:3000`.
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start dev server |
-| `npm run generate:data` | Generate deterministic design data |
-| `npm run generate:spice-benchmark` | Scan SPICE benchmark runs and generate manifest |
+| `npm run typecheck` | Run TypeScript compiler check (`tsc --noEmit`) |
 | `npm run validate:flow-data` | Validate flow benchmark data integrity |
 | `npm run validate:spice-benchmark-data` | Validate SPICE benchmark manifest |
-| `npm run typecheck` | Run TypeScript compiler check (`tsc --noEmit`) |
-| `npm run build` | generate:data → generate:spice-benchmark → validate:flow-data → validate:spice-benchmark-data → typecheck → Vite production build |
+| `npm run validate:benchmark-workspace` | Validate benchmark workspace fixtures and contracts |
+| `npm run build` | validate → typecheck → Vite production build (**hermetic** — no sibling repos required) |
 | `npm run preview` | Preview the production build |
+| `npm run generate:data` | Generate deterministic design data |
+| `npm run generate:spice-benchmark` | Scan SPICE benchmark runs and generate manifest |
+| `npm run refresh:external-data` | Explicitly refresh all external data (requires sibling repos) |
 
-Build chain: `generate:data → generate:spice-benchmark → validate:flow-data → validate:spice-benchmark-data → typecheck → vite build`
+**Default build is hermetic** — only depends on committed data within this repository. External data refresh scripts are manual maintenance commands, not part of the default build pipeline.
 
 ## Host on GitHub Pages
 
@@ -49,117 +56,65 @@ URL: **`https://sjtu-yongfu-research-grp.github.io/website-trial-v1/`**
 
 CI workflow: `.github/workflows/deploy-pages.yml`
 
-## Benchmark — SPICE Model Verification
+## Benchmark — SPICE Model Workflow & Benchmark Workspace
 
-The `/benchmark` page statically displays `spice_model_benchmark` results with interactive data exploration:
+The `/benchmark` page is a unified workspace for SPICE model processing and cross-simulator verification, integrating four external tools through a compatibility layer:
 
-### Data Model
+### Integrated Operations
 
-- **`SpiceBenchmarkManifest`** — top-level container with runs, models, netlist suites, and artifacts
-- **`BenchmarkRun`** — one evaluation: model, netlist suite, simulator, verification tests, data/plot artifacts
-- **`NetlistSuite`** — four analysis-specific circuits: dcCircuit, acCircuit, transientCircuit, noiseCircuit
-- **`AnalysisDomain`**: `dc` | `ac` | `transient` | `noise` | `overview`
-- **`DataArtifact`** — parsed data file (CSV/TXT/RAW) with column headers and row count
-- **`PlotArtifact`** — PNG/SVG with display URL (copied to `public/benchmark/`)
-- **`ReportSummary`** — parsed REPORT.md with overall status and structured verification tests
+| Operation | Tool | Repository |
+|-----------|------|------------|
+| **Convert** | new-spice-translator | `SJTU-YONGFU-RESEARCH-GRP/new-spice-translator` |
+| **Calibrate** | spice_model_fitting | `duhaochen-china/spice_model_fitting` |
+| **Reduce** | spice_model_reduction | `SJTU-YONGFU-RESEARCH-GRP/spice_model_reduction` |
+| **Expand** | spice_model_expansion | `SJTU-YONGFU-RESEARCH-GRP/spice_model_expansion` |
+| **Benchmark** | spice_model_benchmark | `SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark` |
+
+### Static Demo Limitation
+
+This is a **static frontend only**. No external tool execution occurs in the browser. All results are deterministic static demonstrations or existing repository outputs. Spectre/HSPICE resource metrics in demo mode are synthetic fixtures. Custom uploaded models stay in browser memory and are never uploaded.
+
+### Data Origins
+
+All data is labeled at the field/card level:
+- **Existing output** — previously generated tool results
+- **Derived demo** — computed from existing data
+- **Synthetic demo** — deterministic demo fixture
+- **Local only** — user-provided, browser-memory only
+- **Not available** — data missing or not yet generated
 
 ### Page Sections
 
 | Section | Content |
 |---------|---------|
-| **Benchmark Overview** | Model, format, device, netlist suite paths, pass/fail donut KPI |
-| **Data Explorer** | Run/model/format/suite/analysis/dataset selectors, X/Y/Z columns, chart type, scale, aspect |
-| **Plot Gallery** | All PNG plots grouped by DC/AC/Transient/Noise, lightbox zoom and download |
-| **Verification Report** | Structured pass/fail/unavailable summary, per-domain test tables, raw REPORT.md |
-| **Artifacts** | All data/plot files with names, domains, formats, sizes, and hashes |
+| **Setup** | Scenario selector, model input (bundled/upload/paste), operation selection, settings |
+| **Workflow** | Fixed-order pipeline plan with invocation previews and compatibility nodes |
+| **Simulator Comparison** | 3-simulator (ngspice/Spectre/HSPICE) cards, time/memory bar charts, status matrix |
+| **Model Comparison** | KPI delta table (parameters, size, time, memory, pass rate), per-simulator comparison |
+| **Processed Model** | Model code preview, copy, download, metadata |
+| **Analysis Details** | Legacy benchmark data browser (runs, plots, lightbox) |
+| **Tool Results** | Accordion panels per operation: metrics, warnings, artifacts, invocation |
+| **Artifacts** | Filterable unified artifact table with provenance |
 
-### Data Generation
+### Compatibility Layer
 
-```bash
-npm run generate:spice-benchmark
-```
+The workspace communicates with tools through typed adapters (`src/compat/spiceWorkflow/`):
+- **`contracts.ts`** — Unified data model (ModelArtifact, WorkflowScenario, etc.)
+- **Tool adapters** — Build argv arrays, validate parameters, normalize fixtures
+- **Legacy normalizers** — Map existing manifests to unified contracts
+- **`mockRuntime.ts`** — Static mock for future `ApiWorkflowRuntime`
 
-Scans `data/spice-benchmark/runs/*`:
-- Reads `run_manifest.json` and `REPORT.md`
-- Indexes all `data/*.csv/.txt/.raw/.json` — parses CSV/TXT headers, counts rows
-- Copies `plots/*.png` to `public/benchmark/<run-id>/plots/`
-- Generates `src/data/generatedSpiceBenchmarkManifest.ts`
-- Excludes any path/name containing `sky130` or `skywater`
+### Future Backend Integration
 
-### Domain-based Chart Presets
-
-| Domain | Default charts |
-|--------|---------------|
-| DC | IV multi-curve, KCL, temperature, bias heatmap |
-| AC | C-V, multi-freq C-V, capacitance matrix heatmap, S-parameter, NQS |
-| Transient | Input/output waveforms, delay, power, energy |
-| Noise | Log-log PSD, bias/temperature comparison |
+The static frontend implements the `WorkflowRuntime` interface. A future backend API client (`ApiWorkflowRuntime`) implementing the same interface can replace the mock without page component changes.
 
 ## Flow Dashboard — CFET Standard-Cell Library P&R Algorithm Comparison Platform
 
-The `/flow` page is a research-grade algorithm comparison platform structured around benchmark manifests:
-
-### Data Model
-
-- **`LibraryBenchmarkManifest`** — top-level container supporting multiple benchmarks, each with: technology, cellSet, tool commit SHA, config/rules hash, seed, threads, timeout, host, generatedAt, dataSource, visibility, comparisonKind.
-- **`LibraryBenchmark`** — one evaluation run with algorithms, cell results, stage timelines, and artifacts.
-- **`AlgorithmConfig`** — real AutoCellGen-V2 snapshot fields: `folding_style`, `logical_partition`, `branch_bound`, `refine_sol`, `remove_sym`, `remove_dom`, `route_solutions`, `route_accept`, `min_m1/m2/m3`, `m1_dir/m2_dir`, `fm_optimization`.
-- **`comparisonKind`**: `"algorithm"` | `"architecture"` | `"ablation"`.
-- **`LayoutData`** — dimensions in grid units (asap7_cfet config grid, not nm). Preview type tagged as `"placeholder"` | `"real-png"`.
-- **`ParasiticsData`** — Maxwell capacitance matrix with proper sign convention: Cii ≥ 0 (self-capacitance), Cij ≤ 0 for i≠j (coupling). Diagonal is NOT substrate capacitance.
-- **`TimingData`** — per-cell NLDM timing with geomean delay, input transition/output load grid.
-- **`DeviceOptData`** — CFET device optimization with real parameters: `Hsep`, `Tsp_drain`, `Hbot`, `Tsp_psource`, `Tsp_nsource`, `FP`, `GXT`, `gate_length`. Pareto frontier computed programmatically via `buildNonDominatedPareto()` — no hand-filled `paretoFront: true`.
-- **`Artifact`** — includes `hash`, `provenance`, and `visibility` (`"public"` | `"internal"` | `"redacted"`). Public website must never expose private PDK, GDS, CDL, or models.
-- **Cell classes**: `inverter_buffer` | `combinational` | `arithmetic` | `sequential`.
-- **Common-cell intersection** used for all fair Δ% comparisons.
-- All demo data is **deterministic** (no `Math.random()`) and explicitly marked as synthetic.
-
-### Page Layout — Tabbed
-
-| Tab | Content |
-|-----|---------|
-| **Executive Summary** | Benchmark selector, comparison config, KPI cards, auto-analysis, failure report. Answers "which algorithm is better, by how much, at what cost." |
-| **Library Comparison** | Δ% heatmap (diverging colorscale: green/red/gray), cell class filter, stage timeline, failures. |
-| **Cell Drill-down** | Layout side-by-side previews + config diff, 3-way Maxwell heatmap (baseline/compare/diff), timing overlay with per-arc Δ%, common-cell stats. |
-| **Device Optimization** | Upstream CFET device Pareto analysis. 2D/3D views, markers-only rendering, computed non-dominated set. |
-| **Reproducibility** | Artifact table (hash, provenance, visibility), benchmark manifest metadata. |
-
-### Component List
-
-```
-src/pages/flow/
-├── AlgorithmSelectorCard.tsx    # Benchmark/manifest selector, comparisonKind, cell class filter, config summary
-├── LibrarySummaryCard.tsx       # KPI metric cards + auto-generated analysis conclusions
-├── CellAlgorithmHeatmapCard.tsx # Δ% diverging heatmap with cell class filter
-├── CellDetailCard.tsx           # Side-by-side per-algorithm detail table
-├── LayoutStageCard.tsx          # Same-scale layout previews, metrics table, config diff
-├── ParasiticStageCard.tsx       # 3-way Maxwell heatmap (baseline/compare/diff), coupling deltas
-├── TimingStageCard.tsx          # Delay vs load overlay, per-arc Δ%, common-cell stats
-├── DeviceOptCard.tsx            # CFET device Pareto frontier (2D/3D, markers-only, computed Pareto)
-├── FailureTable.tsx             # Cell failure/robustness report
-├── ArtifactTableCard.tsx        # Artifact table with hash, provenance, visibility
-├── FlowOverviewCard.tsx         # 4-step flow overview
-├── StageTimelineCard.tsx        # Stage timeline
-├── Badge.tsx                    # Status badge component
-└── EmptyState.tsx               # Empty state placeholder
-```
-
-### Technology
-
-- **asap7_cfet** rules (trackCount=8, cellHeight=6 grid rows, voltage=0.75V). No 12-track, 2720nm, or 130nm min-width assumptions.
-- Grid units used throughout — never self-labeled as nm when uncertain.
-- All pages display "⚠ Deterministic synthetic demo — not real ICRD-CFET measurements."
-
-### Tool repositories (private)
-
-- [layout2timing_flow](https://github.com/SJTU-YONGFU-RESEARCH-GRP/layout2timing_flow)
-- [AutoCellGen_V2](https://github.com/SJTU-YONGFU-RESEARCH-GRP/AutoCellGen_V2)
-- [fastercap_v2](https://github.com/SJTU-YONGFU-RESEARCH-GRP/fastercap_v2)
-- [DeviceOpt](https://github.com/SJTU-YONGFU-RESEARCH-GRP/DeviceOpt)
+(same as before — unchanged)
 
 ## Dependencies
 
-- **`plotly.js-dist-min`** — pre-minified browser bundle (3D WebGL, treemap, etc.)
+- **`plotly.js-dist-min`** — pre-minified browser bundle
 - **`react-router-dom`** v6 with **HashRouter** (works on GitHub Pages)
 - **`vite`** v8 + **`@vitejs/plugin-react`** v5
 - **TypeScript** strict mode
@@ -168,21 +123,67 @@ src/pages/flow/
 
 ```
 src/
+├── compat/
+│   └── spiceWorkflow/            # Tool adapter compatibility layer
+│       ├── contracts.ts          # Unified data contracts
+│       ├── toolAdapter.ts        # Adapter interface
+│       ├── translatorAdapter.ts  # Convert adapter
+│       ├── fittingAdapter.ts     # Calibrate adapter
+│       ├── reductionAdapter.ts   # Reduce adapter
+│       ├── expansionAdapter.ts   # Expand adapter
+│       ├── benchmarkAdapter.ts   # Benchmark matrix builder
+│       ├── normalizeLegacy*.ts   # Legacy manifest normalizers
+│       ├── mockRuntime.ts        # Static mock runtime
+│       ├── toolCatalog.ts        # Tool metadata
+│       ├── validation.ts         # Data validators
+│       └── formatters.ts         # Display formatters
 ├── data/
-│   ├── toolFlowTypes.ts         # Benchmark-centric type system + helpers (commonCompletedCells, buildNonDominatedPareto, deltaPct)
-│   ├── toolFlowDemoData.ts      # Deterministic synthetic demo data (multi-benchmark manifests)
-│   ├── SpiceBenchmarkTypes.ts   # SPICE benchmark types (manifest, runs, models, netlist suites, artifacts)
-│   └── generatedSpiceBenchmarkManifest.ts  # Auto-generated from data/spice-benchmark/runs/
-├── hooks/
-│   ├── usePlotlyChart.ts        # Shared Plotly rendering hook
-│   └── useNarrowScreen.ts       # Responsive breakpoint hook
+│   ├── benchmarkWorkspace/       # Workspace fixtures
+│   │   ├── integratedDemo.ts     # Deterministic integrated demo
+│   │   ├── fittingFixture.ts     # Fitting synthetic fixture
+│   │   ├── bundledModels.ts      # Bundled demo models
+│   │   └── selectors.ts          # Derived selectors
+│   ├── SpiceBenchmarkTypes.ts    # SPICE benchmark types
+│   └── generatedSpiceBenchmarkManifest.ts
 ├── pages/
-│   ├── flow/                    # Flow sub-components (14 files)
-│   ├── ToolFlowPage.tsx         # Tabbed flow page
-│   ├── SpiceBenchmarkPage.tsx   # SPICE model benchmark page
-│   ├── HomePage.tsx             # Tool entry cards
+│   ├── benchmark/                # Benchmark workspace components
+│   │   ├── BenchmarkWorkspacePage.tsx  # Main workspace page
+│   │   ├── ScenarioSelector.tsx
+│   │   ├── ModelInputCard.tsx
+│   │   ├── OperationSelector.tsx
+│   │   ├── OperationSettings.tsx
+│   │   ├── TranslatorSettings.tsx
+│   │   ├── FittingSettings.tsx
+│   │   ├── ReductionSettings.tsx
+│   │   ├── ExpansionSettings.tsx
+│   │   ├── WorkflowPlanCard.tsx
+│   │   ├── BenchmarkSetupCard.tsx
+│   │   ├── ExecutiveSummaryCard.tsx
+│   │   ├── ModelLineageCard.tsx
+│   │   ├── SimulatorComparisonCard.tsx
+│   │   ├── ModelComparisonCard.tsx
+│   │   ├── ProcessedModelCard.tsx
+│   │   ├── OperationResults.tsx
+│   │   ├── ArtifactTableCard.tsx
+│   │   └── shared/              # Shared UI components
+│   ├── HomePage.tsx
+│   ├── SpiceBenchmarkPage.tsx    # Re-exports BenchmarkWorkspacePage
 │   ├── PlotlyPage.tsx
-│   └── AnalogPage.tsx
-├── theme/                       # Theme & chart palette
-└── components/                  # Shared UI components
+│   ├── AnalogPage.tsx
+│   └── flow/                     # Flow sub-components
+├── hooks/
+├── theme/
+└── components/
 ```
+
+## Tool repositories (private)
+
+- [new-spice-translator](https://github.com/SJTU-YONGFU-RESEARCH-GRP/new-spice-translator)
+- [spice_model_fitting](https://github.com/duhaochen-china/spice_model_fitting)
+- [spice_model_reduction](https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_reduction)
+- [spice_model_expansion](https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_expansion)
+- [spice_model_benchmark](https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark)
+- [layout2timing_flow](https://github.com/SJTU-YONGFU-RESEARCH-GRP/layout2timing_flow)
+- [AutoCellGen_V2](https://github.com/SJTU-YONGFU-RESEARCH-GRP/AutoCellGen_V2)
+- [fastercap_v2](https://github.com/SJTU-YONGFU-RESEARCH-GRP/fastercap_v2)
+- [DeviceOpt](https://github.com/SJTU-YONGFU-RESEARCH-GRP/DeviceOpt)

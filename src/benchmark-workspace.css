@@ -1,0 +1,303 @@
+/* ==================================================================
+ *  benchmark-workspace.css (goal.md §26.5)
+ *  Scoped styles for the Benchmark Workspace page.
+ *  Prefix: bmw- (benchmark workspace)
+ * ================================================================== */
+
+/* ─── Section anchor nav ─── */
+.bmw-anchor-nav {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border-light, #e5e5e5);
+}
+
+.bmw-anchor-link {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  color: var(--muted, #666);
+  background: transparent;
+}
+
+.bmw-anchor-link--active {
+  color: var(--accent, #0071e3);
+  background: var(--accent-bg, rgba(0, 113, 227, 0.08));
+  font-weight: 600;
+}
+
+/* ─── Provenance banner ─── */
+.bmw-provenance-banner {
+  font-size: 0.72rem;
+  color: var(--muted, #888);
+  background: var(--surface-inset, #f9f9f9);
+  border: 1px solid var(--border-light, #e5e5e5);
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ─── Form field label ─── */
+.bmw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ─── Badge row ─── */
+.bmw-badge-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+
+/* ─── Button row ─── */
+.bmw-btn-row {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ─── Model metadata ─── */
+.bmw-model-meta {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+/* ─── Code preview ─── */
+.bmw-code-preview {
+  margin-top: 0;
+  font-size: 0.65rem;
+  background: var(--surface-inset, #f5f5f7);
+  padding: 0.5rem;
+  border-radius: 6px;
+  overflow: auto;
+  max-height: 300px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ─── Diff table ─── */
+.bmw-diff-table-wrap {
+  overflow-x: auto;
+}
+
+.bmw-diff-table {
+  width: 100%;
+  font-size: 0.68rem;
+  border-collapse: collapse;
+}
+
+.bmw-diff-table th,
+.bmw-diff-table td {
+  padding: 0.2rem 0.4rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light, #eee);
+}
+
+.bmw-diff-param {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 0.68rem;
+}
+
+.bmw-diff-mono {
+  font-family: monospace;
+  font-size: 0.65rem;
+}
+
+.bmw-diff-changed {
+  background: rgba(255, 59, 48, 0.04);
+}
+
+/* ─── Pipeline ─── */
+.bmw-pipeline {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--surface-inset, #f9f9f9);
+  border-radius: 8px;
+}
+
+.bmw-pipeline-arrow {
+  color: var(--muted, #999);
+  font-size: 0.8rem;
+}
+
+/* ─── Operation card selected state ─── */
+.bmw-op-card {
+  display: block;
+  cursor: pointer;
+  padding: 0.65rem 0.75rem;
+  position: relative;
+}
+
+.bmw-op-card--selected {
+  border: 2px solid var(--accent, #0071e3);
+  background: var(--accent-bg, rgba(0, 113, 227, 0.04));
+}
+
+/* ─── Scenario radio ─── */
+.bmw-scenario-option {
+  cursor: pointer;
+  padding: 0.65rem 0.75rem;
+}
+
+.bmw-scenario-option--active {
+  border: 2px solid var(--accent, #0071e3);
+  background: var(--accent-bg, rgba(0, 113, 227, 0.04));
+}
+
+.bmw-scenario-dot {
+  color: var(--accent, #0071e3);
+  margin-right: 0.35rem;
+}
+
+/* ─── Lightbox ─── */
+.bmw-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: bmw-fade-in 0.15s ease-out;
+}
+
+.bmw-lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.bmw-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.bmw-lightbox-close:hover {
+  background: #fff;
+}
+
+.bmw-lightbox-prev,
+.bmw-lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.bmw-lightbox-prev:hover,
+.bmw-lightbox-next:hover {
+  background: #fff;
+}
+
+.bmw-lightbox-prev {
+  left: 1rem;
+}
+
+.bmw-lightbox-next {
+  right: 1rem;
+}
+
+.bmw-lightbox-counter {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.78rem;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+}
+
+/* ─── Accordion ─── */
+.bmw-accordion-btn {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: inherit;
+  color: inherit;
+}
+
+.bmw-accordion-chevron {
+  font-size: 0.8rem;
+  color: var(--muted, #888);
+}
+
+/* ─── Invocation preview ─── */
+.bmw-invocation {
+  font-size: 0.6rem;
+  background: var(--surface-inset, #f5f5f7);
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  overflow: auto;
+  max-height: 60px;
+}
+
+/* ─── Animations ─── */
+@keyframes bmw-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bmw-lightbox-overlay {
+    animation: none;
+  }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .bmw-lightbox-prev,
+  .bmw-lightbox-next {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+  .bmw-lightbox-prev { left: 0.5rem; }
+  .bmw-lightbox-next { right: 0.5rem; }
+}

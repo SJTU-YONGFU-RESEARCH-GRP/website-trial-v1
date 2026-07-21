@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { lazy, Suspense } from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { HomePage } from "./pages/HomePage";
 
@@ -15,15 +15,6 @@ const ToolFlowPage = lazy(async () => ({
 }));
 const SpiceBenchmarkPage = lazy(async () => ({
   default: (await import("./pages/SpiceBenchmarkPage")).SpiceBenchmarkPage,
-}));
-const SpiceTranslatorPage = lazy(async () => ({
-  default: (await import("./pages/SpiceTranslatorPage")).SpiceTranslatorPage,
-}));
-const ReductionPage = lazy(async () => ({
-  default: (await import("./pages/ReductionPage")).ReductionPage,
-}));
-const ExpansionPage = lazy(async () => ({
-  default: (await import("./pages/ExpansionPage")).ExpansionPage,
 }));
 
 export default function App(): ReactElement {
@@ -50,28 +41,10 @@ export default function App(): ReactElement {
           Flow
         </NavLink>
         <NavLink
-          to="/expansion"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Expansion
-        </NavLink>
-        <NavLink
-          to="/reduction"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Reduction
-        </NavLink>
-        <NavLink
           to="/benchmark"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           Benchmark
-        </NavLink>
-        <NavLink
-          to="/translator"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Translator
         </NavLink>
         <NavLink
           to="/plotly"
@@ -98,11 +71,12 @@ export default function App(): ReactElement {
             <Route path="/" element={<HomePage />} />
             <Route path="/flow" element={<ToolFlowPage />} />
             <Route path="/benchmark" element={<SpiceBenchmarkPage />} />
-            <Route path="/translator" element={<SpiceTranslatorPage />} />
-            <Route path="/expansion" element={<ExpansionPage />} />
-            <Route path="/reduction" element={<ReductionPage />} />
             <Route path="/plotly" element={<PlotlyPage />} />
             <Route path="/analog" element={<AnalogPage />} />
+            {/* Legacy redirects (goal.md §4.1) */}
+            <Route path="/translator" element={<Navigate to="/benchmark?operation=translator" replace />} />
+            <Route path="/reduction" element={<Navigate to="/benchmark?operation=reduction" replace />} />
+            <Route path="/expansion" element={<Navigate to="/benchmark?operation=expansion" replace />} />
           </Routes>
         </Suspense>
       </main>

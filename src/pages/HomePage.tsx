@@ -9,38 +9,13 @@ const TOOLS = [
       "End-to-end design flow connecting layout generation, parasitic extraction, and timing characterization for digital standard cells.",
   },
   {
-    title: "Model Expansion",
-    subtitle: "TT → T/S/F corners + Monte Carlo",
-    repo: "spice_model_expansion",
-    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_expansion",
-    flowPath: "/#/expansion",
-    description: "Single TT model expanded to Typical/Slow/Fast corners with full Monte Carlo characterization. IV/CV comparison, parameter distributions, and design margin analysis.",
-  },
-  {
-    title: "Model Reduction",
-    subtitle: "BSIM parameter reduction & optimization",
-    repo: "spice_model_reduction",
-    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_reduction",
-    flowPath: "/#/reduction",
-    description: "BSIM model reduction: 62→12 parameters, 80.6% reduction, accuracy preserved within tolerance. DC IV validation with full convergence analysis.",
-  },
-  {
-    title: "SPICE Translator",
-    subtitle: "HSPICE/Spectre → ngspice model translation",
-    repo: "new-spice-translator",
-    url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/new-spice-translator",
-    flowPath: "/#/translator",
-    description:
-      "Multi-PDK SPICE model translator: 17 PDKs, 322 source files, 224 successful translations, full verification report.",
-  },
-  {
-    title: "SPICE Model Benchmark",
-    subtitle: "DC / AC / Transient / Noise verification",
+    title: "SPICE Model Workflow & Benchmark",
+    subtitle: "Convert · Calibrate · Reduce · Expand · Compare",
     repo: "spice_model_benchmark",
     url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark",
     flowPath: "/#/benchmark",
     description:
-      "SPICE model verification benchmark: DC IV curves, AC C-V, transient switching, and noise PSD analysis across models and netlist suites.",
+      "Unified SPICE model workspace: multi-directional format conversion, BSIM parameter calibration, model reduction, corner expansion, and cross-simulator benchmark (ngspice / Spectre / HSPICE). Static demo — no external execution in browser.",
   },
   {
     title: "Layout Generation",
@@ -71,14 +46,32 @@ const TOOLS = [
   },
 ] as const;
 
+/** Quick shortcuts to the Benchmark workspace with pre-selected operations. */
+const QUICK_ENTRIES = [
+  { label: "Open with Convert selected", operation: "translator" },
+  { label: "Open with Reduce selected", operation: "reduction" },
+  { label: "Open with Expand selected", operation: "expansion" },
+  { label: "Open with Calibrate selected", operation: "fitting" },
+] as const;
+
+/** External tool repository links (not top-level pages). */
+const REPO_LINKS = [
+  { repo: "new-spice-translator", url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/new-spice-translator" },
+  { repo: "spice_model_fitting", url: "https://github.com/duhaochen-china/spice_model_fitting" },
+  { repo: "spice_model_reduction", url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_reduction" },
+  { repo: "spice_model_expansion", url: "https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_expansion" },
+] as const;
+
 export function HomePage(): JSX.Element {
   return (
     <div>
       <p className="home-intro">
         <strong>Design Analytics Platform</strong> — Integrated EDA tool suite for
         standard-cell characterization, from layout generation to parasitic extraction
-        and device optimization.
+        and device optimization, plus a unified SPICE model workflow and cross-simulator
+        benchmark workspace.
       </p>
+
       <div className="tool-grid">
         {TOOLS.map((t) => (
           <div className="chart-card tool-card" key={t.title}>
@@ -109,9 +102,47 @@ export function HomePage(): JSX.Element {
           </div>
         ))}
       </div>
+
+      {/* Quick entry shortcuts */}
+      <div className="chart-card" style={{ marginTop: "1rem" }}>
+        <h3 className="flow-subsection-title">Quick Start — Benchmark Workspace</h3>
+        <div className="tool-grid">
+          {QUICK_ENTRIES.map((entry) => (
+            <a
+              key={entry.operation}
+              href={`/#/benchmark?operation=${entry.operation}`}
+              className="chart-card"
+              style={{
+                display: "block",
+                padding: "0.5rem 0.75rem",
+                textDecoration: "none",
+                color: "inherit",
+                textAlign: "center",
+                fontSize: "0.82rem",
+              }}
+            >
+              {entry.label}
+            </a>
+          ))}
+        </div>
+
+        <p className="hint" style={{ marginTop: "0.5rem" }}>
+          Tool repositories:{" "}
+          {REPO_LINKS.map((r, i) => (
+            <span key={r.repo}>
+              {i > 0 && " · "}
+              <a href={r.url} target="_blank" rel="noopener noreferrer">
+                {r.repo}
+              </a>
+            </span>
+          ))}
+        </p>
+      </div>
+
       <p className="note">
         <strong>Navigation:</strong>{" "}
         <a href="/#/flow">Flow</a> &middot;{" "}
+        <a href="/#/benchmark">Benchmark</a> &middot;{" "}
         <a href="/#/plotly">Digital Circuits</a> &middot;{" "}
         <a href="/#/analog">Analog Circuits</a>
         <br />
