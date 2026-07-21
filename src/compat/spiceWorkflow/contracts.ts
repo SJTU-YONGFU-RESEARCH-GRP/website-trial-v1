@@ -116,6 +116,10 @@ export interface ArtifactRef {
   fetchUrl?: string | null;
   visibility: "public" | "local" | "redacted";
   provenance: Provenance;
+  /** Stable semantic key for cross-model plot pairing (goal2.md §6.6) */
+  comparisonKey?: string;
+  /** Human-readable plot title */
+  title?: string;
 }
 
 /* ─── Resource Metrics ─── */

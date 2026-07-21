@@ -428,6 +428,78 @@ const executions: Record<string, ToolExecutionResult> = {
 };
 
 /* ═════════════════════════════════════════════════════════════════ */
+/*  Benchmark Plot Artifacts (real public/benchmark PNGs)             */
+/* ═════════════════════════════════════════════════════════════════ */
+
+// Map: modelId → simulator → domain → list of {artifactId, comparisonKey, title}
+type PlotEntry = { artifactId: string; comparisonKey: string; title: string; displayUrl: string };
+
+const PLOT_INDEX: Record<string, Record<string, Record<string, PlotEntry[]>>> = {};
+
+function addPlot(modelId: string, sim: string, domain: string, artifactId: string, key: string, title: string, publicPath: string) {
+  const m = PLOT_INDEX[modelId] ?? (PLOT_INDEX[modelId] = {});
+  const s = m[sim] ?? (m[sim] = {});
+  const d = s[domain] ?? (s[domain] = []);
+  d.push({ artifactId, comparisonKey: key, title, displayUrl: publicPath });
+}
+
+const BENCHMARK_PLOT_ARTIFACTS: Record<string, ArtifactRef> = {};
+
+function registerPlotArtifact(artifactId: string, name: string, modelId: string, domain: string, displayUrl: string, comparisonKey: string, title: string, _sim: string, origin: "existing-tool-output" | "synthetic-demo") {
+  BENCHMARK_PLOT_ARTIFACTS[artifactId] = {
+    artifactId, name, toolId: "benchmark", modelId, domain: domain as never, kind: "plot",
+    format: "png", sizeBytes: null, hash: null, displayUrl, visibility: "public",
+    provenance: { origin, sourceRepo: "spice_model_benchmark" },
+    comparisonKey, title,
+  };
+}
+
+// Ngspice plots for input model (from results/)
+addPlot("model-input", "ngspice", "dc", "bp-input-ngspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/results/dc_iv_characteristics_44e599f9.png");
+addPlot("model-input", "ngspice", "dc", "bp-input-ngspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/results/dc_kcl_verification_9a99adfa.png");
+addPlot("model-input", "ngspice", "dc", "bp-input-ngspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/results/dc_temperature_analysis_8afe0802.png");
+addPlot("model-input", "ngspice", "ac", "bp-input-ngspice-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/results/ac_cv_characteristics_54ad29bc.png");
+addPlot("model-input", "ngspice", "ac", "bp-input-ngspice-ac-cvc", "cv-components", "C-V Components", "benchmark/results/ac_cv_components_b0763246.png");
+addPlot("model-input", "ngspice", "ac", "bp-input-ngspice-ac-nqs", "nqs-effects", "Non-Quasi-Static Effects", "benchmark/results/ac_cv_nqs_effects_dd0638f7.png");
+addPlot("model-input", "ngspice", "ac", "bp-input-ngspice-ac-sp", "s-parameter", "S-Parameter Analysis", "benchmark/results/ac_cv_sparameter_analysis_ea6bfba2.png");
+addPlot("model-input", "ngspice", "transient", "bp-input-ngspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/results/trans_large_signal_transient_a8870071.png");
+addPlot("model-input", "ngspice", "transient", "bp-input-ngspice-tran-sw", "switching-response", "Switching Response", "benchmark/results/trans_switching_response_bad3ed2b.png");
+addPlot("model-input", "ngspice", "transient", "bp-input-ngspice-tran-delay", "delay-effect", "Delay Effect", "benchmark/results/trans_delay_effect_bbf71e09.png");
+addPlot("model-input", "ngspice", "transient", "bp-input-ngspice-tran-power", "power-dissipation", "Power Dissipation", "benchmark/results/trans_power_dissipation_831114e8.png");
+addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/results/noise_thermal_noise_84c213c5.png");
+addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-flicker", "flicker-noise", "Flicker Noise", "benchmark/results/noise_flicker_noise_8992dd34.png");
+addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-shot", "shot-noise", "Shot Noise", "benchmark/results/noise_shot_noise_97f69a58.png");
+addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-components", "noise-components", "Noise Components", "benchmark/results/noise_components_d2a1aff6.png");
+
+// Ngspice plots for reduced model (from results_final/)
+addPlot("model-reduced", "ngspice", "dc", "bp-reduced-ngspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/results_final/dc_iv_characteristics_24e9b83e.png");
+addPlot("model-reduced", "ngspice", "dc", "bp-reduced-ngspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/results_final/dc_kcl_verification_3e27897c.png");
+addPlot("model-reduced", "ngspice", "dc", "bp-reduced-ngspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/results_final/dc_temperature_analysis_f15e5dc8.png");
+addPlot("model-reduced", "ngspice", "ac", "bp-reduced-ngspice-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/results_final/ac_cv_characteristics_2f26bb98.png");
+addPlot("model-reduced", "ngspice", "transient", "bp-reduced-ngspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/results_final/trans_large_signal_transient_de4ca9fb.png");
+addPlot("model-reduced", "ngspice", "transient", "bp-reduced-ngspice-tran-sw", "switching-response", "Switching Response", "benchmark/results_final/trans_switching_response_95782e13.png");
+addPlot("model-reduced", "ngspice", "transient", "bp-reduced-ngspice-tran-delay", "delay-effect", "Delay Effect", "benchmark/results_final/trans_delay_effect_46e5bfba.png");
+addPlot("model-reduced", "ngspice", "noise", "bp-reduced-ngspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/results_final/thermal_noise_01d4dd8b.png");
+
+// Spectre plots for reduced model (from results_spectre_final2/) — synthetic demo
+addPlot("model-reduced", "spectre", "dc", "bp-reduced-spectre-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/results_spectre_final2/dc_iv_characteristics_24e9b83e.png");
+addPlot("model-reduced", "spectre", "dc", "bp-reduced-spectre-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/results_spectre_final2/dc_kcl_verification_3e27897c.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduced-spectre-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/results_spectre_final2/trans_large_signal_transient_de4ca9fb.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduced-spectre-tran-sw", "switching-response", "Switching Response", "benchmark/results_spectre_final2/trans_switching_response_95782e13.png");
+
+// Register all artifacts
+for (const [modelId, sims] of Object.entries(PLOT_INDEX)) {
+  for (const [sim, domains] of Object.entries(sims)) {
+    for (const [domain, entries] of Object.entries(domains)) {
+      for (const e of entries) {
+        const origin: "existing-tool-output" | "synthetic-demo" = sim === "ngspice" ? "existing-tool-output" : "synthetic-demo";
+        registerPlotArtifact(e.artifactId, e.title, modelId, domain, e.displayUrl, e.comparisonKey, e.title, sim, origin);
+      }
+    }
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════ */
 /*  Benchmark Results                                                */
 /* ═════════════════════════════════════════════════════════════════ */
 
@@ -442,6 +514,8 @@ function benchResult(
   origin: "existing-tool-output" | "synthetic-demo",
 ): DomainBenchmarkResult {
   const prov = origin === "existing-tool-output" ? realProvenance : synthProvenance;
+  // Look up plot artifact IDs for this model/simulator/domain combo
+  const plotIds = (PLOT_INDEX[modelId]?.[simulator]?.[domain] ?? []).map((e) => e.artifactId);
   return {
     resultId: id,
     modelId,
@@ -449,14 +523,10 @@ function benchResult(
     simulatorVersion: simulator === "ngspice" ? "42" : null,
     domain,
     status,
-    resources: {
-      wallTimeMs: timeMs,
-      peakRssMB: memMB,
-      source: origin,
-    },
+    resources: { wallTimeMs: timeMs, peakRssMB: memMB, source: origin },
     keyMetrics: {},
     datasetArtifactIds: [],
-    plotArtifactIds: [],
+    plotArtifactIds: plotIds,
     provenance: { ...prov },
   };
 }
@@ -579,6 +649,12 @@ const artifacts: Record<string, ArtifactRef> = {
     sizeBytes: 6144, hash: null, visibility: "public", provenance: synthProvenance,
   },
 };
+
+/* ═════════════════════════════════════════════════════════════════ */
+/*  Merge plot artifacts                                             */
+/* ═════════════════════════════════════════════════════════════════ */
+
+Object.assign(artifacts, BENCHMARK_PLOT_ARTIFACTS);
 
 /* ═════════════════════════════════════════════════════════════════ */
 /*  Assembled Scenario                                               */

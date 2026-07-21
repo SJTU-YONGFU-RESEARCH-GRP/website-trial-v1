@@ -8,6 +8,7 @@
 import type {
   WorkflowScenario,
   ModelArtifact,
+  Provenance,
   DomainBenchmarkResult,
   SimulatorId,
   AnalysisDomain,
@@ -276,4 +277,130 @@ function deltaPct(a: number | null, b: number | null): string {
   if (a === null || b === null || a === 0) return "N/A";
   const pct = ((b - a) / a) * 100;
   return `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%`;
+}
+
+/* ─── Benchmark Plot Resolution (goal2.md §6.5) ─── */
+
+export interface ResolvedBenchmarkPlot {
+  artifactId: string;
+  comparisonKey: string;
+  title: string;
+  displayUrl: string;
+  downloadUrl: string | null;
+  modelId: string;
+  simulator: SimulatorId;
+  domain: AnalysisDomain;
+  provenance: Provenance;
+}
+
+export interface BenchmarkPlotPair {
+  comparisonKey: string;
+  title: string;
+  simulator: SimulatorId;
+  domain: AnalysisDomain;
+  baseline: ResolvedBenchmarkPlot | null;
+  candidate: ResolvedBenchmarkPlot | null;
+}
+
+import { canonicalizeBenchmarkPlotKey, PLOT_CATALOG } from "./benchmarkPlotCatalog";
+
+/** Resolve all plot artifacts from benchmark results for a given model. */
+function resolveModelPlots(
+  scenario: WorkflowScenario,
+  modelId: string,
+): ResolvedBenchmarkPlot[] {
+  const plots: ResolvedBenchmarkPlot[] = [];
+  const results = scenario.benchmarkResults.filter((r) => r.modelId === modelId);
+
+  for (const r of results) {
+    for (const aId of r.plotArtifactIds) {
+      const artifact = scenario.artifacts[aId];
+      if (!artifact || artifact.kind !== "plot") continue;
+      if (!artifact.displayUrl) continue;
+
+      const comparisonKey = artifact.comparisonKey
+        ?? canonicalizeBenchmarkPlotKey(artifact.name, artifact.domain ?? r.domain);
+
+      const title = artifact.title
+        ?? PLOT_CATALOG.find((e) => e.comparisonKey === comparisonKey)?.title
+        ?? artifact.name;
+
+      plots.push({
+        artifactId: artifact.artifactId,
+        comparisonKey,
+        title,
+        displayUrl: artifact.displayUrl,
+        downloadUrl: artifact.fetchUrl ?? null,
+        modelId,
+        simulator: r.simulator,
+        domain: r.domain,
+        provenance: artifact.provenance,
+      });
+    }
+  }
+
+  return plots;
+}
+
+/** Pair baseline and candidate plots by (simulator, domain, comparisonKey). */
+export function resolveBenchmarkPlotPairs(
+  scenario: WorkflowScenario,
+  baselineModelId: string | null,
+  candidateModelId: string | null,
+  selectedSimulators: SimulatorId[],
+  selectedDomains: AnalysisDomain[],
+): BenchmarkPlotPair[] {
+  if (!baselineModelId || !candidateModelId) return [];
+
+  const baselinePlots = resolveModelPlots(scenario, baselineModelId);
+  const candidatePlots = resolveModelPlots(scenario, candidateModelId);
+
+  const baselineByKey = new Map<string, ResolvedBenchmarkPlot>();
+  for (const p of baselinePlots) {
+    const key = `${p.simulator}|${p.domain}|${p.comparisonKey}`;
+    baselineByKey.set(key, p);
+  }
+
+  const candidateByKey = new Map<string, ResolvedBenchmarkPlot>();
+  for (const p of candidatePlots) {
+    const key = `${p.simulator}|${p.domain}|${p.comparisonKey}`;
+    candidateByKey.set(key, p);
+  }
+
+  const pairs: BenchmarkPlotPair[] = [];
+  const seenKeys = new Set<string>();
+
+  // Prioritize catalog order
+  for (const entry of PLOT_CATALOG) {
+    if (!selectedDomains.includes(entry.domain)) continue;
+    for (const sim of selectedSimulators) {
+      const key = `${sim}|${entry.domain}|${entry.comparisonKey}`;
+      if (seenKeys.has(key)) continue;
+      const baseline = baselineByKey.get(key) ?? null;
+      const candidate = candidateByKey.get(key) ?? null;
+      if (baseline || candidate) {
+        seenKeys.add(key);
+        pairs.push({ comparisonKey: entry.comparisonKey, title: entry.title, simulator: sim, domain: entry.domain, baseline, candidate });
+      }
+    }
+  }
+
+  // Add any remaining unmatched
+  for (const [key, baseline] of baselineByKey) {
+    if (seenKeys.has(key)) continue;
+    const [sim, domain, compKey] = key.split("|");
+    const candidate = candidateByKey.get(key) ?? null;
+    if (!selectedSimulators.includes(sim as SimulatorId) || !selectedDomains.includes(domain as AnalysisDomain)) continue;
+    seenKeys.add(key);
+    pairs.push({ comparisonKey: compKey, title: baseline.title, simulator: sim as SimulatorId, domain: domain as AnalysisDomain, baseline, candidate });
+  }
+  for (const [key, candidate] of candidateByKey) {
+    if (seenKeys.has(key)) continue;
+    const [sim, domain, compKey] = key.split("|");
+    if (!selectedSimulators.includes(sim as SimulatorId) || !selectedDomains.includes(domain as AnalysisDomain)) continue;
+    seenKeys.add(key);
+    pairs.push({ comparisonKey: compKey, title: candidate.title, simulator: sim as SimulatorId, domain: domain as AnalysisDomain, baseline: null, candidate });
+  }
+
+  return pairs;
 }

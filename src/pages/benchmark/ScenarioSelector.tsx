@@ -1,16 +1,16 @@
 /* ==================================================================
- *  ScenarioSelector (goal.md §17)
+ *  ScenarioSelector (goal2.md §4.2)
+ *  Simplified: integrated-demo and custom-local only.
  * ================================================================== */
 
 import "../../benchmark-workspace.css";
 
-export type ScenarioMode = "integrated-demo" | "existing-results" | "custom-local";
+export type ScenarioMode = "integrated-demo" | "custom-local";
 
 interface ScenarioSelectorProps { mode: ScenarioMode; onChange: (mode: ScenarioMode) => void }
 
 const OPTIONS: { value: ScenarioMode; label: string; desc: string }[] = [
   { value: "integrated-demo", label: "Integrated Workflow Demo", desc: "Deterministic demo: Convert → Calibrate → Reduce → Expand → Benchmark. Synthetic Spectre/HSPICE data included." },
-  { value: "existing-results", label: "Existing Repository Results", desc: "Browse previously generated benchmark, translator, reduction, and expansion manifests. Independent models; cross-tool lineage not implied." },
   { value: "custom-local", label: "Custom Local Model", desc: "Upload or paste your own SPICE model. Configure operations and preview invocation. No execution in browser." },
 ];
 

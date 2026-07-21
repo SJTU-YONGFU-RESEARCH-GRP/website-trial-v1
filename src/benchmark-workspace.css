@@ -1,33 +1,8 @@
 /* ==================================================================
- *  benchmark-workspace.css (goal.md §26.5)
+ *  benchmark-workspace.css (goal2.md §5, §9)
  *  Scoped styles for the Benchmark Workspace page.
  *  Prefix: bmw- (benchmark workspace)
  * ================================================================== */
-
-/* ─── Section anchor nav ─── */
-.bmw-anchor-nav {
-  display: flex;
-  gap: 0.35rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.75rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid var(--border-light, #e5e5e5);
-}
-
-.bmw-anchor-link {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 1rem;
-  text-decoration: none;
-  color: var(--muted, #666);
-  background: transparent;
-}
-
-.bmw-anchor-link--active {
-  color: var(--accent, #0071e3);
-  background: var(--accent-bg, rgba(0, 113, 227, 0.08));
-  font-weight: 600;
-}
 
 /* ─── Provenance banner ─── */
 .bmw-provenance-banner {
@@ -48,6 +23,152 @@
   gap: 0.2rem;
   font-size: 0.78rem;
   font-weight: 600;
+}
+
+.bmw-field input,
+.bmw-field select,
+.bmw-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* ─── Four-column operation grid (goal2.md §5.3) ─── */
+.bmw-operation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .bmw-operation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .bmw-operation-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ─── Operation card (goal2.md §5.2) ─── */
+.bmw-operation-card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle, #e5e5e5);
+  background: var(--surface, #fff);
+  min-width: 0;
+}
+
+.bmw-operation-card.is-enabled {
+  border-color: var(--accent, #0071e3);
+  background: var(--accent-bg, rgba(0, 113, 227, 0.03));
+}
+
+.bmw-operation-card.is-disabled {
+  opacity: 0.65;
+}
+
+.bmw-operation-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.bmw-operation-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.bmw-operation-toggle input[type="checkbox"] {
+  width: auto;
+  flex-shrink: 0;
+}
+
+.bmw-operation-order {
+  font-size: 0.62rem;
+  color: var(--muted, #aaa);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.bmw-operation-card__summary {
+  font-size: 0.72rem;
+  color: var(--text-secondary, #666);
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+}
+
+.bmw-operation-card__settings {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle, #eee);
+}
+
+.bmw-operation-card__footer {
+  font-size: 0.65rem;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle, #eee);
+  color: var(--muted, #aaa);
+}
+
+.bmw-operation-advanced {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle, #eee);
+}
+
+.bmw-operation-advanced > summary {
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--accent, #0071e3);
+}
+
+.bmw-operation-advanced > .bmw-advanced-body {
+  margin-top: 6px;
+}
+
+/* ─── Settings inline fields ─── */
+.bmw-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.bmw-settings-field input,
+.bmw-settings-field select,
+.bmw-settings-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.72rem;
+  min-width: 0;
+}
+
+.bmw-settings-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.bmw-settings-checkboxes label {
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* ─── Badge row ─── */
@@ -136,19 +257,6 @@
   font-size: 0.8rem;
 }
 
-/* ─── Operation card selected state ─── */
-.bmw-op-card {
-  display: block;
-  cursor: pointer;
-  padding: 0.65rem 0.75rem;
-  position: relative;
-}
-
-.bmw-op-card--selected {
-  border: 2px solid var(--accent, #0071e3);
-  background: var(--accent-bg, rgba(0, 113, 227, 0.04));
-}
-
 /* ─── Scenario radio ─── */
 .bmw-scenario-option {
   cursor: pointer;
@@ -163,6 +271,133 @@
 .bmw-scenario-dot {
   color: var(--accent, #0071e3);
   margin-right: 0.35rem;
+}
+
+/* ─── Cross-Model filters (goal2.md §6.2) ─── */
+.bmw-cm-filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--surface-inset, #f9f9f9);
+  border-radius: 8px;
+}
+
+.bmw-cm-filters fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.bmw-cm-filters legend {
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  padding: 0;
+}
+
+.bmw-cm-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  margin-right: 0.65rem;
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+
+/* ─── Cross-Model plot pairs (goal2.md §6.10) ─── */
+.bmw-model-domain-section {
+  margin-bottom: 0.65rem;
+}
+
+.bmw-model-domain-section > header {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.bmw-model-simulator-section {
+  margin-bottom: 0.5rem;
+}
+
+.bmw-model-simulator-section > header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  text-transform: capitalize;
+  color: var(--text-secondary, #555);
+}
+
+.bmw-model-plot-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .bmw-model-plot-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.bmw-model-plot-panel {
+  margin: 0;
+  border: 1px solid var(--border-subtle, #e5e5e5);
+  border-radius: 10px;
+  background: var(--plot-inset-bg, var(--surface-inset, #f5f5f7));
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bmw-model-plot-panel figcaption {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-secondary, #555);
+}
+
+.bmw-model-plot-panel img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.bmw-model-plot-panel .bmw-plot-title {
+  font-size: 0.68rem;
+  color: var(--muted, #888);
+  margin-top: 4px;
+}
+
+.bmw-model-plot-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  font-size: 0.7rem;
+  color: var(--muted, #aaa);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.bmw-model-empty-state {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--muted, #888);
+  font-size: 0.78rem;
+  border: 1px dashed var(--border-subtle, #ddd);
+  border-radius: 8px;
 }
 
 /* ─── Lightbox ─── */
@@ -246,36 +481,6 @@
   background: rgba(0, 0, 0, 0.5);
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
-}
-
-/* ─── Accordion ─── */
-.bmw-accordion-btn {
-  width: 100%;
-  text-align: left;
-  border: none;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font: inherit;
-  color: inherit;
-}
-
-.bmw-accordion-chevron {
-  font-size: 0.8rem;
-  color: var(--muted, #888);
-}
-
-/* ─── Invocation preview ─── */
-.bmw-invocation {
-  font-size: 0.6rem;
-  background: var(--surface-inset, #f5f5f7);
-  padding: 0.3rem 0.4rem;
-  border-radius: 4px;
-  overflow: auto;
-  max-height: 60px;
 }
 
 /* ─── Animations ─── */

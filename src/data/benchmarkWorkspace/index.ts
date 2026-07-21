@@ -25,5 +25,8 @@ export {
   getSimulatorSummary,
   getEffectivePipeline,
   computeModelComparisonKPIs,
+  resolveBenchmarkPlotPairs,
 } from "./selectors";
-export type { ModelComparisonKPI } from "./selectors";
+export type { ModelComparisonKPI, BenchmarkPlotPair, ResolvedBenchmarkPlot } from "./selectors";
+export { PLOT_CATALOG, canonicalizeBenchmarkPlotKey } from "./benchmarkPlotCatalog";
+export type { PlotKeyEntry } from "./benchmarkPlotCatalog";
