@@ -15,6 +15,10 @@ import type { ProcessingToolId } from "../../compat/spiceWorkflow/contracts";
 import { INTEGRATED_DEMO_SCENARIO } from "../../data/benchmarkWorkspace";
 import { TOOL_CATALOG, DEFAULT_OPERATION_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
 import { getSelectableModels } from "../../data/benchmarkWorkspace/selectors";
+import {
+  buildWorkspaceFingerprint, buildRecordedFingerprint, fingerprintsMatch,
+} from "../../compat/spiceWorkflow/configurationFingerprint";
+import { analyzeWorkflow } from "../../compat/spiceWorkflow/workflowAnalyzer";
 import { ModelInputCard } from "./ModelInputCard";
 import type { InputMode, LocalModelData } from "./ModelInputCard";
 import { OperationSelector } from "./OperationSelector";
@@ -107,6 +111,42 @@ export function BenchmarkWorkspacePage() {
     ];
   }, [operationOrder, enabledOps]);
 
+  /* ── Configuration fingerprint ── */
+  const currentFingerprint = useMemo(() => {
+    const inputModel = activeResultSet?.models[activeResultSet.defaultInputModelId] ?? null;
+    return buildWorkspaceFingerprint({
+      inputModel, enabledOps, operationOrder, opParams,
+      selectedSimulators, baselineModelId, candidateModelId,
+    });
+  }, [activeResultSet, enabledOps, operationOrder, opParams, selectedSimulators, baselineModelId, candidateModelId]);
+
+  const recordedFingerprint = useMemo(() => {
+    if (!activeResultSet) return null;
+    const inputModel = activeResultSet.models[activeResultSet.defaultInputModelId] ?? null;
+    return buildRecordedFingerprint({
+      inputModel,
+      operationOrder: operationOrder,
+      enabledOps,
+      opParams: {},
+      defaultSimulators: activeResultSet.defaultSimulators,
+      defaultInputModelId: activeResultSet.defaultInputModelId,
+      defaultCandidateModelId: activeResultSet.defaultCandidateModelId,
+    });
+  }, [activeResultSet, operationOrder, enabledOps]);
+
+  const resultsMatch = fingerprintsMatch(currentFingerprint, recordedFingerprint);
+
+  /* ── Workflow analysis ── */
+  const workflowAnalysis = useMemo(() => {
+    if (!activeResultSet) return null;
+    const inputModel = activeResultSet.models[activeResultSet.defaultInputModelId];
+    if (!inputModel) return null;
+    return analyzeWorkflow({
+      inputModel, operationOrder, enabledOps, params: opParams as Record<string, Record<string, unknown>>,
+      selectedSimulators,
+    });
+  }, [activeResultSet, operationOrder, enabledOps, opParams, selectedSimulators]);
+
   /* ── Available models ── */
   const availableModels = useMemo((): ModelArtifact[] => {
     if (!activeResultSet) return [];
@@ -183,11 +223,34 @@ export function BenchmarkWorkspacePage() {
       {/* ═══ Static Results (bundled model) ═══ */}
       {isBundledModel && activeResultSet && (
         <div style={{ marginTop: "1rem" }}>
+          {/* Configuration mismatch notice */}
+          {!resultsMatch && (
+            <div className="bmw-provenance-banner" style={{ marginBottom: "0.75rem" }}>
+              Displayed results belong to the recorded configuration and have not been recomputed for the current order or parameters.
+            </div>
+          )}
+
+          {/* Workflow analysis notices */}
+          {workflowAnalysis && (workflowAnalysis.notices.length > 0 || workflowAnalysis.blockingIssues.length > 0) && (
+            <div className="chart-card" style={{ marginBottom: "0.75rem", padding: "0.65rem 1rem" }}>
+              {workflowAnalysis.blockingIssues.map((issue, i) => (
+                <p key={`block-${i}`} className="hint" style={{ color: "var(--text-secondary, #666)" }}>
+                  {issue}
+                </p>
+              ))}
+              {workflowAnalysis.notices.map((note, i) => (
+                <p key={`note-${i}`} className="hint" style={{ fontSize: "0.72rem" }}>
+                  {note}
+                </p>
+              ))}
+            </div>
+          )}
+
           <ExecutiveSummaryCard scenario={activeResultSet} enabledOps={enabledOps} simulators={selectedSimulators} />
           <SimulatorComparisonCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} simulators={selectedSimulators} domains={selectedDomains as never} referenceSimulator={referenceSimulator} />
           <ModelComparisonCard scenario={activeResultSet} baselineId={baselineModelId} candidateId={candidateModelId} />
           <ProcessedModelCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} baselineModelId={baselineModelId} />
-          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} />
+          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} operationOrder={operationOrder} />
           <ArtifactTableCard scenario={activeResultSet} />
         </div>
       )}

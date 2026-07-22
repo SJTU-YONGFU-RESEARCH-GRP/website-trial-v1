@@ -4,24 +4,28 @@
  * ================================================================== */
 
 import { useState } from "react";
-import type { WorkflowScenario, ToolId } from "../../compat/spiceWorkflow/contracts";
+import type { WorkflowScenario, ToolId, ProcessingToolId } from "../../compat/spiceWorkflow/contracts";
 import { TOOL_CATALOG } from "../../compat/spiceWorkflow/toolCatalog";
 import { DataOriginBadge } from "./shared/DataOriginBadge";
 import { StatusBadge } from "./shared/StatusBadge";
 
-interface Props { scenario: WorkflowScenario; enabledOps: Record<string, boolean> }
+interface Props { scenario: WorkflowScenario; enabledOps: Record<string, boolean>; operationOrder: ProcessingToolId[] }
 
-export function OperationResults({ scenario, enabledOps }: Props) {
+export function OperationResults({ scenario, enabledOps, operationOrder }: Props) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  const opResults: { toolId: ToolId; label: string; executionId: string | null }[] = [
-    { toolId: "translator", label: "Translator Result", executionId: "exec-translator" },
-    { toolId: "fitting", label: "Fitting Result", executionId: "exec-fitting" },
-    { toolId: "reduction", label: "Reduction Result", executionId: "exec-reduction" },
-    { toolId: "expansion", label: "Expansion Result", executionId: "exec-expansion" },
-  ];
+  const execMap: Record<string, string | null> = {
+    translator: "exec-translator", fitting: "exec-fitting",
+    reduction: "exec-reduction", expansion: "exec-expansion",
+  };
 
-  const visible = opResults.filter((op) => enabledOps[op.toolId]);
+  const visible = operationOrder
+    .filter((tid) => enabledOps[tid])
+    .map((tid) => ({
+      toolId: tid as unknown as ToolId,
+      label: `${TOOL_CATALOG[tid]?.label ?? tid} Result`,
+      executionId: execMap[tid] ?? null,
+    }));
 
   if (visible.length === 0) return null;
 
