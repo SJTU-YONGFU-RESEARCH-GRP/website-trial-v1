@@ -14,7 +14,7 @@ import type {
   AnalysisDomain,
   ToolId,
 } from "../../compat/spiceWorkflow/contracts";
-import { CANONICAL_WORKFLOW_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
+import { DEFAULT_OPERATION_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
 
 /* ─── Model selectors ─── */
 export function getModelById(
@@ -145,7 +145,7 @@ export function getEffectivePipeline(
   const steps: { toolId: ToolId; label: string; order: number }[] = [];
   let order = 0;
 
-  for (const toolId of CANONICAL_WORKFLOW_ORDER) {
+  for (const toolId of DEFAULT_OPERATION_ORDER) {
     if (enabledToolIds.has(toolId)) {
       steps.push({ toolId, label: getToolLabel(toolId), order: order++ });
     }

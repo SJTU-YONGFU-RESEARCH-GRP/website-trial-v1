@@ -495,6 +495,93 @@
   }
 }
 
+/* ─── Drag handle (goal3.md §3.4) ─── */
+.bmw-drag-handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #999);
+  padding: 0;
+  margin-right: 4px;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+.bmw-drag-handle:active {
+  cursor: grabbing;
+}
+
+.bmw-drag-handle:focus-visible {
+  outline: 2px solid var(--accent, #0071e3);
+  outline-offset: 1px;
+  border-radius: 2px;
+}
+
+.bmw-operation-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bmw-sortable-wrapper {
+  min-width: 0;
+}
+
+/* ─── Artifact table shell ─── */
+.bmw-artifact-table-shell {
+  width: min(100%, 1080px);
+  margin-inline: auto;
+}
+
+.bmw-artifact-table-shell table {
+  width: 100%;
+  font-size: 0.76rem;
+  border-collapse: collapse;
+}
+
+.bmw-artifact-table-shell th,
+.bmw-artifact-table-shell td {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle, #eee);
+  text-align: left;
+}
+
+.bmw-artifact-table-shell th {
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--text-secondary, #555);
+}
+
+/* ─── Metadata table ─── */
+.bmw-metadata-table {
+  width: 100%;
+  font-size: 0.76rem;
+  border-collapse: collapse;
+}
+
+.bmw-metadata-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle, #eee);
+}
+
+.bmw-metadata-table td:first-child {
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  width: 40%;
+}
+
+/* ─── Pipeline step ─── */
+.bmw-pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
   .bmw-lightbox-prev,

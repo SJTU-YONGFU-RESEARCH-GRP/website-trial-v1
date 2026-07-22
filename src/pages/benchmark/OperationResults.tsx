@@ -15,8 +15,8 @@ export function OperationResults({ scenario, enabledOps }: Props) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const opResults: { toolId: ToolId; label: string; executionId: string | null }[] = [
-    { toolId: "translator", label: "Translation Result", executionId: "exec-translator" },
-    { toolId: "fitting", label: "Calibration Result", executionId: "exec-fitting" },
+    { toolId: "translator", label: "Translator Result", executionId: "exec-translator" },
+    { toolId: "fitting", label: "Fitting Result", executionId: "exec-fitting" },
     { toolId: "reduction", label: "Reduction Result", executionId: "exec-reduction" },
     { toolId: "expansion", label: "Expansion Result", executionId: "exec-expansion" },
   ];

@@ -26,8 +26,8 @@ export function FittingSettings({ params, onChange, showAdvanced, advancedOnly }
 
   return (
     <div>
-      <p className="hint" style={{ color: "var(--warn, #b85c00)", fontSize: "0.67rem", margin: "0 0 4px 0" }}>
-        ⚠ DC IV calibration only. AC/CV not enabled.
+      <p className="hint" style={{ color: "var(--text-secondary, #666)", fontSize: "0.72rem", margin: "0 0 4px 0" }}>
+        Current support: DC IV fitting only.
       </p>
       <CoreFields update={update} p={p} />
       {showAdvanced && (

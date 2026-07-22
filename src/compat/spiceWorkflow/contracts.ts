@@ -15,6 +15,8 @@ export type ToolId =
   | "expansion"
   | "benchmark";
 
+export type ProcessingToolId = "translator" | "reduction" | "expansion" | "fitting";
+
 export type SimulatorId = "ngspice" | "spectre" | "hspice";
 
 export type SpiceDialect = SimulatorId | "auto" | "unknown";

@@ -1,70 +1,61 @@
 /* ==================================================================
- *  WorkflowPlanCard (goal.md §6.5–§6.6)
+ *  WorkflowPlanCard (goal3.md §4)
+ *  Only shows enabled steps in current drag order. Benchmark last.
  * ================================================================== */
 
-import type { ToolId, SimulatorId } from "../../compat/spiceWorkflow/contracts";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-import type { ToolInvocation } from "../../compat/spiceWorkflow/contracts";
+import type { ProcessingToolId } from "../../compat/spiceWorkflow/contracts";
+import { TOOL_CATALOG } from "../../compat/spiceWorkflow/toolCatalog";
 import "../../benchmark-workspace.css";
 
-interface WorkflowStep { toolId: ToolId; label: string; enabled: boolean }
-
-interface CompatibilityNode { simulator: SimulatorId; dialect: string; temporary: boolean }
+interface WorkflowStep { toolId: string; label: string; enabled: boolean }
 
 interface WorkflowPlanCardProps {
   steps: WorkflowStep[];
-  compatibilityNodes?: CompatibilityNode[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  invocationPreviews?: ToolInvocation<any>[];
+  operationOrder: ProcessingToolId[];
+  enabledOps: Record<string, boolean>;
 }
 
-export function WorkflowPlanCard({ steps, compatibilityNodes, invocationPreviews }: WorkflowPlanCardProps) {
+export function WorkflowPlanCard({ steps: _steps, operationOrder, enabledOps }: WorkflowPlanCardProps) {
+  const enabledTools = operationOrder.filter((tid) => enabledOps[tid]);
+  const summary = enabledTools.length > 0
+    ? `Input Model → ${enabledTools.map((tid) => TOOL_CATALOG[tid].label).join(" → ")} → Benchmark`
+    : "Input Model → Benchmark";
+
+  const noToolsSelected = enabledTools.length === 0;
+
   return (
-    <div className="chart-card" id="workflow">
+    <div className="chart-card" id="workflow" style={{ marginBottom: "1rem" }}>
       <h3 className="flow-subsection-title">Workflow Plan</h3>
-      <p className="hint">Fixed execution order: Convert → Calibrate → Reduce → Expand → Benchmark. Steps not selected are automatically skipped.</p>
+      <p className="hint" style={{ marginBottom: "0.5rem" }}>
+        Current plan: {summary}
+      </p>
+
+      {noToolsSelected && (
+        <p className="hint" style={{ fontStyle: "italic" }}>
+          No processing tool is selected. The input model will be benchmarked directly.
+        </p>
+      )}
 
       <div className="bmw-pipeline">
-        <PipelineNode label="Input" active={true} />
-        {steps.map((step) => (
-          <span key={step.toolId} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+        <PipelineNode label="Input Model" />
+        {enabledTools.map((toolId) => (
+          <span key={toolId} className="bmw-pipeline-step">
             <span className="bmw-pipeline-arrow">→</span>
-            <PipelineNode label={step.label} active={step.enabled} skipped={!step.enabled} />
+            <PipelineNode label={TOOL_CATALOG[toolId].label} />
           </span>
         ))}
+        <span className="bmw-pipeline-step">
+          <span className="bmw-pipeline-arrow">→</span>
+          <PipelineNode label="Benchmark" />
+        </span>
       </div>
-
-      {compatibilityNodes && compatibilityNodes.length > 0 && (
-        <div style={{ marginTop: "0.5rem" }}>
-          <p className="hint" style={{ fontSize: "0.7rem" }}>Temporary compatibility conversions for simulator-specific deck generation:</p>
-          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.3rem" }}>
-            {compatibilityNodes.map((node) => (
-              <span key={node.simulator} className="tr-badge tr-badge--partial" style={{ border: "1px dashed var(--border-light, #ccc)", background: "transparent", fontSize: "0.68rem" }}>
-                temp {node.dialect} deck
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {invocationPreviews && invocationPreviews.length > 0 && (
-        <div style={{ marginTop: "0.5rem" }}>
-          <p className="hint" style={{ fontSize: "0.7rem", fontWeight: 600 }}>Invocation Preview (for future backend):</p>
-          {invocationPreviews.map((inv) => (
-            <div key={inv.invocationId} className="bmw-code-preview" style={{ marginTop: "0.3rem", maxHeight: "80px" }}>
-              $ {inv.argv.join(" ")}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
 
-function PipelineNode({ label, active, skipped }: { label: string; active: boolean; skipped?: boolean }) {
+function PipelineNode({ label }: { label: string }) {
   return (
-    <span className={`tr-badge ${active ? "tr-badge--completed" : "tr-badge--partial"}`}
-      style={{ opacity: skipped ? 0.4 : 1, fontSize: "0.7rem", padding: "0.25rem 0.5rem" }}>
+    <span className="tr-badge tr-badge--completed" style={{ fontSize: "0.75rem", padding: "0.25rem 0.5rem" }}>
       {label}
     </span>
   );

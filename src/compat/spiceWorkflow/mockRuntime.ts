@@ -12,7 +12,7 @@ import type {
   WorkflowScenario,
   ToolId,
 } from "./contracts";
-import { CANONICAL_WORKFLOW_ORDER } from "./toolCatalog";
+import { DEFAULT_OPERATION_ORDER } from "./toolCatalog";
 
 /* ─── Fixture registry ─── */
 const scenarioRegistry = new Map<string, () => Promise<WorkflowScenario>>();
@@ -29,7 +29,7 @@ export function createMockRuntime(): WorkflowRuntime {
     async preview(request: WorkflowPreviewRequest): Promise<WorkflowPreview> {
       const enabledTools: ToolId[] = [];
 
-      for (const toolId of CANONICAL_WORKFLOW_ORDER) {
+      for (const toolId of DEFAULT_OPERATION_ORDER) {
         const op = request.operations.find((o) => o.toolId === toolId);
         if (op?.enabled) {
           enabledTools.push(toolId);

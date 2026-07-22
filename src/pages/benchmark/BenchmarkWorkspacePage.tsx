@@ -1,30 +1,23 @@
 /* ==================================================================
- *  BenchmarkWorkspacePage — round 2 convergence (goal2.md)
+ *  BenchmarkWorkspacePage — round 3 (goal3.md)
  *
- *  Removed: SectionAnchorNav, Legacy Browser, ModelLineage,
- *  DomainOverlay, Load-demo button, selectedModelForPreview.
- *  Results auto-display on page load.
+ *  No Scenario. Input Model is the sole entry point.
+ *  Formal names: Translator, Reduction, Expansion, Fitting.
+ *  Draggable order via @dnd-kit.
  * ================================================================== */
 
 import { useMemo, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import type {
-  WorkflowScenario, SimulatorId, ToolId, ModelArtifact,
-  ToolInvocation, AnalysisDomain,
+  WorkflowScenario, SimulatorId, ModelArtifact, AnalysisDomain,
 } from "../../compat/spiceWorkflow/contracts";
+import type { ProcessingToolId } from "../../compat/spiceWorkflow/contracts";
 import { INTEGRATED_DEMO_SCENARIO } from "../../data/benchmarkWorkspace";
-import { TOOL_CATALOG, CANONICAL_WORKFLOW_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
+import { TOOL_CATALOG, DEFAULT_OPERATION_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
 import { getSelectableModels } from "../../data/benchmarkWorkspace/selectors";
-import { translatorAdapter } from "../../compat/spiceWorkflow/translatorAdapter";
-import { fittingAdapter } from "../../compat/spiceWorkflow/fittingAdapter";
-import { reductionAdapter } from "../../compat/spiceWorkflow/reductionAdapter";
-import { expansionAdapter } from "../../compat/spiceWorkflow/expansionAdapter";
-import { ScenarioSelector } from "./ScenarioSelector";
-import type { ScenarioMode } from "./ScenarioSelector";
 import { ModelInputCard } from "./ModelInputCard";
 import type { InputMode, LocalModelData } from "./ModelInputCard";
 import { OperationSelector } from "./OperationSelector";
-type OperationParams = Record<string, Record<string, unknown>>;
 import { WorkflowPlanCard } from "./WorkflowPlanCard";
 import { BenchmarkSetupCard } from "./BenchmarkSetupCard";
 import { ExecutiveSummaryCard } from "./ExecutiveSummaryCard";
@@ -36,28 +29,20 @@ import { ArtifactTableCard } from "./ArtifactTableCard";
 import "../../benchmark.css";
 import "../../benchmark-workspace.css";
 
+const DEFAULT_RESULT_SET = INTEGRATED_DEMO_SCENARIO as WorkflowScenario;
 type PreselectedOperation = "translator" | "reduction" | "expansion" | "fitting" | null;
 
-/* ═══════════════════════════════════════════════════════════════ */
-/*  Provenance Banner                                              */
-/* ═══════════════════════════════════════════════════════════════ */
-
-function ProvenanceBanner({ mode }: { scenario: WorkflowScenario | null; mode: ScenarioMode }) {
+function ProvenanceBanner({ isBundled }: { isBundled: boolean }) {
   return (
     <div className="bmw-provenance-banner">
-      {mode === "integrated-demo" && (
+      {isBundled ? (
         <><strong>Deterministic static demonstration.</strong> Existing repository outputs and synthetic comparison fixtures are labeled separately. No external tool is executed in this browser.</>
-      )}
-      {mode === "custom-local" && (
+      ) : (
         <><strong>Local model — configured only.</strong> Your model stays in browser memory. Configure operations and preview invocation. No execution occurs.</>
       )}
     </div>
   );
 }
-
-/* ═══════════════════════════════════════════════════════════════ */
-/*  Main Page                                                      */
-/* ═══════════════════════════════════════════════════════════════ */
 
 export function BenchmarkWorkspacePage() {
   const [searchParams] = useSearchParams();
@@ -68,28 +53,30 @@ export function BenchmarkWorkspacePage() {
     return null;
   }, [searchParams]);
 
-  /* ── Scenario ── */
-  const [scenarioMode, setScenarioMode] = useState<ScenarioMode>("integrated-demo");
-  const scenario: WorkflowScenario | null = scenarioMode === "integrated-demo" ? INTEGRATED_DEMO_SCENARIO : null;
-  const shouldShowStaticResults = scenarioMode !== "custom-local" && scenario !== null;
-
-  /* ── Model input ── */
+  /* ── Input Model (sole entry point) ── */
   const [inputMode, setInputMode] = useState<InputMode>("bundled");
   const [bundledModelId, setBundledModelId] = useState<string | null>("bundled-bsim4-nmos-tt");
   const [localModel, setLocalModel] = useState<LocalModelData | null>(null);
+  const isBundledModel = inputMode === "bundled";
+  const activeResultSet: WorkflowScenario | null = isBundledModel ? DEFAULT_RESULT_SET : null;
 
-  /* ── Operations ── */
+  /* ── Operation Order (draggable) ── */
+  const [operationOrder, setOperationOrder] = useState<ProcessingToolId[]>(
+    [...DEFAULT_OPERATION_ORDER] as ProcessingToolId[],
+  );
+
+  /* ── Operations enabled + params ── */
   const [enabledOps, setEnabledOps] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
-    for (const t of CANONICAL_WORKFLOW_ORDER) init[t] = true;
+    for (const t of DEFAULT_OPERATION_ORDER) init[t] = true;
     if (preselectedOperation) {
-      for (const t of CANONICAL_WORKFLOW_ORDER) init[t] = (t === preselectedOperation);
+      for (const t of DEFAULT_OPERATION_ORDER) init[t] = (t === preselectedOperation);
     }
     return init;
   });
-  const [opParams, setOpParams] = useState<OperationParams>(() => {
-    const init: OperationParams = {};
-    for (const t of CANONICAL_WORKFLOW_ORDER) init[t] = {};
+  const [opParams, setOpParams] = useState<Record<string, Record<string, unknown>>>(() => {
+    const init: Record<string, Record<string, unknown>> = {};
+    for (const t of DEFAULT_OPERATION_ORDER) init[t] = {};
     return init;
   });
 
@@ -104,136 +91,73 @@ export function BenchmarkWorkspacePage() {
   const [selectedSimulators, setSelectedSimulators] = useState<SimulatorId[]>(["ngspice", "spectre", "hspice"]);
   const [selectedDomains, setSelectedDomains] = useState<AnalysisDomain[]>(["dc", "ac", "transient", "noise"]);
   const [benchmarkModelIds, setBenchmarkModelIds] = useState<string[]>(
-    scenario ? [scenario.defaultInputModelId, scenario.defaultCandidateModelId] : [],
+    activeResultSet ? [activeResultSet.defaultInputModelId, activeResultSet.defaultCandidateModelId] : [],
   );
-  const [baselineModelId, setBaselineModelId] = useState<string | null>(scenario?.defaultInputModelId ?? null);
-  const [candidateModelId, setCandidateModelId] = useState<string | null>(scenario?.defaultCandidateModelId ?? null);
+  const [baselineModelId, setBaselineModelId] = useState<string | null>(activeResultSet?.defaultInputModelId ?? null);
+  const [candidateModelId, setCandidateModelId] = useState<string | null>(activeResultSet?.defaultCandidateModelId ?? null);
   const [referenceSimulator, setReferenceSimulator] = useState<SimulatorId>("ngspice");
   const [showCornerModels, setShowCornerModels] = useState(false);
 
-  /* ── Invocation previews (custom-local + integrated-demo) ── */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const invocationPreviews = useMemo((): ToolInvocation<any>[] => {
-    if (!scenario) return [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const previews: ToolInvocation<any>[] = [];
-    const contextBase = { workingDirectoryKey: "workspace", adapterVersion: "1.0.0" };
-    let idx = 0;
-    const inputModel = scenario.models[scenario.defaultInputModelId];
-    if (!inputModel) return [];
-
-    for (const toolId of CANONICAL_WORKFLOW_ORDER) {
-      if (!enabledOps[toolId]) continue;
-      const ctx = { ...contextBase, invocationId: `inv-preview-${toolId}-${idx++}`, outputDirectoryKey: `${toolId}-output` };
-      if (toolId === "translator") {
-        previews.push(translatorAdapter.buildInvocation(ctx, [inputModel], {
-          sourceDialect: inputModel.dialect, targetDialect: "ngspice",
-          followIncludes: true, verify: true, plot: true,
-          maxPlots: Number(opParams.translator?.maxPlots ?? 10), preserveComments: false,
-        }));
-      } else if (toolId === "fitting") {
-        previews.push(fittingAdapter.buildInvocation(ctx, [inputModel], {
-          modelName: String(opParams.fitting?.modelName ?? "nmos_bsim4"),
-          deviceType: (opParams.fitting?.deviceType as "nmos" | "pmos") ?? "nmos",
-          simType: "dc", datasets: [],
-          optimizer: (opParams.fitting?.optimizer as never) ?? "nelder_mead",
-          maxIterations: Number(opParams.fitting?.maxIterations ?? 50),
-          targetRelativeLoss: Number(opParams.fitting?.targetRelativeLoss ?? 0.3),
-          outputFilename: String(opParams.fitting?.outputFilename ?? "calibrated.lib"),
-          plot: Boolean(opParams.fitting?.plot ?? true),
-          trainParameters: (opParams.fitting?.trainParameters as string[]) ?? ["vth0", "k1", "k2", "nfactor"],
-          fixedParameters: (opParams.fitting?.fixedParameters as string[]) ?? [],
-          lowerBounds: {}, upperBounds: {},
-        }));
-      } else if (toolId === "reduction") {
-        previews.push(reductionAdapter.buildInvocation(ctx, [inputModel], {
-          errorTolerance: Number(opParams.reduction?.errorTolerance ?? 0.05),
-          minParameters: Number(opParams.reduction?.minParameters ?? 10),
-          maxIterations: Number(opParams.reduction?.maxIterations ?? 100),
-          optimizationMethod: (opParams.reduction?.optimizationMethod as never) ?? "genetic_algorithm",
-          reductionMethod: (opParams.reduction?.reductionMethod as never) ?? "sensitivity",
-          testType: (opParams.reduction?.testType as never) ?? "dc_iv",
-          deviceType: (opParams.reduction?.deviceType as "nmos") ?? "nmos",
-          usePrebuiltNetlist: Boolean(opParams.reduction?.usePrebuiltNetlist ?? true),
-        }));
-      } else if (toolId === "expansion") {
-        previews.push(expansionAdapter.buildInvocation(ctx, [inputModel], {
-          modelName: String(opParams.expansion?.modelName ?? "nmos_bsim4_red"),
-          nSigma: Number(opParams.expansion?.nSigma ?? 3),
-          generateTSF: Boolean(opParams.expansion?.generateTSF ?? true),
-          runIv: Boolean(opParams.expansion?.runIv ?? true),
-          runCv: Boolean(opParams.expansion?.runCv ?? true),
-          monteCarlo: Boolean(opParams.expansion?.monteCarlo ?? false),
-          mcSamples: Number(opParams.expansion?.mcSamples ?? 100),
-          distribution: (opParams.expansion?.distribution as never) ?? "normal",
-          seed: Number(opParams.expansion?.seed ?? 42),
-          plot: Boolean(opParams.expansion?.plot ?? true),
-        }));
-      }
-    }
-    return previews;
-  }, [scenario, enabledOps, opParams]);
-
-  /* ── Workflow steps ── */
+  /* ── Workflow Plan (only enabled, current order) ── */
   const workflowSteps = useMemo(() => {
-    const steps = CANONICAL_WORKFLOW_ORDER.map((toolId) => ({
-      toolId, label: TOOL_CATALOG[toolId].label, enabled: enabledOps[toolId] ?? false,
-    }));
-    return [...steps, { toolId: "benchmark" as ToolId, label: "Benchmark", enabled: true }];
-  }, [enabledOps]);
+    const enabled = operationOrder.filter((tid) => enabledOps[tid]);
+    return [
+      ...enabled.map((tid) => ({ toolId: tid as never, label: TOOL_CATALOG[tid].label, enabled: true })),
+      { toolId: "benchmark" as never, label: "Benchmark", enabled: true },
+    ];
+  }, [operationOrder, enabledOps]);
 
   /* ── Available models ── */
   const availableModels = useMemo((): ModelArtifact[] => {
-    if (!scenario) return [];
-    const models = getSelectableModels(scenario);
+    if (!activeResultSet) return [];
+    const models = getSelectableModels(activeResultSet);
     if (!showCornerModels) return models.filter((m) => !m.variant.startsWith("corner-"));
     return models;
-  }, [scenario, showCornerModels]);
+  }, [activeResultSet, showCornerModels]);
 
   return (
     <div>
-      <ProvenanceBanner scenario={scenario} mode={scenarioMode} />
+      <ProvenanceBanner isBundled={isBundledModel} />
 
-      {/* ═══ Setup Card ═══ */}
-      <div className="chart-card" id="setup" style={{ marginBottom: "0.85rem" }}>
-        <h2>SPICE Model Workflow &amp; Benchmark Workspace</h2>
-        <p className="hint">
-          Configure input model, select operations, and view cross-simulator benchmark results.{" "}
-          {preselectedOperation && (
-            <span style={{ color: "var(--accent, #0071e3)", fontWeight: 600 }}>Pre-selected: {preselectedOperation}.</span>
-          )}
+      {/* ═══ Workspace Header ═══ */}
+      <div className="chart-card" style={{ marginBottom: "1rem", textAlign: "center" }}>
+        <h2 style={{ marginBottom: "0.35rem" }}>SPICE Model Workflow &amp; Benchmark Workspace</h2>
+        <p className="hint" style={{ maxWidth: "640px", marginInline: "auto" }}>
+          Configure input model, select and reorder processing tools, and view cross-simulator benchmark results.
         </p>
-
-        <div style={{ marginTop: "0.75rem" }}>
-          <ScenarioSelector mode={scenarioMode} onChange={setScenarioMode} />
-        </div>
-
-        <div style={{ marginTop: "0.75rem" }}>
-          <ModelInputCard
-            mode={inputMode} onModeChange={setInputMode}
-            bundledModelId={bundledModelId} onBundledModelChange={setBundledModelId}
-            localModel={localModel} onLocalModelChange={setLocalModel}
-          />
-        </div>
       </div>
 
-      {/* ═══ Select Operations (4-column grid + inline settings) ═══ */}
-      <div className="chart-card" id="workflow" style={{ marginBottom: "0.85rem" }}>
-        <OperationSelector enabled={enabledOps} onChange={handleOpToggle} scenarioMode={scenarioMode} params={opParams} onParamsChange={handleParamsChange} />
+      {/* ═══ Input Model ═══ */}
+      <div className="chart-card" style={{ marginBottom: "1rem" }}>
+        <h2>Input Model</h2>
+        <ModelInputCard
+          mode={inputMode} onModeChange={setInputMode}
+          bundledModelId={bundledModelId} onBundledModelChange={setBundledModelId}
+          localModel={localModel} onLocalModelChange={setLocalModel}
+        />
+      </div>
+
+      {/* ═══ Select Operations ═══ */}
+      <div className="chart-card" style={{ marginBottom: "1rem" }}>
+        <OperationSelector
+          operationOrder={operationOrder}
+          onOrderChange={setOperationOrder}
+          enabled={enabledOps}
+          onChange={handleOpToggle}
+          params={opParams}
+          onParamsChange={handleParamsChange}
+        />
       </div>
 
       {/* ═══ Workflow Plan ═══ */}
       <WorkflowPlanCard
         steps={workflowSteps}
-        invocationPreviews={invocationPreviews}
-        compatibilityNodes={scenarioMode === "integrated-demo" ? [
-          { simulator: "spectre" as SimulatorId, dialect: "spectre", temporary: true },
-          { simulator: "hspice" as SimulatorId, dialect: "hspice", temporary: true },
-        ] : undefined}
+        operationOrder={operationOrder}
+        enabledOps={enabledOps}
       />
 
       {/* ═══ Benchmark Setup ═══ */}
-      <div style={{ marginTop: "0.85rem" }}>
+      <div style={{ marginTop: "1rem" }}>
         <BenchmarkSetupCard
           selectedSimulators={selectedSimulators} onSimulatorsChange={setSelectedSimulators}
           selectedDomains={selectedDomains as never} onDomainsChange={setSelectedDomains as never}
@@ -246,35 +170,25 @@ export function BenchmarkWorkspacePage() {
         />
       </div>
 
-      {/* ═══ Preview Workflow (custom-local only) ═══ */}
-      {scenarioMode === "custom-local" && (
-        <div style={{ marginTop: "0.85rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-          <button className="benchmark-btn" onClick={() => {}} style={{ padding: "0.5rem 1rem", fontWeight: 600 }}>
-            Preview workflow
-          </button>
-          <div className="chart-card" style={{ width: "100%", padding: "0.5rem 0.75rem", fontSize: "0.78rem", color: "var(--muted, #888)" }}>
-            Execution is unavailable in this static build. Connect the future backend to run this exact invocation.
+      {/* ═══ Local model: configured-only ═══ */}
+      {!isBundledModel && (
+        <div style={{ marginTop: "1rem" }}>
+          <div className="chart-card" style={{ textAlign: "center", padding: "2rem" }}>
+            <p style={{ fontSize: "1.1rem", fontWeight: 600 }}>Configured, not executed</p>
+            <p className="hint">Your workflow configuration is complete. Execution requires the future backend.</p>
           </div>
         </div>
       )}
 
-      {/* ═══ Static Results — auto-displayed ═══ */}
-      {shouldShowStaticResults && scenario && (
+      {/* ═══ Static Results (bundled model) ═══ */}
+      {isBundledModel && activeResultSet && (
         <div style={{ marginTop: "1rem" }}>
-          <ExecutiveSummaryCard scenario={scenario} enabledOps={enabledOps} simulators={selectedSimulators} />
-          <SimulatorComparisonCard scenario={scenario} modelId={candidateModelId ?? scenario.defaultCandidateModelId} simulators={selectedSimulators} domains={selectedDomains as never} referenceSimulator={referenceSimulator} />
-          <ModelComparisonCard scenario={scenario} baselineId={baselineModelId} candidateId={candidateModelId} />
-          <ProcessedModelCard scenario={scenario} modelId={candidateModelId ?? scenario.defaultCandidateModelId} baselineModelId={baselineModelId} />
-          <OperationResults scenario={scenario} enabledOps={enabledOps} />
-          <ArtifactTableCard scenario={scenario} />
-        </div>
-      )}
-
-      {/* ═══ Custom-local: configured, not executed ═══ */}
-      {scenarioMode === "custom-local" && (
-        <div className="chart-card" style={{ marginTop: "1rem", textAlign: "center", padding: "2rem" }}>
-          <p style={{ fontSize: "1.1rem", fontWeight: 600 }}>Configured, not executed</p>
-          <p className="hint">Your workflow configuration is complete. Execution requires the future backend.</p>
+          <ExecutiveSummaryCard scenario={activeResultSet} enabledOps={enabledOps} simulators={selectedSimulators} />
+          <SimulatorComparisonCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} simulators={selectedSimulators} domains={selectedDomains as never} referenceSimulator={referenceSimulator} />
+          <ModelComparisonCard scenario={activeResultSet} baselineId={baselineModelId} candidateId={candidateModelId} />
+          <ProcessedModelCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} baselineModelId={baselineModelId} />
+          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} />
+          <ArtifactTableCard scenario={activeResultSet} />
         </div>
       )}
     </div>

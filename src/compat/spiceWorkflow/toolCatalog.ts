@@ -22,7 +22,7 @@ export interface ToolMeta {
 export const TOOL_CATALOG: Record<ToolId, ToolMeta> = {
   translator: {
     id: "translator",
-    label: "Convert",
+    label: "Translator",
     subtitle: "Translate between ngspice, Spectre, and HSPICE dialects",
     description:
       "Multi-directional format translation with include-aware processing, " +
@@ -36,7 +36,7 @@ export const TOOL_CATALOG: Record<ToolId, ToolMeta> = {
   },
   fitting: {
     id: "fitting",
-    label: "Calibrate",
+    label: "Fitting",
     subtitle: "Fit BSIM parameters to measured DC IV data",
     description:
       "Calibrate BSIM4.5 DC parameters against measured I-V sweeps " +
@@ -50,7 +50,7 @@ export const TOOL_CATALOG: Record<ToolId, ToolMeta> = {
   },
   reduction: {
     id: "reduction",
-    label: "Reduce",
+    label: "Reduction",
     subtitle: "Prune and optimize BSIM parameters within an error tolerance",
     description:
       "Sensitivity-driven parameter reduction with multiple optimization " +
@@ -64,7 +64,7 @@ export const TOOL_CATALOG: Record<ToolId, ToolMeta> = {
   },
   expansion: {
     id: "expansion",
-    label: "Expand",
+    label: "Expansion",
     subtitle: "Generate T/S/F corners and optional Monte Carlo variants from a TT model",
     description:
       "Derive process corners and Monte Carlo ensembles from a nominal " +
@@ -93,11 +93,11 @@ export const TOOL_CATALOG: Record<ToolId, ToolMeta> = {
   },
 };
 
-export const CANONICAL_WORKFLOW_ORDER: Exclude<ToolId, "benchmark">[] = [
+export const DEFAULT_OPERATION_ORDER: Exclude<ToolId, "benchmark">[] = [
   "translator",
-  "fitting",
   "reduction",
   "expansion",
+  "fitting",
 ];
 
 export const ALL_SIMULATORS = ["ngspice", "spectre", "hspice"] as const;
