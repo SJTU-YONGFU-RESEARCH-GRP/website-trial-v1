@@ -3,27 +3,18 @@
  *
  *  No Scenario. Input Model is the sole entry point.
  *  Formal names: Translator, Reduction, Expansion, Fitting.
- *  Draggable order via @dnd-kit.
  * ================================================================== */
 
 import { useMemo, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import type {
-  WorkflowScenario, SimulatorId, ModelArtifact, AnalysisDomain,
+  WorkflowScenario, SimulatorId, AnalysisDomain, ProcessingToolId,
 } from "../../compat/spiceWorkflow/contracts";
-import type { ProcessingToolId } from "../../compat/spiceWorkflow/contracts";
 import { INTEGRATED_DEMO_SCENARIO } from "../../data/benchmarkWorkspace";
-import { TOOL_CATALOG, DEFAULT_OPERATION_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
-import { getSelectableModels } from "../../data/benchmarkWorkspace/selectors";
-import {
-  buildWorkspaceFingerprint, buildRecordedFingerprint, fingerprintsMatch,
-} from "../../compat/spiceWorkflow/configurationFingerprint";
-import { analyzeWorkflow } from "../../compat/spiceWorkflow/workflowAnalyzer";
+import { DEFAULT_OPERATION_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
 import { ModelInputCard } from "./ModelInputCard";
 import type { InputMode, LocalModelData } from "./ModelInputCard";
 import { OperationSelector } from "./OperationSelector";
-import { WorkflowPlanCard } from "./WorkflowPlanCard";
-import { BenchmarkSetupCard } from "./BenchmarkSetupCard";
 import { ExecutiveSummaryCard } from "./ExecutiveSummaryCard";
 import { SimulatorComparisonCard } from "./SimulatorComparisonCard";
 import { ModelComparisonCard } from "./ModelComparisonCard";
@@ -87,69 +78,11 @@ export function BenchmarkWorkspacePage() {
   }, []);
 
   /* ── Benchmark setup ── */
-  const [selectedSimulators, setSelectedSimulators] = useState<SimulatorId[]>(["ngspice", "spectre", "hspice"]);
-  const [selectedDomains, setSelectedDomains] = useState<AnalysisDomain[]>(["dc", "ac", "transient", "noise"]);
-  const [benchmarkModelIds, setBenchmarkModelIds] = useState<string[]>(
-    activeResultSet ? [activeResultSet.defaultInputModelId, activeResultSet.defaultCandidateModelId] : [],
-  );
-  const [baselineModelId, setBaselineModelId] = useState<string | null>(activeResultSet?.defaultInputModelId ?? null);
-  const [candidateModelId, setCandidateModelId] = useState<string | null>(activeResultSet?.defaultCandidateModelId ?? null);
-  const [referenceSimulator, setReferenceSimulator] = useState<SimulatorId>("ngspice");
-  const [showCornerModels, setShowCornerModels] = useState(false);
-
-  /* ── Workflow Plan (only enabled, current order) ── */
-  const workflowSteps = useMemo(() => {
-    const enabled = DEFAULT_OPERATION_ORDER.filter((tid) => enabledOps[tid]);
-    return [
-      ...enabled.map((tid) => ({ toolId: tid as never, label: TOOL_CATALOG[tid].label, enabled: true })),
-      { toolId: "benchmark" as never, label: "Benchmark", enabled: true },
-    ];
-  }, [enabledOps]);
-
-  /* ── Configuration fingerprint ── */
-  const defaultOrder = DEFAULT_OPERATION_ORDER as unknown as ProcessingToolId[];
-  const currentFingerprint = useMemo(() => {
-    const inputModel = activeResultSet?.models[activeResultSet.defaultInputModelId] ?? null;
-    return buildWorkspaceFingerprint({
-      inputModel, enabledOps, operationOrder: defaultOrder, opParams,
-      selectedSimulators, baselineModelId, candidateModelId,
-    });
-  }, [activeResultSet, enabledOps, opParams, selectedSimulators, baselineModelId, candidateModelId, defaultOrder]);
-
-  const recordedFingerprint = useMemo(() => {
-    if (!activeResultSet) return null;
-    const inputModel = activeResultSet.models[activeResultSet.defaultInputModelId] ?? null;
-    return buildRecordedFingerprint({
-      inputModel,
-      operationOrder: defaultOrder,
-      enabledOps,
-      opParams: {},
-      defaultSimulators: activeResultSet.defaultSimulators,
-      defaultInputModelId: activeResultSet.defaultInputModelId,
-      defaultCandidateModelId: activeResultSet.defaultCandidateModelId,
-    });
-  }, [activeResultSet, enabledOps, defaultOrder]);
-
-  const resultsMatch = fingerprintsMatch(currentFingerprint, recordedFingerprint);
-
-  /* ── Workflow analysis ── */
-  const workflowAnalysis = useMemo(() => {
-    if (!activeResultSet) return null;
-    const inputModel = activeResultSet.models[activeResultSet.defaultInputModelId];
-    if (!inputModel) return null;
-    return analyzeWorkflow({
-      inputModel, operationOrder: defaultOrder, enabledOps, params: opParams as Record<string, Record<string, unknown>>,
-      selectedSimulators,
-    });
-  }, [activeResultSet, enabledOps, opParams, selectedSimulators, defaultOrder]);
-
-  /* ── Available models ── */
-  const availableModels = useMemo((): ModelArtifact[] => {
-    if (!activeResultSet) return [];
-    const models = getSelectableModels(activeResultSet);
-    if (!showCornerModels) return models.filter((m) => !m.variant.startsWith("corner-"));
-    return models;
-  }, [activeResultSet, showCornerModels]);
+  const [selectedSimulators] = useState<SimulatorId[]>(["ngspice", "spectre", "hspice"]);
+  const [selectedDomains] = useState<AnalysisDomain[]>(["dc", "ac", "transient", "noise"]);
+  const [baselineModelId] = useState<string | null>(activeResultSet?.defaultInputModelId ?? null);
+  const [candidateModelId] = useState<string | null>(activeResultSet?.defaultCandidateModelId ?? null);
+  const [referenceSimulator] = useState<SimulatorId>("ngspice");
 
   return (
     <div>
@@ -159,7 +92,7 @@ export function BenchmarkWorkspacePage() {
       <div className="chart-card" style={{ marginBottom: "1rem", textAlign: "center" }}>
         <h2 style={{ marginBottom: "0.35rem" }}>SPICE Model Workflow &amp; Benchmark Workspace</h2>
         <p className="hint" style={{ maxWidth: "640px", marginInline: "auto" }}>
-          Configure input model, select and reorder processing tools, and view cross-simulator benchmark results.
+          Configure input model, select operations, and view cross-simulator benchmark results.
         </p>
       </div>
 
@@ -183,27 +116,6 @@ export function BenchmarkWorkspacePage() {
         />
       </div>
 
-      {/* ═══ Workflow Plan ═══ */}
-      <WorkflowPlanCard
-        steps={workflowSteps}
-        operationOrder={defaultOrder}
-        enabledOps={enabledOps}
-      />
-
-      {/* ═══ Benchmark Setup ═══ */}
-      <div style={{ marginTop: "1rem" }}>
-        <BenchmarkSetupCard
-          selectedSimulators={selectedSimulators} onSimulatorsChange={setSelectedSimulators}
-          selectedDomains={selectedDomains as never} onDomainsChange={setSelectedDomains as never}
-          benchmarkModelIds={benchmarkModelIds} onBenchmarkModelIdsChange={setBenchmarkModelIds}
-          availableModels={availableModels}
-          baselineModelId={baselineModelId} onBaselineChange={setBaselineModelId}
-          candidateModelId={candidateModelId} onCandidateChange={setCandidateModelId}
-          referenceSimulator={referenceSimulator} onReferenceSimulatorChange={setReferenceSimulator}
-          showCornerModels={showCornerModels} onShowCornerModelsChange={setShowCornerModels}
-        />
-      </div>
-
       {/* ═══ Local model: configured-only ═══ */}
       {!isBundledModel && (
         <div style={{ marginTop: "1rem" }}>
@@ -217,34 +129,11 @@ export function BenchmarkWorkspacePage() {
       {/* ═══ Static Results (bundled model) ═══ */}
       {isBundledModel && activeResultSet && (
         <div style={{ marginTop: "1rem" }}>
-          {/* Configuration mismatch notice */}
-          {!resultsMatch && (
-            <div className="bmw-provenance-banner" style={{ marginBottom: "0.75rem" }}>
-              Displayed results belong to the recorded configuration and have not been recomputed for the current order or parameters.
-            </div>
-          )}
-
-          {/* Workflow analysis notices */}
-          {workflowAnalysis && (workflowAnalysis.notices.length > 0 || workflowAnalysis.blockingIssues.length > 0) && (
-            <div className="chart-card" style={{ marginBottom: "0.75rem", padding: "0.65rem 1rem" }}>
-              {workflowAnalysis.blockingIssues.map((issue, i) => (
-                <p key={`block-${i}`} className="hint" style={{ color: "var(--text-secondary, #666)" }}>
-                  {issue}
-                </p>
-              ))}
-              {workflowAnalysis.notices.map((note, i) => (
-                <p key={`note-${i}`} className="hint" style={{ fontSize: "0.72rem" }}>
-                  {note}
-                </p>
-              ))}
-            </div>
-          )}
-
           <ExecutiveSummaryCard scenario={activeResultSet} enabledOps={enabledOps} simulators={selectedSimulators} />
           <SimulatorComparisonCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} simulators={selectedSimulators} domains={selectedDomains as never} referenceSimulator={referenceSimulator} />
           <ModelComparisonCard scenario={activeResultSet} baselineId={baselineModelId} candidateId={candidateModelId} />
           <ProcessedModelCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} baselineModelId={baselineModelId} />
-          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} operationOrder={defaultOrder} />
+          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} operationOrder={DEFAULT_OPERATION_ORDER as unknown as ProcessingToolId[]} />
           <ArtifactTableCard scenario={activeResultSet} />
         </div>
       )}
