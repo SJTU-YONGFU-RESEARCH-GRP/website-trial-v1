@@ -64,11 +64,6 @@ export function BenchmarkWorkspacePage() {
   const isBundledModel = inputMode === "bundled";
   const activeResultSet: WorkflowScenario | null = isBundledModel ? DEFAULT_RESULT_SET : null;
 
-  /* ── Operation Order (draggable) ── */
-  const [operationOrder, setOperationOrder] = useState<ProcessingToolId[]>(
-    [...DEFAULT_OPERATION_ORDER] as ProcessingToolId[],
-  );
-
   /* ── Operations enabled + params ── */
   const [enabledOps, setEnabledOps] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
@@ -104,35 +99,36 @@ export function BenchmarkWorkspacePage() {
 
   /* ── Workflow Plan (only enabled, current order) ── */
   const workflowSteps = useMemo(() => {
-    const enabled = operationOrder.filter((tid) => enabledOps[tid]);
+    const enabled = DEFAULT_OPERATION_ORDER.filter((tid) => enabledOps[tid]);
     return [
       ...enabled.map((tid) => ({ toolId: tid as never, label: TOOL_CATALOG[tid].label, enabled: true })),
       { toolId: "benchmark" as never, label: "Benchmark", enabled: true },
     ];
-  }, [operationOrder, enabledOps]);
+  }, [enabledOps]);
 
   /* ── Configuration fingerprint ── */
+  const defaultOrder = DEFAULT_OPERATION_ORDER as unknown as ProcessingToolId[];
   const currentFingerprint = useMemo(() => {
     const inputModel = activeResultSet?.models[activeResultSet.defaultInputModelId] ?? null;
     return buildWorkspaceFingerprint({
-      inputModel, enabledOps, operationOrder, opParams,
+      inputModel, enabledOps, operationOrder: defaultOrder, opParams,
       selectedSimulators, baselineModelId, candidateModelId,
     });
-  }, [activeResultSet, enabledOps, operationOrder, opParams, selectedSimulators, baselineModelId, candidateModelId]);
+  }, [activeResultSet, enabledOps, opParams, selectedSimulators, baselineModelId, candidateModelId, defaultOrder]);
 
   const recordedFingerprint = useMemo(() => {
     if (!activeResultSet) return null;
     const inputModel = activeResultSet.models[activeResultSet.defaultInputModelId] ?? null;
     return buildRecordedFingerprint({
       inputModel,
-      operationOrder: operationOrder,
+      operationOrder: defaultOrder,
       enabledOps,
       opParams: {},
       defaultSimulators: activeResultSet.defaultSimulators,
       defaultInputModelId: activeResultSet.defaultInputModelId,
       defaultCandidateModelId: activeResultSet.defaultCandidateModelId,
     });
-  }, [activeResultSet, operationOrder, enabledOps]);
+  }, [activeResultSet, enabledOps, defaultOrder]);
 
   const resultsMatch = fingerprintsMatch(currentFingerprint, recordedFingerprint);
 
@@ -142,10 +138,10 @@ export function BenchmarkWorkspacePage() {
     const inputModel = activeResultSet.models[activeResultSet.defaultInputModelId];
     if (!inputModel) return null;
     return analyzeWorkflow({
-      inputModel, operationOrder, enabledOps, params: opParams as Record<string, Record<string, unknown>>,
+      inputModel, operationOrder: defaultOrder, enabledOps, params: opParams as Record<string, Record<string, unknown>>,
       selectedSimulators,
     });
-  }, [activeResultSet, operationOrder, enabledOps, opParams, selectedSimulators]);
+  }, [activeResultSet, enabledOps, opParams, selectedSimulators, defaultOrder]);
 
   /* ── Available models ── */
   const availableModels = useMemo((): ModelArtifact[] => {
@@ -180,8 +176,6 @@ export function BenchmarkWorkspacePage() {
       {/* ═══ Select Operations ═══ */}
       <div className="chart-card" style={{ marginBottom: "1rem" }}>
         <OperationSelector
-          operationOrder={operationOrder}
-          onOrderChange={setOperationOrder}
           enabled={enabledOps}
           onChange={handleOpToggle}
           params={opParams}
@@ -192,7 +186,7 @@ export function BenchmarkWorkspacePage() {
       {/* ═══ Workflow Plan ═══ */}
       <WorkflowPlanCard
         steps={workflowSteps}
-        operationOrder={operationOrder}
+        operationOrder={defaultOrder}
         enabledOps={enabledOps}
       />
 
@@ -250,7 +244,7 @@ export function BenchmarkWorkspacePage() {
           <SimulatorComparisonCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} simulators={selectedSimulators} domains={selectedDomains as never} referenceSimulator={referenceSimulator} />
           <ModelComparisonCard scenario={activeResultSet} baselineId={baselineModelId} candidateId={candidateModelId} />
           <ProcessedModelCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} baselineModelId={baselineModelId} />
-          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} operationOrder={operationOrder} />
+          <OperationResults scenario={activeResultSet} enabledOps={enabledOps} operationOrder={defaultOrder} />
           <ArtifactTableCard scenario={activeResultSet} />
         </div>
       )}
