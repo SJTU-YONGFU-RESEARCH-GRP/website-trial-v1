@@ -179,7 +179,7 @@ export function ModelComparisonCard({ scenario }: Props) {
         </div>
       )}
 
-      {/* Plots: domain → comparisonKey → simulator → horizontal row of model plots */}
+      {/* Plots: domain → comparisonKey → single horizontal row mixing all simulators */}
       {hasSelection && groups.length > 0 && (
         <div>
           {DOMAIN_ORDER.map((domain) => {
@@ -191,27 +191,41 @@ export function ModelComparisonCard({ scenario }: Props) {
                 <header>{domain.toUpperCase()}</header>
 
                 {Array.from(compMap.entries()).map(([compKey, simMap]) => {
-                  return Array.from(simMap.entries()).map(([simulator, group]) => (
-                    <div key={`${domain}|${compKey}|${simulator}`} className="bmw-model-metric-block">
+                  // Collect all (modelId, simulator, plot) tuples for this metric
+                  const cells: { modelId: string; simulator: SimulatorId; plot: ResolvedBenchmarkPlot | null }[] = [];
+                  for (const mid of selectedModels) {
+                    for (const sim of SIMULATOR_ORDER) {
+                      if (!selectedSimulators.includes(sim)) continue;
+                      const group = simMap.get(sim);
+                      const plot = group?.plots.get(mid) ?? null;
+                      cells.push({ modelId: mid, simulator: sim, plot });
+                    }
+                  }
+
+                  // Determine title from any group
+                  const anyGroup = simMap.values().next().value;
+                  const title = anyGroup?.title ?? compKey;
+
+                  return (
+                    <div key={`${domain}|${compKey}`} className="bmw-model-metric-block">
                       <div className="bmw-model-metric-header">
-                        <span className="bmw-model-metric-sim">{simulator}</span>
-                        <span className="bmw-model-metric-title">{group.title}</span>
+                        <span className="bmw-model-metric-title">{title}</span>
                       </div>
                       <div className="bmw-model-scroll-row">
-                        {selectedModels.map((mid) => {
-                          const plot = group.plots.get(mid) ?? null;
-                          const model = scenario.models[mid];
+                        {cells.map(({ modelId, simulator, plot }) => {
+                          const model = scenario.models[modelId];
+                          const label = `${model?.displayName ?? modelId} (${simulator})`;
                           return (
                             <MultiModelPlotPanel
-                              key={mid}
+                              key={`${modelId}|${simulator}`}
                               plot={plot}
-                              modelName={model?.displayName ?? mid}
+                              modelName={label}
                             />
                           );
                         })}
                       </div>
                     </div>
-                  ));
+                  );
                 })}
               </section>
             );
