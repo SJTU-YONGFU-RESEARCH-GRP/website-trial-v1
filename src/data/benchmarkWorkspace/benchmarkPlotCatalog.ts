@@ -27,6 +27,8 @@ export const PLOT_CATALOG: PlotKeyEntry[] = [
   { comparisonKey: "power-dissipation", title: "Power Dissipation", domain: "transient" },
   { comparisonKey: "energy-consumption", title: "Energy Consumption", domain: "transient" },
   { comparisonKey: "quasi-static", title: "Quasi-Static Analysis", domain: "transient" },
+  { comparisonKey: "quasi-static-iv", title: "Quasi-Static IV", domain: "transient" },
+  { comparisonKey: "quasi-static-time", title: "Quasi-Static Time", domain: "transient" },
   { comparisonKey: "charge-conservation", title: "Charge Conservation", domain: "transient" },
   { comparisonKey: "total-charge", title: "Total Charge", domain: "transient" },
   // AC

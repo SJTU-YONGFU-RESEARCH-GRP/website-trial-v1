@@ -454,7 +454,9 @@ function registerPlotArtifact(artifactId: string, name: string, modelId: string,
   };
 }
 
-// Ngspice plots for input model (from results/)
+// ═══════════════════════════════════════════════════════════
+// Ngspice plots for input model (from reference_results/)
+// ═══════════════════════════════════════════════════════════
 addPlot("model-input", "ngspice", "dc", "bp-input-ngspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/reference_results/plots/iv_characteristics_44e599f9.png");
 addPlot("model-input", "ngspice", "dc", "bp-input-ngspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/reference_results/plots/kcl_verification_9a99adfa.png");
 addPlot("model-input", "ngspice", "dc", "bp-input-ngspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/reference_results/plots/temperature_analysis_8afe0802.png");
@@ -471,28 +473,108 @@ addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-flicker", "fl
 addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-shot", "shot-noise", "Shot Noise", "benchmark/reference_results/plots/shot_noise_97f69a58.png");
 addPlot("model-input", "ngspice", "noise", "bp-input-ngspice-noise-components", "noise-components", "Noise Components", "benchmark/reference_results/plots/noise_components_d2a1aff6.png");
 
-// Ngspice plots for reduced model (from results_final/)
-addPlot("model-reduced", "ngspice", "dc", "bp-reduced-ngspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/results_final/plots/dc_iv_characteristics_24e9b83e.png");
-addPlot("model-reduced", "ngspice", "dc", "bp-reduced-ngspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/results_final/plots/dc_kcl_verification_3e27897c.png");
-addPlot("model-reduced", "ngspice", "dc", "bp-reduced-ngspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/results_final/plots/dc_temperature_analysis_f15e5dc8.png");
-addPlot("model-reduced", "ngspice", "ac", "bp-reduced-ngspice-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/results_final/plots/ac_cv_characteristics_2f26bb98.png");
-addPlot("model-reduced", "ngspice", "transient", "bp-reduced-ngspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/results_final/plots/trans_large_signal_transient_de4ca9fb.png");
-addPlot("model-reduced", "ngspice", "transient", "bp-reduced-ngspice-tran-sw", "switching-response", "Switching Response", "benchmark/results_final/plots/trans_switching_response_95782e13.png");
-addPlot("model-reduced", "ngspice", "transient", "bp-reduced-ngspice-tran-delay", "delay-effect", "Delay Effect", "benchmark/results_final/plots/trans_delay_effect_46e5bfba.png");
-addPlot("model-reduced", "ngspice", "noise", "bp-reduced-ngspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/results_final/plots/thermal_noise_01d4dd8b.png");
+// ═══════════════════════════════════════════════════════════
+// HSPICE + Spectre pipeline results (4 tools × 2 simulators)
+// ═══════════════════════════════════════════════════════════
+// --- Translator ---
+addPlot("model-translated", "hspice", "dc", "bp-translator-hspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/translator/hspice/dc_iv_characteristics.png");
+addPlot("model-translated", "hspice", "dc", "bp-translator-hspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/translator/hspice/dc_kcl_verification.png");
+addPlot("model-translated", "hspice", "dc", "bp-translator-hspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/translator/hspice/dc_temperature_analysis.png");
+addPlot("model-translated", "hspice", "ac", "bp-translator-hspice-ac-nqs", "nqs-effects", "Non-Quasi-Static Effects", "benchmark/pipeline_results/translator/hspice/ac_cv_nqs_effects.png");
+addPlot("model-translated", "hspice", "ac", "bp-translator-hspice-ac-sp", "s-parameter", "S-Parameter Analysis", "benchmark/pipeline_results/translator/hspice/ac_cv_sparameter_analysis.png");
+addPlot("model-translated", "hspice", "noise", "bp-translator-hspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/translator/hspice/thermal_noise.png");
+addPlot("model-translated", "hspice", "transient", "bp-translator-hspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/translator/hspice/trans_large_signal_transient.png");
+addPlot("model-translated", "hspice", "transient", "bp-translator-hspice-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/translator/hspice/trans_quasi_static_iv.png");
+addPlot("model-translated", "hspice", "transient", "bp-translator-hspice-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/translator/hspice/trans_quasi_static_time.png");
+addPlot("model-translated", "spectre", "dc", "bp-translator-spectre-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/translator/spectre/dc_iv_characteristics.png");
+addPlot("model-translated", "spectre", "dc", "bp-translator-spectre-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/translator/spectre/dc_kcl_verification.png");
+addPlot("model-translated", "spectre", "dc", "bp-translator-spectre-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/translator/spectre/dc_temperature_analysis.png");
+addPlot("model-translated", "spectre", "ac", "bp-translator-spectre-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/pipeline_results/translator/spectre/ac_cv_characteristics.png");
+addPlot("model-translated", "spectre", "ac", "bp-translator-spectre-ac-cvc", "cv-components", "C-V Components", "benchmark/pipeline_results/translator/spectre/ac_cv_components.png");
+addPlot("model-translated", "spectre", "ac", "bp-translator-spectre-ac-cvmf", "cv-multifrequency", "Multi-Frequency C-V", "benchmark/pipeline_results/translator/spectre/ac_v_multifreq_characteristics.png");
+addPlot("model-translated", "spectre", "noise", "bp-translator-spectre-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/translator/spectre/thermal_noise.png");
+addPlot("model-translated", "spectre", "transient", "bp-translator-spectre-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/translator/spectre/trans_large_signal_transient.png");
+addPlot("model-translated", "spectre", "transient", "bp-translator-spectre-tran-delay", "delay-effect", "Delay Effect", "benchmark/pipeline_results/translator/spectre/trans_delay_effect.png");
+addPlot("model-translated", "spectre", "transient", "bp-translator-spectre-tran-sw", "switching-response", "Switching Response", "benchmark/pipeline_results/translator/spectre/trans_switching_response.png");
+addPlot("model-translated", "spectre", "transient", "bp-translator-spectre-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/translator/spectre/trans_quasi_static_iv.png");
+addPlot("model-translated", "spectre", "transient", "bp-translator-spectre-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/translator/spectre/trans_quasi_static_time.png");
 
-// Spectre plots for reduced model (from results_spectre_final2/) — synthetic demo
-addPlot("model-reduced", "spectre", "dc", "bp-reduced-spectre-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/results_spectre_final2/dc_iv_characteristics_24e9b83e.png");
-addPlot("model-reduced", "spectre", "dc", "bp-reduced-spectre-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/results_spectre_final2/dc_kcl_verification_3e27897c.png");
-addPlot("model-reduced", "spectre", "transient", "bp-reduced-spectre-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/results_spectre_final2/trans_large_signal_transient_de4ca9fb.png");
-addPlot("model-reduced", "spectre", "transient", "bp-reduced-spectre-tran-sw", "switching-response", "Switching Response", "benchmark/results_spectre_final2/trans_switching_response_95782e13.png");
+// --- Fitting ---
+addPlot("model-calibrated", "hspice", "dc", "bp-fitting-hspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/fitting/hspice/dc_iv_characteristics.png");
+addPlot("model-calibrated", "hspice", "dc", "bp-fitting-hspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/fitting/hspice/dc_kcl_verification.png");
+addPlot("model-calibrated", "hspice", "dc", "bp-fitting-hspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/fitting/hspice/dc_temperature_analysis.png");
+addPlot("model-calibrated", "hspice", "ac", "bp-fitting-hspice-ac-nqs", "nqs-effects", "Non-Quasi-Static Effects", "benchmark/pipeline_results/fitting/hspice/ac_cv_nqs_effects.png");
+addPlot("model-calibrated", "hspice", "ac", "bp-fitting-hspice-ac-sp", "s-parameter", "S-Parameter Analysis", "benchmark/pipeline_results/fitting/hspice/ac_cv_sparameter_analysis.png");
+addPlot("model-calibrated", "hspice", "noise", "bp-fitting-hspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/fitting/hspice/thermal_noise.png");
+addPlot("model-calibrated", "hspice", "transient", "bp-fitting-hspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/fitting/hspice/trans_large_signal_transient.png");
+addPlot("model-calibrated", "hspice", "transient", "bp-fitting-hspice-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/fitting/hspice/trans_quasi_static_iv.png");
+addPlot("model-calibrated", "hspice", "transient", "bp-fitting-hspice-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/fitting/hspice/trans_quasi_static_time.png");
+addPlot("model-calibrated", "spectre", "dc", "bp-fitting-spectre-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/fitting/spectre/dc_iv_characteristics.png");
+addPlot("model-calibrated", "spectre", "dc", "bp-fitting-spectre-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/fitting/spectre/dc_kcl_verification.png");
+addPlot("model-calibrated", "spectre", "dc", "bp-fitting-spectre-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/fitting/spectre/dc_temperature_analysis.png");
+addPlot("model-calibrated", "spectre", "ac", "bp-fitting-spectre-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/pipeline_results/fitting/spectre/ac_cv_characteristics.png");
+addPlot("model-calibrated", "spectre", "ac", "bp-fitting-spectre-ac-cvc", "cv-components", "C-V Components", "benchmark/pipeline_results/fitting/spectre/ac_cv_components.png");
+addPlot("model-calibrated", "spectre", "ac", "bp-fitting-spectre-ac-cvmf", "cv-multifrequency", "Multi-Frequency C-V", "benchmark/pipeline_results/fitting/spectre/ac_v_multifreq_characteristics.png");
+addPlot("model-calibrated", "spectre", "noise", "bp-fitting-spectre-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/fitting/spectre/thermal_noise.png");
+addPlot("model-calibrated", "spectre", "transient", "bp-fitting-spectre-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/fitting/spectre/trans_large_signal_transient.png");
+addPlot("model-calibrated", "spectre", "transient", "bp-fitting-spectre-tran-delay", "delay-effect", "Delay Effect", "benchmark/pipeline_results/fitting/spectre/trans_delay_effect.png");
+addPlot("model-calibrated", "spectre", "transient", "bp-fitting-spectre-tran-sw", "switching-response", "Switching Response", "benchmark/pipeline_results/fitting/spectre/trans_switching_response.png");
+addPlot("model-calibrated", "spectre", "transient", "bp-fitting-spectre-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/fitting/spectre/trans_quasi_static_iv.png");
+addPlot("model-calibrated", "spectre", "transient", "bp-fitting-spectre-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/fitting/spectre/trans_quasi_static_time.png");
+
+// --- Expansion (Corner Typical) ---
+addPlot("model-corner-typical", "hspice", "dc", "bp-expansion-hspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/expansion/hspice/dc_iv_characteristics.png");
+addPlot("model-corner-typical", "hspice", "dc", "bp-expansion-hspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/expansion/hspice/dc_kcl_verification.png");
+addPlot("model-corner-typical", "hspice", "dc", "bp-expansion-hspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/expansion/hspice/dc_temperature_analysis.png");
+addPlot("model-corner-typical", "hspice", "ac", "bp-expansion-hspice-ac-nqs", "nqs-effects", "Non-Quasi-Static Effects", "benchmark/pipeline_results/expansion/hspice/ac_cv_nqs_effects.png");
+addPlot("model-corner-typical", "hspice", "ac", "bp-expansion-hspice-ac-sp", "s-parameter", "S-Parameter Analysis", "benchmark/pipeline_results/expansion/hspice/ac_cv_sparameter_analysis.png");
+addPlot("model-corner-typical", "hspice", "noise", "bp-expansion-hspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/expansion/hspice/thermal_noise.png");
+addPlot("model-corner-typical", "hspice", "transient", "bp-expansion-hspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/expansion/hspice/trans_large_signal_transient.png");
+addPlot("model-corner-typical", "hspice", "transient", "bp-expansion-hspice-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/expansion/hspice/trans_quasi_static_iv.png");
+addPlot("model-corner-typical", "hspice", "transient", "bp-expansion-hspice-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/expansion/hspice/trans_quasi_static_time.png");
+addPlot("model-corner-typical", "spectre", "dc", "bp-expansion-spectre-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/expansion/spectre/dc_iv_characteristics.png");
+addPlot("model-corner-typical", "spectre", "dc", "bp-expansion-spectre-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/expansion/spectre/dc_kcl_verification.png");
+addPlot("model-corner-typical", "spectre", "dc", "bp-expansion-spectre-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/expansion/spectre/dc_temperature_analysis.png");
+addPlot("model-corner-typical", "spectre", "ac", "bp-expansion-spectre-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/pipeline_results/expansion/spectre/ac_cv_characteristics.png");
+addPlot("model-corner-typical", "spectre", "ac", "bp-expansion-spectre-ac-cvc", "cv-components", "C-V Components", "benchmark/pipeline_results/expansion/spectre/ac_cv_components.png");
+addPlot("model-corner-typical", "spectre", "ac", "bp-expansion-spectre-ac-cvmf", "cv-multifrequency", "Multi-Frequency C-V", "benchmark/pipeline_results/expansion/spectre/ac_v_multifreq_characteristics.png");
+addPlot("model-corner-typical", "spectre", "noise", "bp-expansion-spectre-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/expansion/spectre/thermal_noise.png");
+addPlot("model-corner-typical", "spectre", "transient", "bp-expansion-spectre-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/expansion/spectre/trans_large_signal_transient.png");
+addPlot("model-corner-typical", "spectre", "transient", "bp-expansion-spectre-tran-delay", "delay-effect", "Delay Effect", "benchmark/pipeline_results/expansion/spectre/trans_delay_effect.png");
+addPlot("model-corner-typical", "spectre", "transient", "bp-expansion-spectre-tran-sw", "switching-response", "Switching Response", "benchmark/pipeline_results/expansion/spectre/trans_switching_response.png");
+addPlot("model-corner-typical", "spectre", "transient", "bp-expansion-spectre-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/expansion/spectre/trans_quasi_static_iv.png");
+addPlot("model-corner-typical", "spectre", "transient", "bp-expansion-spectre-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/expansion/spectre/trans_quasi_static_time.png");
+
+// --- Reduction ---
+addPlot("model-reduced", "hspice", "dc", "bp-reduction-hspice-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/reduction/hspice/dc_iv_characteristics.png");
+addPlot("model-reduced", "hspice", "dc", "bp-reduction-hspice-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/reduction/hspice/dc_kcl_verification.png");
+addPlot("model-reduced", "hspice", "dc", "bp-reduction-hspice-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/reduction/hspice/dc_temperature_analysis.png");
+addPlot("model-reduced", "hspice", "ac", "bp-reduction-hspice-ac-nqs", "nqs-effects", "Non-Quasi-Static Effects", "benchmark/pipeline_results/reduction/hspice/ac_cv_nqs_effects.png");
+addPlot("model-reduced", "hspice", "ac", "bp-reduction-hspice-ac-sp", "s-parameter", "S-Parameter Analysis", "benchmark/pipeline_results/reduction/hspice/ac_cv_sparameter_analysis.png");
+addPlot("model-reduced", "hspice", "noise", "bp-reduction-hspice-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/reduction/hspice/thermal_noise.png");
+addPlot("model-reduced", "hspice", "transient", "bp-reduction-hspice-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/reduction/hspice/trans_large_signal_transient.png");
+addPlot("model-reduced", "hspice", "transient", "bp-reduction-hspice-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/reduction/hspice/trans_quasi_static_iv.png");
+addPlot("model-reduced", "hspice", "transient", "bp-reduction-hspice-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/reduction/hspice/trans_quasi_static_time.png");
+addPlot("model-reduced", "spectre", "dc", "bp-reduction-spectre-dc-iv", "iv-characteristics", "IV Characteristics", "benchmark/pipeline_results/reduction/spectre/dc_iv_characteristics.png");
+addPlot("model-reduced", "spectre", "dc", "bp-reduction-spectre-dc-kcl", "kcl-verification", "KCL Verification", "benchmark/pipeline_results/reduction/spectre/dc_kcl_verification.png");
+addPlot("model-reduced", "spectre", "dc", "bp-reduction-spectre-dc-temp", "temperature-analysis", "Temperature Analysis", "benchmark/pipeline_results/reduction/spectre/dc_temperature_analysis.png");
+addPlot("model-reduced", "spectre", "ac", "bp-reduction-spectre-ac-cv", "cv-characteristics", "C-V Characteristics", "benchmark/pipeline_results/reduction/spectre/ac_cv_characteristics.png");
+addPlot("model-reduced", "spectre", "ac", "bp-reduction-spectre-ac-cvc", "cv-components", "C-V Components", "benchmark/pipeline_results/reduction/spectre/ac_cv_components.png");
+addPlot("model-reduced", "spectre", "ac", "bp-reduction-spectre-ac-cvmf", "cv-multifrequency", "Multi-Frequency C-V", "benchmark/pipeline_results/reduction/spectre/ac_v_multifreq_characteristics.png");
+addPlot("model-reduced", "spectre", "noise", "bp-reduction-spectre-noise-thermal", "thermal-noise", "Thermal Noise", "benchmark/pipeline_results/reduction/spectre/thermal_noise.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduction-spectre-tran-ls", "large-signal-transient", "Large-Signal Transient", "benchmark/pipeline_results/reduction/spectre/trans_large_signal_transient.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduction-spectre-tran-delay", "delay-effect", "Delay Effect", "benchmark/pipeline_results/reduction/spectre/trans_delay_effect.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduction-spectre-tran-sw", "switching-response", "Switching Response", "benchmark/pipeline_results/reduction/spectre/trans_switching_response.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduction-spectre-tran-qs-iv", "quasi-static-iv", "Quasi-Static IV", "benchmark/pipeline_results/reduction/spectre/trans_quasi_static_iv.png");
+addPlot("model-reduced", "spectre", "transient", "bp-reduction-spectre-tran-qs-t", "quasi-static-time", "Quasi-Static Time", "benchmark/pipeline_results/reduction/spectre/trans_quasi_static_time.png");
 
 // Register all artifacts
 for (const [modelId, sims] of Object.entries(PLOT_INDEX)) {
   for (const [sim, domains] of Object.entries(sims)) {
     for (const [domain, entries] of Object.entries(domains)) {
       for (const e of entries) {
-        const origin: "existing-tool-output" | "synthetic-demo" = sim === "ngspice" ? "existing-tool-output" : "synthetic-demo";
+        const isPipeline = e.displayUrl.includes("pipeline_results");
+        const origin: "existing-tool-output" | "synthetic-demo" = isPipeline ? "existing-tool-output" : (sim === "ngspice" ? "existing-tool-output" : "synthetic-demo");
         registerPlotArtifact(e.artifactId, e.title, modelId, domain, e.displayUrl, e.comparisonKey, e.title, sim, origin);
       }
     }
