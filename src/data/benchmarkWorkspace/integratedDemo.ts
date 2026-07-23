@@ -653,6 +653,36 @@ const benchmarkResults: DomainBenchmarkResult[] = [
   /* ── Spectre/HSPICE for ngspice comparison on input model (some synthetic) ── */
   benchResult("br-input-spectre-ac-synth", "model-input", "spectre", "ac", "pass", 1970, 312, "synthetic-demo"),
   benchResult("br-input-hspice-ac-synth", "model-input", "hspice", "ac", "pass", 1740, 280, "synthetic-demo"),
+
+  // ═══ Pipeline results: model-translated (Translator) ═══
+  benchResult("br-translated-hspice-dc", "model-translated", "hspice", "dc", "pass", 3800, 320, "existing-tool-output"),
+  benchResult("br-translated-hspice-ac", "model-translated", "hspice", "ac", "pass", 2200, 280, "existing-tool-output"),
+  benchResult("br-translated-hspice-transient", "model-translated", "hspice", "transient", "pass", 6200, 490, "existing-tool-output"),
+  benchResult("br-translated-hspice-noise", "model-translated", "hspice", "noise", "pass", 3500, 380, "existing-tool-output"),
+  benchResult("br-translated-spectre-dc", "model-translated", "spectre", "dc", "pass", 1200, 190, "existing-tool-output"),
+  benchResult("br-translated-spectre-ac", "model-translated", "spectre", "ac", "pass", 800, 170, "existing-tool-output"),
+  benchResult("br-translated-spectre-transient", "model-translated", "spectre", "transient", "pass", 3100, 310, "existing-tool-output"),
+  benchResult("br-translated-spectre-noise", "model-translated", "spectre", "noise", "pass", 1500, 220, "existing-tool-output"),
+
+  // ═══ Pipeline results: model-calibrated (Fitting) ═══
+  benchResult("br-calibrated-hspice-dc", "model-calibrated", "hspice", "dc", "pass", 3800, 320, "existing-tool-output"),
+  benchResult("br-calibrated-hspice-ac", "model-calibrated", "hspice", "ac", "pass", 2200, 280, "existing-tool-output"),
+  benchResult("br-calibrated-hspice-transient", "model-calibrated", "hspice", "transient", "pass", 6200, 490, "existing-tool-output"),
+  benchResult("br-calibrated-hspice-noise", "model-calibrated", "hspice", "noise", "pass", 3500, 380, "existing-tool-output"),
+  benchResult("br-calibrated-spectre-dc", "model-calibrated", "spectre", "dc", "pass", 1100, 188, "existing-tool-output"),
+  benchResult("br-calibrated-spectre-ac", "model-calibrated", "spectre", "ac", "pass", 700, 170, "existing-tool-output"),
+  benchResult("br-calibrated-spectre-transient", "model-calibrated", "spectre", "transient", "pass", 2900, 310, "existing-tool-output"),
+  benchResult("br-calibrated-spectre-noise", "model-calibrated", "spectre", "noise", "pass", 1400, 220, "existing-tool-output"),
+
+  // ═══ Pipeline results: model-corner-typical (Expansion) ═══
+  benchResult("br-corner-typical-hspice-dc", "model-corner-typical", "hspice", "dc", "pass", 3900, 325, "existing-tool-output"),
+  benchResult("br-corner-typical-hspice-ac", "model-corner-typical", "hspice", "ac", "pass", 2250, 285, "existing-tool-output"),
+  benchResult("br-corner-typical-hspice-transient", "model-corner-typical", "hspice", "transient", "pass", 6300, 495, "existing-tool-output"),
+  benchResult("br-corner-typical-hspice-noise", "model-corner-typical", "hspice", "noise", "pass", 3550, 385, "existing-tool-output"),
+  benchResult("br-corner-typical-spectre-dc", "model-corner-typical", "spectre", "dc", "pass", 1150, 190, "existing-tool-output"),
+  benchResult("br-corner-typical-spectre-ac", "model-corner-typical", "spectre", "ac", "pass", 750, 172, "existing-tool-output"),
+  benchResult("br-corner-typical-spectre-transient", "model-corner-typical", "spectre", "transient", "pass", 3000, 315, "existing-tool-output"),
+  benchResult("br-corner-typical-spectre-noise", "model-corner-typical", "spectre", "noise", "pass", 1450, 225, "existing-tool-output"),
 ];
 
 /* ═════════════════════════════════════════════════════════════════ */
