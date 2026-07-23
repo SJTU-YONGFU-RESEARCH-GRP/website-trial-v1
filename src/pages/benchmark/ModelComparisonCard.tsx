@@ -1,12 +1,15 @@
 /* ==================================================================
- *  ModelComparisonCard (goal2.md §6)
- *  Dual checkbox filters + original benchmark plot pairs.
+ *  ModelComparisonCard (goal2.md §6 / goal3.md)
+ *
+ *  Multi-model cross comparison: filter by simulators, domains,
+ *  and models, then display all selected models side-by-side per
+ *  metric plot, with horizontal scrolling when needed.
  * ================================================================== */
 
 import { useState, useMemo, useCallback } from "react";
 import type { WorkflowScenario, SimulatorId, AnalysisDomain } from "../../compat/spiceWorkflow/contracts";
-import { resolveBenchmarkPlotPairs } from "../../data/benchmarkWorkspace/selectors";
-import type { BenchmarkPlotPair, ResolvedBenchmarkPlot } from "../../data/benchmarkWorkspace/selectors";
+import { resolveMultiModelPlots } from "../../data/benchmarkWorkspace/selectors";
+import type { MultiModelPlotGroup, ResolvedBenchmarkPlot } from "../../data/benchmarkWorkspace/selectors";
 import { DataOriginBadge } from "./shared/DataOriginBadge";
 import { BenchmarkPlotLightbox } from "./BenchmarkPlotLightbox";
 
@@ -15,13 +18,29 @@ const DOMAIN_ORDER: AnalysisDomain[] = ["dc", "transient", "ac", "noise"];
 
 interface Props {
   scenario: WorkflowScenario;
-  baselineId: string | null;
-  candidateId: string | null;
 }
 
-export function ModelComparisonCard({ scenario, baselineId, candidateId }: Props) {
+/** Extract selectable models from scenario (nontemporary, persistent). */
+function useSelectableModels(scenario: WorkflowScenario) {
+  return useMemo(() => {
+    return Object.values(scenario.models)
+      .filter((m) => !m.temporary)
+      .sort((a, b) => {
+        // Input model first, then by variant order
+        if (a.variant === "input") return -1;
+        if (b.variant === "input") return 1;
+        return (a.variant).localeCompare(b.variant);
+      });
+  }, [scenario]);
+}
+
+export function ModelComparisonCard({ scenario }: Props) {
   const [selectedSimulators, setSelectedSimulators] = useState<SimulatorId[]>([]);
   const [selectedDomains, setSelectedDomains] = useState<AnalysisDomain[]>([]);
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const selectableModels = useSelectableModels(scenario);
 
   const toggleSim = useCallback((sim: SimulatorId) => {
     setSelectedSimulators((prev) => prev.includes(sim) ? prev.filter((s) => s !== sim) : [...prev, sim]);
@@ -32,47 +51,54 @@ export function ModelComparisonCard({ scenario, baselineId, candidateId }: Props
   const clearAll = useCallback(() => {
     setSelectedSimulators([]);
     setSelectedDomains([]);
+    setSelectedModels([]);
   }, []);
 
-  const pairs = useMemo(() => {
-    if (selectedSimulators.length === 0 || selectedDomains.length === 0) return [];
-    return resolveBenchmarkPlotPairs(scenario, baselineId, candidateId, selectedSimulators, selectedDomains);
-  }, [scenario, baselineId, candidateId, selectedSimulators, selectedDomains]);
+  const hasSelection = selectedSimulators.length > 0 && selectedDomains.length > 0 && selectedModels.length > 0;
 
-  // Flatten all valid displayUrls for lightbox
+  // Toggle a model ID in/out
+  const toggleModel = useCallback((mid: string) => {
+    setSelectedModels((prev) => prev.includes(mid) ? prev.filter((m) => m !== mid) : [...prev, mid]);
+  }, []);
+
+  const groups = useMemo(() => {
+    if (!hasSelection) return [];
+    return resolveMultiModelPlots(scenario, selectedModels, selectedSimulators, selectedDomains);
+  }, [scenario, selectedModels, selectedSimulators, selectedDomains, hasSelection]);
+
+  // Flatten all valid plots for lightbox
   const lightboxPlots = useMemo(() => {
     const plots: ResolvedBenchmarkPlot[] = [];
-    for (const p of pairs) {
-      if (p.baseline) plots.push(p.baseline);
-      if (p.candidate) plots.push(p.candidate);
+    for (const g of groups) {
+      for (const p of g.plots.values()) {
+        if (p) plots.push(p);
+      }
     }
     return plots;
-  }, [pairs]);
+  }, [groups]);
 
-  const hasSelection = selectedSimulators.length > 0 && selectedDomains.length > 0;
-
-  // Group pairs by domain → simulator
+  // Grouped: domain → comparisonKey → simulator → group
   const grouped = useMemo(() => {
-    const map = new Map<AnalysisDomain, Map<SimulatorId, BenchmarkPlotPair[]>>();
+    const map = new Map<AnalysisDomain, Map<string, Map<SimulatorId, MultiModelPlotGroup>>>();
     for (const d of DOMAIN_ORDER) {
       if (!selectedDomains.includes(d)) continue;
       map.set(d, new Map());
     }
-    for (const p of pairs) {
-      const dom = map.get(p.domain);
+    for (const g of groups) {
+      const dom = map.get(g.domain);
       if (!dom) continue;
-      const sim = dom.get(p.simulator);
-      if (sim) sim.push(p);
-      else dom.set(p.simulator, [p]);
+      const comp = dom.get(g.comparisonKey);
+      if (comp) comp.set(g.simulator, g);
+      else dom.set(g.comparisonKey, new Map([[g.simulator, g]]));
     }
     return map;
-  }, [pairs, selectedDomains]);
+  }, [groups, selectedDomains]);
 
   return (
     <div className="chart-card" id="model-comparison" style={{ marginTop: "0.85rem" }}>
       <h2>Cross-Model Comparison</h2>
       <p className="hint" style={{ marginBottom: "0.5rem" }}>
-        Compare original benchmark plots between baseline and processed model. Select simulators and categories below.
+        Compare benchmark plots across multiple models. Filter by simulators, categories, and models below.
       </p>
 
       {/* Filters */}
@@ -97,6 +123,42 @@ export function ModelComparisonCard({ scenario, baselineId, candidateId }: Props
           ))}
         </fieldset>
 
+        <fieldset style={{ flex: "1 1 260px", minWidth: "220px" }}>
+          <legend>Models</legend>
+          <div className="bmw-multi-select">
+            <button
+              className="bmw-multi-select-trigger"
+              onClick={() => setDropdownOpen((o) => !o)}
+              onBlur={() => setTimeout(() => setDropdownOpen(false), 150)}
+            >
+              {selectedModels.length === 0
+                ? "Select models…"
+                : `${selectedModels.length} model${selectedModels.length > 1 ? "s" : ""} selected`}
+              <span className="bmw-multi-select-arrow">{dropdownOpen ? "▲" : "▼"}</span>
+            </button>
+            {dropdownOpen && (
+              <div className="bmw-multi-select-dropdown">
+                {selectableModels.length === 0 && (
+                  <div className="bmw-multi-select-empty">No models available</div>
+                )}
+                {selectableModels.map((m) => (
+                  <label key={m.modelId} className="bmw-multi-select-option">
+                    <input
+                      type="checkbox"
+                      checked={selectedModels.includes(m.modelId)}
+                      onChange={() => toggleModel(m.modelId)}
+                    />
+                    <span className="bmw-multi-select-label">
+                      <strong>{m.displayName}</strong>
+                      <span className="bmw-multi-select-sub">{m.variant}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        </fieldset>
+
         {hasSelection && (
           <button className="benchmark-btn" onClick={clearAll} style={{ fontSize: "0.65rem", alignSelf: "flex-end" }}>
             Clear
@@ -107,40 +169,49 @@ export function ModelComparisonCard({ scenario, baselineId, candidateId }: Props
       {/* Empty state */}
       {!hasSelection && (
         <div className="bmw-model-empty-state">
-          Select at least one simulator and one benchmark category to compare original plots.
+          Select at least one simulator, one benchmark category, and one model to compare plots.
         </div>
       )}
 
-      {/* Plot pairs grouped by domain → simulator */}
-      {hasSelection && pairs.length === 0 && (
+      {hasSelection && groups.length === 0 && (
         <div className="bmw-model-empty-state">
-          No plot data available for the selected combination. Try different simulators or categories.
+          No plot data available for the selected combination. Try different simulators, categories, or models.
         </div>
       )}
 
-      {hasSelection && pairs.length > 0 && (
+      {/* Plots: domain → comparisonKey → simulator → horizontal row of model plots */}
+      {hasSelection && groups.length > 0 && (
         <div>
           {DOMAIN_ORDER.map((domain) => {
-            const simMap = grouped.get(domain);
-            if (!simMap || simMap.size === 0) return null;
+            const compMap = grouped.get(domain);
+            if (!compMap || compMap.size === 0) return null;
 
             return (
               <section key={domain} className="bmw-model-domain-section">
                 <header>{domain.toUpperCase()}</header>
 
-                {SIMULATOR_ORDER.map((simulator) => {
-                  const simPairs = simMap.get(simulator);
-                  if (!simPairs || simPairs.length === 0) return null;
-
-                  return (
-                    <section key={simulator} className="bmw-model-simulator-section">
-                      <header>{simulator}</header>
-
-                      {simPairs.map((pair) => (
-                        <PlotPairRow key={`${simulator}|${domain}|${pair.comparisonKey}`} pair={pair} />
-                      ))}
-                    </section>
-                  );
+                {Array.from(compMap.entries()).map(([compKey, simMap]) => {
+                  return Array.from(simMap.entries()).map(([simulator, group]) => (
+                    <div key={`${domain}|${compKey}|${simulator}`} className="bmw-model-metric-block">
+                      <div className="bmw-model-metric-header">
+                        <span className="bmw-model-metric-sim">{simulator}</span>
+                        <span className="bmw-model-metric-title">{group.title}</span>
+                      </div>
+                      <div className="bmw-model-scroll-row">
+                        {selectedModels.map((mid) => {
+                          const plot = group.plots.get(mid) ?? null;
+                          const model = scenario.models[mid];
+                          return (
+                            <MultiModelPlotPanel
+                              key={mid}
+                              plot={plot}
+                              modelName={model?.displayName ?? mid}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ));
                 })}
               </section>
             );
@@ -156,42 +227,30 @@ export function ModelComparisonCard({ scenario, baselineId, candidateId }: Props
   );
 }
 
-/* ─── Plot Pair Row ─── */
+/* ─── Single model plot panel ─── */
 
-function PlotPairRow({ pair }: { pair: BenchmarkPlotPair }) {
-  return (
-    <div className="bmw-model-plot-pair">
-      <PlotPanel plot={pair.baseline} role="Original Model" plotTitle={pair.title} />
-      <PlotPanel plot={pair.candidate} role="Processed Model" plotTitle={pair.title} />
-    </div>
-  );
-}
-
-function PlotPanel({ plot, role, plotTitle }: { plot: ResolvedBenchmarkPlot | null; role: string; plotTitle: string }) {
+function MultiModelPlotPanel({ plot, modelName }: { plot: ResolvedBenchmarkPlot | null; modelName: string }) {
   if (!plot) {
     return (
-      <figure className="bmw-model-plot-panel">
-        <figcaption>{role}</figcaption>
-        <div className="bmw-model-plot-unavailable">
-          Plot unavailable in current static dataset
-        </div>
+      <figure className="bmw-model-plot-panel bmw-model-plot-panel--multi">
+        <figcaption>{modelName}</figcaption>
+        <div className="bmw-model-plot-unavailable">No plot</div>
       </figure>
     );
   }
 
   return (
-    <figure className="bmw-model-plot-panel">
+    <figure className="bmw-model-plot-panel bmw-model-plot-panel--multi">
       <figcaption>
-        {role}
+        {modelName}
         <DataOriginBadge origin={plot.provenance.origin} />
       </figcaption>
       <img
         src={plot.displayUrl}
-        alt={`${role} — ${plot.modelId} — ${plot.simulator} — ${plot.domain} — ${plotTitle}`}
+        alt={`${modelName} — ${plot.simulator} — ${plot.domain} — ${plot.title}`}
         loading="lazy"
         data-lightbox-id={plot.artifactId}
       />
-      <div className="bmw-plot-title">{plotTitle}</div>
     </figure>
   );
 }

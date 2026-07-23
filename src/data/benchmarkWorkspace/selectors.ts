@@ -404,3 +404,77 @@ export function resolveBenchmarkPlotPairs(
 
   return pairs;
 }
+
+/* ─── Multi-Model Plot Resolution (goal3.md) ─── */
+
+export interface MultiModelPlotGroup {
+  comparisonKey: string;
+  title: string;
+  simulator: SimulatorId;
+  domain: AnalysisDomain;
+  /** modelId → plot (null if unavailable for that model) */
+  plots: Map<string, ResolvedBenchmarkPlot | null>;
+}
+
+/** Resolve plots for N models, grouped by (domain, comparisonKey, simulator). */
+export function resolveMultiModelPlots(
+  scenario: WorkflowScenario,
+  modelIds: string[],
+  selectedSimulators: SimulatorId[],
+  selectedDomains: AnalysisDomain[],
+): MultiModelPlotGroup[] {
+  if (modelIds.length === 0 || selectedSimulators.length === 0 || selectedDomains.length === 0) {
+    return [];
+  }
+
+  // Resolve plots for each model → keyed by `${sim}|${domain}|${comparisonKey}`
+  const modelPlotMaps = new Map<string, Map<string, ResolvedBenchmarkPlot>>();
+  for (const mid of modelIds) {
+    const plots = resolveModelPlots(scenario, mid);
+    const map = new Map<string, ResolvedBenchmarkPlot>();
+    for (const p of plots) {
+      map.set(`${p.simulator}|${p.domain}|${p.comparisonKey}`, p);
+    }
+    modelPlotMaps.set(mid, map);
+  }
+
+  const groups: MultiModelPlotGroup[] = [];
+  const seenKeys = new Set<string>();
+
+  // Prioritize catalog order
+  for (const entry of PLOT_CATALOG) {
+    if (!selectedDomains.includes(entry.domain)) continue;
+    for (const sim of selectedSimulators) {
+      const key = `${sim}|${entry.domain}|${entry.comparisonKey}`;
+      if (seenKeys.has(key)) continue;
+      const plots = new Map<string, ResolvedBenchmarkPlot | null>();
+      let hasAny = false;
+      for (const mid of modelIds) {
+        const p = modelPlotMaps.get(mid)?.get(key) ?? null;
+        plots.set(mid, p);
+        if (p) hasAny = true;
+      }
+      if (hasAny) {
+        seenKeys.add(key);
+        groups.push({ comparisonKey: entry.comparisonKey, title: entry.title, simulator: sim, domain: entry.domain, plots });
+      }
+    }
+  }
+
+  // Add any remaining unmatched
+  for (const [mid, plotMap] of modelPlotMaps) {
+    for (const [key, plot] of plotMap) {
+      if (seenKeys.has(key)) continue;
+      const [sim, domain, compKey] = key.split("|");
+      if (!selectedSimulators.includes(sim as SimulatorId) || !selectedDomains.includes(domain as AnalysisDomain)) continue;
+      seenKeys.add(key);
+      const plots = new Map<string, ResolvedBenchmarkPlot | null>();
+      for (const mid2 of modelIds) {
+        plots.set(mid2, mid2 === mid ? plot : (modelPlotMaps.get(mid2)?.get(key) ?? null));
+      }
+      groups.push({ comparisonKey: compKey, title: plot.title, simulator: sim as SimulatorId, domain: domain as AnalysisDomain, plots });
+    }
+  }
+
+  return groups;
+}

@@ -131,7 +131,7 @@ export function BenchmarkWorkspacePage() {
         <div style={{ marginTop: "1rem" }}>
           <ExecutiveSummaryCard scenario={activeResultSet} enabledOps={enabledOps} simulators={selectedSimulators} />
           <SimulatorComparisonCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} simulators={selectedSimulators} domains={selectedDomains as never} referenceSimulator={referenceSimulator} />
-          <ModelComparisonCard scenario={activeResultSet} baselineId={baselineModelId} candidateId={candidateModelId} />
+          <ModelComparisonCard scenario={activeResultSet} />
           <ProcessedModelCard scenario={activeResultSet} modelId={candidateModelId ?? activeResultSet.defaultCandidateModelId} baselineModelId={baselineModelId} />
           <OperationResults scenario={activeResultSet} enabledOps={enabledOps} operationOrder={DEFAULT_OPERATION_ORDER as unknown as ProcessingToolId[]} />
           <ArtifactTableCard scenario={activeResultSet} />
