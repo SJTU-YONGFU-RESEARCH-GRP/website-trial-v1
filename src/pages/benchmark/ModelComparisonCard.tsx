@@ -177,7 +177,9 @@ export function ModelComparisonCard({ scenario }: Props) {
                 {filteredModels.length === 0 && (
                   <div className="bmw-multi-select-empty">No models match selected filters</div>
                 )}
-                {filteredModels.map((m) => (
+                {filteredModels.map((m) => {
+                  const modelType = `${m.modelFamily ?? "MOSFET"} ${(m.deviceType ?? "nmos").toUpperCase()}`;
+                  return (
                   <label key={m.modelId} className="bmw-multi-select-option">
                     <input
                       type="checkbox"
@@ -185,16 +187,14 @@ export function ModelComparisonCard({ scenario }: Props) {
                       onChange={() => toggleModel(m.modelId)}
                     />
                     <span className="bmw-multi-select-label">
-                      <strong>{m.displayName}</strong>
+                      <strong>{modelType}</strong>
                       <span className="bmw-multi-select-sub">
-                        {m.operationChain ?? m.variant}
-                      </span>
-                      <span className="bmw-multi-select-md5">
-                        MD5: {shortMd5(m.checksum)}
+                        {m.operationChain ?? m.variant}  ·  MD5: {shortMd5(m.checksum)}
                       </span>
                     </span>
                   </label>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -257,7 +257,8 @@ export function ModelComparisonCard({ scenario }: Props) {
                       <div className="bmw-model-scroll-row">
                         {cells.map(({ modelId, simulator, plot, status }) => {
                           const model = scenario.models[modelId];
-                          const label = `${model?.displayName ?? modelId} (${simulator})`;
+                          const chain = model?.operationChain ?? model?.variant ?? modelId;
+                          const label = `${chain} (${simulator})`;
                           const st = STATUS_LABEL[status] ?? STATUS_LABEL.unavailable;
                           return (
                             <figure
