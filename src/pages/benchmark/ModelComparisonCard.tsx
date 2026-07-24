@@ -35,8 +35,15 @@ function useSelectableModels(scenario: WorkflowScenario) {
     const models = Object.values(scenario.models)
       .filter((m) => !m.temporary)
       .sort((a, b) => {
-        if (a.variant === "input") return -1;
-        if (b.variant === "input") return 1;
+        // Input models first, then NMOS before PMOS, then by variant
+        const aIsInput = a.variant === "input";
+        const bIsInput = b.variant === "input";
+        if (aIsInput && !bIsInput) return -1;
+        if (!aIsInput && bIsInput) return 1;
+        // Within same input status, NMOS before PMOS
+        const aType = a.deviceType ?? "nmos";
+        const bType = b.deviceType ?? "nmos";
+        if (aType !== bType) return aType === "nmos" ? -1 : 1;
         return (a.variant).localeCompare(b.variant);
       });
 
@@ -179,6 +186,7 @@ export function ModelComparisonCard({ scenario }: Props) {
                 )}
                 {filteredModels.map((m) => {
                   const modelType = `${m.modelFamily ?? "MOSFET"} ${(m.deviceType ?? "nmos").toUpperCase()}`;
+                  const pdk = m.pdkSource ? ` · ${m.pdkSource}` : "";
                   return (
                   <label key={m.modelId} className="bmw-multi-select-option">
                     <input
@@ -187,9 +195,9 @@ export function ModelComparisonCard({ scenario }: Props) {
                       onChange={() => toggleModel(m.modelId)}
                     />
                     <span className="bmw-multi-select-label">
-                      <strong>{modelType}</strong>
+                      <strong>{modelType}{pdk}</strong>
                       <span className="bmw-multi-select-sub">
-                        {m.operationChain ?? m.variant}  ·  MD5: {shortMd5(m.checksum)}
+                        {m.operationChain ?? m.variant}  ·  UniqueID: {shortMd5(m.checksum)}
                       </span>
                     </span>
                   </label>

@@ -92,6 +92,8 @@ export interface ModelArtifact {
   generatedBy: ToolId | "user";
   /** Human-readable operation chain derived from model lineage, e.g. "Input → Translator → Fitting" */
   operationChain?: string;
+  /** PDK source, e.g. "FreePDK45", "SkyWater130", "ASAP7" */
+  pdkSource?: string;
   persistent: boolean;
   temporary: boolean;
   provenance: Provenance;
