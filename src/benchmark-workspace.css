@@ -542,11 +542,47 @@
   text-transform: capitalize;
 }
 
+.bmw-multi-select-md5 {
+  font-size: 0.6rem;
+  color: var(--muted, #aaa);
+  font-family: monospace;
+}
+
 .bmw-multi-select-empty {
   padding: 10px;
   text-align: center;
   color: var(--muted, #aaa);
   font-size: 0.72rem;
+}
+
+/* ─── Benchmark status badges ─── */
+.bmw-plot-status {
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bmw-status-pass {
+  background: #e6f7e6;
+  color: #1a7a1a;
+}
+
+.bmw-status-fail {
+  background: #fde8e8;
+  color: #c41e1e;
+}
+
+.bmw-status-partial {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bmw-status-unavailable {
+  background: #f3f4f6;
+  color: #9ca3af;
 }
 
 /* ─── Lightbox ─── */

@@ -90,6 +90,8 @@ export interface ModelArtifact {
   parameterCount: number | null;
   checksum: string | null;
   generatedBy: ToolId | "user";
+  /** Human-readable operation chain derived from model lineage, e.g. "Input → Translator → Fitting" */
+  operationChain?: string;
   persistent: boolean;
   temporary: boolean;
   provenance: Provenance;
