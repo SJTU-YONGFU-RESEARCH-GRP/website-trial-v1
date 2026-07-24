@@ -1,12 +1,13 @@
 /* ==================================================================
  *  ModelComparisonCard
  *
- *  Multi-model cross comparison with metadata-rich model selector,
- *  benchmark status badges, and horizontal-scroll plot rows.
+ *  Multi-model cross comparison: Simulators + Benchmark Categories
+ *  are filters (optional). Selecting models alone triggers comparison.
+ *  Status verdict grid shown below plot rows.
  * ================================================================== */
 
 import { useState, useMemo, useCallback } from "react";
-import type { WorkflowScenario, SimulatorId, AnalysisDomain, ModelArtifact } from "../../compat/spiceWorkflow/contracts";
+import type { WorkflowScenario, SimulatorId, AnalysisDomain } from "../../compat/spiceWorkflow/contracts";
 import { resolveMultiModelPlots } from "../../data/benchmarkWorkspace/selectors";
 import type { MultiModelPlotGroup, ResolvedBenchmarkPlot } from "../../data/benchmarkWorkspace/selectors";
 import { DataOriginBadge } from "./shared/DataOriginBadge";
@@ -19,10 +20,8 @@ interface Props {
   scenario: WorkflowScenario;
 }
 
-/** Extract selectable models, enriched with benchmark-status lookup. */
 function useSelectableModels(scenario: WorkflowScenario) {
   return useMemo(() => {
-    // Build status index: modelId → simulator → domain → status
     const statusIdx = new Map<string, Map<string, Map<string, string>>>();
     for (const r of scenario.benchmarkResults) {
       const m = statusIdx.get(r.modelId) ?? new Map();
@@ -35,12 +34,10 @@ function useSelectableModels(scenario: WorkflowScenario) {
     const models = Object.values(scenario.models)
       .filter((m) => !m.temporary)
       .sort((a, b) => {
-        // Input models first, then NMOS before PMOS, then by variant
         const aIsInput = a.variant === "input";
         const bIsInput = b.variant === "input";
         if (aIsInput && !bIsInput) return -1;
         if (!aIsInput && bIsInput) return 1;
-        // Within same input status, NMOS before PMOS
         const aType = a.deviceType ?? "nmos";
         const bType = b.deviceType ?? "nmos";
         if (aType !== bType) return aType === "nmos" ? -1 : 1;
@@ -51,8 +48,7 @@ function useSelectableModels(scenario: WorkflowScenario) {
   }, [scenario]);
 }
 
-/** Shorten an MD5 checksum for display. */
-function shortMd5(checksum: string | null): string {
+function shortUid(checksum: string | null): string {
   if (!checksum || checksum.length < 8) return checksum ?? "N/A";
   return checksum.slice(0, 8);
 }
@@ -72,12 +68,36 @@ export function ModelComparisonCard({ scenario }: Props) {
 
   const { models: selectableModels, statusIdx } = useSelectableModels(scenario);
 
+  // Effective simulators/domains: if none selected, use all available
+  const effectiveSims = useMemo(() => {
+    if (selectedSimulators.length > 0) return selectedSimulators;
+    // When nothing selected, show all simulators that have data for selected models
+    const sims = new Set<SimulatorId>();
+    for (const mid of selectedModels) {
+      const m = statusIdx.get(mid);
+      if (m) for (const s of m.keys()) sims.add(s as SimulatorId);
+    }
+    if (sims.size === 0) return SIMULATOR_ORDER;
+    return SIMULATOR_ORDER.filter((s) => sims.has(s));
+  }, [selectedSimulators, selectedModels, statusIdx]);
+
+  const effectiveDomains = useMemo(() => {
+    if (selectedDomains.length > 0) return selectedDomains;
+    const doms = new Set<AnalysisDomain>();
+    for (const mid of selectedModels) {
+      const m = statusIdx.get(mid);
+      if (m) for (const s of m.values()) for (const d of s.keys()) doms.add(d as AnalysisDomain);
+    }
+    if (doms.size === 0) return DOMAIN_ORDER;
+    return DOMAIN_ORDER.filter((d) => doms.has(d));
+  }, [selectedDomains, selectedModels, statusIdx]);
+
   // Filter models that match selected simulators + domains
   const filteredModels = useMemo(() => {
     if (selectedSimulators.length === 0 && selectedDomains.length === 0) return selectableModels;
     return selectableModels.filter((m) => {
       const sims = statusIdx.get(m.modelId);
-      if (!sims) return selectedSimulators.length === 0; // show if no sim filter
+      if (!sims) return selectedSimulators.length === 0;
       for (const [sim, domains] of sims) {
         if (selectedSimulators.length > 0 && !selectedSimulators.includes(sim as SimulatorId)) continue;
         for (const dom of domains.keys()) {
@@ -100,16 +120,16 @@ export function ModelComparisonCard({ scenario }: Props) {
     setSelectedModels([]);
   }, []);
 
-  const hasSelection = selectedSimulators.length > 0 && selectedDomains.length > 0 && selectedModels.length > 0;
+  const hasModels = selectedModels.length > 0;
 
   const toggleModel = useCallback((mid: string) => {
     setSelectedModels((prev) => prev.includes(mid) ? prev.filter((m) => m !== mid) : [...prev, mid]);
   }, []);
 
   const groups = useMemo(() => {
-    if (!hasSelection) return [];
-    return resolveMultiModelPlots(scenario, selectedModels, selectedSimulators, selectedDomains);
-  }, [scenario, selectedModels, selectedSimulators, selectedDomains, hasSelection]);
+    if (!hasModels) return [];
+    return resolveMultiModelPlots(scenario, selectedModels, effectiveSims, effectiveDomains);
+  }, [scenario, selectedModels, effectiveSims, effectiveDomains, hasModels]);
 
   const lightboxPlots = useMemo(() => {
     const plots: ResolvedBenchmarkPlot[] = [];
@@ -123,8 +143,7 @@ export function ModelComparisonCard({ scenario }: Props) {
 
   const grouped = useMemo(() => {
     const map = new Map<AnalysisDomain, Map<string, Map<SimulatorId, MultiModelPlotGroup>>>();
-    for (const d of DOMAIN_ORDER) {
-      if (!selectedDomains.includes(d)) continue;
+    for (const d of effectiveDomains) {
       map.set(d, new Map());
     }
     for (const g of groups) {
@@ -135,13 +154,32 @@ export function ModelComparisonCard({ scenario }: Props) {
       else dom.set(g.comparisonKey, new Map([[g.simulator, g]]));
     }
     return map;
-  }, [groups, selectedDomains]);
+  }, [groups, effectiveDomains]);
+
+  // Build verdict grid: domain → (modelId + simulator) → status
+  const verdictGrid = useMemo(() => {
+    if (!hasModels || selectedModels.length < 2) return null;
+    const grid = new Map<AnalysisDomain, { modelId: string; simulator: SimulatorId; status: string; chain: string }[]>();
+    for (const dom of effectiveDomains) {
+      const rows: { modelId: string; simulator: SimulatorId; status: string; chain: string }[] = [];
+      for (const mid of selectedModels) {
+        const model = scenario.models[mid];
+        const chain = model?.operationChain ?? model?.variant ?? mid;
+        for (const sim of effectiveSims) {
+          const status = statusIdx.get(mid)?.get(sim)?.get(dom) ?? "unavailable";
+          rows.push({ modelId: mid, simulator: sim, status, chain });
+        }
+      }
+      grid.set(dom, rows);
+    }
+    return grid;
+  }, [hasModels, selectedModels, effectiveDomains, effectiveSims, statusIdx, scenario.models]);
 
   return (
     <div className="chart-card" id="model-comparison" style={{ marginTop: "0.85rem" }}>
       <h2>Cross-Model Comparison</h2>
       <p className="hint" style={{ marginBottom: "0.5rem" }}>
-        Compare benchmark plots across multiple models. Select filters below — models with matching data appear.
+        Select models to compare. Simulators and Benchmark Categories are optional filters.
       </p>
 
       {/* Filters */}
@@ -197,7 +235,7 @@ export function ModelComparisonCard({ scenario }: Props) {
                     <span className="bmw-multi-select-label">
                       <strong>{modelType}{pdk}</strong>
                       <span className="bmw-multi-select-sub">
-                        {m.operationChain ?? m.variant}  ·  UniqueID: {shortMd5(m.checksum)}
+                        {m.operationChain ?? m.variant}  ·  UID: {shortUid(m.checksum)}
                       </span>
                     </span>
                   </label>
@@ -208,7 +246,7 @@ export function ModelComparisonCard({ scenario }: Props) {
           </div>
         </fieldset>
 
-        {hasSelection && (
+        {hasModels && (
           <button className="benchmark-btn" onClick={clearAll} style={{ fontSize: "0.65rem", alignSelf: "flex-end" }}>
             Clear
           </button>
@@ -216,22 +254,22 @@ export function ModelComparisonCard({ scenario }: Props) {
       </div>
 
       {/* Empty state */}
-      {!hasSelection && (
+      {!hasModels && (
         <div className="bmw-model-empty-state">
-          Select at least one simulator, one benchmark category, and one model to compare plots.
+          Select at least one model to compare benchmark plots.
         </div>
       )}
 
-      {hasSelection && groups.length === 0 && (
+      {hasModels && groups.length === 0 && (
         <div className="bmw-model-empty-state">
           No plot data available for the selected combination.
         </div>
       )}
 
-      {/* Plots: domain → comparisonKey → single row with status badges */}
-      {hasSelection && groups.length > 0 && (
+      {/* Plots */}
+      {hasModels && groups.length > 0 && (
         <div>
-          {DOMAIN_ORDER.map((domain) => {
+          {effectiveDomains.map((domain) => {
             const compMap = grouped.get(domain);
             if (!compMap || compMap.size === 0) return null;
 
@@ -242,15 +280,13 @@ export function ModelComparisonCard({ scenario }: Props) {
                 {Array.from(compMap.entries()).map(([compKey, simMap]) => {
                   const cells: {
                     modelId: string; simulator: SimulatorId;
-                    plot: ResolvedBenchmarkPlot | null; status: string;
+                    plot: ResolvedBenchmarkPlot | null;
                   }[] = [];
                   for (const mid of selectedModels) {
-                    for (const sim of SIMULATOR_ORDER) {
-                      if (!selectedSimulators.includes(sim)) continue;
+                    for (const sim of effectiveSims) {
                       const group = simMap.get(sim);
                       const plot = group?.plots.get(mid) ?? null;
-                      const status = statusIdx.get(mid)?.get(sim)?.get(domain) ?? "unavailable";
-                      cells.push({ modelId: mid, simulator: sim, plot, status });
+                      cells.push({ modelId: mid, simulator: sim, plot });
                     }
                   }
 
@@ -263,11 +299,10 @@ export function ModelComparisonCard({ scenario }: Props) {
                         <span className="bmw-model-metric-title">{title}</span>
                       </div>
                       <div className="bmw-model-scroll-row">
-                        {cells.map(({ modelId, simulator, plot, status }) => {
+                        {cells.map(({ modelId, simulator, plot }) => {
                           const model = scenario.models[modelId];
                           const chain = model?.operationChain ?? model?.variant ?? modelId;
                           const label = `${chain} (${simulator})`;
-                          const st = STATUS_LABEL[status] ?? STATUS_LABEL.unavailable;
                           return (
                             <figure
                               key={`${modelId}|${simulator}`}
@@ -287,9 +322,6 @@ export function ModelComparisonCard({ scenario }: Props) {
                               ) : (
                                 <div className="bmw-model-plot-unavailable">No plot</div>
                               )}
-                              <div className={`bmw-plot-status ${st.cls}`}>
-                                {st.text}
-                              </div>
                             </figure>
                           );
                         })}
@@ -300,6 +332,50 @@ export function ModelComparisonCard({ scenario }: Props) {
               </section>
             );
           })}
+        </div>
+      )}
+
+      {/* Verdict Grid: domain × (model+simulator) status matrix */}
+      {hasModels && selectedModels.length >= 2 && verdictGrid && (
+        <div className="bmw-verdict-section">
+          <h3>Benchmark Verdict</h3>
+          <p className="hint">
+            Pass/fail status per domain. Reference (first selected model) vs subsequent models.
+          </p>
+          <div className="bmw-verdict-scroll">
+            <table className="bmw-verdict-table">
+              <thead>
+                <tr>
+                  <th>Domain</th>
+                  {selectedModels.map((mid) => {
+                    const model = scenario.models[mid];
+                    const chain = model?.operationChain ?? model?.variant ?? mid;
+                    return effectiveSims.map((sim) => (
+                      <th key={`${mid}|${sim}`}>{chain}<br/><small>{sim}</small></th>
+                    ));
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {effectiveDomains.map((dom) => (
+                  <tr key={dom}>
+                    <td className="bmw-verdict-domain">{dom.toUpperCase()}</td>
+                    {selectedModels.map((mid) =>
+                      effectiveSims.map((sim) => {
+                        const status = statusIdx.get(mid)?.get(sim)?.get(dom) ?? "unavailable";
+                        const st = STATUS_LABEL[status] ?? STATUS_LABEL.unavailable;
+                        return (
+                          <td key={`${mid}|${sim}|${dom}`} className={`bmw-verdict-cell ${st.cls}`}>
+                            {st.text}
+                          </td>
+                        );
+                      })
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
