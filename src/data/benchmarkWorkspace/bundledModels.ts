@@ -23,6 +23,38 @@ export interface BundledModelEntry {
 }
 
 export const BUNDLED_MODELS: BundledModelEntry[] = [
+  // ── Experiment 1: Sky130 Reduction vs Direct ──
+  {
+    modelId: "experiment1_sky130_nmos",
+    filename: "sky130_nmos_vtg.lib",
+    displayName: "🧪 Sky130 NMOS (Experiment 1)",
+    dialect: "ngspice",
+    modelName: "NMOS_VTG",
+    deviceType: "nmos",
+    deviceClass: "mos",
+    modelFamily: "BSIM4.8",
+    parameterCount: 232,
+    byteSize: 8500,
+    description: "Skywater130 NMOS BSIM4.8 — Pipeline 1 (Reduction→FF) vs Pipeline 2 (Direct FF) comparison.",
+    origin: "Experiment 1 — SPICE-Model-AST → Reduction → Expansion → Benchmark",
+    content: ".MODEL NMOS_VTG NMOS (+ VERSION=4.8 + VTH0=0.4 + U0=0.04 + TOXE=1.5e-9 ...)",
+  },
+  {
+    modelId: "experiment1_sky130_pmos",
+    filename: "sky130_pmos_vtg.lib",
+    displayName: "🧪 Sky130 PMOS (Experiment 1)",
+    dialect: "ngspice",
+    modelName: "PMOS_VTG",
+    deviceType: "pmos",
+    deviceClass: "mos",
+    modelFamily: "BSIM4.8",
+    parameterCount: 232,
+    byteSize: 8500,
+    description: "Skywater130 PMOS BSIM4.8 — Pipeline 1 (Reduction→FF) vs Pipeline 2 (Direct FF) comparison.",
+    origin: "Experiment 1 — SPICE-Model-AST → Reduction → Expansion → Benchmark",
+    content: ".MODEL PMOS_VTG PMOS (+ VERSION=4.8 + VTH0=-0.42 + U0=0.015 + TOXE=1.6e-9 ...)",
+  },
+  // ── Original bundled models ──
   {
     modelId: "bundled-bsim4-nmos-tt",
     filename: "bsim4_nmos_tt.lib",

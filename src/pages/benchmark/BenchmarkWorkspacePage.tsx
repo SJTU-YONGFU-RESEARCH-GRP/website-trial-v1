@@ -10,7 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import type {
   WorkflowScenario, SimulatorId, AnalysisDomain, ProcessingToolId,
 } from "../../compat/spiceWorkflow/contracts";
-import { INTEGRATED_DEMO_SCENARIO } from "../../data/benchmarkWorkspace";
+import { INTEGRATED_DEMO_SCENARIO, EXPERIMENT1_SCENARIO } from "../../data/benchmarkWorkspace";
 import { DEFAULT_OPERATION_ORDER } from "../../compat/spiceWorkflow/toolCatalog";
 import { ModelInputCard } from "./ModelInputCard";
 import type { InputMode, LocalModelData } from "./ModelInputCard";
@@ -25,6 +25,12 @@ import "../../benchmark.css";
 import "../../benchmark-workspace.css";
 
 const DEFAULT_RESULT_SET = INTEGRATED_DEMO_SCENARIO as WorkflowScenario;
+const EXPERIMENT1_RESULT_SET = EXPERIMENT1_SCENARIO as WorkflowScenario;
+
+function resolveScenario(modelId: string | null): WorkflowScenario {
+  if (modelId?.startsWith("experiment1_")) return EXPERIMENT1_RESULT_SET;
+  return DEFAULT_RESULT_SET;
+}
 type PreselectedOperation = "translator" | "reduction" | "expansion" | "fitting" | null;
 
 function ProvenanceBanner({ isBundled }: { isBundled: boolean }) {
@@ -53,7 +59,7 @@ export function BenchmarkWorkspacePage() {
   const [bundledModelId, setBundledModelId] = useState<string | null>("bundled-bsim4-nmos-tt");
   const [localModel, setLocalModel] = useState<LocalModelData | null>(null);
   const isBundledModel = inputMode === "bundled";
-  const activeResultSet: WorkflowScenario | null = isBundledModel ? DEFAULT_RESULT_SET : null;
+  const activeResultSet: WorkflowScenario | null = isBundledModel ? resolveScenario(bundledModelId) : null;
 
   /* ── Operations enabled + params ── */
   const [enabledOps, setEnabledOps] = useState<Record<string, boolean>>(() => {

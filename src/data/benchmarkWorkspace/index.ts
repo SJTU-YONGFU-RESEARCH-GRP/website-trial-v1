@@ -3,6 +3,7 @@
  * ================================================================== */
 
 export { INTEGRATED_DEMO_SCENARIO } from "./integratedDemo";
+export { EXPERIMENT1_SCENARIO } from "./experiment1Demo";
 export {
   FITTING_FIXTURE_EXECUTION,
   FITTING_FIXTURE_ARTIFACTS,

@@ -159,21 +159,54 @@ export function ModelComparisonCard({ scenario }: Props) {
   // Build verdict grid: domain → (modelId + simulator) → status
   const verdictGrid = useMemo(() => {
     if (!hasModels || selectedModels.length < 2) return null;
-    const grid = new Map<AnalysisDomain, { modelId: string; simulator: SimulatorId; status: string; chain: string }[]>();
+    const grid = new Map<AnalysisDomain, { modelId: string; simulator: SimulatorId; status: string; chain: string; metrics: Record<string, number | string | null> }[]>();
     for (const dom of effectiveDomains) {
-      const rows: { modelId: string; simulator: SimulatorId; status: string; chain: string }[] = [];
+      const rows: { modelId: string; simulator: SimulatorId; status: string; chain: string; metrics: Record<string, number | string | null> }[] = [];
       for (const mid of selectedModels) {
         const model = scenario.models[mid];
         const chain = model?.operationChain ?? model?.variant ?? mid;
         for (const sim of effectiveSims) {
           const status = statusIdx.get(mid)?.get(sim)?.get(dom) ?? "unavailable";
-          rows.push({ modelId: mid, simulator: sim, status, chain });
+          // Find matching benchmark result for metrics
+          const br = scenario.benchmarkResults.find(
+            (r) => r.modelId === mid && r.simulator === sim && r.domain === dom
+          );
+          rows.push({ modelId: mid, simulator: sim, status, chain, metrics: br?.keyMetrics ?? {} });
         }
       }
       grid.set(dom, rows);
     }
     return grid;
-  }, [hasModels, selectedModels, effectiveDomains, effectiveSims, statusIdx, scenario.models]);
+  }, [hasModels, selectedModels, effectiveDomains, effectiveSims, statusIdx, scenario.models, scenario.benchmarkResults]);
+
+  // Compute metric deltas: for each domain+sim, compare metric values across models
+  const metricDeltas = useMemo(() => {
+    if (!verdictGrid || selectedModels.length < 2) return null;
+    const deltas: { domain: AnalysisDomain; metric: string; rows: { modelId: string; simulator: SimulatorId; value: number | string | null; delta?: string }[] }[] = [];
+    for (const [dom, rows] of verdictGrid) {
+      // Collect all metric keys for this domain
+      const metricKeys = new Set<string>();
+      for (const r of rows) {
+        for (const k of Object.keys(r.metrics)) {
+          if (k !== "data_points") metricKeys.add(k);
+        }
+      }
+      for (const metric of metricKeys) {
+        const baselineVal = rows[0]?.metrics[metric];
+        const metricRows = rows.map((r) => {
+          const val = r.metrics[metric];
+          let delta: string | undefined;
+          if (typeof baselineVal === "number" && typeof val === "number" && baselineVal !== 0) {
+            const pct = ((Math.abs(val - baselineVal)) / Math.abs(baselineVal)) * 100;
+            delta = pct < 0.01 ? "<0.01%" : `${pct.toFixed(2)}%`;
+          }
+          return { modelId: r.modelId, simulator: r.simulator, value: val ?? "—", delta };
+        });
+        deltas.push({ domain: dom, metric, rows: metricRows });
+      }
+    }
+    return deltas;
+  }, [verdictGrid, selectedModels]);
 
   return (
     <div className="chart-card" id="model-comparison" style={{ marginTop: "0.85rem" }}>
@@ -340,7 +373,7 @@ export function ModelComparisonCard({ scenario }: Props) {
         <div className="bmw-verdict-section">
           <h3>Benchmark Verdict</h3>
           <p className="hint">
-            Pass/fail status per domain. Reference (first selected model) vs subsequent models.
+            Pass/fail status per domain, plus key metric values and deltas (Δ) relative to the first selected model.
           </p>
           <div className="bmw-verdict-scroll">
             <table className="bmw-verdict-table">
@@ -364,9 +397,16 @@ export function ModelComparisonCard({ scenario }: Props) {
                       effectiveSims.map((sim) => {
                         const status = statusIdx.get(mid)?.get(sim)?.get(dom) ?? "unavailable";
                         const st = STATUS_LABEL[status] ?? STATUS_LABEL.unavailable;
+                        // Get metric values for tooltip/display
+                        const br = scenario.benchmarkResults.find(
+                          (r) => r.modelId === mid && r.simulator === sim && r.domain === dom
+                        );
+                        const ionVal = br?.keyMetrics?.ion;
+                        const ionStr = typeof ionVal === "number" ? (ionVal < 0.01 ? ionVal.toExponential(2) : ionVal.toFixed(4)) : "";
                         return (
-                          <td key={`${mid}|${sim}|${dom}`} className={`bmw-verdict-cell ${st.cls}`}>
-                            {st.text}
+                          <td key={`${mid}|${sim}|${dom}`} className={`bmw-verdict-cell ${st.cls}`} title={ionStr ? `Ion: ${ionStr} A` : ""}>
+                            <span className="bmw-verdict-status">{st.text}</span>
+                            {ionStr && <span className="bmw-verdict-ion">{ionStr}</span>}
                           </td>
                         );
                       })
@@ -376,6 +416,49 @@ export function ModelComparisonCard({ scenario }: Props) {
               </tbody>
             </table>
           </div>
+
+          {/* Metric Delta Table */}
+          {metricDeltas && metricDeltas.length > 0 && (
+            <details style={{ marginTop: "0.75rem" }}>
+              <summary style={{ cursor: "pointer", fontWeight: 600, fontSize: "0.85rem" }}>
+                📊 Metric Deltas (Δ vs first model)
+              </summary>
+              <div className="bmw-verdict-scroll" style={{ marginTop: "0.5rem" }}>
+                {metricDeltas.map(({ domain, metric, rows: mrows }) => (
+                  <div key={`${domain}|${metric}`} style={{ marginBottom: "0.5rem" }}>
+                    <div style={{ fontSize: "0.72rem", fontWeight: 600, marginBottom: "0.2rem", color: "var(--text-secondary, #555)" }}>
+                      {domain.toUpperCase()} — {metric}
+                    </div>
+                    <table className="bmw-verdict-table" style={{ fontSize: "0.7rem" }}>
+                      <thead>
+                        <tr>
+                          {mrows.map((mr) => (
+                            <th key={`${mr.modelId}|${mr.simulator}`}>
+                              {scenario.models[mr.modelId]?.displayName ?? mr.modelId}<br/><small>{mr.simulator}</small>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {mrows.map((mr, i) => (
+                            <td key={i} className="bmw-verdict-cell" style={{ fontFamily: "monospace", fontSize: "0.7rem" }}>
+                              {typeof mr.value === "number" ? (mr.value < 0.01 ? mr.value.toExponential(2) : mr.value.toPrecision(4)) : String(mr.value)}
+                              {mr.delta && i > 0 && (
+                                <span style={{ display: "block", fontSize: "0.62rem", color: "var(--accent, #0071e3)", marginTop: "1px" }}>
+                                  Δ {mr.delta}
+                                </span>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
         </div>
       )}
 
