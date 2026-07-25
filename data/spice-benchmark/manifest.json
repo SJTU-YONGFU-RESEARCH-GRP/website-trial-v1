@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "description": "SPICE Model Benchmark Results",
+  "models": {
+    "sky130_nmos_input": {
+      "md5": "c48102d18af9084f",
+      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
+      "pdk": "SkyWater130",
+      "type": "nmos",
+      "chain": "Input",
+      "params": 232
+    },
+    "sky130_nmos_reduced": {
+      "md5": "e74a7e6576abbe3d",
+      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
+      "pdk": "SkyWater130",
+      "type": "nmos",
+      "chain": "Input \u2192 Reduction",
+      "params": 46
+    },
+    "sky130_nmos_translated_fitted": {
+      "md5": "174b5fb847cdb2f1",
+      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
+      "pdk": "SkyWater130",
+      "type": "nmos",
+      "chain": "Input \u2192 Convert \u2192 Calibrate",
+      "params": 232
+    },
+    "sky130_nmos_expanded_ff": {
+      "md5": "b06dac5c5e922bf0",
+      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
+      "pdk": "SkyWater130",
+      "type": "nmos",
+      "chain": "Input \u2192 Expansion \u2192 FF Corner",
+      "params": 232
+    },
+    "freepdk45_pmos_input": {
+      "md5": "87ced2481a27c6be",
+      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
+      "pdk": "FreePDK45",
+      "type": "pmos",
+      "chain": "Input",
+      "params": 148
+    },
+    "freepdk45_pmos_expanded_ss": {
+      "md5": "4be90a6344d709df",
+      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
+      "pdk": "FreePDK45",
+      "type": "pmos",
+      "chain": "Input \u2192 Expansion \u2192 SS Corner",
+      "params": 148
+    },
+    "freepdk45_pmos_translated_reduced": {
+      "md5": "5d34a87c2ea41436",
+      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
+      "pdk": "FreePDK45",
+      "type": "pmos",
+      "chain": "Input \u2192 Convert \u2192 Reduction",
+      "params": 52
+    },
+    "freepdk45_pmos_fitted": {
+      "md5": "ab30f612964e8f8d",
+      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
+      "pdk": "FreePDK45",
+      "type": "pmos",
+      "chain": "Input \u2192 Calibrate",
+      "params": 148
+    }
+  },
+  "simulators": [
+    "ngspice",
+    "hspice",
+    "spectre"
+  ],
+  "domains": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ]
+}

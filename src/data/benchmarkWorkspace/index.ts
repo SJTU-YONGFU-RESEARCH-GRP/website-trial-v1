@@ -1,7 +1,12 @@
 /* ==================================================================
- *  benchmarkWorkspace data index
+ *  benchmarkWorkspace data index — v4
+ *
+ *  Auto-discovery based. All data comes from data/spice-benchmark/.
  * ================================================================== */
 
+export { buildScenario, fetchGlobalManifest, fetchReport } from "./dataLoader";
+
+// Keep legacy exports for components that still reference them
 export { INTEGRATED_DEMO_SCENARIO } from "./integratedDemo";
 export { EXPERIMENT1_SCENARIO } from "./experiment1Demo";
 export {
@@ -31,3 +36,11 @@ export {
 export type { ModelComparisonKPI, BenchmarkPlotPair, ResolvedBenchmarkPlot } from "./selectors";
 export { PLOT_CATALOG, canonicalizeBenchmarkPlotKey } from "./benchmarkPlotCatalog";
 export type { PlotKeyEntry } from "./benchmarkPlotCatalog";
+export {
+  EXPERIMENT1_REPORTS,
+  buildReportLookup,
+  buildManifestLookup,
+  generateReport,
+  generateManifest,
+} from "./reportData";
+export type { ModelReportEntry } from "./reportData";

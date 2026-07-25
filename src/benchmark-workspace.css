@@ -497,11 +497,12 @@
 }
 
 .bmw-multi-select-dropdown {
+  display: block;
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  max-height: 240px;
+  max-height: 360px;
   overflow-y: auto;
   border: 1px solid var(--border-subtle, #d0d0d0);
   border-radius: 6px;
@@ -512,13 +513,18 @@
 }
 
 .bmw-multi-select-option {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
   align-items: flex-start;
   gap: 8px;
   padding: 7px 10px;
   cursor: pointer;
   font-size: 0.73rem;
   border-bottom: 1px solid var(--border-subtle, #f0f0f0);
+  width: 100%;
+  box-sizing: border-box;
+  float: none;
+  clear: both;
 }
 
 .bmw-multi-select-option:last-child {
@@ -894,3 +900,189 @@
   .bmw-lightbox-prev { left: 0.5rem; }
   .bmw-lightbox-next { right: 0.5rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Report Viewer (rv-)                                                 */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.rv-section {
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.rv-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-secondary, #f5f5f7);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.rv-section-header:hover { background: var(--bg-hover, #eaeaef); }
+
+.rv-section-header h3 { margin: 0; font-size: 0.9rem; font-weight: 700; flex: 1; }
+.rv-section-header h4 { margin: 0; font-size: 0.82rem; font-weight: 600; flex: 1; }
+
+.rv-caret { font-size: 0.65rem; color: var(--muted, #888); min-width: 0.8rem; }
+.rv-caret--lg { font-size: 0.75rem; }
+
+.rv-entry-count { font-size: 0.68rem; color: var(--muted, #999); white-space: nowrap; }
+
+.rv-section-body { padding: 0.5rem 0.75rem; }
+
+.rv-subsection {
+  margin-bottom: 0.4rem;
+}
+.rv-subsection-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.12s;
+}
+.rv-subsection-header:hover { background: var(--bg-secondary, #f5f5f7); }
+.rv-subsection-header h4 { margin: 0; font-size: 0.78rem; font-weight: 600; flex: 1; }
+
+.rv-subsection-body { padding: 0.3rem 0 0.3rem 1.2rem; }
+
+/* Report entry table */
+.rv-entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  margin: 0.3rem 0;
+}
+
+.rv-entry-table th {
+  text-align: left;
+  padding: 0.3rem 0.4rem;
+  background: var(--bg-secondary, #f0f0f3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-secondary, #555);
+  border-bottom: 2px solid var(--border, #ddd);
+}
+
+.rv-entry-table td {
+  padding: 0.28rem 0.4rem;
+  border-bottom: 1px solid var(--border-light, #eee);
+  vertical-align: top;
+}
+
+.rv-entry-test { font-weight: 500; }
+.rv-entry-findings { font-family: "SF Mono", "Cascadia Code", monospace; font-size: 0.68rem; color: var(--text-secondary, #555); }
+.rv-na { color: var(--muted, #bbb); font-style: italic; }
+
+/* Status badges */
+.rv-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.rv-status-pass    { background: #e6f7e6; color: #2d8a2d; }
+.rv-status-fail    { background: #fde8e8; color: #c53030; }
+.rv-status-progress { background: #fef3c7; color: #b7791f; }
+.rv-status-unavail { background: #f0f0f0; color: #999; }
+
+/* Plot references */
+.rv-plot-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  border-top: 1px dashed var(--border-light, #eee);
+}
+.rv-plot-ref {
+  font-size: 0.62rem;
+  font-family: monospace;
+  color: var(--accent, #0071e3);
+  background: var(--bg-accent, #e8f0fe);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+/* Metric deltas */
+.rv-metric-deltas {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--border, #ddd);
+}
+.rv-metric-deltas h4 { font-size: 0.85rem; margin-bottom: 0.5rem; }
+
+.rv-verdict-scroll { overflow-x: auto; }
+.rv-verdict-cell { text-align: center; padding: 0.3rem 0.5rem; }
+
+/* Embedded plot images in report */
+.rv-plot-embed { margin-top: 0.5rem; }
+.rv-plot-embed-item { margin-bottom: 0.6rem; }
+.rv-plot-embed-label {
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: var(--text-secondary, #666);
+  margin-bottom: 0.2rem;
+}
+.rv-plot-embed-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+.rv-plot-embed-fig {
+  flex: 0 0 auto;
+  width: 420px;
+  margin: 0;
+  border: 1px solid var(--border-light, #eee);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rv-plot-embed-fig img {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 150px;
+  object-fit: contain;
+  background: #fafafa;
+}
+.rv-plot-embed-fig figcaption {
+  font-size: 0.65rem;
+  text-align: center;
+  padding: 0.2rem;
+  color: var(--text-secondary, #666);
+  background: var(--bg-secondary, #f5f5f7);
+}
+.rv-plot-unavailable {
+  padding: 2rem 0.5rem;
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--muted, #999);
+  background: var(--bg-secondary, #f8f8f8);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Multi-model finding text */
+.rv-finding-text {
+  font-size: 0.68rem;
+  color: var(--text-secondary, #555);
+  margin-top: 3px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+/* Utility */
+.rv-hidden { display: none !important; }

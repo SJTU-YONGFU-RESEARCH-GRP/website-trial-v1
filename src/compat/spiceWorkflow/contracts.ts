@@ -213,6 +213,10 @@ export interface WorkflowScenario {
   executions: Record<string, ToolExecutionResult>;
   benchmarkResults: DomainBenchmarkResult[];
   artifacts: Record<string, ArtifactRef>;
+  /** Per-model+simulator structured report data (REPORT.md) */
+  reports?: Record<string, ReportStructure>;
+  /** Per-model manifest data */
+  manifests?: Record<string, ModelManifest>;
   defaultInputModelId: string;
   defaultCandidateModelId: string;
   defaultSimulators: SimulatorId[];
@@ -246,6 +250,60 @@ export interface WorkflowPreview {
 export interface WorkflowRuntime {
   preview(request: WorkflowPreviewRequest): Promise<WorkflowPreview>;
   loadResult(scenarioId: string): Promise<WorkflowScenario>;
+}
+
+/* ─── REPORT.md Structured Data ─── */
+
+export type ReportStatus = "pass" | "fail" | "in-progress" | "unavailable";
+
+export interface ReportEntry {
+  /** Human-readable test name, e.g. "IV data file is generated" */
+  testType: string;
+  status: ReportStatus;
+  keyFindings: string | null;
+  /** Optional nested sub-details */
+  children?: ReportEntry[];
+}
+
+export interface ReportSubSection {
+  title: string;
+  entries: ReportEntry[];
+  /** Optional plot image paths for this subsection */
+  plots?: string[];
+}
+
+export interface ReportSection {
+  /** e.g. "DC Analysis", "Transient Analysis" */
+  title: string;
+  /** Top-level entries before subsections */
+  entries?: ReportEntry[];
+  subsections: ReportSubSection[];
+}
+
+export interface ReportStructure {
+  scenarioTitle: string;
+  generatedAt: string;
+  simulationSetup: ReportEntry[];
+  summary: {
+    dc: ReportEntry[];
+    transient: ReportEntry[];
+    ac: ReportEntry[];
+    noise: ReportEntry[];
+  };
+  sections: ReportSection[];
+}
+
+export interface ModelManifest {
+  modelId: string;
+  displayName: string;
+  checksum: string;
+  deviceType: "nmos" | "pmos" | "unknown";
+  modelFamily: string;
+  pdkSource: string;
+  operationChain: string;
+  parameterCount: number;
+  simulators: SimulatorId[];
+  reportGeneratedAt: string;
 }
 
 /* ─── Unit conventions (goal.md §19.2) ───
