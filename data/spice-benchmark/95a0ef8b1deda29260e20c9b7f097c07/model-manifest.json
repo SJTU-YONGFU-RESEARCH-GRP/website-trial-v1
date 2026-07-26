@@ -1,0 +1,51 @@
+{
+  "id": "bsim__nmos__bsim2__spectre__reduction",
+  "sourceId": "bsim__nmos__bsim2__spectre__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_bsim2.spectre",
+  "sourceMd5": "40a291788b3e5fa6f8c5533f20ec51ef",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/95a0ef8b1deda29260e20c9b7f097c07/model.lib",
+  "md5": "95a0ef8b1deda29260e20c9b7f097c07",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_bsim2",
+      "deviceType": "nmos",
+      "parameterCount": 50
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:36.810402+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:34.048540+00:00",
+      "elapsedSeconds": 2.756679,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim2__spectre/original/model.lib",
+      "inputMd5": "91e0f1597d9829b41fd5e449b63eaf61",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim2__spectre/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "14f4a1fb92b5f616071860da632218ab",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim2__spectre/reduction/01-reduction/normalized.lib",
+      "outputMd5": "b64f60179c10936482aa89620e4c2a74",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim2__spectre/reduction/01-reduction/reduced.lib",
+        "inputMd5": "14f4a1fb92b5f616071860da632218ab",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim2__spectre/reduction/01-reduction/normalized.lib",
+        "outputMd5": "b64f60179c10936482aa89620e4c2a74",
+        "cards": [
+          {
+            "name": "nmos_bsim2",
+            "deviceType": "nmos",
+            "parameterCount": 50
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

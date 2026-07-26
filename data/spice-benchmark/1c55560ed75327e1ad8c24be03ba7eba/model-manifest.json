@@ -1,0 +1,51 @@
+{
+  "id": "bsim__nmos__bsim3v3__hspice__reduction",
+  "sourceId": "bsim__nmos__bsim3v3__hspice__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_bsim3v3.hspice",
+  "sourceMd5": "e59beb1d1817ed43ea3b92ee450fb695",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/1c55560ed75327e1ad8c24be03ba7eba/model.lib",
+  "md5": "1c55560ed75327e1ad8c24be03ba7eba",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_bsim3v3",
+      "deviceType": "nmos",
+      "parameterCount": 89
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:39.633626+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:36.530480+00:00",
+      "elapsedSeconds": 3.091679,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__hspice/original/model.lib",
+      "inputMd5": "ab834bfa739a1e35b7f90f9b6cf5e220",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__hspice/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "d0d52d2fc6c15c82092b55341f0cd87e",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__hspice/reduction/01-reduction/normalized.lib",
+      "outputMd5": "47dff841a8f1a37963e5287d6f178142",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__hspice/reduction/01-reduction/reduced.lib",
+        "inputMd5": "d0d52d2fc6c15c82092b55341f0cd87e",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__hspice/reduction/01-reduction/normalized.lib",
+        "outputMd5": "47dff841a8f1a37963e5287d6f178142",
+        "cards": [
+          {
+            "name": "nmos_bsim3v3",
+            "deviceType": "nmos",
+            "parameterCount": 89
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

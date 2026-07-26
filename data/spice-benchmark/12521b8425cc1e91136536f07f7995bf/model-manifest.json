@@ -1,0 +1,92 @@
+{
+  "id": "ptm__90nm__bulk__pm__expansion_translation",
+  "sourceId": "ptm__90nm__bulk__pm__original",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/90nm_bulk.pm",
+  "sourceMd5": "c2f80cae2389d91d764bbd4319765243",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/12521b8425cc1e91136536f07f7995bf/model.lib",
+  "md5": "12521b8425cc1e91136536f07f7995bf",
+  "cardCount": 2,
+  "models": [
+    {
+      "name": "nmos",
+      "deviceType": "nmos",
+      "parameterCount": 214
+    },
+    {
+      "name": "pmos",
+      "deviceType": "pmos",
+      "parameterCount": 214
+    }
+  ],
+  "completedAt": "2026-07-26T16:56:13.367592+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-26T16:56:11.758197+00:00",
+      "elapsedSeconds": 1.315023,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/original/model.lib",
+      "inputMd5": "b5d9b3d1a2233d5008f1575a9224763e",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "1d5f89ebb484617b88fd463c4cbe1ce9",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "286fdde9ded1f932cfbd616d930e51bb",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "1d5f89ebb484617b88fd463c4cbe1ce9",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "286fdde9ded1f932cfbd616d930e51bb",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 214
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 214
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:56:13.073707+00:00",
+      "elapsedSeconds": 0.269229,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "286fdde9ded1f932cfbd616d930e51bb",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "44920a5870e0fdd0eddf98e273b023b3",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "21b8d2c158c25bc7ed44cd832905a01a",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "44920a5870e0fdd0eddf98e273b023b3",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__90nm__bulk__pm/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "21b8d2c158c25bc7ed44cd832905a01a",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 214
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 214
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

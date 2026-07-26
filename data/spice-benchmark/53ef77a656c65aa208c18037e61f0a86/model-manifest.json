@@ -1,0 +1,61 @@
+{
+  "id": "ptm__32nm__hp__pm__reduction",
+  "sourceId": "ptm__32nm__hp__pm__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/32nm_HP.pm",
+  "sourceMd5": "0ed307551f2432c15f1e725c1b69e7f8",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/53ef77a656c65aa208c18037e61f0a86/model.lib",
+  "md5": "53ef77a656c65aa208c18037e61f0a86",
+  "cardCount": 2,
+  "models": [
+    {
+      "name": "nmos",
+      "deviceType": "nmos",
+      "parameterCount": 107
+    },
+    {
+      "name": "pmos",
+      "deviceType": "pmos",
+      "parameterCount": 214
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:55.803800+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:55:53.103005+00:00",
+      "elapsedSeconds": 2.682231,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__hp__pm/original/model.lib",
+      "inputMd5": "dc205c70ce833ddf92fc3a1ae508b7fc",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__hp__pm/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "51fafc8fbc3cbfeb82979dfc7d8d0d64",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__hp__pm/reduction/01-reduction/normalized.lib",
+      "outputMd5": "5673c668e1a4243f086685efc222f61e",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__hp__pm/reduction/01-reduction/reduced.lib",
+        "inputMd5": "51fafc8fbc3cbfeb82979dfc7d8d0d64",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__hp__pm/reduction/01-reduction/normalized.lib",
+        "outputMd5": "5673c668e1a4243f086685efc222f61e",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 107
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 214
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

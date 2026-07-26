@@ -49,7 +49,7 @@ function dataPath(modelId: string, sim: string, domain: string): string {
 }
 
 function plotPath(modelId: string, sim: string, domain: string): string {
-  return `${BASE}data/spice-benchmark/${modelId}/${sim}/plots/${domain}_chart.png`;
+  return `${BASE}data/spice-benchmark/${modelId}/${sim}/plot/${domain}_chart.png`;
 }
 
 /* ─── Catalog mapping ─── */

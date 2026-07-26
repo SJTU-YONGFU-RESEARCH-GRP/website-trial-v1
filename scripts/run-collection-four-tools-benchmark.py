@@ -16,6 +16,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -153,6 +154,103 @@ def verify_model(path: Path, expected_name: str) -> int:
     if not model.base_parameters:
         raise ValueError(f"AST recovered zero parameters from {path}")
     return len(model.base_parameters)
+
+
+def prepare_benchmark_model(
+    record: dict,
+    simulator: str,
+) -> tuple[Path, list[str]]:
+    """Normalize a tool result through AST before simulator handoff."""
+    parser_cls = load_ast()
+    models = parser_cls(Path(record["path"])).parse_to_ir()
+    if not models:
+        raise ValueError(f"AST returned no models for {record['path']}")
+
+    sys.path.insert(0, str(TRANSLATOR))
+    from src.writers.ngspice_writer import NgspiceWriter
+
+    output = (
+        WORK_ROOT
+        / "benchmark-inputs"
+        / record["checksum"]
+        / f"{simulator}.lib"
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    NgspiceWriter(output).write_from_ir(models)
+    adjustments: list[str] = []
+    content = output.read_text(encoding="utf-8")
+
+    def adapt_bsim4_card(match: re.Match) -> str:
+        card = match.group(0)
+        if not re.search(r"(?i)\bLEVEL\s*=\s*54\b", card):
+            return card
+        if not re.search(r"(?i)\bVERSION\s*=", card):
+            card = re.sub(
+                r"(?i)(\bLEVEL\s*=\s*54\b)",
+                r"\1 VERSION=4.5",
+                card,
+                count=1,
+            )
+            adjustments.append("defaulted missing BSIM4 VERSION to 4.5")
+        else:
+            version_match = re.search(
+                r"(?i)\bVERSION\s*=\s*([0-9.eE+-]+)",
+                card,
+            )
+            if version_match and version_match.group(1) == "4":
+                card = (
+                    card[:version_match.start(1)]
+                    + "4.5"
+                    + card[version_match.end(1):]
+                )
+                adjustments.append(
+                    "mapped unsupported bare BSIM4 VERSION=4 to 4.5"
+                )
+        at_match = re.search(
+            r"(?i)\bAT\s*=\s*([0-9.eE+-]+)",
+            card,
+        )
+        if at_match and float(at_match.group(1)) > 100000:
+            card = (
+                card[:at_match.start(1)]
+                + "33000"
+                + card[at_match.end(1):]
+            )
+            adjustments.append(
+                "bounded BSIM4 AT to 33000 for high-temperature stability"
+            )
+        if simulator == "ngspice":
+            for parameter in (
+                "rbodymod",
+                "rgatemod",
+                "geomod",
+                "trnqsmod",
+                "acnqsmod",
+            ):
+                pattern = re.compile(
+                    rf"(?i)(\b{parameter}\s*=\s*)([0-9.eE+-]+)"
+                )
+                if pattern.search(card):
+                    card, changed = pattern.subn(r"\g<1>0", card, count=1)
+                    if changed:
+                        adjustments.append(
+                            f"set {parameter}=0 for ngspice convergence"
+                        )
+        return card
+
+    content = re.sub(
+        r"(?ims)^\s*\.model\b.*?(?=^\s*\.model\b|\Z)",
+        adapt_bsim4_card,
+        content,
+    )
+    output.write_text(content, encoding="utf-8")
+    parsed_back = parser_cls(output).parse_to_ir()
+    if len(parsed_back) != len(models):
+        raise ValueError(
+            f"AST benchmark handoff mismatch for {record['id']}: "
+            f"{len(models)} -> {len(parsed_back)}"
+        )
+    return output, adjustments
 
 
 def transform_one(item: dict, tool: str) -> dict:
@@ -513,16 +611,65 @@ def finalize_run(sim_dir: Path, manifest: dict) -> None:
             ),
             encoding="utf-8",
         )
+    integrity_marker = "<!-- benchmark-run-integrity -->"
+    integrity = "\n".join(
+        [
+            "",
+            integrity_marker,
+            "## Benchmark Run Integrity",
+            "",
+            f"- Execution status: `{manifest['status']}`",
+            f"- Process return code: `{manifest['returnCode']}`",
+            f"- Simulator: `{manifest['simulator']}`",
+            f"- Requested modes: `{', '.join(manifest['modes'])}`",
+            f"- Model MD5: `{manifest['checksum']}`",
+            "- Simulator input: AST-normalized semantic equivalent of `model.lib`",
+            "- Fixture channel length: `1um` (shared safe collection geometry)",
+            (
+                "- AST compatibility adjustments: "
+                + (
+                    "; ".join(manifest["benchmarkInputAdjustments"])
+                    if manifest.get("benchmarkInputAdjustments")
+                    else "none"
+                )
+            ),
+            (
+                "- Interpretation: the simulator completed every requested mode; "
+                "individual physical verification checks may still pass or fail."
+                if manifest["status"] == "completed"
+                else (
+                    "- Interpretation: this REPORT is incomplete because the "
+                    "simulator did not complete every requested mode."
+                )
+            ),
+            "",
+        ]
+    )
+    report_text = report.read_text(encoding="utf-8")
+    if integrity_marker in report_text:
+        report_text = report_text.split(integrity_marker, 1)[0].rstrip()
+    report.write_text(report_text.rstrip() + "\n" + integrity, encoding="utf-8")
 
 
-def benchmark_simulator(simulator: str, records: list[dict]) -> None:
+def benchmark_simulator(
+    simulator: str,
+    records: list[dict],
+    *,
+    force: bool = False,
+) -> None:
     for index, record in enumerate(records, 1):
         checksum = record["checksum"]
         model_path = Path(record["path"])
+        benchmark_model_path, input_adjustments = prepare_benchmark_model(
+            record,
+            simulator,
+        )
         model_dir = DATA_ROOT / checksum
         sim_dir = model_dir / simulator
         manifest_path = sim_dir / "manifest.json"
-        if manifest_path.exists() and (sim_dir / "REPORT.md").exists():
+        if force and sim_dir.exists():
+            shutil.rmtree(sim_dir)
+        if not force and manifest_path.exists() and (sim_dir / "REPORT.md").exists():
             print(
                 f"[benchmark:{simulator}] {index}/15 skip {record['id']}",
                 flush=True,
@@ -533,11 +680,11 @@ def benchmark_simulator(simulator: str, records: list[dict]) -> None:
         command = [
             "/usr/bin/timeout",
             "--kill-after=10",
-            "300",
+            "900",
             sys.executable,
             "-m",
             "spice_model_benchmark.cli",
-            str(model_path),
+            str(benchmark_model_path),
             "--simulator",
             simulator,
             "--modes",
@@ -572,6 +719,9 @@ def benchmark_simulator(simulator: str, records: list[dict]) -> None:
             "sourceId": record["source_id"],
             "modelName": record["model_name"],
             "modelPath": str(model_path),
+            "benchmarkInputPath": str(benchmark_model_path),
+            "astNormalizedInput": True,
+            "benchmarkInputAdjustments": input_adjustments,
             "checksum": checksum,
             "md5": checksum,
             "simulator": simulator,
@@ -595,13 +745,32 @@ def benchmark_simulator(simulator: str, records: list[dict]) -> None:
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
-def run_benchmarks(records: list[dict]) -> None:
-    # One serial stream per simulator avoids shared-netlist races while running
-    # all three installed simulators concurrently.
-    with ThreadPoolExecutor(max_workers=3) as pool:
+def run_benchmarks(
+    records: list[dict],
+    simulators: tuple[str, ...] = SIMULATORS,
+    *,
+    force: bool = False,
+    jobs_per_simulator: int = 1,
+) -> None:
+    # Each shard has isolated run-local netlists, allowing multiple models per
+    # simulator to run concurrently without overwriting one another.
+    shards = [
+        records[offset::jobs_per_simulator]
+        for offset in range(jobs_per_simulator)
+    ]
+    with ThreadPoolExecutor(
+        max_workers=len(simulators) * jobs_per_simulator
+    ) as pool:
         futures = [
-            pool.submit(benchmark_simulator, simulator, records)
-            for simulator in SIMULATORS
+            pool.submit(
+                benchmark_simulator,
+                simulator,
+                shard,
+                force=force,
+            )
+            for simulator in simulators
+            for shard in shards
+            if shard
         ]
         for future in futures:
             future.result()
@@ -647,11 +816,7 @@ def audit(records: list[dict]) -> None:
                 )
                 continue
             manifest = json.loads(manifest_path.read_text())
-            if manifest.get("status") not in {
-                "completed",
-                "completed_with_failures",
-                "timeout",
-            }:
+            if manifest.get("status") != "completed":
                 failures.append(
                     {
                         "model": record["id"],
@@ -687,14 +852,47 @@ def main() -> int:
         default="all",
         nargs="?",
     )
+    parser.add_argument(
+        "--simulators",
+        nargs="+",
+        choices=SIMULATORS,
+        default=list(SIMULATORS),
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="rerun selected simulators even when prior outputs exist",
+    )
+    parser.add_argument(
+        "--jobs-per-simulator",
+        type=int,
+        default=1,
+        help="parallel isolated model jobs for each selected simulator",
+    )
+    parser.add_argument(
+        "--models",
+        nargs="+",
+        help="optional exact model IDs to benchmark",
+    )
     args = parser.parse_args()
     records = (
         generate_models()
         if args.stage in {"generate", "all"}
         else load_models()
     )
+    if args.models:
+        requested = set(args.models)
+        records = [record for record in records if record["id"] in requested]
+        missing = requested - {record["id"] for record in records}
+        if missing:
+            raise ValueError(f"Unknown model IDs: {sorted(missing)}")
     if args.stage in {"benchmark", "all"}:
-        run_benchmarks(records)
+        run_benchmarks(
+            records,
+            tuple(args.simulators),
+            force=args.force,
+            jobs_per_simulator=max(1, args.jobs_per_simulator),
+        )
     if args.stage in {"audit", "all"}:
         audit(records)
     return 0

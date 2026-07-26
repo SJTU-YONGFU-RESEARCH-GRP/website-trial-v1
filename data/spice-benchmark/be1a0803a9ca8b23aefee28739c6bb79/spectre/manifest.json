@@ -1,0 +1,36 @@
+{
+  "modelId": "bsim__pmos__bsim3v3__spectre__expansion_translation",
+  "sourceId": "bsim__pmos__bsim3v3__spectre__original",
+  "kind": "processed",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/be1a0803a9ca8b23aefee28739c6bb79/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/be1a0803a9ca8b23aefee28739c6bb79/spectre.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture",
+    "removed 1 unresolved symbolic parameter"
+  ],
+  "md5": "be1a0803a9ca8b23aefee28739c6bb79",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T20:55:26.880151+00:00",
+  "finishedAt": "2026-07-26T20:59:24.650267+00:00",
+  "elapsedSeconds": 237.770144,
+  "peakRssKiB": 1491484,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

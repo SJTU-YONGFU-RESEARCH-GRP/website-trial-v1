@@ -1,0 +1,103 @@
+{
+  "id": "ptm__16nfet__hp__pm__fitting_reduction_translation",
+  "sourceId": "ptm__16nfet__hp__pm__original",
+  "kind": "processed",
+  "chainId": "fitting_reduction_translation",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "toolCount": 3,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/16nfet_HP.pm",
+  "sourceMd5": "bfd2ad135047f995b9041ab18964d18f",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/60f48c553192541c72b0baf60dfb1e94/model.lib",
+  "md5": "60f48c553192541c72b0baf60dfb1e94",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nfet",
+      "deviceType": "nmos",
+      "parameterCount": 32
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:37.445065+00:00",
+  "stages": [
+    {
+      "tool": "fitting",
+      "startedAt": "2026-07-26T16:55:33.721733+00:00",
+      "elapsedSeconds": 0.612582,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/original/model.lib",
+      "inputMd5": "75a059bbb4b683a0b37cc6e0eb24433e",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+      "rawOutputMd5": "6c65b2c5a6262b00e7f01e2f952ecf39",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+      "outputMd5": "e239da185210dc2f55b8997273fabcc5",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+        "inputMd5": "6c65b2c5a6262b00e7f01e2f952ecf39",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+        "outputMd5": "e239da185210dc2f55b8997273fabcc5",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 65
+          }
+        ]
+      }
+    },
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:55:34.336815+00:00",
+      "elapsedSeconds": 2.873491,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+      "inputMd5": "e239da185210dc2f55b8997273fabcc5",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/02-reduction/reduced.lib",
+      "rawOutputMd5": "bac4ec12bae4d278901ec36a5f38db84",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+      "outputMd5": "09e301d941c7bc46243b3f2629975f3c",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/02-reduction/reduced.lib",
+        "inputMd5": "bac4ec12bae4d278901ec36a5f38db84",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+        "outputMd5": "09e301d941c7bc46243b3f2629975f3c",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 32
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:37.210738+00:00",
+      "elapsedSeconds": 0.229583,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+      "inputMd5": "09e301d941c7bc46243b3f2629975f3c",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/03-translation/translated.hspice",
+      "rawOutputMd5": "c047fe3995215031e681f268099ab2d5",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/03-translation/normalized.lib",
+      "outputMd5": "c774f585d025e6b042ea8a9f63d58035",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/03-translation/translated.hspice",
+        "inputMd5": "c047fe3995215031e681f268099ab2d5",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfet__hp__pm/fitting_reduction_translation/03-translation/normalized.lib",
+        "outputMd5": "c774f585d025e6b042ea8a9f63d58035",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 32
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

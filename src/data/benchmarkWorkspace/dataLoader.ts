@@ -214,8 +214,8 @@ function buildPlotArtifact(modelId: string, sim: string, domain: string): Artifa
     format: "png",
     sizeBytes: null,
     hash: null,
-    displayUrl: `${DATA_ROOT}/${modelId}/${sim}/plots/${domain}_chart.png`,
-    fetchUrl: `${DATA_ROOT}/${modelId}/${sim}/plots/${domain}_chart.png`,
+    displayUrl: `${DATA_ROOT}/${modelId}/${sim}/plot/${domain}_chart.png`,
+    fetchUrl: `${DATA_ROOT}/${modelId}/${sim}/plot/${domain}_chart.png`,
     visibility: "public",
     provenance: { origin: "existing-tool-output" },
     comparisonKey: domain,
@@ -547,7 +547,7 @@ function parseReportMD(md: string, modelId: string, sim: string): ReportStructur
     else if (line.match(/<img src='([^']+)'/)) {
       const m = line.match(/src='([^']+)'/);
       if (m) {
-        const plotName = m[1].replace("plots/", "");
+        const plotName = m[1].replace(/^plots?\//, "");
         if (!currentPlots.includes(plotName)) currentPlots.push(plotName);
       }
     }

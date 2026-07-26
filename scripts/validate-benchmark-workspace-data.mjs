@@ -116,7 +116,7 @@ if (!existsSync(BENCHMARK_DATA)) {
           if (checksum !== md5) err(`${md5}/${simulator}: manifest checksum mismatch`);
         }
 
-        const plotsDir = resolve(runDir, "plots");
+        const plotsDir = resolve(runDir, "plot");
         if (!existsSync(plotsDir)) {
           err(`${md5}/${simulator}: missing plots directory`);
         } else {
@@ -124,10 +124,10 @@ if (!existsSync(BENCHMARK_DATA)) {
             if (!name.endsWith(".png")) continue;
             const file = resolve(plotsDir, name);
             const st = statSync(file);
-            if (st.size === 0) err(`${md5}/${simulator}/plots/${name}: empty file`);
+            if (st.size === 0) err(`${md5}/${simulator}/plot/${name}: empty file`);
             const buf = readFileSync(file);
             if (buf[0] !== 0x89 || buf[1] !== 0x50 || buf[2] !== 0x4e || buf[3] !== 0x47) {
-              err(`${md5}/${simulator}/plots/${name}: invalid PNG`);
+              err(`${md5}/${simulator}/plot/${name}: invalid PNG`);
             }
             checkedPlots++;
           }

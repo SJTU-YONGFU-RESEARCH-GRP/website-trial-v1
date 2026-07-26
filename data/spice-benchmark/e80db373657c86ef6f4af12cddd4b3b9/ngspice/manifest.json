@@ -1,0 +1,34 @@
+{
+  "modelId": "ptm__180nm__bulk__pm__expansion_translation",
+  "sourceId": "ptm__180nm__bulk__pm__original",
+  "kind": "processed",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/e80db373657c86ef6f4af12cddd4b3b9/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/e80db373657c86ef6f4af12cddd4b3b9/ngspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "applied fitting BSIM4.5 capability normalization for stable full-range ngspice sweeps"
+  ],
+  "md5": "e80db373657c86ef6f4af12cddd4b3b9",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T21:48:19.999057+00:00",
+  "finishedAt": "2026-07-26T21:49:54.500124+00:00",
+  "elapsedSeconds": 94.50107,
+  "peakRssKiB": 201652,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

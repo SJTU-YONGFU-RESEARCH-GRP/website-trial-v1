@@ -1,0 +1,47 @@
+$ /usr/bin/time -v -o /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53/ngspice/resource.txt /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/pipeline_full_collection/benchmark-inputs/41c7b4f19c9bd85872116daba6c73e53/ngspice.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53 --dpi 120 --log-level WARNING
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1557: RuntimeWarning: divide by zero encountered in divide
+  tc = np.mean((d_ids / d_temp) / np.abs(i_ds[:-1]))
+SPICE Model Benchmark: /home/duhaochen/pipeline_full_collection/benchmark-inputs/41c7b4f19c9bd85872116daba6c73e53/ngspice.lib
+Simulators: ngspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: NGSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53/ngspice
+============================================================
+Vgs range: -1.200V to 0.000V
+Ids range: 0.000e+00A to 6.664e-05A
+Selected Vgs values: [-1.2 -1.  -0.8 -0.6 -0.4 -0.2  0. ]
+Vgs=-1.200V: Ids range 0.000e+00A to 6.658e-05A
+Vgs=-1.000V: Ids range 0.000e+00A to 6.664e-05A
+Vgs=-0.800V: Ids range 0.000e+00A to 6.664e-05A
+Vgs=-0.600V: Ids range 0.000e+00A to 6.664e-05A
+Vgs=-0.400V: Ids range 0.000e+00A to 6.658e-05A
+Vgs=-0.200V: Ids range 0.000e+00A to 6.658e-05A
+Vgs=0.000V: Ids range 2.801e-07A to 6.664e-05A
+ids_variation: 3.250939220860699
+ids_variation <= max_variation: False
+tc: inf
+abs(tc) <= max_tc: False
+[WARNING]: Temperature effects verification failed - effects outside expected range
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1817: RuntimeWarning: divide by zero encountered in log
+  log_ids = np.log(np.abs(i_ds))
+/home/duhaochen/.local/lib/python3.9/site-packages/numpy/lib/function_base.py:2742: RuntimeWarning: invalid value encountered in subtract
+  X -= avg[:, None]
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1862: RuntimeWarning: divide by zero encountered in divide
+  efficiency = np.abs(gm / i_ds)  # Transconductance efficiency
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53/ngspice/plots/ac_cv_sparameter_analysis.png
+[INFO]: NQS effects plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53/ngspice/plots/ac_cv_nqs_effects.png
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53/ngspice/plots/ac_cv_sparameter_analysis.png
+norm_dvg: [1.0e+12 5.0e+11 2.5e+11 ... 0.0e+00 0.0e+00 0.0e+00]
+norm_dvd: [0. 0. 0. ... 0. 0. 0.]
+norm_did: [1.61396771e+10 1.09362902e+10 1.31988029e+11 ... 0.00000000e+00
+ 2.50672875e+07 5.17470513e+06]
+[WARNING]: Quasi-static verification failed
+[WARNING]: Max normalized derivatives: dVg/dt=1.00e+12, dVd/dt=0.00e+00, dId/dt=9.20e+16
+[WARNING]: Cannot compute correlation: constant data detected
+
+  ngspice: ✓ PASS  (168.0s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-model-benchmark/41c7b4f19c9bd85872116daba6c73e53/ngspice

@@ -1,0 +1,61 @@
+$ /usr/bin/time -v -o /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc/spectre/resource.txt /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/pipeline_full_collection/benchmark-inputs/dc205c70ce833ddf92fc3a1ae508b7fc/spectre.lib --simulator spectre --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc --dpi 120 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/pipeline_full_collection/benchmark-inputs/dc205c70ce833ddf92fc3a1ae508b7fc/spectre.lib
+Simulators: spectre
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: SPECTRE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc/spectre
+============================================================
+Vgs range: 0.000V to 1.200V
+Ids range: -3.868e-06A to 6.266e-03A
+Selected Vgs values: [0.  0.2 0.4 0.6 0.8 1.  1.2]
+Vgs=0.000V: Ids range 2.199e-12A to 1.718e-08A
+Vgs=0.200V: Ids range -4.836e-12A to 1.440e-08A
+Vgs=0.400V: Ids range -9.247e-10A to 1.054e-06A
+Vgs=0.600V: Ids range -7.059e-08A to 1.262e-04A
+Vgs=0.800V: Ids range -4.285e-07A to 1.222e-03A
+Vgs=1.000V: Ids range -1.440e-06A to 3.375e-03A
+Vgs=1.200V: Ids range -3.868e-06A to 6.266e-03A
+ids_variation: 25.202318678388014
+ids_variation <= max_variation: False
+tc: 51409.26092085765
+abs(tc) <= max_tc: False
+[WARNING]: Temperature effects verification failed - effects outside expected range
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2706: RuntimeWarning: divide by zero encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2706: RuntimeWarning: invalid value encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+norm_dvg: [2.45831816e+11 1.46087754e+11 8.06454299e+10 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+norm_dvd: [0. 0. 0. ... 0. 0. 0.]
+norm_did: [3.89941096e+10 1.57488825e+10 6.32207522e+09 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+[WARNING]: Quasi-static verification failed
+[WARNING]: Max normalized derivatives: dVg/dt=nan, dVd/dt=0.00e+00, dId/dt=6.51e+11
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/plot_generator.py:633: RuntimeWarning: divide by zero encountered in log10
+  plt.semilogx(freq, 20 * np.log10(s11_mag), 'r-', label='S11 (Input Return Loss)')
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/plot_generator.py:634: RuntimeWarning: divide by zero encountered in log10
+  plt.semilogx(freq, 20 * np.log10(s21_mag), 'g-', label='S21 (Forward Gain)')
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/plot_generator.py:635: RuntimeWarning: divide by zero encountered in log10
+  plt.semilogx(freq, 20 * np.log10(s12_mag), 'b-', label='S12 (Reverse Isolation)')
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/plot_generator.py:636: RuntimeWarning: divide by zero encountered in log10
+  plt.semilogx(freq, 20 * np.log10(s22_mag), 'm-', label='S22 (Output Return Loss)')
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2157: RuntimeWarning: invalid value encountered in scalar divide
+  unilateral_ratio = np.max(s21_mag) / np.max(s12_mag)
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2183: RuntimeWarning: divide by zero encountered in log10
+  s11_db = 20 * np.log10(s11_mag)
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2184: RuntimeWarning: divide by zero encountered in log10
+  s21_db = 20 * np.log10(s21_mag)
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2185: RuntimeWarning: divide by zero encountered in log10
+  s22_db = 20 * np.log10(s22_mag)
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2186: RuntimeWarning: divide by zero encountered in log10
+  s12_db = 20 * np.log10(s12_mag)
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc/spectre/plots/ac_cv_sparameter_analysis.png
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc/spectre/plots/ac_cv_sparameter_analysis.png
+[INFO]: NQS effects plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc/spectre/plots/ac_cv_nqs_effects.png
+
+  spectre: ✓ PASS  (54.8s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-model-benchmark/dc205c70ce833ddf92fc3a1ae508b7fc/spectre

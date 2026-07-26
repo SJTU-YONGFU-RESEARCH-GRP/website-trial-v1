@@ -1,0 +1,77 @@
+{
+  "id": "ptm__10nfet__hp__pm__expansion_translation",
+  "sourceId": "ptm__10nfet__hp__pm__original",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/10nfet_HP.pm",
+  "sourceMd5": "529044a7bba68005de44b55a3bd99a68",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/2c2ae92f430998fc1a99e59bf0d8fe02/model.lib",
+  "md5": "2c2ae92f430998fc1a99e59bf0d8fe02",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nfet",
+      "deviceType": "nmos",
+      "parameterCount": 278
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:15.005096+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-26T16:55:13.424904+00:00",
+      "elapsedSeconds": 1.296481,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/original/model.lib",
+      "inputMd5": "61b20515c961358c875827476abc7537",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "10814be4f0f4adeacc0bda05419fa7e0",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "71d0eeb5eb42bd669f26724bb4670a63",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "10814be4f0f4adeacc0bda05419fa7e0",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "71d0eeb5eb42bd669f26724bb4670a63",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 278
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:14.721847+00:00",
+      "elapsedSeconds": 0.26646,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "71d0eeb5eb42bd669f26724bb4670a63",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "e351cb2848d9e2768777ac924689fcdc",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "38e485a358febebb72c30867dc971234",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "e351cb2848d9e2768777ac924689fcdc",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__10nfet__hp__pm/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "38e485a358febebb72c30867dc971234",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 278
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

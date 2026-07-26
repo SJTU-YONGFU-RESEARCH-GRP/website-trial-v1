@@ -1,0 +1,123 @@
+{
+  "id": "ptm__32nm__lp__pm__fitting_reduction_translation",
+  "sourceId": "ptm__32nm__lp__pm__original",
+  "kind": "processed",
+  "chainId": "fitting_reduction_translation",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "toolCount": 3,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/32nm_LP.pm",
+  "sourceMd5": "a1d0beabffa85dcbce35bc99132c3909",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/efee6371564b9e83d00dc414b569c992/model.lib",
+  "md5": "efee6371564b9e83d00dc414b569c992",
+  "cardCount": 2,
+  "models": [
+    {
+      "name": "nmos",
+      "deviceType": "nmos",
+      "parameterCount": 32
+    },
+    {
+      "name": "pmos",
+      "deviceType": "pmos",
+      "parameterCount": 213
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:59.811334+00:00",
+  "stages": [
+    {
+      "tool": "fitting",
+      "startedAt": "2026-07-26T16:55:55.814619+00:00",
+      "elapsedSeconds": 0.733848,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/original/model.lib",
+      "inputMd5": "121d7533ff02ffdc5690ab28c571a5e1",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+      "rawOutputMd5": "8249d244b78b463c123191c33e8dd28e",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+      "outputMd5": "b5aec0fbf5af902a5970f1ca60313fb9",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+        "inputMd5": "8249d244b78b463c123191c33e8dd28e",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+        "outputMd5": "b5aec0fbf5af902a5970f1ca60313fb9",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 65
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 213
+          }
+        ]
+      }
+    },
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:55:56.555900+00:00",
+      "elapsedSeconds": 2.862344,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+      "inputMd5": "b5aec0fbf5af902a5970f1ca60313fb9",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/02-reduction/reduced.lib",
+      "rawOutputMd5": "dcd534ae8b8691ed06051f410d6fc4ff",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+      "outputMd5": "bb2e87c121706d88b87179d716784482",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/02-reduction/reduced.lib",
+        "inputMd5": "dcd534ae8b8691ed06051f410d6fc4ff",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+        "outputMd5": "bb2e87c121706d88b87179d716784482",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 32
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 213
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:59.418701+00:00",
+      "elapsedSeconds": 0.37661,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+      "inputMd5": "bb2e87c121706d88b87179d716784482",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/03-translation/translated.hspice",
+      "rawOutputMd5": "9a3bc669dd977257143b2ddd6ee2207b",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/03-translation/normalized.lib",
+      "outputMd5": "6051bca3240d975ddc7522710bb13d96",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/03-translation/translated.hspice",
+        "inputMd5": "9a3bc669dd977257143b2ddd6ee2207b",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__32nm__lp__pm/fitting_reduction_translation/03-translation/normalized.lib",
+        "outputMd5": "6051bca3240d975ddc7522710bb13d96",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 32
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 213
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

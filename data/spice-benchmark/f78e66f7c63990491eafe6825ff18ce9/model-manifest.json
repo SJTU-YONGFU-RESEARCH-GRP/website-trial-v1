@@ -1,0 +1,51 @@
+{
+  "id": "bsim__nmos__level1__spectre__reduction",
+  "sourceId": "bsim__nmos__level1__spectre__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_level1.spectre",
+  "sourceMd5": "fa3cfaddca8475784176b3a6627c2f24",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/f78e66f7c63990491eafe6825ff18ce9/model.lib",
+  "md5": "f78e66f7c63990491eafe6825ff18ce9",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_level1",
+      "deviceType": "nmos",
+      "parameterCount": 10
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:55.469784+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:52.846186+00:00",
+      "elapsedSeconds": 2.620943,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level1__spectre/original/model.lib",
+      "inputMd5": "13d067af3eba2d11154b447d539b6a07",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level1__spectre/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "3e981d005d7f5ce58199c9f8b364e2cf",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level1__spectre/reduction/01-reduction/normalized.lib",
+      "outputMd5": "3126939dde77d36db6d58067bbe1be61",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level1__spectre/reduction/01-reduction/reduced.lib",
+        "inputMd5": "3e981d005d7f5ce58199c9f8b364e2cf",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level1__spectre/reduction/01-reduction/normalized.lib",
+        "outputMd5": "3126939dde77d36db6d58067bbe1be61",
+        "cards": [
+          {
+            "name": "nmos_level1",
+            "deviceType": "nmos",
+            "parameterCount": 10
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

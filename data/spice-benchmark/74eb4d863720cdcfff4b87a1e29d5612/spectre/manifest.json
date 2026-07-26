@@ -1,0 +1,33 @@
+{
+  "modelId": "ptm__45nm__hp__pm__fitting_reduction_translation",
+  "sourceId": "ptm__45nm__hp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/74eb4d863720cdcfff4b87a1e29d5612/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/74eb4d863720cdcfff4b87a1e29d5612/spectre.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [],
+  "md5": "74eb4d863720cdcfff4b87a1e29d5612",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T22:08:13.768333+00:00",
+  "finishedAt": "2026-07-26T22:09:14.799225+00:00",
+  "elapsedSeconds": 61.030845,
+  "peakRssKiB": 225848,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

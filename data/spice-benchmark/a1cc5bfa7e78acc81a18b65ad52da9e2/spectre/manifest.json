@@ -1,0 +1,33 @@
+{
+  "modelId": "ptm__22nm__hp__pm__reduction",
+  "sourceId": "ptm__22nm__hp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "reduction"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/a1cc5bfa7e78acc81a18b65ad52da9e2/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/a1cc5bfa7e78acc81a18b65ad52da9e2/spectre.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "normalized BSIM4 version selector"
+  ],
+  "md5": "a1cc5bfa7e78acc81a18b65ad52da9e2",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T22:00:22.195222+00:00",
+  "finishedAt": "2026-07-26T22:01:22.118680+00:00",
+  "elapsedSeconds": 59.923473,
+  "peakRssKiB": 227004,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

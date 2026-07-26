@@ -1,0 +1,36 @@
+{
+  "modelId": "bsim__nmos__bsim3v3__hspice__fitting_reduction_translation",
+  "sourceId": "bsim__nmos__bsim3v3__hspice__original",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/122e3ea6b5ae0f1b2e97f0bf8d862435/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/122e3ea6b5ae0f1b2e97f0bf8d862435/ngspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "122e3ea6b5ae0f1b2e97f0bf8d862435",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T18:40:23.818475+00:00",
+  "finishedAt": "2026-07-26T18:49:33.910112+00:00",
+  "elapsedSeconds": 550.091651,
+  "peakRssKiB": 208388,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

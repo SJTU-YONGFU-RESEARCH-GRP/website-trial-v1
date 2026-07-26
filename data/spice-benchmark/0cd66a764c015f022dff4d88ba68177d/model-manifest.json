@@ -1,0 +1,77 @@
+{
+  "id": "ptm__20pfet__hp__pm__expansion_translation",
+  "sourceId": "ptm__20pfet__hp__pm__original",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/20pfet_HP.pm",
+  "sourceMd5": "312c79a1f6aa6a0338c1a650b916ff31",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/0cd66a764c015f022dff4d88ba68177d/model.lib",
+  "md5": "0cd66a764c015f022dff4d88ba68177d",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "pfet",
+      "deviceType": "pmos",
+      "parameterCount": 278
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:47.065292+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-26T16:55:45.610270+00:00",
+      "elapsedSeconds": 1.178027,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/original/model.lib",
+      "inputMd5": "6c9970f8837184826e36fd905bd79116",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "f81feff1bb16bccaa731a5a36eda38bd",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "a82f661beb9790a1e1e5a5149f633357",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "f81feff1bb16bccaa731a5a36eda38bd",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "a82f661beb9790a1e1e5a5149f633357",
+        "cards": [
+          {
+            "name": "pfet",
+            "deviceType": "pmos",
+            "parameterCount": 278
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:46.788722+00:00",
+      "elapsedSeconds": 0.257697,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "a82f661beb9790a1e1e5a5149f633357",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "ab35cc4b0d0197a6ee6b4cefc3b77bcc",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "36c94a0c06296be0244b1f1969a02142",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "ab35cc4b0d0197a6ee6b4cefc3b77bcc",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "36c94a0c06296be0244b1f1969a02142",
+        "cards": [
+          {
+            "name": "pfet",
+            "deviceType": "pmos",
+            "parameterCount": 278
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

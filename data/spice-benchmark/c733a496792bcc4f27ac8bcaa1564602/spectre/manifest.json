@@ -1,0 +1,32 @@
+{
+  "modelId": "ptm__20nfet__lstp__pm__original",
+  "sourceId": "ptm__20nfet__lstp__pm",
+  "kind": "original",
+  "chain": [],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/c733a496792bcc4f27ac8bcaa1564602/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/c733a496792bcc4f27ac8bcaa1564602/spectre.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "c733a496792bcc4f27ac8bcaa1564602",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T21:53:42.561967+00:00",
+  "finishedAt": "2026-07-26T21:54:38.816216+00:00",
+  "elapsedSeconds": 56.254291,
+  "peakRssKiB": 227676,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

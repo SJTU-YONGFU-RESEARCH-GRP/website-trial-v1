@@ -1,0 +1,37 @@
+{
+  "modelId": "ptm__20nfet__lstp__pm__fitting_reduction_translation",
+  "sourceId": "ptm__20nfet__lstp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/57941e3204f7ae749b8f8898d7800486/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/57941e3204f7ae749b8f8898d7800486/ngspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture",
+    "applied fitting BSIM4.5 capability normalization for stable full-range ngspice sweeps"
+  ],
+  "md5": "57941e3204f7ae749b8f8898d7800486",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T21:52:58.389478+00:00",
+  "finishedAt": "2026-07-26T21:53:52.795928+00:00",
+  "elapsedSeconds": 54.406445,
+  "peakRssKiB": 195096,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

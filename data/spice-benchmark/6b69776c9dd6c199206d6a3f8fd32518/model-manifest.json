@@ -1,0 +1,103 @@
+{
+  "id": "bsim__nmos__bsim4__ngspice__fitting_reduction_translation",
+  "sourceId": "bsim__nmos__bsim4__ngspice__original",
+  "kind": "processed",
+  "chainId": "fitting_reduction_translation",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "toolCount": 3,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_bsim4.ngspice",
+  "sourceMd5": "41d5123dfde10b1af4eaf02cceb960de",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/6b69776c9dd6c199206d6a3f8fd32518/model.lib",
+  "md5": "6b69776c9dd6c199206d6a3f8fd32518",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_bsim4",
+      "deviceType": "nmos",
+      "parameterCount": 32
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:48.958778+00:00",
+  "stages": [
+    {
+      "tool": "fitting",
+      "startedAt": "2026-07-26T16:54:45.121845+00:00",
+      "elapsedSeconds": 0.744478,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/original/model.lib",
+      "inputMd5": "a1417a77b61a79b30d8471d9bd3b02cb",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+      "rawOutputMd5": "004b5e820fc52e57abaf614bdbadee4c",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/01-fitting/normalized.lib",
+      "outputMd5": "d242545e3851c0e71423feb34a6878d9",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+        "inputMd5": "004b5e820fc52e57abaf614bdbadee4c",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/01-fitting/normalized.lib",
+        "outputMd5": "d242545e3851c0e71423feb34a6878d9",
+        "cards": [
+          {
+            "name": "nmos_bsim4",
+            "deviceType": "nmos",
+            "parameterCount": 65
+          }
+        ]
+      }
+    },
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:45.868626+00:00",
+      "elapsedSeconds": 2.830032,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/01-fitting/normalized.lib",
+      "inputMd5": "d242545e3851c0e71423feb34a6878d9",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/02-reduction/reduced.lib",
+      "rawOutputMd5": "7dab0d0d2139badf5d52eda86ef2d9b6",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/02-reduction/normalized.lib",
+      "outputMd5": "adb98bcb1ebfb4d4d920b1c53672a88b",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/02-reduction/reduced.lib",
+        "inputMd5": "7dab0d0d2139badf5d52eda86ef2d9b6",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/02-reduction/normalized.lib",
+        "outputMd5": "adb98bcb1ebfb4d4d920b1c53672a88b",
+        "cards": [
+          {
+            "name": "nmos_bsim4",
+            "deviceType": "nmos",
+            "parameterCount": 32
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:54:48.699013+00:00",
+      "elapsedSeconds": 0.254763,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/02-reduction/normalized.lib",
+      "inputMd5": "adb98bcb1ebfb4d4d920b1c53672a88b",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/03-translation/translated.hspice",
+      "rawOutputMd5": "b9c9f0b1b02aeafd652349d0c39258a6",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/03-translation/normalized.lib",
+      "outputMd5": "ff9aa8f0cc31b6545ff25fe7a2e12503",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/03-translation/translated.hspice",
+        "inputMd5": "b9c9f0b1b02aeafd652349d0c39258a6",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim4__ngspice/fitting_reduction_translation/03-translation/normalized.lib",
+        "outputMd5": "ff9aa8f0cc31b6545ff25fe7a2e12503",
+        "cards": [
+          {
+            "name": "nmos_bsim4",
+            "deviceType": "nmos",
+            "parameterCount": 32
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

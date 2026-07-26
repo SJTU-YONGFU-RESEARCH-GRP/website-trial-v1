@@ -467,7 +467,7 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
   // Image URL builder — modelId is `${md5}|${sim}`, we need the md5 part for the path
   const baseImgUrl = (modelId: string, plotName: string): string => {
     const { md5, sim } = parseModelId(modelId);
-    return `${import.meta.env.BASE_URL || "/"}data/spice-benchmark/${md5}/${sim}/plots/${plotName}`;
+    return `${import.meta.env.BASE_URL || "/"}data/spice-benchmark/${md5}/${sim}/plot/${plotName}`;
   };
 
   if (selectedModels.length === 0 || !report) {

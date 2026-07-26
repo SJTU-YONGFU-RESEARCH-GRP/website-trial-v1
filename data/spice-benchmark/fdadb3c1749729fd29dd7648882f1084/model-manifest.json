@@ -1,0 +1,77 @@
+{
+  "id": "ptm__16nfe__lstp__pm__expansion_translation",
+  "sourceId": "ptm__16nfe__lstp__pm__original",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/16nfe_LSTP.pm",
+  "sourceMd5": "79baddcbaa5f1df33e36e64b5787d0df",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-benchmark/fdadb3c1749729fd29dd7648882f1084/model.lib",
+  "md5": "fdadb3c1749729fd29dd7648882f1084",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nfet",
+      "deviceType": "nmos",
+      "parameterCount": 278
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:32.621625+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-26T16:55:31.043607+00:00",
+      "elapsedSeconds": 1.275053,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/original/model.lib",
+      "inputMd5": "b119538f7a68b028f69ba04927ed86df",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "5716b80e2bb484bb7a249b4c1e35bf01",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "8db9333daadf7bb56c421f4d3e296654",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "5716b80e2bb484bb7a249b4c1e35bf01",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "8db9333daadf7bb56c421f4d3e296654",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 278
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:32.319102+00:00",
+      "elapsedSeconds": 0.284726,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "8db9333daadf7bb56c421f4d3e296654",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "a0db868015714f572f4346c470353493",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "ef03e23fb24a8701425c1cb3f04d925b",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "a0db868015714f572f4346c470353493",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__16nfe__lstp__pm/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "ef03e23fb24a8701425c1cb3f04d925b",
+        "cards": [
+          {
+            "name": "nfet",
+            "deviceType": "nmos",
+            "parameterCount": 278
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}
