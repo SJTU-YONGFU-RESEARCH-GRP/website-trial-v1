@@ -1,0 +1,78 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/0ed4bba8942e0fdb1c79ed18f3169915/model.lib --simulator hspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/0ed4bba8942e0fdb1c79ed18f3169915 --dpi 150 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/0ed4bba8942e0fdb1c79ed18f3169915/model.lib
+Simulators: hspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: HSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/0ed4bba8942e0fdb1c79ed18f3169915/hspice
+============================================================
+[ERROR]: HSPICE failed rc=1
+[WARNING]: HSPICE DC returned non-zero but data may still be usable
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[ERROR]: HSPICE failed rc=1
+[WARNING]: IV data file not found: iv_data_-40.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: IV data file not found: iv_data_0.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: IV data file not found: iv_data_25.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: IV data file not found: iv_data_50.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: IV data file not found: iv_data_100.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: IV data file not found: iv_data_150.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[ERROR]: No valid data found in any IV data file
+[WARNING]: Temperature data file not found: iv_data_-40.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: Temperature data file not found: iv_data_0.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: Temperature data file not found: iv_data_25.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: Temperature data file not found: iv_data_50.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: Temperature data file not found: iv_data_100.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[WARNING]: Temperature data file not found: iv_data_150.txt
+[ERROR]: Error parsing data file None: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+[ERROR]: No valid temperature data found
+[WARNING]: Large signal transient data file not found in any location
+[WARNING]: Switching response data file not found in any location
+[WARNING]: Delay effect data file not found in any location
+[WARNING]: Power dissipation data file at 27°C not found in any location
+[WARNING]: Power dissipation data file at 100°C not found in any location
+[WARNING]: Quasi-static data file not found in any location
+[ERROR]: Failed to parse ngspice raw format: Could not find data section in ngspice raw file
+[WARNING]: S-parameter data file not found
+[WARNING]: NQS effects data file not found
+[WARNING]: Thermal noise data file not found for Vgs=0.6V, Vds=0.6V
+
+  hspice: ✓ PASS  (180.1s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-benchmark/0ed4bba8942e0fdb1c79ed18f3169915/hspice

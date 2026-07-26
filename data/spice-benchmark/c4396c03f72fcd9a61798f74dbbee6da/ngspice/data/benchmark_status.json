@@ -1,0 +1,14 @@
+{
+  "modelId": "180nm_bulk__fitting",
+  "checksum": "c4396c03f72fcd9a61798f74dbbee6da",
+  "simulator": "ngspice",
+  "modesRequested": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "status": "completed_with_failures",
+  "returnCode": 1,
+  "error": "command failed (1): /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/c4396c03f72fcd9a61798f74dbbee6da/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/c4396c03f72fcd9a61798f74dbbee6da --dpi 150 --log-level WARNING; see /home/duhaochen/website-trial-v1/data/spice-benchmark/c4396c03f72fcd9a61798f74dbbee6da/ngspice/benchmark.log"
+}

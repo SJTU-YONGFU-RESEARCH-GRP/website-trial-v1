@@ -1,81 +1,153 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SPICE Model Benchmark Results",
   "models": {
-    "sky130_nmos_input": {
-      "md5": "c48102d18af9084f",
-      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
-      "pdk": "SkyWater130",
+    "nmos_level1__original": {
+      "md5": "b0e9d98cfdd35ff415e9a51da7dfaff0",
+      "displayName": "nmos_level1__original",
+      "pdk": "SPICE Model Collection",
       "type": "nmos",
-      "chain": "Input",
-      "params": 232
+      "chain": "Original",
+      "params": 20,
+      "sourceId": "nmos_level1"
     },
-    "sky130_nmos_reduced": {
-      "md5": "e74a7e6576abbe3d",
-      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
-      "pdk": "SkyWater130",
+    "nmos_level1__translator": {
+      "md5": "8486baec7978259bc647103f972218a5",
+      "displayName": "nmos_level1__translator",
+      "pdk": "SPICE Model Collection",
       "type": "nmos",
-      "chain": "Input \u2192 Reduction",
-      "params": 46
+      "chain": "Translator",
+      "params": 20,
+      "sourceId": "nmos_level1"
     },
-    "sky130_nmos_translated_fitted": {
-      "md5": "174b5fb847cdb2f1",
-      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
-      "pdk": "SkyWater130",
+    "nmos_level1__reduction": {
+      "md5": "1b5dad4a597ea521fd3bffb7b4adae91",
+      "displayName": "nmos_level1__reduction",
+      "pdk": "SPICE Model Collection",
       "type": "nmos",
-      "chain": "Input \u2192 Convert \u2192 Calibrate",
-      "params": 232
+      "chain": "Reduction",
+      "params": 10,
+      "sourceId": "nmos_level1"
     },
-    "sky130_nmos_expanded_ff": {
-      "md5": "b06dac5c5e922bf0",
-      "displayName": "[SkyWater130][ngspice] NMOS-BSIM4.8",
-      "pdk": "SkyWater130",
+    "nmos_level1__expansion": {
+      "md5": "3252fef59583b478291ec5d5fe8ab0fb",
+      "displayName": "nmos_level1__expansion",
+      "pdk": "SPICE Model Collection",
       "type": "nmos",
-      "chain": "Input \u2192 Expansion \u2192 FF Corner",
-      "params": 232
+      "chain": "Expansion",
+      "params": 20,
+      "sourceId": "nmos_level1"
     },
-    "freepdk45_pmos_input": {
-      "md5": "87ced2481a27c6be",
-      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
-      "pdk": "FreePDK45",
-      "type": "pmos",
-      "chain": "Input",
-      "params": 148
+    "nmos_level1__fitting": {
+      "md5": "794dc1a7574bd3ffd50e44ffc9b5c90b",
+      "displayName": "nmos_level1__fitting",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Fitting",
+      "params": 79,
+      "sourceId": "nmos_level1"
     },
-    "freepdk45_pmos_expanded_ss": {
-      "md5": "4be90a6344d709df",
-      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
-      "pdk": "FreePDK45",
-      "type": "pmos",
-      "chain": "Input \u2192 Expansion \u2192 SS Corner",
-      "params": 148
+    "180nm_bulk__original": {
+      "md5": "0ed4bba8942e0fdb1c79ed18f3169915",
+      "displayName": "180nm_bulk__original",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Original",
+      "params": 118,
+      "sourceId": "180nm_bulk"
     },
-    "freepdk45_pmos_translated_reduced": {
-      "md5": "5d34a87c2ea41436",
-      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
-      "pdk": "FreePDK45",
-      "type": "pmos",
-      "chain": "Input \u2192 Convert \u2192 Reduction",
-      "params": 52
+    "180nm_bulk__translator": {
+      "md5": "3bf81dfcf52803200b940fc696343cc5",
+      "displayName": "180nm_bulk__translator",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Translator",
+      "params": 118,
+      "sourceId": "180nm_bulk"
     },
-    "freepdk45_pmos_fitted": {
-      "md5": "ab30f612964e8f8d",
-      "displayName": "[FreePDK45][ngspice] PMOS-BSIM4.8",
-      "pdk": "FreePDK45",
-      "type": "pmos",
-      "chain": "Input \u2192 Calibrate",
-      "params": 148
+    "180nm_bulk__reduction": {
+      "md5": "25eebf65a92dbe40307d827548992c8e",
+      "displayName": "180nm_bulk__reduction",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Reduction",
+      "params": 55,
+      "sourceId": "180nm_bulk"
+    },
+    "180nm_bulk__expansion": {
+      "md5": "076b81ba0dcd161da47dfee868d420d7",
+      "displayName": "180nm_bulk__expansion",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Expansion",
+      "params": 118,
+      "sourceId": "180nm_bulk"
+    },
+    "180nm_bulk__fitting": {
+      "md5": "c4396c03f72fcd9a61798f74dbbee6da",
+      "displayName": "180nm_bulk__fitting",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Fitting",
+      "params": 125,
+      "sourceId": "180nm_bulk"
+    },
+    "22nm_LP__original": {
+      "md5": "3105e048ec91e3251dfcd03d888651e9",
+      "displayName": "22nm_LP__original",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Original",
+      "params": 213,
+      "sourceId": "22nm_LP"
+    },
+    "22nm_LP__translator": {
+      "md5": "896712df9436b3964d0ac3cb501bd240",
+      "displayName": "22nm_LP__translator",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Translator",
+      "params": 213,
+      "sourceId": "22nm_LP"
+    },
+    "22nm_LP__reduction": {
+      "md5": "8f995d1fa8809a42841ab199d8fea137",
+      "displayName": "22nm_LP__reduction",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Reduction",
+      "params": 55,
+      "sourceId": "22nm_LP"
+    },
+    "22nm_LP__expansion": {
+      "md5": "e83e72d4e176527d0243bcd6fdad8a14",
+      "displayName": "22nm_LP__expansion",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Expansion",
+      "params": 213,
+      "sourceId": "22nm_LP"
+    },
+    "22nm_LP__fitting": {
+      "md5": "789454e8e4cec26f6c141611b907181f",
+      "displayName": "22nm_LP__fitting",
+      "pdk": "SPICE Model Collection",
+      "type": "nmos",
+      "chain": "Fitting",
+      "params": 216,
+      "sourceId": "22nm_LP"
     }
   },
   "simulators": [
     "ngspice",
-    "hspice",
-    "spectre"
+    "spectre",
+    "hspice"
   ],
   "domains": [
     "dc",
     "transient",
     "ac",
     "noise"
-  ]
+  ],
+  "updatedAt": "2026-07-26T12:22:58.276601+00:00"
 }

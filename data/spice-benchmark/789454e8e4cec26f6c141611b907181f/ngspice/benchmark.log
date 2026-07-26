@@ -1,0 +1,102 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f --dpi 150 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib
+Simulators: ngspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: NGSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/ngspice
+============================================================
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 1 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( level=54 version=4.5 tnom=27 tox=3e-09 toxe=1.4e-09 t ...
+unrecognized parameter (tox) - ignored
+
+
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 1 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( level=54 version=4.5 tnom=27 tox=3e-09 toxe=1.4e-09 t ...
+unrecognized parameter (tox) - ignored
+
+
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 1 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib!
+
+warning, can't find model 'pmos_vtg' from line
+    m_inv_p out_inv in_inv vdd_inv vdd_inv pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_d1_p mid1_delay in_delay vdd_delay vdd_delay pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_d2_p mid2_delay mid1_delay vdd_delay vdd_delay pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_d3_p out_delay mid2_delay vdd_delay vdd_delay pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_power_p out_power in_power vdd_power vdd_power pmos_vtg l=0.045u w=20u
+Warning: Model issue on line 3 :
+  .model nmos nmos ( level=54 version=4.5 tnom=27 tox=3e-09 toxe=1.4e-09 t ...
+unrecognized parameter (tox) - ignored
+
+Error on line 33 or its substitute:
+  m_inv_p out_inv in_inv vdd_inv vdd_inv pmos_vtg l=0.045u w=20u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: SPICE simulation failed with return code 1: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 1 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib!
+
+warning, can't find model 'pmos_vtg' from line
+    m_inv_p out_inv in_inv vdd_inv vdd_inv pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_d1_p mid1_delay in_delay vdd_delay vdd_delay pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_d2_p mid2_delay mid1_delay vdd_delay vdd_delay pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_d3_p out_delay mid2_delay vdd_delay vdd_delay pmos_vtg l=0.045u w=20u
+warning, can't find model 'pmos_vtg' from line
+    m_power_p out_power in_power vdd_power vdd_power pmos_vtg l=0.045u w=20u
+Warning: Model issue on line 3 :
+  .model nmos nmos ( level=54 version=4.5 tnom=27 tox=3e-09 toxe=1.4e-09 t ...
+unrecognized parameter (tox) - ignored
+
+Error on line 33 or its substitute:
+  m_inv_p out_inv in_inv vdd_inv vdd_inv pmos_vtg l=0.045u w=20u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: Transient circuit simulation failed
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 1 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( level=54 version=4.5 tnom=27 tox=3e-09 toxe=1.4e-09 t ...
+unrecognized parameter (tox) - ignored
+
+
+[ERROR]: SPICE simulation failed
+
+  ngspice: ✗ FAIL  (105.3s)
+
+✗ Benchmark failed: /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/ngspice

@@ -1,0 +1,1 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240 --dpi 150 --log-level WARNING

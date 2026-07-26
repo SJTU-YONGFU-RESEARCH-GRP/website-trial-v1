@@ -1,0 +1,14 @@
+{
+  "modelId": "nmos_level1__translator",
+  "checksum": "8486baec7978259bc647103f972218a5",
+  "simulator": "ngspice",
+  "modesRequested": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "status": "completed_with_failures",
+  "returnCode": 1,
+  "error": "command failed (1): /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5 --dpi 150 --log-level WARNING; see /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5/ngspice/benchmark.log"
+}

@@ -1,0 +1,163 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137 --dpi 150 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib
+Simulators: ngspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: NGSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/ngspice
+============================================================
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 15 or its substitute:
+  m1 drain_iv gate_iv source_iv bulk_iv nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: SPICE simulation failed with return code 1: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 15 or its substitute:
+  m1 drain_iv gate_iv source_iv bulk_iv nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: DC circuit simulation failed
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 19 or its substitute:
+  m1 drain_1 gate_1 source_1 bulk_1 nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: SPICE simulation failed with return code 1: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 19 or its substitute:
+  m1 drain_1 gate_1 source_1 bulk_1 nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: AC circuit simulation failed
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 17 or its substitute:
+  m_tran drain_tran gate_tran source_tran bulk_tran nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: SPICE simulation failed with return code 1: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 17 or its substitute:
+  m_tran drain_tran gate_tran source_tran bulk_tran nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: Transient circuit simulation failed
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 36 or its substitute:
+  m_noise drain_noise gate_noise source_noise bulk_noise nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: SPICE simulation failed with return code 1: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 59 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/model.lib!
+
+Warning: Model issue on line 3 :
+  .model nmos nmos ( at=33000 beta0=30 bgidl=2100000000 bvd=10 bvs=10 capm ...
+Device type BSIM4 version 4 not available in this binary
+
+Error on line 36 or its substitute:
+  m_noise drain_noise gate_noise source_noise bulk_noise nmos l=0.045u w=10u
+could not find a valid modelname
+    Simulation interrupted due to error!
+
+Error: incomplete or empty netlist
+       or no ".plot", ".print", or ".fourier" lines in batch mode;
+no simulations run!
+
+[ERROR]: Noise analysis simulation failed
+[ERROR]: SPICE simulation failed
+
+  ngspice: ✗ FAIL  (0.2s)
+
+✗ Benchmark failed: /home/duhaochen/website-trial-v1/data/spice-benchmark/8f995d1fa8809a42841ab199d8fea137/ngspice

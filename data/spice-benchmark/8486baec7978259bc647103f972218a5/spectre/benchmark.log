@@ -1,0 +1,23 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5/model.lib --simulator spectre --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5 --dpi 150 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5/model.lib
+Simulators: spectre
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: SPECTRE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5/spectre
+============================================================
+[ERROR]: Spectre failed (rc=2): spectre terminated prematurely due to fatal error.
+
+[ERROR]: Spectre failed (rc=2): spectre terminated prematurely due to fatal error.
+
+[ERROR]: Spectre failed (rc=2): spectre terminated prematurely due to fatal error.
+
+[ERROR]: Spectre failed (rc=2): spectre terminated prematurely due to fatal error.
+
+[ERROR]: Spectre simulations failed
+
+  spectre: ✗ FAIL  (7.3s)
+
+✗ Benchmark failed: /home/duhaochen/website-trial-v1/data/spice-benchmark/8486baec7978259bc647103f972218a5/spectre

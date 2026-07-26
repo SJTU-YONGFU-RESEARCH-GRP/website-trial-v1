@@ -1,0 +1,14 @@
+{
+  "modelId": "nmos_level1__expansion",
+  "checksum": "3252fef59583b478291ec5d5fe8ab0fb",
+  "simulator": "spectre",
+  "modesRequested": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "status": "completed_with_failures",
+  "returnCode": 1,
+  "error": "command failed (1): /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/3252fef59583b478291ec5d5fe8ab0fb/model.lib --simulator spectre --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/3252fef59583b478291ec5d5fe8ab0fb --dpi 150 --log-level WARNING; see /home/duhaochen/website-trial-v1/data/spice-benchmark/3252fef59583b478291ec5d5fe8ab0fb/spectre/benchmark.log"
+}

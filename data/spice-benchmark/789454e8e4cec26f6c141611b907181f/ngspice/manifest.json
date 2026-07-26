@@ -1,0 +1,29 @@
+{
+  "modelId": "22nm_LP__fitting",
+  "sourceId": "22nm_LP",
+  "modelName": "nmos",
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib",
+  "checksum": "789454e8e4cec26f6c141611b907181f",
+  "md5": "789454e8e4cec26f6c141611b907181f",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "status": "completed_with_failures",
+  "returnCode": 1,
+  "error": "command failed (1): /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f --dpi 150 --log-level WARNING; see /home/duhaochen/website-trial-v1/data/spice-benchmark/789454e8e4cec26f6c141611b907181f/ngspice/benchmark.log",
+  "startedAt": "2026-07-26T12:55:55.773893+00:00",
+  "completedAt": "2026-07-26T12:57:43.913880+00:00",
+  "dataDirectory": "data",
+  "plotsDirectory": "plots",
+  "report": "REPORT.md",
+  "attemptedModes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ]
+}

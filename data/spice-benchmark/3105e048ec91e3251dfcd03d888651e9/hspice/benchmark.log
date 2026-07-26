@@ -1,0 +1,45 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9/model.lib --simulator hspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9 --dpi 150 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9/model.lib
+Simulators: hspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: HSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9/hspice
+============================================================
+[WARNING]: No CV data parsed, using fallback
+[WARNING]: Using synthetic CV data fallback
+Vgs range: 0.000V to 1.200V
+Ids range: -1.087e-02A to 6.324e-08A
+Selected Vgs values: [0.  0.2 0.4 0.6 0.8 1.  1.2]
+Vgs=0.000V: Ids range -7.004e-10A to -8.470e-14A
+Vgs=0.200V: Ids range -2.717e-08A to 1.875e-16A
+Vgs=0.400V: Ids range -1.020e-06A to 1.012e-13A
+Vgs=0.600V: Ids range -1.611e-04A to 4.048e-11A
+Vgs=0.800V: Ids range -2.824e-03A to 2.880e-09A
+Vgs=1.000V: Ids range -6.895e-03A to 1.778e-08A
+Vgs=1.200V: Ids range -1.087e-02A to 6.324e-08A
+ids_variation: 10.045797305040852
+ids_variation <= max_variation: False
+tc: 6473330012183.163
+abs(tc) <= max_tc: False
+[WARNING]: Temperature effects verification failed - effects outside expected range
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2689: RuntimeWarning: divide by zero encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2689: RuntimeWarning: invalid value encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+norm_dvg: [1.00000000e+10 5.00000000e+09 3.33333333e+09 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+norm_dvd: [0. 0. 0. ... 0. 0. 0.]
+norm_did: [4879153.13514694 3238177.72523924 3385335.41341583 ...       0.
+       0.               0.        ]
+[WARNING]: Quasi-static verification failed
+[WARNING]: Max normalized derivatives: dVg/dt=nan, dVd/dt=0.00e+00, dId/dt=3.87e+12
+[ERROR]: Failed to parse ngspice raw format: Could not find data section in ngspice raw file
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9/hspice/plots/ac_cv_sparameter_analysis.png
+[INFO]: NQS effects plot saved to /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9/hspice/plots/ac_cv_nqs_effects.png
+
+  hspice: ✓ PASS  (202.1s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-benchmark/3105e048ec91e3251dfcd03d888651e9/hspice

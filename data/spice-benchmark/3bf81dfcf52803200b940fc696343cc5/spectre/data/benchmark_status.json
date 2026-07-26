@@ -1,0 +1,14 @@
+{
+  "modelId": "180nm_bulk__translator",
+  "checksum": "3bf81dfcf52803200b940fc696343cc5",
+  "simulator": "spectre",
+  "modesRequested": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "status": "completed_with_failures",
+  "returnCode": 1,
+  "error": "command failed (1): /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/3bf81dfcf52803200b940fc696343cc5/model.lib --simulator spectre --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/3bf81dfcf52803200b940fc696343cc5 --dpi 150 --log-level WARNING; see /home/duhaochen/website-trial-v1/data/spice-benchmark/3bf81dfcf52803200b940fc696343cc5/spectre/benchmark.log"
+}

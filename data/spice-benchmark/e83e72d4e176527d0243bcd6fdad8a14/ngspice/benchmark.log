@@ -1,0 +1,22 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/e83e72d4e176527d0243bcd6fdad8a14/model.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/e83e72d4e176527d0243bcd6fdad8a14 --dpi 150 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/e83e72d4e176527d0243bcd6fdad8a14/model.lib
+Simulators: ngspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: NGSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/e83e72d4e176527d0243bcd6fdad8a14/ngspice
+============================================================
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 219 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/e83e72d4e176527d0243bcd6fdad8a14/model.lib!
+
+
+[WARNING]: Simulation warnings: Warning: Unusual leading characters like ')' or others out of '= [] ? () & % $"!:,\f'
+    in netlist or included files, will be replaced with '*'.
+    check line  )
+    line no. 219 from file /home/duhaochen/website-trial-v1/data/spice-benchmark/e83e72d4e176527d0243bcd6fdad8a14/model.lib!
+
+

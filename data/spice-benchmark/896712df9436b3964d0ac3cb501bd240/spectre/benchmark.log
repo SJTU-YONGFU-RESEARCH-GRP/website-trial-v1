@@ -1,0 +1,55 @@
+$ /usr/bin/timeout --kill-after=10 300 /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/model.lib --simulator spectre --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240 --dpi 150 --log-level WARNING
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1540: RuntimeWarning: divide by zero encountered in divide
+  tc = np.mean((d_ids / d_temp) / np.abs(i_ds[:-1]))
+SPICE Model Benchmark: /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/model.lib
+Simulators: spectre
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: SPECTRE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/spectre
+============================================================
+Vgs range: 0.000V to 1.200V
+Ids range: -6.324e-08A to 1.087e-02A
+Selected Vgs values: [0.  0.2 0.4 0.6 0.8 1.  1.2]
+Vgs=0.000V: Ids range 7.472e-14A to 6.992e-10A
+Vgs=0.200V: Ids range -1.776e-16A to 2.717e-08A
+Vgs=0.400V: Ids range -8.612e-14A to 1.020e-06A
+Vgs=0.600V: Ids range -4.048e-11A to 1.611e-04A
+Vgs=0.800V: Ids range -2.880e-09A to 2.824e-03A
+Vgs=1.000V: Ids range -1.778e-08A to 6.895e-03A
+Vgs=1.200V: Ids range -6.324e-08A to 1.087e-02A
+ids_variation: 10.045829667199454
+ids_variation <= max_variation: False
+tc: inf
+abs(tc) <= max_tc: False
+[WARNING]: Temperature effects verification failed - effects outside expected range
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1800: RuntimeWarning: divide by zero encountered in log
+  log_ids = np.log(np.abs(i_ds))
+/home/duhaochen/.local/lib/python3.9/site-packages/numpy/lib/function_base.py:2742: RuntimeWarning: invalid value encountered in subtract
+  X -= avg[:, None]
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1845: RuntimeWarning: divide by zero encountered in divide
+  efficiency = np.abs(gm / i_ds)  # Transconductance efficiency
+[WARNING]: Power dissipation data file at 27C°C not found in any location
+[WARNING]: Power dissipation data file at 100C°C not found in any location
+[ERROR]: Error creating power dissipation plot: unsupported operand type(s) for *: 'NoneType' and 'float'
+[WARNING]: Cannot verify power dissipation: data missing
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2689: RuntimeWarning: divide by zero encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2689: RuntimeWarning: invalid value encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+norm_dvg: [8.19200000e+13 7.33118355e+13 6.05802699e+13 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+norm_dvd: [0. 0. 0. ... 0. 0. 0.]
+norm_did: [8.05988327e+13 7.06649747e+13 5.67120035e+13 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+[WARNING]: Quasi-static verification failed
+[WARNING]: Max normalized derivatives: dVg/dt=nan, dVd/dt=0.00e+00, dId/dt=1.04e+16
+[ERROR]: Error parsing data file /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/spectre/data/sparams_data.txt: tuple index out of range
+[ERROR]: Error parsing data file /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/spectre/data/nqs_effects.txt: tuple index out of range
+[ERROR]: Could not find 'Values:' in charge conservation file
+
+  spectre: ✓ PASS  (288.7s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-benchmark/896712df9436b3964d0ac3cb501bd240/spectre
