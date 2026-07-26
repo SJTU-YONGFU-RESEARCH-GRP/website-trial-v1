@@ -1,0 +1,33 @@
+{
+  "modelId": "bsim__nmos__bsim2__hspice__original",
+  "sourceId": "bsim__nmos__bsim2__hspice",
+  "kind": "original",
+  "chain": [],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/a93ea4bbc9dd54336a83440728668821/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/a93ea4bbc9dd54336a83440728668821/hspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture",
+    "lowered simulator-incompatible MOS cards through fitting BSIM4.5 capability normalization (return code 1)"
+  ],
+  "md5": "a93ea4bbc9dd54336a83440728668821",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T18:18:04.064847+00:00",
+  "finishedAt": "2026-07-26T18:21:50.927437+00:00",
+  "elapsedSeconds": 226.862616,
+  "peakRssKiB": 209672,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

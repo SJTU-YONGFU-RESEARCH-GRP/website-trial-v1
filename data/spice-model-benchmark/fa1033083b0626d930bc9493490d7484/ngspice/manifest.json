@@ -1,0 +1,39 @@
+{
+  "modelId": "ptm__130nm__bulk__pm__reduction",
+  "sourceId": "ptm__130nm__bulk__pm__original",
+  "kind": "processed",
+  "chain": [
+    "reduction"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/fa1033083b0626d930bc9493490d7484/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/fa1033083b0626d930bc9493490d7484/ngspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "applied fitting BSIM4.5 capability normalization for stable full-range ngspice sweeps",
+    "disabled optional acnqsmod subnetwork",
+    "disabled optional geomod subnetwork",
+    "disabled optional rbodymod subnetwork",
+    "disabled optional rgatemod subnetwork",
+    "disabled optional trnqsmod subnetwork",
+    "normalized BSIM4 version selector"
+  ],
+  "md5": "fa1033083b0626d930bc9493490d7484",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T22:29:41.173790+00:00",
+  "finishedAt": "2026-07-26T22:30:18.260820+00:00",
+  "elapsedSeconds": 37.08701,
+  "peakRssKiB": 218292,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

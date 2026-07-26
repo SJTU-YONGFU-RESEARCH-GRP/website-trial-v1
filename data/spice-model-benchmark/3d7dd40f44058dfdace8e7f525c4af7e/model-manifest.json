@@ -1,0 +1,51 @@
+{
+  "id": "bsim__nmos__level2__spectre__reduction",
+  "sourceId": "bsim__nmos__level2__spectre__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_level2.spectre",
+  "sourceMd5": "f0d647eac8a884179bc8568ecd7784a3",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/3d7dd40f44058dfdace8e7f525c4af7e/model.lib",
+  "md5": "3d7dd40f44058dfdace8e7f525c4af7e",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_level2",
+      "deviceType": "nmos",
+      "parameterCount": 14
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:01.325984+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:58.532109+00:00",
+      "elapsedSeconds": 2.78916,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__spectre/original/model.lib",
+      "inputMd5": "600070869c4665bd34698173013bd93e",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__spectre/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "c48b8e855a43212402e1c58927daa33e",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__spectre/reduction/01-reduction/normalized.lib",
+      "outputMd5": "d20bc445895ae185cfb3779c2a7a384d",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__spectre/reduction/01-reduction/reduced.lib",
+        "inputMd5": "c48b8e855a43212402e1c58927daa33e",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__spectre/reduction/01-reduction/normalized.lib",
+        "outputMd5": "d20bc445895ae185cfb3779c2a7a384d",
+        "cards": [
+          {
+            "name": "nmos_level2",
+            "deviceType": "nmos",
+            "parameterCount": 14
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

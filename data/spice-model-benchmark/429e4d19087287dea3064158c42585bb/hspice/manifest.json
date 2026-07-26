@@ -1,0 +1,35 @@
+{
+  "modelId": "ptm__7pfet__lstp__pm__expansion_translation",
+  "sourceId": "ptm__7pfet__lstp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/429e4d19087287dea3064158c42585bb/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/429e4d19087287dea3064158c42585bb/hspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "429e4d19087287dea3064158c42585bb",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T22:20:39.901130+00:00",
+  "finishedAt": "2026-07-26T22:24:07.283642+00:00",
+  "elapsedSeconds": 207.382507,
+  "peakRssKiB": 207892,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

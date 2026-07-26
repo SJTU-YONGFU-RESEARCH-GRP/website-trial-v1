@@ -1,0 +1,2019 @@
+{
+  "version": "2.0.0",
+  "generatedAt": "2026-07-26T16:56:16.365464+00:00",
+  "collectionCommit": "fa8f3632907ad92416bd2322a46a8e7b0bdd2465",
+  "sourceCount": 54,
+  "processedCount": 162,
+  "modelCount": 216,
+  "simulators": [
+    "ngspice",
+    "spectre",
+    "hspice"
+  ],
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "models": {
+    "bsim__nmos__bsim1__hspice__expansion_translation": {
+      "md5": "b91260002e7fb33831f282f02cafea66",
+      "sourceId": "bsim__nmos__bsim1__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__hspice__fitting_reduction_translation": {
+      "md5": "61b78feee5947728e57b5e41ed783788",
+      "sourceId": "bsim__nmos__bsim1__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__hspice__original": {
+      "md5": "3d26acfe0c2802a5a4f083d53bebb977",
+      "sourceId": "bsim__nmos__bsim1__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__hspice__reduction": {
+      "md5": "0f94d411bf4205f6d524f06038b97eb4",
+      "sourceId": "bsim__nmos__bsim1__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__ngspice__expansion_translation": {
+      "md5": "ebecd2b0e42ab15b412a36ae7cc11110",
+      "sourceId": "bsim__nmos__bsim1__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__ngspice__fitting_reduction_translation": {
+      "md5": "5cb1a8c26af3993165493d0e1355ab80",
+      "sourceId": "bsim__nmos__bsim1__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__ngspice__original": {
+      "md5": "b5844cd6c05c8b07cc95e67a8d0b2a98",
+      "sourceId": "bsim__nmos__bsim1__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__ngspice__reduction": {
+      "md5": "38420032a8607fab24e6b5563777bcc3",
+      "sourceId": "bsim__nmos__bsim1__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__spectre__expansion_translation": {
+      "md5": "42f5240d15c2be456a991005c9f151dd",
+      "sourceId": "bsim__nmos__bsim1__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__spectre__fitting_reduction_translation": {
+      "md5": "368a4f13c72947233b2f69a239a7042f",
+      "sourceId": "bsim__nmos__bsim1__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__spectre__original": {
+      "md5": "c85f37ee10b2cfa9cffe76751540037c",
+      "sourceId": "bsim__nmos__bsim1__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim1__spectre__reduction": {
+      "md5": "85807076a5edc0a2bd0f3f12aaa9f31f",
+      "sourceId": "bsim__nmos__bsim1__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__hspice__expansion_translation": {
+      "md5": "56afb1013af51053e4fccc156eee278e",
+      "sourceId": "bsim__nmos__bsim2__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__hspice__fitting_reduction_translation": {
+      "md5": "11f7651b1f41ce2b217973c330665d81",
+      "sourceId": "bsim__nmos__bsim2__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__hspice__original": {
+      "md5": "a93ea4bbc9dd54336a83440728668821",
+      "sourceId": "bsim__nmos__bsim2__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__hspice__reduction": {
+      "md5": "b331c6c4a7a7a3310c4566fb659af579",
+      "sourceId": "bsim__nmos__bsim2__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__ngspice__expansion_translation": {
+      "md5": "1838303bac5722ba41fcbb9382d9b90e",
+      "sourceId": "bsim__nmos__bsim2__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__ngspice__fitting_reduction_translation": {
+      "md5": "804c99027b0ab6c8691c10a4ec650038",
+      "sourceId": "bsim__nmos__bsim2__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__ngspice__original": {
+      "md5": "75a45a91109d4399fc801f3411153b5e",
+      "sourceId": "bsim__nmos__bsim2__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__ngspice__reduction": {
+      "md5": "240e8e19ab0e1ae72242767f5f0683e3",
+      "sourceId": "bsim__nmos__bsim2__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__spectre__expansion_translation": {
+      "md5": "87db5a3d3b31ee2e4c5a01217fee0c7b",
+      "sourceId": "bsim__nmos__bsim2__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__spectre__fitting_reduction_translation": {
+      "md5": "80c5e3cfc78157a079206401c9c99c72",
+      "sourceId": "bsim__nmos__bsim2__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__spectre__original": {
+      "md5": "91e0f1597d9829b41fd5e449b63eaf61",
+      "sourceId": "bsim__nmos__bsim2__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim2__spectre__reduction": {
+      "md5": "95a0ef8b1deda29260e20c9b7f097c07",
+      "sourceId": "bsim__nmos__bsim2__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__hspice__expansion_translation": {
+      "md5": "e02986c002e6946b09354088b4b7d1d8",
+      "sourceId": "bsim__nmos__bsim3v3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__hspice__fitting_reduction_translation": {
+      "md5": "122e3ea6b5ae0f1b2e97f0bf8d862435",
+      "sourceId": "bsim__nmos__bsim3v3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__hspice__original": {
+      "md5": "ab834bfa739a1e35b7f90f9b6cf5e220",
+      "sourceId": "bsim__nmos__bsim3v3__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__hspice__reduction": {
+      "md5": "1c55560ed75327e1ad8c24be03ba7eba",
+      "sourceId": "bsim__nmos__bsim3v3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__ngspice__expansion_translation": {
+      "md5": "e90e2fbbdd78ccb6288aa9447340cfe7",
+      "sourceId": "bsim__nmos__bsim3v3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__ngspice__fitting_reduction_translation": {
+      "md5": "d4592de16afb59fe715cf4c457a13376",
+      "sourceId": "bsim__nmos__bsim3v3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__ngspice__original": {
+      "md5": "6ae02c182f1ade2ffcdb90c1bda48e54",
+      "sourceId": "bsim__nmos__bsim3v3__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__ngspice__reduction": {
+      "md5": "8ba15c1cc3843a36f191042c37e29747",
+      "sourceId": "bsim__nmos__bsim3v3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__spectre__expansion_translation": {
+      "md5": "72c09ecd164de195f1bc2781488f9775",
+      "sourceId": "bsim__nmos__bsim3v3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__spectre__fitting_reduction_translation": {
+      "md5": "c4cf61406cde7f6121e5bf2280d5599e",
+      "sourceId": "bsim__nmos__bsim3v3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__spectre__original": {
+      "md5": "cb3ab842df0ad4d857689037e84bcf74",
+      "sourceId": "bsim__nmos__bsim3v3__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim3v3__spectre__reduction": {
+      "md5": "2fed61d6f65aa2a9cfb4f673b9b8e22d",
+      "sourceId": "bsim__nmos__bsim3v3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__hspice__expansion_translation": {
+      "md5": "8b9e6de612a2cabdfa34e4b62645d936",
+      "sourceId": "bsim__nmos__bsim4__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__hspice__fitting_reduction_translation": {
+      "md5": "c2dc409adf474f1831c71ac75a2902be",
+      "sourceId": "bsim__nmos__bsim4__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__hspice__original": {
+      "md5": "26d6ce5b11cd1952c01f9bd3cf62cde9",
+      "sourceId": "bsim__nmos__bsim4__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__hspice__reduction": {
+      "md5": "283469c900c48cb1d662dab30564ad4f",
+      "sourceId": "bsim__nmos__bsim4__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__ngspice__expansion_translation": {
+      "md5": "21ce79dac69ab93e8ec5f8eed9a7ecc5",
+      "sourceId": "bsim__nmos__bsim4__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__ngspice__fitting_reduction_translation": {
+      "md5": "6b69776c9dd6c199206d6a3f8fd32518",
+      "sourceId": "bsim__nmos__bsim4__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__ngspice__original": {
+      "md5": "a1417a77b61a79b30d8471d9bd3b02cb",
+      "sourceId": "bsim__nmos__bsim4__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__ngspice__reduction": {
+      "md5": "e9baf60fc078d4af8bfe7864f1217ee3",
+      "sourceId": "bsim__nmos__bsim4__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__spectre__expansion_translation": {
+      "md5": "c3e9f80f713f30271aa7d9ea215f636c",
+      "sourceId": "bsim__nmos__bsim4__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__spectre__fitting_reduction_translation": {
+      "md5": "9b8d665a4c48427076a89444e654bcf0",
+      "sourceId": "bsim__nmos__bsim4__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__spectre__original": {
+      "md5": "611d2c1e72a8d5bccaa552a4c06a9da2",
+      "sourceId": "bsim__nmos__bsim4__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__bsim4__spectre__reduction": {
+      "md5": "79e3eed3175aa6f47d5880a94cf5e721",
+      "sourceId": "bsim__nmos__bsim4__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__hspice__expansion_translation": {
+      "md5": "cf1c664d3ea2e8dead7740d62dc0aac1",
+      "sourceId": "bsim__nmos__level1__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__hspice__fitting_reduction_translation": {
+      "md5": "03cc7951e0c20f9074888a8ed2e6fdfa",
+      "sourceId": "bsim__nmos__level1__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__hspice__original": {
+      "md5": "8fb16bbe42531a67b8fa2ce17bbba046",
+      "sourceId": "bsim__nmos__level1__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__hspice__reduction": {
+      "md5": "d5fea46d5a5157ac3eef93da4027e950",
+      "sourceId": "bsim__nmos__level1__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__ngspice__expansion_translation": {
+      "md5": "4d29536d9af7e2f4bb71d22c6e92e378",
+      "sourceId": "bsim__nmos__level1__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__ngspice__fitting_reduction_translation": {
+      "md5": "f63fa878d700bffb762d25085478ce34",
+      "sourceId": "bsim__nmos__level1__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__ngspice__original": {
+      "md5": "a781130a25aa0586fe92d355c78ca754",
+      "sourceId": "bsim__nmos__level1__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__ngspice__reduction": {
+      "md5": "3967f598cf659ada5ff83eb00eb755a6",
+      "sourceId": "bsim__nmos__level1__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__spectre__expansion_translation": {
+      "md5": "f7c41a9eb3f6a29b770ac0a092750a58",
+      "sourceId": "bsim__nmos__level1__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__spectre__fitting_reduction_translation": {
+      "md5": "1bae509dadedefb14d2ee7dede4cc358",
+      "sourceId": "bsim__nmos__level1__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__spectre__original": {
+      "md5": "13d067af3eba2d11154b447d539b6a07",
+      "sourceId": "bsim__nmos__level1__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level1__spectre__reduction": {
+      "md5": "f78e66f7c63990491eafe6825ff18ce9",
+      "sourceId": "bsim__nmos__level1__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__hspice__expansion_translation": {
+      "md5": "c14ac5e2e6b42d17a3bc095cadcef220",
+      "sourceId": "bsim__nmos__level2__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__hspice__fitting_reduction_translation": {
+      "md5": "536378c6444adefab58bf24e7342ede0",
+      "sourceId": "bsim__nmos__level2__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__hspice__original": {
+      "md5": "3f46f84860b15bc7ad5bd3e3f4e8dbb3",
+      "sourceId": "bsim__nmos__level2__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__hspice__reduction": {
+      "md5": "d01c1b5e1f8772164f0860efcb17ebb7",
+      "sourceId": "bsim__nmos__level2__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__ngspice__expansion_translation": {
+      "md5": "7854858ec5d8e6ffac26b3b28dcf8287",
+      "sourceId": "bsim__nmos__level2__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__ngspice__fitting_reduction_translation": {
+      "md5": "2bacb441a7713111b8d935a30780ad3d",
+      "sourceId": "bsim__nmos__level2__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__ngspice__original": {
+      "md5": "94e7b3d42850be4d6ca625ad8ddf114a",
+      "sourceId": "bsim__nmos__level2__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__ngspice__reduction": {
+      "md5": "dfc975de5ea8f79693b6ef55d4d78653",
+      "sourceId": "bsim__nmos__level2__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__spectre__expansion_translation": {
+      "md5": "411db53a2fd97d2ae64b503b436c9d5d",
+      "sourceId": "bsim__nmos__level2__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__spectre__fitting_reduction_translation": {
+      "md5": "443a1bf105eac054603b9e45cb9277bb",
+      "sourceId": "bsim__nmos__level2__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__spectre__original": {
+      "md5": "600070869c4665bd34698173013bd93e",
+      "sourceId": "bsim__nmos__level2__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level2__spectre__reduction": {
+      "md5": "3d7dd40f44058dfdace8e7f525c4af7e",
+      "sourceId": "bsim__nmos__level2__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__hspice__expansion_translation": {
+      "md5": "c360ab389edcafb45736031c0190e309",
+      "sourceId": "bsim__nmos__level3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__hspice__fitting_reduction_translation": {
+      "md5": "46dc2738a5349338f03ce62ae938528e",
+      "sourceId": "bsim__nmos__level3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__hspice__original": {
+      "md5": "79216728ee8036fbb63658415d96d906",
+      "sourceId": "bsim__nmos__level3__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__hspice__reduction": {
+      "md5": "e344eb5e7c6c2bbd645d720cec412a84",
+      "sourceId": "bsim__nmos__level3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__ngspice__expansion_translation": {
+      "md5": "a7118e9aaf46667ce2e3c2932d23d64a",
+      "sourceId": "bsim__nmos__level3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__ngspice__fitting_reduction_translation": {
+      "md5": "84129cefc3438460d1a5fe2f4cabeb68",
+      "sourceId": "bsim__nmos__level3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__ngspice__original": {
+      "md5": "4a26e14059fd37c6e3db102aeaf90cdd",
+      "sourceId": "bsim__nmos__level3__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__ngspice__reduction": {
+      "md5": "1137a95fae27c118c068605be0b82bd3",
+      "sourceId": "bsim__nmos__level3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__spectre__expansion_translation": {
+      "md5": "9f24d5656571c0a3fca709c62d62c12c",
+      "sourceId": "bsim__nmos__level3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__spectre__fitting_reduction_translation": {
+      "md5": "11b1ab3b0de0b85c532c5e05fc2ce98d",
+      "sourceId": "bsim__nmos__level3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__spectre__original": {
+      "md5": "39d8bdfadf461f6f61920f87f6ee688c",
+      "sourceId": "bsim__nmos__level3__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__nmos__level3__spectre__reduction": {
+      "md5": "a9b4870f16c9291b7b840f2fba0a2002",
+      "sourceId": "bsim__nmos__level3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__hspice__expansion_translation": {
+      "md5": "5434d97e65e43c281caf70d5d600c5fe",
+      "sourceId": "bsim__pmos__bsim3v3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__hspice__fitting_reduction_translation": {
+      "md5": "239aa096f9ba0bf8a2fd3fa32824c7e0",
+      "sourceId": "bsim__pmos__bsim3v3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__hspice__original": {
+      "md5": "2aeb92e46940dfebe0f621df8cba67da",
+      "sourceId": "bsim__pmos__bsim3v3__hspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__hspice__reduction": {
+      "md5": "277d3bb4294dd2dae4fc5423b7806f8a",
+      "sourceId": "bsim__pmos__bsim3v3__hspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__ngspice__expansion_translation": {
+      "md5": "7e51ff8695ab01a708b53ce24ed18e6c",
+      "sourceId": "bsim__pmos__bsim3v3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__ngspice__fitting_reduction_translation": {
+      "md5": "7d695cbf15c7d343960ad9a57847286c",
+      "sourceId": "bsim__pmos__bsim3v3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__ngspice__original": {
+      "md5": "41c7b4f19c9bd85872116daba6c73e53",
+      "sourceId": "bsim__pmos__bsim3v3__ngspice",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__ngspice__reduction": {
+      "md5": "7caca278d4f89a0a3cd966796dba85e3",
+      "sourceId": "bsim__pmos__bsim3v3__ngspice__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__spectre__expansion_translation": {
+      "md5": "be1a0803a9ca8b23aefee28739c6bb79",
+      "sourceId": "bsim__pmos__bsim3v3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__spectre__fitting_reduction_translation": {
+      "md5": "a593759db87b1af2610255c4053780bc",
+      "sourceId": "bsim__pmos__bsim3v3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__spectre__original": {
+      "md5": "fc1f6916bfb0a0dce6a08b93b05347c2",
+      "sourceId": "bsim__pmos__bsim3v3__spectre",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "bsim__pmos__bsim3v3__spectre__reduction": {
+      "md5": "32466d2e9b644d38d74f753cfb376552",
+      "sourceId": "bsim__pmos__bsim3v3__spectre__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10nfet__hp__pm__expansion_translation": {
+      "md5": "2c2ae92f430998fc1a99e59bf0d8fe02",
+      "sourceId": "ptm__10nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10nfet__hp__pm__fitting_reduction_translation": {
+      "md5": "48720015255dc9e6194ab85f27a2cc50",
+      "sourceId": "ptm__10nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10nfet__hp__pm__original": {
+      "md5": "61b20515c961358c875827476abc7537",
+      "sourceId": "ptm__10nfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__10nfet__hp__pm__reduction": {
+      "md5": "dae5af88236b80c976c2f3cfe95aa13e",
+      "sourceId": "ptm__10nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10nfet__lstp__pm__expansion_translation": {
+      "md5": "786caee5305d4d6717e9898982807f19",
+      "sourceId": "ptm__10nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10nfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "f3d57d467455852e709865da45736f2e",
+      "sourceId": "ptm__10nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10nfet__lstp__pm__original": {
+      "md5": "69aa99c88698ce248121ce05444745d9",
+      "sourceId": "ptm__10nfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__10nfet__lstp__pm__reduction": {
+      "md5": "130bbc27953dbd679c13ff67962df9d3",
+      "sourceId": "ptm__10nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10pfet__hp__pm__expansion_translation": {
+      "md5": "de81c21fd385f96ec13a49e5367578b2",
+      "sourceId": "ptm__10pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10pfet__hp__pm__fitting_reduction_translation": {
+      "md5": "36d95309997e48ea68736ac6cdfeac08",
+      "sourceId": "ptm__10pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10pfet__hp__pm__original": {
+      "md5": "98715d363099811d3d12e5c7e23deb90",
+      "sourceId": "ptm__10pfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__10pfet__hp__pm__reduction": {
+      "md5": "377c4946b1aa946bacc27ba982499266",
+      "sourceId": "ptm__10pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10pfet__lstp__pm__expansion_translation": {
+      "md5": "d60409df5632eb2dc4aff39b9d2429ff",
+      "sourceId": "ptm__10pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10pfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "4b4212f23ff0e773e3b78710b01a09cd",
+      "sourceId": "ptm__10pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__10pfet__lstp__pm__original": {
+      "md5": "2fbb942ec059f218058e77e14f27ccf9",
+      "sourceId": "ptm__10pfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__10pfet__lstp__pm__reduction": {
+      "md5": "2b19ec29d1a15610208168144c4d7cb8",
+      "sourceId": "ptm__10pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__130nm__bulk__pm__expansion_translation": {
+      "md5": "9add38218f66d4ae56bdbb568091226d",
+      "sourceId": "ptm__130nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__130nm__bulk__pm__fitting_reduction_translation": {
+      "md5": "66a4abb39f17309b61d3bc150a99d4d7",
+      "sourceId": "ptm__130nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__130nm__bulk__pm__original": {
+      "md5": "b0c9102f84eb45f899b437a83e4c9eb2",
+      "sourceId": "ptm__130nm__bulk__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__130nm__bulk__pm__reduction": {
+      "md5": "fa1033083b0626d930bc9493490d7484",
+      "sourceId": "ptm__130nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__14nfet__hp__pm__expansion_translation": {
+      "md5": "6306bbb46172ff1118edd18a4e24304f",
+      "sourceId": "ptm__14nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14nfet__hp__pm__fitting_reduction_translation": {
+      "md5": "c2130fababda3e8b6a31949d51895cd3",
+      "sourceId": "ptm__14nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14nfet__hp__pm__original": {
+      "md5": "c1d26b40192169950b119bf69db8d109",
+      "sourceId": "ptm__14nfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__14nfet__hp__pm__reduction": {
+      "md5": "14be0d1a6e86d5b907d1bd46cec4f7a7",
+      "sourceId": "ptm__14nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14nfet__lstp__pm__expansion_translation": {
+      "md5": "05309a886a3aac85d7461a8a02ea4280",
+      "sourceId": "ptm__14nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14nfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "dcab2ce08ee711d6176ca0f1feac16fe",
+      "sourceId": "ptm__14nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14nfet__lstp__pm__original": {
+      "md5": "51b08d5236ed9f083d56766c1143a9c0",
+      "sourceId": "ptm__14nfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__14nfet__lstp__pm__reduction": {
+      "md5": "c7a1200b5f610c930a86b1b707adf310",
+      "sourceId": "ptm__14nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14pfet__hp__pm__expansion_translation": {
+      "md5": "bc905c7bc432f6dc57e5b7e53a49ff75",
+      "sourceId": "ptm__14pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14pfet__hp__pm__fitting_reduction_translation": {
+      "md5": "19e0410a718b8f903a84498fad582b6d",
+      "sourceId": "ptm__14pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14pfet__hp__pm__original": {
+      "md5": "ac2712bf4215ae3d14247d9f3e70d3d8",
+      "sourceId": "ptm__14pfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__14pfet__hp__pm__reduction": {
+      "md5": "f456009808aae4c994ad02da4ceec50b",
+      "sourceId": "ptm__14pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14pfet__lstp__pm__expansion_translation": {
+      "md5": "4206421792473caec81aa89f48115dbf",
+      "sourceId": "ptm__14pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14pfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "636abef5a2ecad7408a5919ab2ea3d58",
+      "sourceId": "ptm__14pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__14pfet__lstp__pm__original": {
+      "md5": "dd74df3ae5dc6eabf7ce5ef80919234c",
+      "sourceId": "ptm__14pfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__14pfet__lstp__pm__reduction": {
+      "md5": "55a11a51d6d6652581d93d8c055fc378",
+      "sourceId": "ptm__14pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16nfe__lstp__pm__expansion_translation": {
+      "md5": "fdadb3c1749729fd29dd7648882f1084",
+      "sourceId": "ptm__16nfe__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16nfe__lstp__pm__fitting_reduction_translation": {
+      "md5": "059e9f1fd6b309c2b22ac9fe091f5747",
+      "sourceId": "ptm__16nfe__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16nfe__lstp__pm__original": {
+      "md5": "b119538f7a68b028f69ba04927ed86df",
+      "sourceId": "ptm__16nfe__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__16nfe__lstp__pm__reduction": {
+      "md5": "1f0348bf2d13aae9e2f0c86809eb3801",
+      "sourceId": "ptm__16nfe__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16nfet__hp__pm__expansion_translation": {
+      "md5": "97b90bb48da31b649a6acc5cf71e3b78",
+      "sourceId": "ptm__16nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16nfet__hp__pm__fitting_reduction_translation": {
+      "md5": "60f48c553192541c72b0baf60dfb1e94",
+      "sourceId": "ptm__16nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16nfet__hp__pm__original": {
+      "md5": "75a059bbb4b683a0b37cc6e0eb24433e",
+      "sourceId": "ptm__16nfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__16nfet__hp__pm__reduction": {
+      "md5": "aef77c686bd0c1432851d9310ff5e122",
+      "sourceId": "ptm__16nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16pfet__hp__pm__expansion_translation": {
+      "md5": "d171f5706916ba30bf6102ad7bd57e78",
+      "sourceId": "ptm__16pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16pfet__hp__pm__fitting_reduction_translation": {
+      "md5": "3bde3b2b6235ce0758dbcbc5ce7c8357",
+      "sourceId": "ptm__16pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16pfet__hp__pm__original": {
+      "md5": "8bd519764395dd458070bd65fe993bc5",
+      "sourceId": "ptm__16pfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__16pfet__hp__pm__reduction": {
+      "md5": "4e29486f2ec910bdd286c6bb973dcfe7",
+      "sourceId": "ptm__16pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16pfet__lstp__pm__expansion_translation": {
+      "md5": "3418c5bc0db168e464e598a84228c24b",
+      "sourceId": "ptm__16pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16pfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "19d0abdb40f118f64c47db561a2f1d24",
+      "sourceId": "ptm__16pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__16pfet__lstp__pm__original": {
+      "md5": "cfc5c0f90c1bc0531597151fd45a3849",
+      "sourceId": "ptm__16pfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__16pfet__lstp__pm__reduction": {
+      "md5": "458c6592cd54212baff0fd86a3bc2af3",
+      "sourceId": "ptm__16pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__180nm__bulk__pm__expansion_translation": {
+      "md5": "e80db373657c86ef6f4af12cddd4b3b9",
+      "sourceId": "ptm__180nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__180nm__bulk__pm__fitting_reduction_translation": {
+      "md5": "11c41ea5e371bfefe2f169e4211ee34f",
+      "sourceId": "ptm__180nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__180nm__bulk__pm__original": {
+      "md5": "61ceabb774ca24b97d59702473367fe9",
+      "sourceId": "ptm__180nm__bulk__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__180nm__bulk__pm__reduction": {
+      "md5": "baecca2ae244bb5187c42882f1c7c081",
+      "sourceId": "ptm__180nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__20nfet__hp__pm__expansion_translation": {
+      "md5": "78f87edf45a8074d576fb28f544b940a",
+      "sourceId": "ptm__20nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20nfet__hp__pm__fitting_reduction_translation": {
+      "md5": "7f64fa8f22474f41a9409544ac8dc516",
+      "sourceId": "ptm__20nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20nfet__hp__pm__original": {
+      "md5": "a454514c8a5c8d4c84bb503f6a9f06e0",
+      "sourceId": "ptm__20nfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__20nfet__hp__pm__reduction": {
+      "md5": "ca47a5f4e616f124caa4460d9c9fbffe",
+      "sourceId": "ptm__20nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20nfet__lstp__pm__expansion_translation": {
+      "md5": "1c0eb2846bc9ed9f6b61365cd3bbde02",
+      "sourceId": "ptm__20nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20nfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "57941e3204f7ae749b8f8898d7800486",
+      "sourceId": "ptm__20nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20nfet__lstp__pm__original": {
+      "md5": "c733a496792bcc4f27ac8bcaa1564602",
+      "sourceId": "ptm__20nfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__20nfet__lstp__pm__reduction": {
+      "md5": "2341a27d2d6d5a96f336d8ba982de15d",
+      "sourceId": "ptm__20nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20pfet__hp__pm__expansion_translation": {
+      "md5": "0cd66a764c015f022dff4d88ba68177d",
+      "sourceId": "ptm__20pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20pfet__hp__pm__fitting_reduction_translation": {
+      "md5": "e6b538540389e0855316e26a76767679",
+      "sourceId": "ptm__20pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20pfet__hp__pm__original": {
+      "md5": "6c9970f8837184826e36fd905bd79116",
+      "sourceId": "ptm__20pfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__20pfet__hp__pm__reduction": {
+      "md5": "4f39dc47ee0f73e46a8c647631866d8a",
+      "sourceId": "ptm__20pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20pfet__lstp__pm__expansion_translation": {
+      "md5": "2ca746a31139d75dec67111ff3918b65",
+      "sourceId": "ptm__20pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20pfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "238cc43240dc7ea17b99b560e5e507e2",
+      "sourceId": "ptm__20pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__20pfet__lstp__pm__original": {
+      "md5": "c46b1a96dabd4075711d033901359504",
+      "sourceId": "ptm__20pfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__20pfet__lstp__pm__reduction": {
+      "md5": "7a4308b8c87856776fd027c4e3e10155",
+      "sourceId": "ptm__20pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__22nm__hp__pm__expansion_translation": {
+      "md5": "f141fba2b8af8f1adad9688ed62d32e2",
+      "sourceId": "ptm__22nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__22nm__hp__pm__fitting_reduction_translation": {
+      "md5": "2d350ef7dfa30aadeefe5d4969901645",
+      "sourceId": "ptm__22nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__22nm__hp__pm__original": {
+      "md5": "9f0345a55dfc700f456a8bd23c9925d0",
+      "sourceId": "ptm__22nm__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__22nm__hp__pm__reduction": {
+      "md5": "a1cc5bfa7e78acc81a18b65ad52da9e2",
+      "sourceId": "ptm__22nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__22nm__lp__pm__expansion_translation": {
+      "md5": "52fddd8d55c7e479cfc7ae46b6002264",
+      "sourceId": "ptm__22nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__22nm__lp__pm__fitting_reduction_translation": {
+      "md5": "38f72ebedcabaf9e84bb57e192c0504e",
+      "sourceId": "ptm__22nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__22nm__lp__pm__original": {
+      "md5": "42e7f6b681b3fa1edc7e3c66e61bfc9d",
+      "sourceId": "ptm__22nm__lp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__22nm__lp__pm__reduction": {
+      "md5": "66347c252c67d1d7e87c2cf817ab75a5",
+      "sourceId": "ptm__22nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__32nm__hp__pm__expansion_translation": {
+      "md5": "61c9425b658af56537423fdf285c0103",
+      "sourceId": "ptm__32nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__32nm__hp__pm__fitting_reduction_translation": {
+      "md5": "6c0d05193992cff21066ccb7c66f9b50",
+      "sourceId": "ptm__32nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__32nm__hp__pm__original": {
+      "md5": "dc205c70ce833ddf92fc3a1ae508b7fc",
+      "sourceId": "ptm__32nm__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__32nm__hp__pm__reduction": {
+      "md5": "53ef77a656c65aa208c18037e61f0a86",
+      "sourceId": "ptm__32nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__32nm__lp__pm__expansion_translation": {
+      "md5": "11b06162e175e4743bdd54682eee8007",
+      "sourceId": "ptm__32nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__32nm__lp__pm__fitting_reduction_translation": {
+      "md5": "efee6371564b9e83d00dc414b569c992",
+      "sourceId": "ptm__32nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__32nm__lp__pm__original": {
+      "md5": "121d7533ff02ffdc5690ab28c571a5e1",
+      "sourceId": "ptm__32nm__lp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__32nm__lp__pm__reduction": {
+      "md5": "a7c738730e05900a23f8e8ff30cf3c28",
+      "sourceId": "ptm__32nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__45nm__hp__pm__expansion_translation": {
+      "md5": "088ff2370f43ed3a660cdb73b708e956",
+      "sourceId": "ptm__45nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__45nm__hp__pm__fitting_reduction_translation": {
+      "md5": "74eb4d863720cdcfff4b87a1e29d5612",
+      "sourceId": "ptm__45nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__45nm__hp__pm__original": {
+      "md5": "42b85108fb4fd9c9e204e97b074ad105",
+      "sourceId": "ptm__45nm__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__45nm__hp__pm__reduction": {
+      "md5": "bbf01fc285ae1fd32569f1b8cc7ed75e",
+      "sourceId": "ptm__45nm__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__45nm__lp__pm__expansion_translation": {
+      "md5": "156d25d387207241717c7b8d8350ea60",
+      "sourceId": "ptm__45nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__45nm__lp__pm__fitting_reduction_translation": {
+      "md5": "a0fdd603cfedf1d8d7ac7e06a770394e",
+      "sourceId": "ptm__45nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__45nm__lp__pm__original": {
+      "md5": "3c2654d20983d55e19def179bed07e16",
+      "sourceId": "ptm__45nm__lp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__45nm__lp__pm__reduction": {
+      "md5": "a9249aae377cd2fafa340ce69bfc2164",
+      "sourceId": "ptm__45nm__lp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__65nm__bulk__pm__expansion_translation": {
+      "md5": "ce76c515537430b71bc26d456377df91",
+      "sourceId": "ptm__65nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__65nm__bulk__pm__fitting_reduction_translation": {
+      "md5": "e4a3a2e59fef3aedea238540881b7773",
+      "sourceId": "ptm__65nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__65nm__bulk__pm__original": {
+      "md5": "e02f72efa173293b723148dbdc2a21eb",
+      "sourceId": "ptm__65nm__bulk__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__65nm__bulk__pm__reduction": {
+      "md5": "975e01162f1b3514a5ee41988ddd34ef",
+      "sourceId": "ptm__65nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "ptm__7nfet__hp__pm__expansion_translation": {
+      "md5": "f63f7c158b2d34c48100e42cb738c595",
+      "sourceId": "ptm__7nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7nfet__hp__pm__fitting_reduction_translation": {
+      "md5": "ea0a399f747301b2cbd2b3f45f3327fe",
+      "sourceId": "ptm__7nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7nfet__hp__pm__original": {
+      "md5": "98df9e5e1d8e57b43740083064258cc6",
+      "sourceId": "ptm__7nfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__7nfet__hp__pm__reduction": {
+      "md5": "a926181d6041a3c2c803ce0030ee90b6",
+      "sourceId": "ptm__7nfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7nfet__lstp__pm__expansion_translation": {
+      "md5": "e2b36c75e3a35c868c2fad1fdc4226cf",
+      "sourceId": "ptm__7nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7nfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "ec0a58210ee7f0c21192ef2ab19dd8d5",
+      "sourceId": "ptm__7nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7nfet__lstp__pm__original": {
+      "md5": "d1f5b21697a6fa1da06353c54f1a7f43",
+      "sourceId": "ptm__7nfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__7nfet__lstp__pm__reduction": {
+      "md5": "1b85899b2faf21ba1787a1c206569f89",
+      "sourceId": "ptm__7nfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7pfet__hp__pm__expansion_translation": {
+      "md5": "d7237e0e83f549ad7de00830df5dbf4d",
+      "sourceId": "ptm__7pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7pfet__hp__pm__fitting_reduction_translation": {
+      "md5": "0bbf26734da89bdf9823171361116e8c",
+      "sourceId": "ptm__7pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7pfet__hp__pm__original": {
+      "md5": "4e6ccff7635cf0f9bbf079865c000370",
+      "sourceId": "ptm__7pfet__hp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__7pfet__hp__pm__reduction": {
+      "md5": "126436c7ffdeec29d6cb7b3c08ecb098",
+      "sourceId": "ptm__7pfet__hp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7pfet__lstp__pm__expansion_translation": {
+      "md5": "429e4d19087287dea3064158c42585bb",
+      "sourceId": "ptm__7pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7pfet__lstp__pm__fitting_reduction_translation": {
+      "md5": "bd834e5baa4fb901ae97f645764eff2f",
+      "sourceId": "ptm__7pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "ptm__7pfet__lstp__pm__original": {
+      "md5": "f21a70f79362e9337d91d3212c1da531",
+      "sourceId": "ptm__7pfet__lstp__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "ptm__7pfet__lstp__pm__reduction": {
+      "md5": "131f455ebbf4c5172c50d8cae77e19a4",
+      "sourceId": "ptm__7pfet__lstp__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "ptm__90nm__bulk__pm__expansion_translation": {
+      "md5": "12521b8425cc1e91136536f07f7995bf",
+      "sourceId": "ptm__90nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__90nm__bulk__pm__fitting_reduction_translation": {
+      "md5": "885bfaafb75ac73510ce6fc27e15c139",
+      "sourceId": "ptm__90nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "ptm__90nm__bulk__pm__original": {
+      "md5": "b5d9b3d1a2233d5008f1575a9224763e",
+      "sourceId": "ptm__90nm__bulk__pm",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "ptm__90nm__bulk__pm__reduction": {
+      "md5": "814c7c34888f874c4bddf65d22a1ef28",
+      "sourceId": "ptm__90nm__bulk__pm__original",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    }
+  }
+}

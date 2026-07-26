@@ -1,0 +1,35 @@
+{
+  "modelId": "ptm__7pfet__lstp__pm__reduction",
+  "sourceId": "ptm__7pfet__lstp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "reduction"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/131f455ebbf4c5172c50d8cae77e19a4/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/131f455ebbf4c5172c50d8cae77e19a4/ngspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture",
+    "applied fitting BSIM4.5 capability normalization for stable full-range ngspice sweeps"
+  ],
+  "md5": "131f455ebbf4c5172c50d8cae77e19a4",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T22:21:39.241811+00:00",
+  "finishedAt": "2026-07-26T22:22:28.113867+00:00",
+  "elapsedSeconds": 48.872049,
+  "peakRssKiB": 197416,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

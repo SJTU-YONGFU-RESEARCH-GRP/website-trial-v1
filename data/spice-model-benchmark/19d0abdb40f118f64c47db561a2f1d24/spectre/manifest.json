@@ -1,0 +1,36 @@
+{
+  "modelId": "ptm__16pfet__lstp__pm__fitting_reduction_translation",
+  "sourceId": "ptm__16pfet__lstp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/19d0abdb40f118f64c47db561a2f1d24/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/19d0abdb40f118f64c47db561a2f1d24/spectre.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "19d0abdb40f118f64c47db561a2f1d24",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T21:46:56.492165+00:00",
+  "finishedAt": "2026-07-26T21:47:50.474151+00:00",
+  "elapsedSeconds": 53.981994,
+  "peakRssKiB": 227264,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

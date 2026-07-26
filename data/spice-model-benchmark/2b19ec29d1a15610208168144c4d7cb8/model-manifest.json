@@ -1,0 +1,51 @@
+{
+  "id": "ptm__10pfet__lstp__pm__reduction",
+  "sourceId": "ptm__10pfet__lstp__pm__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/10pfet_LSTP.pm",
+  "sourceMd5": "9a81d5850d9d5643363b4cbc019ba4c4",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/2b19ec29d1a15610208168144c4d7cb8/model.lib",
+  "md5": "2b19ec29d1a15610208168144c4d7cb8",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "pfet",
+      "deviceType": "pmos",
+      "parameterCount": 139
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:21.155259+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:55:18.595167+00:00",
+      "elapsedSeconds": 2.549661,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__10pfet__lstp__pm/original/model.lib",
+      "inputMd5": "2fbb942ec059f218058e77e14f27ccf9",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__10pfet__lstp__pm/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "dc7289aa749c4e3ca0147f6ea9d0cb61",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__10pfet__lstp__pm/reduction/01-reduction/normalized.lib",
+      "outputMd5": "5e125e5a84e1187cde2bacb333f04987",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__10pfet__lstp__pm/reduction/01-reduction/reduced.lib",
+        "inputMd5": "dc7289aa749c4e3ca0147f6ea9d0cb61",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__10pfet__lstp__pm/reduction/01-reduction/normalized.lib",
+        "outputMd5": "5e125e5a84e1187cde2bacb333f04987",
+        "cards": [
+          {
+            "name": "pfet",
+            "deviceType": "pmos",
+            "parameterCount": 139
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

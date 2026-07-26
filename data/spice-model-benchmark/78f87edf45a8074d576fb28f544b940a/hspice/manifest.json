@@ -1,0 +1,35 @@
+{
+  "modelId": "ptm__20nfet__hp__pm__expansion_translation",
+  "sourceId": "ptm__20nfet__hp__pm__original",
+  "kind": "processed",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/78f87edf45a8074d576fb28f544b940a/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/78f87edf45a8074d576fb28f544b940a/hspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "78f87edf45a8074d576fb28f544b940a",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-26T21:50:45.314832+00:00",
+  "finishedAt": "2026-07-26T21:54:17.924102+00:00",
+  "elapsedSeconds": 212.609277,
+  "peakRssKiB": 197480,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

@@ -1,0 +1,77 @@
+{
+  "id": "bsim__nmos__bsim3v3__spectre__expansion_translation",
+  "sourceId": "bsim__nmos__bsim3v3__spectre__original",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_bsim3v3.spectre",
+  "sourceMd5": "e1569dd4ebf1575a52f3ca4f2006ad6d",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/72c09ecd164de195f1bc2781488f9775/model.lib",
+  "md5": "72c09ecd164de195f1bc2781488f9775",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_bsim3v3",
+      "deviceType": "nmos",
+      "parameterCount": 179
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:42.208006+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-26T16:54:40.589265+00:00",
+      "elapsedSeconds": 1.28679,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/original/model.lib",
+      "inputMd5": "cb3ab842df0ad4d857689037e84bcf74",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "b34cad3738dbc1f8f30e5ba29222a246",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "d3a3138ebceb345366b6b0ff078eb5b4",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "b34cad3738dbc1f8f30e5ba29222a246",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "d3a3138ebceb345366b6b0ff078eb5b4",
+        "cards": [
+          {
+            "name": "nmos_bsim3v3",
+            "deviceType": "nmos",
+            "parameterCount": 179
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:54:41.876521+00:00",
+      "elapsedSeconds": 0.311404,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "d3a3138ebceb345366b6b0ff078eb5b4",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "b5bf5c9c69a17a899d365e4fd9fccfe7",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "d7285ef51ba5489365cf2a02a0bc0a9e",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "b5bf5c9c69a17a899d365e4fd9fccfe7",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim3v3__spectre/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "d7285ef51ba5489365cf2a02a0bc0a9e",
+        "cards": [
+          {
+            "name": "nmos_bsim3v3",
+            "deviceType": "nmos",
+            "parameterCount": 179
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

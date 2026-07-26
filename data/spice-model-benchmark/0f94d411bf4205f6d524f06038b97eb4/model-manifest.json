@@ -1,0 +1,51 @@
+{
+  "id": "bsim__nmos__bsim1__hspice__reduction",
+  "sourceId": "bsim__nmos__bsim1__hspice__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_bsim1.hspice",
+  "sourceMd5": "2c5715502b79376d4f6ca4e3abb18ed4",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/0f94d411bf4205f6d524f06038b97eb4/model.lib",
+  "md5": "0f94d411bf4205f6d524f06038b97eb4",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_bsim1",
+      "deviceType": "nmos",
+      "parameterCount": 17
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:27.680229+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:25.002275+00:00",
+      "elapsedSeconds": 2.673993,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim1__hspice/original/model.lib",
+      "inputMd5": "3d26acfe0c2802a5a4f083d53bebb977",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim1__hspice/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "6657e06fa6a2cf11613748e00e66882b",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim1__hspice/reduction/01-reduction/normalized.lib",
+      "outputMd5": "59581c18cd0be2cdf22f78f0fc8ec6a7",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim1__hspice/reduction/01-reduction/reduced.lib",
+        "inputMd5": "6657e06fa6a2cf11613748e00e66882b",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__bsim1__hspice/reduction/01-reduction/normalized.lib",
+        "outputMd5": "59581c18cd0be2cdf22f78f0fc8ec6a7",
+        "cards": [
+          {
+            "name": "nmos_bsim1",
+            "deviceType": "nmos",
+            "parameterCount": 17
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

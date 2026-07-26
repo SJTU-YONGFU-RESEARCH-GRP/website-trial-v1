@@ -1,0 +1,51 @@
+{
+  "id": "bsim__nmos__level2__hspice__reduction",
+  "sourceId": "bsim__nmos__level2__hspice__original",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/bsim/nmos_level2.hspice",
+  "sourceMd5": "cbca5b9475957cea6dfe806dccd632c8",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/d01c1b5e1f8772164f0860efcb17ebb7/model.lib",
+  "md5": "d01c1b5e1f8772164f0860efcb17ebb7",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "nmos_level2",
+      "deviceType": "nmos",
+      "parameterCount": 13
+    }
+  ],
+  "completedAt": "2026-07-26T16:54:57.208265+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:54:54.464445+00:00",
+      "elapsedSeconds": 2.741074,
+      "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__hspice/original/model.lib",
+      "inputMd5": "3f46f84860b15bc7ad5bd3e3f4e8dbb3",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__hspice/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "ad4be1575f2f03c2a1aa495f914160dd",
+      "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__hspice/reduction/01-reduction/normalized.lib",
+      "outputMd5": "38d28280493db99a9a0719e86fdc89cf",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__hspice/reduction/01-reduction/reduced.lib",
+        "inputMd5": "ad4be1575f2f03c2a1aa495f914160dd",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/bsim__nmos__level2__hspice/reduction/01-reduction/normalized.lib",
+        "outputMd5": "38d28280493db99a9a0719e86fdc89cf",
+        "cards": [
+          {
+            "name": "nmos_level2",
+            "deviceType": "nmos",
+            "parameterCount": 13
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

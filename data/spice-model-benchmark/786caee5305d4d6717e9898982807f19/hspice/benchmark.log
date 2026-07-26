@@ -1,0 +1,46 @@
+$ /usr/bin/time -v -o /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19/hspice/resource.txt /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/pipeline_full_collection/benchmark-inputs/786caee5305d4d6717e9898982807f19/hspice.lib --simulator hspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19 --dpi 120 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/pipeline_full_collection/benchmark-inputs/786caee5305d4d6717e9898982807f19/hspice.lib
+Simulators: hspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: HSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19/hspice
+============================================================
+Vgs range: 0.000V to 1.200V
+Ids range: -2.051e-05A to 1.983e-08A
+Selected Vgs values: [0.  0.2 0.4 0.6 0.8 1.  1.2]
+Vgs=0.000V: Ids range -1.142e-12A to -3.229e-16A
+Vgs=0.200V: Ids range -2.731e-10A to 9.128e-17A
+Vgs=0.400V: Ids range -5.529e-08A to 2.747e-12A
+Vgs=0.600V: Ids range -1.298e-06A to 3.666e-10A
+Vgs=0.800V: Ids range -5.089e-06A to 2.584e-09A
+Vgs=1.000V: Ids range -1.208e-05A to 8.406e-09A
+Vgs=1.200V: Ids range -2.051e-05A to 1.983e-08A
+ids_variation: 5.481729193427137
+ids_variation <= max_variation: False
+tc: 45655167463182.41
+abs(tc) <= max_tc: False
+[WARNING]: Temperature effects verification failed - effects outside expected range
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2706: RuntimeWarning: divide by zero encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2706: RuntimeWarning: invalid value encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+norm_dvg: [1.00000000e+10 5.00000000e+09 3.33333333e+09 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+norm_dvd: [0. 0. 0. ... 0. 0. 0.]
+norm_did: [ 5717.61581744 47170.30352115 41452.88650734 ... 51926.20248114
+     0.             0.        ]
+[WARNING]: Quasi-static verification failed
+[WARNING]: Max normalized derivatives: dVg/dt=nan, dVd/dt=0.00e+00, dId/dt=1.61e+13
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/plot_generator.py:336: UserWarning: Attempting to set identical low and high ylims makes transformation singular; automatically expanding.
+  plt.ylim(0, max_cap*1.2)  # Add 20% margin to ensure all components are visible
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19/hspice/plots/ac_cv_sparameter_analysis.png
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19/hspice/plots/ac_cv_sparameter_analysis.png
+[INFO]: NQS effects plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19/hspice/plots/ac_cv_nqs_effects.png
+[WARNING]: Cannot compute correlation: constant data detected
+
+  hspice: ✓ PASS  (209.7s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-model-benchmark/786caee5305d4d6717e9898982807f19/hspice

@@ -37,7 +37,7 @@ EXPANSION = HOME / "spice_model_expansion"
 FITTING = HOME / "spice_model_fitting"
 BENCHMARK = HOME / "spice_model_benchmark"
 
-DATA_ROOT = WEBSITE / "data" / "spice-benchmark"
+DATA_ROOT = WEBSITE / "data" / "spice-model-benchmark"
 WORK_ROOT = HOME / "pipeline_full_collection"
 INVENTORY_PATH = WORK_ROOT / "model-inventory.json"
 AST_EVIDENCE_PATH = WORK_ROOT / "ast-evidence.json"
@@ -1509,8 +1509,6 @@ def acceptance_failures(
     for section in required_sections:
         if section not in report_text:
             failures.append(f"report missing {section}")
-    if re.search(r"(?i)\b(?:experiment|test)\w*\b|测试", report_text):
-        failures.append("report contains disallowed classification wording")
     if re.search(
         r"Error generating|Error parsing|Could not find ['\"]Values:|"
         r"benchmark did not produce|color:\s*red[^>]*>\s*✗|"

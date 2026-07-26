@@ -1,0 +1,103 @@
+{
+  "id": "ptm__20pfet__hp__pm__fitting_reduction_translation",
+  "sourceId": "ptm__20pfet__hp__pm__original",
+  "kind": "processed",
+  "chainId": "fitting_reduction_translation",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "toolCount": 3,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/20pfet_HP.pm",
+  "sourceMd5": "312c79a1f6aa6a0338c1a650b916ff31",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/e6b538540389e0855316e26a76767679/model.lib",
+  "md5": "e6b538540389e0855316e26a76767679",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "pfet",
+      "deviceType": "pmos",
+      "parameterCount": 32
+    }
+  ],
+  "completedAt": "2026-07-26T16:55:49.898380+00:00",
+  "stages": [
+    {
+      "tool": "fitting",
+      "startedAt": "2026-07-26T16:55:46.102447+00:00",
+      "elapsedSeconds": 0.60331,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/original/model.lib",
+      "inputMd5": "6c9970f8837184826e36fd905bd79116",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+      "rawOutputMd5": "d13b58fbca0822c38b93457f91232c37",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+      "outputMd5": "50b0c041bb1a8a0778c3c537ccf624ea",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+        "inputMd5": "d13b58fbca0822c38b93457f91232c37",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+        "outputMd5": "50b0c041bb1a8a0778c3c537ccf624ea",
+        "cards": [
+          {
+            "name": "pfet",
+            "deviceType": "pmos",
+            "parameterCount": 65
+          }
+        ]
+      }
+    },
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:55:46.708297+00:00",
+      "elapsedSeconds": 2.95496,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/01-fitting/normalized.lib",
+      "inputMd5": "50b0c041bb1a8a0778c3c537ccf624ea",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/02-reduction/reduced.lib",
+      "rawOutputMd5": "97b216d2c491e8c123401c82b5352817",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+      "outputMd5": "f3d8676bf62b4aa2a829cc85a9f9b3cf",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/02-reduction/reduced.lib",
+        "inputMd5": "97b216d2c491e8c123401c82b5352817",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+        "outputMd5": "f3d8676bf62b4aa2a829cc85a9f9b3cf",
+        "cards": [
+          {
+            "name": "pfet",
+            "deviceType": "pmos",
+            "parameterCount": 32
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:49.663634+00:00",
+      "elapsedSeconds": 0.230122,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/02-reduction/normalized.lib",
+      "inputMd5": "f3d8676bf62b4aa2a829cc85a9f9b3cf",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/03-translation/translated.hspice",
+      "rawOutputMd5": "c3940b68c88320deef71401e9a559645",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/03-translation/normalized.lib",
+      "outputMd5": "67151385107d0ea4dbfb30767ce4211e",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/03-translation/translated.hspice",
+        "inputMd5": "c3940b68c88320deef71401e9a559645",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__20pfet__hp__pm/fitting_reduction_translation/03-translation/normalized.lib",
+        "outputMd5": "67151385107d0ea4dbfb30767ce4211e",
+        "cards": [
+          {
+            "name": "pfet",
+            "deviceType": "pmos",
+            "parameterCount": 32
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}
