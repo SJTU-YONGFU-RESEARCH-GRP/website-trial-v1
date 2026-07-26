@@ -12,13 +12,13 @@
  *  - Tool labels correct
  * ================================================================== */
 
-import { readFileSync, existsSync, statSync } from "node:fs";
-import { resolve, dirname, join } from "node:path";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const PUBLIC = resolve(ROOT, "public");
+const BENCHMARK_DATA = resolve(ROOT, "data/spice-benchmark");
 
 let errors = 0;
 let warnings = 0;
@@ -39,7 +39,10 @@ const required = [
   "src/compat/spiceWorkflow/mockRuntime.ts", "src/compat/spiceWorkflow/index.ts",
   "src/data/benchmarkWorkspace/integratedDemo.ts", "src/data/benchmarkWorkspace/bundledModels.ts",
   "src/data/benchmarkWorkspace/selectors.ts", "src/data/benchmarkWorkspace/index.ts",
+  "src/data/benchmarkWorkspace/dataLoader.ts",
   "src/pages/benchmark/BenchmarkWorkspacePage.tsx",
+  "src/pages/benchmark/ModelComparisonCard.tsx",
+  "src/pages/benchmark/ReportViewerCard.tsx",
 ];
 for (const f of required) {
   existsSync(resolve(ROOT, f)) ? ok(f) : err(`Missing: ${f}`);
@@ -85,79 +88,80 @@ for (const [id, label] of expectedLabels) {
   re.test(catalog) ? ok(`${id} = ${label}`) : err(`${id} label is not "${label}"`);
 }
 
-/* ─── 4. Real plot file validation ─── */
-console.log("\n🖼 Plot file validation...");
-const demoPath = resolve(ROOT, "src/data/benchmarkWorkspace/integratedDemo.ts");
-if (existsSync(demoPath)) {
-  const demo = readFileSync(demoPath, "utf-8");
+/* ─── 4. Current benchmark result tree ─── */
+console.log("\n🖼 Benchmark result tree...");
+if (!existsSync(BENCHMARK_DATA)) {
+  err("Missing data/spice-benchmark");
+} else {
+  const globalManifestPath = resolve(BENCHMARK_DATA, "manifest.json");
+  if (!existsSync(globalManifestPath)) {
+    err("Missing global benchmark manifest");
+  } else {
+    const globalManifest = JSON.parse(readFileSync(globalManifestPath, "utf-8"));
+    const md5s = Object.values(globalManifest.models ?? {}).map((model) => model.md5);
+    const simulators = globalManifest.simulators ?? [];
+    let checkedRuns = 0;
+    let checkedPlots = 0;
 
-  // Check for wrong legacy paths
-  const wrongPaths = [
-    /benchmark\/results\/dc_iv_characteristics/g,
-    /benchmark\/results\/dc_kcl/g,
-    /benchmark\/results\/trans_/g,
-    /benchmark\/results\/noise_/g,
-  ];
-  for (const re of wrongPaths) {
-    if (re.test(demo)) { err(`integratedDemo.ts: contains wrong legacy path pattern`); break; }
-  }
-
-  // Extract displayUrls and verify file existence
-  const urls = [...demo.matchAll(/displayUrl:\s*["'](benchmark\/[^"']+)["']/g)];
-  let checkedPlots = 0;
-  for (const m of urls) {
-    const fp = resolve(PUBLIC, m[1]);
-    if (existsSync(fp)) {
-      const st = statSync(fp);
-      if (st.size === 0) { err(`Zero-size file: ${m[1]}`); }
-
-      // PNG magic bytes check
-      if (m[1].endsWith(".png")) {
-        const buf = readFileSync(fp);
-        if (buf[0] !== 0x89 || buf[1] !== 0x50 || buf[2] !== 0x4E || buf[3] !== 0x47) {
-          err(`Not a valid PNG: ${m[1]}`);
+    for (const md5 of md5s) {
+      for (const simulator of simulators) {
+        const runDir = resolve(BENCHMARK_DATA, md5, simulator);
+        const runManifest = resolve(runDir, "manifest.json");
+        const report = resolve(runDir, "REPORT.md");
+        if (!existsSync(runManifest)) err(`${md5}/${simulator}: missing manifest.json`);
+        if (!existsSync(report)) err(`${md5}/${simulator}: missing REPORT.md`);
+        if (existsSync(runManifest)) {
+          const parsed = JSON.parse(readFileSync(runManifest, "utf-8"));
+          const checksum = parsed.checksum ?? parsed.md5 ?? parsed.modelMd5 ?? parsed.model_md5;
+          if (checksum !== md5) err(`${md5}/${simulator}: manifest checksum mismatch`);
         }
+
+        const plotsDir = resolve(runDir, "plots");
+        if (!existsSync(plotsDir)) {
+          err(`${md5}/${simulator}: missing plots directory`);
+        } else {
+          for (const name of readdirSync(plotsDir)) {
+            if (!name.endsWith(".png")) continue;
+            const file = resolve(plotsDir, name);
+            const st = statSync(file);
+            if (st.size === 0) err(`${md5}/${simulator}/plots/${name}: empty file`);
+            const buf = readFileSync(file);
+            if (buf[0] !== 0x89 || buf[1] !== 0x50 || buf[2] !== 0x4e || buf[3] !== 0x47) {
+              err(`${md5}/${simulator}/plots/${name}: invalid PNG`);
+            }
+            checkedPlots++;
+          }
+        }
+        checkedRuns++;
       }
-      // SVG check
-      if (m[1].endsWith(".svg")) {
-        const head = readFileSync(fp).slice(0, 200).toString();
-        if (!head.includes("<svg")) err(`Not a valid SVG: ${m[1]}`);
-      }
-      checkedPlots++;
-    } else {
-      err(`Plot file not found: public/${m[1]}`);
     }
+    ok(`${checkedRuns} model/simulator run directories validated`);
+    ok(`${checkedPlots} plot files validated`);
   }
-  ok(`${checkedPlots} plot file(s) validated`);
-
-  // Check baseline/candidate uniqueness
-  const baselineIds = [...demo.matchAll(/bp-input-ngspice-/g)];
-  const candidateIds = [...demo.matchAll(/bp-reduced-ngspice-/g)];
-  if (baselineIds.length > 0 && candidateIds.length > 0) {
-    ok("Baseline and candidate plots use distinct artifact IDs");
-  }
-
-  // Check for synthetic mislabeling
-  if (demo.includes('"existing-tool-output"')) ok("existing-tool-output used correctly");
-  if (demo.includes('"synthetic-demo"')) ok("synthetic-demo markers present");
 }
 
-/* ─── 5. Operation order ─── */
-console.log("\n📋 Operation order...");
-const mainPage = resolve(ROOT, "src/pages/benchmark/BenchmarkWorkspacePage.tsx");
-const mpContent = existsSync(mainPage) ? readFileSync(mainPage, "utf-8") : "";
-const checks = [
-  [/operationOrder/, "operationOrder state present"],
-  [/onOrderChange/, "onOrderChange handler present"],
-  [/DEFAULT_OPERATION_ORDER/, "DEFAULT_OPERATION_ORDER used"],
-  [/ScenarioSelector/, ""], // should NOT exist
+/* ─── 5. Frontend loading contract ─── */
+console.log("\n📋 Frontend loading contract...");
+const loader = readFileSync(resolve(ROOT, "src/data/benchmarkWorkspace/dataLoader.ts"), "utf-8");
+const comparison = readFileSync(resolve(ROOT, "src/pages/benchmark/ModelComparisonCard.tsx"), "utf-8");
+const contractChecks = [
+  [loader, /loadBenchmarkRuns/, "selected-run loader exported"],
+  [loader, /\$\{md5\}\/\$\{sim\}\/manifest\.json/, "per-run manifest fetched"],
+  [loader, /fetchReport\(md5, sim\)/, "per-run REPORT fetched"],
+  [loader, /loadRunManifest\(md5, sim, info\)/, "selector manifests loaded per run"],
+  [comparison, /selectedRunIds/, "selection keyed by model and simulator run"],
+  [comparison, /loadBenchmarkRuns\(selectedRunIds\)/, "selection triggers lazy REPORT loading"],
+  [comparison, /loaded\.runModelIds/, "selected simulator runs compared"],
+  [comparison, /UID:/, "selector labels checksum as UID"],
+  [comparison, /Report:/, "selector displays report timestamp"],
 ];
-for (const [re, label] of checks) {
-  if (label === "") {
-    re.test(mpContent) ? err("ScenarioSelector still referenced in main page") : ok("No ScenarioSelector reference");
-  } else {
-    re.test(mpContent) ? ok(label) : err(`Missing: ${label}`);
-  }
+for (const [source, pattern, label] of contractChecks) {
+  pattern.test(source) ? ok(label) : err(`Missing: ${label}`);
+}
+if (/wallTimeMs:\s*1500|peakRssMB:\s*120/.test(loader)) {
+  err("Hardcoded benchmark resource metrics remain");
+} else {
+  ok("No hardcoded benchmark time or memory fixtures");
 }
 
 /* ─── 6. Security ─── */

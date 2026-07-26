@@ -304,6 +304,16 @@ export interface ModelManifest {
   parameterCount: number;
   simulators: SimulatorId[];
   reportGeneratedAt: string;
+  /** Simulator represented by this per-run manifest. */
+  simulator?: SimulatorId;
+  simulatorVersion?: string | null;
+  /** Benchmark run metadata. Missing values remain null in the UI. */
+  runId?: string | null;
+  status?: "pass" | "fail" | "partial" | "unavailable";
+  benchmarkStartedAt?: string | null;
+  benchmarkEndedAt?: string | null;
+  wallTimeMs?: number | null;
+  peakRssMB?: number | null;
 }
 
 /* ─── Unit conventions (goal.md §19.2) ───

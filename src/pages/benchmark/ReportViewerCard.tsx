@@ -48,64 +48,69 @@ function MultiModelEntryTable({
   const baselineModel = modelIds[0];
 
   return (
-    <table className="rv-entry-table">
-      <thead>
-        <tr>
-          <th style={{ width: "30%" }}>Test Type</th>
-          {modelIds.map((mid) => {
-            const model = scenario.models[mid];
+    <div className="rv-table-scroll">
+      <table
+        className="rv-entry-table"
+        style={{ minWidth: `${Math.max(720, 260 + modelIds.length * 180)}px` }}
+      >
+        <thead>
+          <tr>
+            <th style={{ width: "260px" }}>Test Type</th>
+            {modelIds.map((mid) => {
+              const model = scenario.models[mid];
+              return (
+                <th key={mid} style={{ minWidth: "180px", textAlign: "center" }}>
+                  {model?.displayName ?? mid}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map((e, i) => {
+            // Find the corresponding entry in other models' reports
+            const otherEntries = new Map<string, ReportEntry>();
+            for (const mid of modelIds) {
+              if (mid === baselineModel) continue;
+              const report = reportMap.get(mid);
+              if (!report) continue;
+              // Try to find matching entry by traversing the same section structure
+              const found = findMatchingEntry(report, e);
+              if (found) otherEntries.set(mid, found);
+            }
+
             return (
-              <th key={mid} style={{ width: `${60 / modelIds.length}%`, textAlign: "center" }}>
-                {model?.displayName ?? mid}
-              </th>
+              <tr key={i}>
+                <td className="rv-entry-test">{e.testType}</td>
+                <td style={{ textAlign: "center" }}>
+                  <StatusBadge status={e.status} />
+                  {e.keyFindings && (
+                    <div className="rv-finding-text">{e.keyFindings}</div>
+                  )}
+                </td>
+                {modelIds.slice(1).map((mid) => {
+                  const oe = otherEntries.get(mid);
+                  return (
+                    <td key={mid} style={{ textAlign: "center" }}>
+                      {oe ? (
+                        <>
+                          <StatusBadge status={oe.status} />
+                          {oe.keyFindings && (
+                            <div className="rv-finding-text">{oe.keyFindings}</div>
+                          )}
+                        </>
+                      ) : (
+                        <span className="rv-na">—</span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
             );
           })}
-        </tr>
-      </thead>
-      <tbody>
-        {entries.map((e, i) => {
-          // Find the corresponding entry in other models' reports
-          const otherEntries = new Map<string, ReportEntry>();
-          for (const mid of modelIds) {
-            if (mid === baselineModel) continue;
-            const report = reportMap.get(mid);
-            if (!report) continue;
-            // Try to find matching entry by traversing the same section structure
-            const found = findMatchingEntry(report, e);
-            if (found) otherEntries.set(mid, found);
-          }
-
-          return (
-            <tr key={i}>
-              <td className="rv-entry-test">{e.testType}</td>
-              <td style={{ textAlign: "center" }}>
-                <StatusBadge status={e.status} />
-                {e.keyFindings && (
-                  <div className="rv-finding-text">{e.keyFindings}</div>
-                )}
-              </td>
-              {modelIds.slice(1).map((mid) => {
-                const oe = otherEntries.get(mid);
-                return (
-                  <td key={mid} style={{ textAlign: "center" }}>
-                    {oe ? (
-                      <>
-                        <StatusBadge status={oe.status} />
-                        {oe.keyFindings && (
-                          <div className="rv-finding-text">{oe.keyFindings}</div>
-                        )}
-                      </>
-                    ) : (
-                      <span className="rv-na">—</span>
-                    )}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -256,6 +261,16 @@ function SubSectionView({
   );
 }
 
+/* ─── Domain → analysis domain mapping ─── */
+
+const DOMAIN_MAP: Record<string, string> = {
+  "DC Analysis": "dc",
+  "Transient Analysis": "transient",
+  "AC Analysis": "ac",
+  "Noise Analysis": "noise",
+  "Geometry and Layout Analysis": "geometry",
+};
+
 /* ─── Section ─── */
 
 function SectionView({
@@ -301,45 +316,53 @@ function SectionView({
               baseImgUrl={baseImgUrl}
             />
           ))}
+          {/* Domain-specific Metric Deltas between tables and next section */}
+          {modelIds.length >= 2 && (
+            <InlineMetricDeltas
+              scenario={scenario}
+              selectedModels={modelIds}
+              domain={DOMAIN_MAP[sect.title] ?? sect.title.toLowerCase()}
+            />
+          )}
         </div>
       )}
     </div>
   );
 }
 
-/* ─── Metric Deltas ─── */
+/* ─── Inline Metric Deltas per domain ─── */
 
-function MetricDeltaTable({
+function InlineMetricDeltas({
   scenario,
   selectedModels,
+  domain,
 }: {
   scenario: WorkflowScenario;
   selectedModels: string[];
+  domain: string;
 }) {
   const metricKeys = useMemo(() => {
     const keys = new Set<string>();
     for (const mid of selectedModels) {
       for (const br of scenario.benchmarkResults) {
-        if (br.modelId === mid) {
+        if (br.modelId === mid && br.domain === domain) {
           for (const k of Object.keys(br.keyMetrics)) {
-            if (k !== "data_points") keys.add(k);
+            keys.add(k);
           }
         }
       }
     }
     return Array.from(keys).sort();
-  }, [scenario, selectedModels]);
+  }, [scenario, selectedModels, domain]);
 
   if (selectedModels.length < 2 || metricKeys.length === 0) return null;
 
   const baseline = selectedModels[0];
-  const baselineModel = scenario.models[baseline];
-
   const modelMetrics = new Map<string, Map<string, number | null>>();
   for (const mid of selectedModels) {
     const mm = new Map<string, number | null>();
     for (const br of scenario.benchmarkResults) {
-      if (br.modelId === mid) {
+      if (br.modelId === mid && br.domain === domain) {
         for (const [k, v] of Object.entries(br.keyMetrics)) {
           if (typeof v === "number") mm.set(k, v);
         }
@@ -362,19 +385,19 @@ function MetricDeltaTable({
   }
 
   return (
-    <div className="rv-metric-deltas">
-      <h4>📊 Metric Deltas (Δ vs {baselineModel?.displayName ?? baseline})</h4>
+    <div className="rv-metric-deltas" style={{ marginTop: "0.5rem", paddingTop: "0.5rem", borderTop: "1px dashed var(--border-light, #ddd)" }}>
+      <h4 style={{ fontSize: "0.78rem", marginBottom: "0.4rem" }}>📊 {domain.toUpperCase()} Metric Deltas (Δ vs baseline)</h4>
       <div className="rv-verdict-scroll">
         {metricKeys.map((metric) => (
-          <div key={metric} style={{ marginBottom: "0.5rem" }}>
-            <div style={{ fontSize: "0.72rem", fontWeight: 600, marginBottom: "0.2rem", color: "var(--text-secondary, #555)" }}>
+          <div key={metric} style={{ marginBottom: "0.35rem" }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 600, marginBottom: "0.15rem", color: "var(--text-secondary, #555)", fontFamily: "monospace", wordBreak: "break-all" }}>
               {metric}
             </div>
-            <table className="rv-entry-table" style={{ fontSize: "0.7rem" }}>
+            <table className="rv-entry-table" style={{ fontSize: "0.68rem" }}>
               <thead>
                 <tr>
                   {selectedModels.map((mid) => (
-                    <th key={mid} style={{ textAlign: "center" }}>
+                    <th key={mid} style={{ textAlign: "center", fontSize: "0.6rem" }}>
                       {scenario.models[mid]?.displayName ?? mid}
                     </th>
                   ))}
@@ -387,10 +410,10 @@ function MetricDeltaTable({
                     const baselineVal = modelMetrics.get(baseline)?.get(metric) ?? null;
                     const delta = i > 0 ? formatDelta(baselineVal, val) : undefined;
                     return (
-                      <td key={mid} className="rv-verdict-cell" style={{ fontFamily: "monospace", fontSize: "0.7rem" }}>
+                      <td key={mid} className="rv-verdict-cell" style={{ fontFamily: "monospace", fontSize: "0.65rem" }}>
                         {formatValue(val)}
                         {delta && (
-                          <span style={{ display: "block", fontSize: "0.62rem", color: "var(--accent, #0071e3)", marginTop: "1px" }}>
+                          <span style={{ display: "block", fontSize: "0.6rem", color: "var(--accent, #0071e3)", marginTop: "1px" }}>
                             Δ {delta}
                           </span>
                         )}
@@ -549,11 +572,6 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
         />
       ))}
 
-      {/* Metric Deltas */}
-      <MetricDeltaTable
-        scenario={scenario}
-        selectedModels={selectedModels}
-      />
     </div>
   );
 }

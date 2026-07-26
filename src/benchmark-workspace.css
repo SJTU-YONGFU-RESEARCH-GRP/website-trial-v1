@@ -843,6 +843,7 @@
 .bmw-artifact-table-shell {
   width: min(100%, 1080px);
   margin-inline: auto;
+  overflow-x: auto;
 }
 
 .bmw-artifact-table-shell table {
@@ -957,6 +958,12 @@
   border-collapse: collapse;
   font-size: 0.72rem;
   margin: 0.3rem 0;
+}
+
+.rv-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .rv-entry-table th {
