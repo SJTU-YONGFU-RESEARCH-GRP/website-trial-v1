@@ -1,0 +1,34 @@
+{
+  "modelId": "ptm__22nm__hp__pm__reduction__card_2_pmos",
+  "sourceId": "ptm__22nm__hp__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chain": [
+    "reduction"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/4cb48f1319ebabd9ab0ee11945c60119/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/4cb48f1319ebabd9ab0ee11945c60119/hspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "4cb48f1319ebabd9ab0ee11945c60119",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-27T02:16:16.279298+00:00",
+  "finishedAt": "2026-07-27T02:19:39.167126+00:00",
+  "elapsedSeconds": 202.887845,
+  "peakRssKiB": 213584,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

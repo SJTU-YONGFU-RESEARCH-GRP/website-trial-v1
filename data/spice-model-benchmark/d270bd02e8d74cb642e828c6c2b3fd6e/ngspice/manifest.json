@@ -1,0 +1,42 @@
+{
+  "modelId": "ptm__130nm__bulk__pm__fitting_reduction_translation__card_2_pmos",
+  "sourceId": "ptm__130nm__bulk__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/d270bd02e8d74cb642e828c6c2b3fd6e/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/d270bd02e8d74cb642e828c6c2b3fd6e/ngspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture",
+    "applied fitting BSIM4.5 capability normalization for stable full-range ngspice sweeps",
+    "disabled optional acnqsmod subnetwork",
+    "disabled optional geomod subnetwork",
+    "disabled optional rbodymod subnetwork",
+    "disabled optional rgatemod subnetwork",
+    "disabled optional trnqsmod subnetwork"
+  ],
+  "md5": "d270bd02e8d74cb642e828c6c2b3fd6e",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-27T02:12:00.881611+00:00",
+  "finishedAt": "2026-07-27T02:13:29.695608+00:00",
+  "elapsedSeconds": 88.814007,
+  "peakRssKiB": 203376,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

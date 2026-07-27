@@ -1,0 +1,36 @@
+{
+  "modelId": "ptm__90nm__bulk__pm__fitting_reduction_translation__card_2_pmos",
+  "sourceId": "ptm__90nm__bulk__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/c4c3137f4a2575c467ff303c37c165b7/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/c4c3137f4a2575c467ff303c37c165b7/hspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "c4c3137f4a2575c467ff303c37c165b7",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-27T02:28:14.693405+00:00",
+  "finishedAt": "2026-07-27T02:31:44.153064+00:00",
+  "elapsedSeconds": 209.459653,
+  "peakRssKiB": 215400,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

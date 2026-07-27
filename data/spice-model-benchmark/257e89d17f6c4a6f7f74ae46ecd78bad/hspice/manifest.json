@@ -1,0 +1,36 @@
+{
+  "modelId": "ptm__22nm__lp__pm__fitting_reduction_translation__card_2_pmos",
+  "sourceId": "ptm__22nm__lp__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/257e89d17f6c4a6f7f74ae46ecd78bad/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/257e89d17f6c4a6f7f74ae46ecd78bad/hspice.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "257e89d17f6c4a6f7f74ae46ecd78bad",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-27T02:17:13.674447+00:00",
+  "finishedAt": "2026-07-27T02:20:45.168530+00:00",
+  "elapsedSeconds": 211.494084,
+  "peakRssKiB": 201728,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

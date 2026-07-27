@@ -1,0 +1,35 @@
+{
+  "modelId": "ptm__22nm__hp__pm__expansion_translation__card_2_pmos",
+  "sourceId": "ptm__22nm__hp__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/a687312c04c197236a82d3e9f5c8163f/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_full_collection/benchmark-inputs/a687312c04c197236a82d3e9f5c8163f/spectre.lib",
+  "astParsedInput": true,
+  "astCompatibilityAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "a687312c04c197236a82d3e9f5c8163f",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-27T02:14:31.003677+00:00",
+  "finishedAt": "2026-07-27T02:15:21.810637+00:00",
+  "elapsedSeconds": 50.806973,
+  "peakRssKiB": 225552,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot"
+}

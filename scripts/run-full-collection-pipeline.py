@@ -761,6 +761,130 @@ def load_records() -> list[dict[str, Any]]:
     return payload["models"]
 
 
+def complete_missing_card_models() -> list[dict[str, Any]]:
+    """Materialize non-primary cards that were hidden by file-level inventory.
+
+    The original collection contains ten PTM files with both an NMOS and PMOS
+    card.  The benchmark runner selects the first non-fixture card as its
+    primary device, so the existing file-level records exercised only NMOS.
+    Keep those accepted runs and add one single-card record for every
+    previously non-primary card in every tool-chain output.
+    """
+    payload = json.loads(INVENTORY_PATH.read_text())
+    records = payload["models"]
+    existing_ids = {record["id"] for record in records}
+    additions: list[dict[str, Any]] = []
+
+    for record in records:
+        if record.get("cardCount", 0) <= 1:
+            continue
+        model_path = Path(record["finalModel"])
+        models = parser_for(model_path, "ngspice")(model_path).parse_to_ir()
+        for card_index, model in enumerate(models[1:], 2):
+            card_tag = re.sub(
+                r"[^a-zA-Z0-9]+", "_", model.name
+            ).strip("_").lower()
+            derived_id = f"{record['id']}__card_{card_index}_{card_tag}"
+            if derived_id in existing_ids:
+                continue
+
+            model_work = (
+                WORK_ROOT
+                / "models"
+                / "supplemental-cards"
+                / derived_id
+            )
+            raw_model = model_work / "raw.lib"
+            accepted_model = model_work / "model.lib"
+            write_ir(
+                [model],
+                raw_model,
+                provenance=f"{derived_id}:supplemental-card",
+            )
+            ast_record = ast_normalize(
+                raw_model,
+                accepted_model,
+                provenance=f"{derived_id}:accepted",
+                source_format="ngspice",
+                expected_cards=1,
+            )
+            source_record_id = record["sourceId"]
+            if record["kind"] == "processed":
+                source_record_id = (
+                    f"{source_record_id}__card_{card_index}_{card_tag}"
+                )
+            derived = dict(record)
+            derived.update(
+                {
+                    "id": derived_id,
+                    "sourceId": source_record_id,
+                    "finalModel": str(accepted_model),
+                    "md5": digest(accepted_model),
+                    "cardCount": 1,
+                    "models": ast_record["cards"],
+                    "derivedFromModelId": record["id"],
+                    "sourceCardIndex": card_index,
+                    "sourceCardName": model.name,
+                    "benchmarkModelName": model.name,
+                    "completedAt": utc_now(),
+                }
+            )
+            additions.append(materialize(derived))
+            existing_ids.add(derived_id)
+
+    records.extend(additions)
+    for record in records:
+        if record.get("models"):
+            record.setdefault("benchmarkModelName", record["models"][0]["name"])
+    records.sort(key=lambda record: record["id"])
+    original_count = sum(record["kind"] == "original" for record in records)
+    processed_count = sum(record["kind"] == "processed" for record in records)
+    payload.update(
+        {
+            "generatedAt": utc_now(),
+            "sourceFileCount": 54,
+            "sourceCount": original_count,
+            "sourceCardCount": original_count,
+            "processedCount": processed_count,
+            "modelCount": len(records),
+            "models": records,
+        }
+    )
+    atomic_json(INVENTORY_PATH, payload)
+    atomic_json(
+        DATA_ROOT / "manifest.json",
+        {
+            "version": "2.1.0",
+            "generatedAt": payload["generatedAt"],
+            "collectionCommit": payload["collectionCommit"],
+            "sourceFileCount": payload["sourceFileCount"],
+            "sourceCount": payload["sourceCount"],
+            "sourceCardCount": payload["sourceCardCount"],
+            "processedCount": payload["processedCount"],
+            "modelCount": payload["modelCount"],
+            "simulators": list(SIMULATORS),
+            "modes": list(MODES),
+            "models": {
+                record["id"]: {
+                    "md5": record["md5"],
+                    "sourceId": record["sourceId"],
+                    "kind": record["kind"],
+                    "chain": record["chain"],
+                    "cardCount": record["cardCount"],
+                    "benchmarkModelName": record["benchmarkModelName"],
+                }
+                for record in records
+            },
+        },
+    )
+    print(
+        f"[supplemental] added {len(additions)} non-primary card models; "
+        f"inventory now contains {len(records)} benchmark models",
+        flush=True,
+    )
+    return records
+
+
 def ngspice_capability_preflight(model_path: Path) -> tuple[bool, str]:
     """Compile and operate every non-fixture card with polarity-correct bias."""
     models = parser_for(model_path, "ngspice")(model_path).parse_to_ir()
@@ -1544,13 +1668,13 @@ def acceptance_failures(
 
 def audit(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     failures: list[dict[str, Any]] = []
-    if len(records) != 216:
+    if len(records) != 256:
         failures.append({"scope": "inventory", "reason": f"model count {len(records)}"})
     kinds = {
         "original": sum(record["kind"] == "original" for record in records),
         "processed": sum(record["kind"] == "processed" for record in records),
     }
-    if kinds != {"original": 54, "processed": 162}:
+    if kinds != {"original": 64, "processed": 192}:
         failures.append({"scope": "inventory", "reason": f"kind counts {kinds}"})
     if len({record["md5"] for record in records}) != len(records):
         failures.append({"scope": "inventory", "reason": "duplicate model md5"})
@@ -1597,7 +1721,8 @@ def audit(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 )
     payload = {
         "generatedAt": utc_now(),
-        "sourceCount": 54,
+        "sourceFileCount": 54,
+        "sourceCount": 64,
         "modelCount": len(records),
         "simulatorCount": len(SIMULATORS),
         "expectedRuns": len(records) * len(SIMULATORS),
@@ -1610,8 +1735,8 @@ def audit(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         print(f"ACCEPTANCE FAILED: {len(failures)} items; see {AUDIT_PATH}")
     else:
         print(
-            "ACCEPTANCE PASS: 54 sources, 216 models, 648 simulator runs, "
-            "15552 non-empty plots"
+            "ACCEPTANCE PASS: 54 files, 64 source-card models, 256 total "
+            "models, 768 simulator runs, 18432 non-empty plots"
         )
     return failures
 
@@ -1631,7 +1756,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "stage",
-        choices=("generate", "benchmark", "audit", "repair", "all"),
+        choices=("generate", "benchmark", "audit", "repair", "complete", "all"),
         nargs="?",
         default="all",
     )
@@ -1642,13 +1767,18 @@ def main() -> int:
     parser.add_argument("--models", nargs="+")
     args = parser.parse_args()
 
-    records = (
-        generate_models(force=args.force, jobs=max(1, args.tool_jobs))
-        if args.stage in {"generate", "all"}
-        else load_records()
-    )
+    if args.stage in {"generate", "all"}:
+        records = generate_models(force=args.force, jobs=max(1, args.tool_jobs))
+    elif args.stage == "complete":
+        records = complete_missing_card_models()
+    else:
+        records = load_records()
     selected = select_records(records, args.models)
-    if args.stage in {"benchmark", "all"}:
+    if args.stage == "complete":
+        selected = [
+            record for record in selected if record.get("derivedFromModelId")
+        ]
+    if args.stage in {"benchmark", "complete", "all"}:
         run_benchmarks(
             selected,
             simulators=tuple(args.simulators),
@@ -1663,7 +1793,7 @@ def main() -> int:
                     failed_pairs.append((record, simulator))
         for record, simulator in failed_pairs:
             run_one_benchmark(record, simulator, force=True)
-    if args.stage in {"audit", "repair", "all"}:
+    if args.stage in {"audit", "repair", "complete", "all"}:
         return 1 if audit(records) else 0
     return 0
 

@@ -1,0 +1,60 @@
+{
+  "id": "ptm__180nm__bulk__pm__reduction__card_2_pmos",
+  "sourceId": "ptm__180nm__bulk__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/180nm_bulk.pm",
+  "sourceMd5": "294d18bd57e518b0647f44fe6ff9b16c",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/93dbca3a60b6d61826ae29ee933515e2/model.lib",
+  "md5": "93dbca3a60b6d61826ae29ee933515e2",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "PMOS",
+      "deviceType": "pmos",
+      "parameterCount": 126
+    }
+  ],
+  "completedAt": "2026-07-27T02:11:44.597674+00:00",
+  "derivedFromModelId": "ptm__180nm__bulk__pm__reduction",
+  "sourceCardIndex": 2,
+  "sourceCardName": "PMOS",
+  "benchmarkModelName": "PMOS",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-26T16:55:38.999543+00:00",
+      "elapsedSeconds": 2.717171,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__180nm__bulk__pm/original/model.lib",
+      "inputMd5": "61ceabb774ca24b97d59702473367fe9",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__180nm__bulk__pm/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "e519dac93cea292af303b2a78501ace1",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__180nm__bulk__pm/reduction/01-reduction/normalized.lib",
+      "outputMd5": "91ecf2444dbbd7b631f797df636f61ef",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__180nm__bulk__pm/reduction/01-reduction/reduced.lib",
+        "inputMd5": "e519dac93cea292af303b2a78501ace1",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__180nm__bulk__pm/reduction/01-reduction/normalized.lib",
+        "outputMd5": "91ecf2444dbbd7b631f797df636f61ef",
+        "cards": [
+          {
+            "name": "NMOS",
+            "deviceType": "nmos",
+            "parameterCount": 59
+          },
+          {
+            "name": "PMOS",
+            "deviceType": "pmos",
+            "parameterCount": 126
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

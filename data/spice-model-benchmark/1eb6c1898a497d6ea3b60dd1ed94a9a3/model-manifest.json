@@ -1,0 +1,91 @@
+{
+  "id": "ptm__22nm__lp__pm__expansion_translation__card_2_pmos",
+  "sourceId": "ptm__22nm__lp__pm__original__card_2_pmos",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/spice_model_collections/ptm/22nm_LP.pm",
+  "sourceMd5": "eccea643d42141bb2defda7fb7a2e72f",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/1eb6c1898a497d6ea3b60dd1ed94a9a3/model.lib",
+  "md5": "1eb6c1898a497d6ea3b60dd1ed94a9a3",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "pmos",
+      "deviceType": "pmos",
+      "parameterCount": 213
+    }
+  ],
+  "completedAt": "2026-07-27T02:11:44.733372+00:00",
+  "derivedFromModelId": "ptm__22nm__lp__pm__expansion_translation",
+  "sourceCardIndex": 2,
+  "sourceCardName": "pmos",
+  "benchmarkModelName": "pmos",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-26T16:55:51.471444+00:00",
+      "elapsedSeconds": 1.309314,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/original/model.lib",
+      "inputMd5": "42e7f6b681b3fa1edc7e3c66e61bfc9d",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "6ecc262831afc39461617dc3598ac22a",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "ee457b55ba3846937d40224619ddf66f",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "6ecc262831afc39461617dc3598ac22a",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "ee457b55ba3846937d40224619ddf66f",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 213
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 213
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-26T16:55:52.781484+00:00",
+      "elapsedSeconds": 0.287614,
+      "input": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "ee457b55ba3846937d40224619ddf66f",
+      "rawOutput": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "7554e8a3a28f9ea29689fb459880e496",
+      "output": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "ed2862bb02d17c4fd7608095601c0151",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "7554e8a3a28f9ea29689fb459880e496",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_full_collection/models/ptm__22nm__lp__pm/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "ed2862bb02d17c4fd7608095601c0151",
+        "cards": [
+          {
+            "name": "nmos",
+            "deviceType": "nmos",
+            "parameterCount": 213
+          },
+          {
+            "name": "pmos",
+            "deviceType": "pmos",
+            "parameterCount": 213
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}
