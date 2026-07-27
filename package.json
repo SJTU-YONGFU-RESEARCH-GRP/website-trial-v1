@@ -16,7 +16,8 @@
     "validate:spice-benchmark-data": "node scripts/validate-spice-benchmark-data.mjs",
     "validate:translator": "node scripts/validate-spice-translator-data.mjs",
     "validate:benchmark-workspace": "node scripts/validate-benchmark-workspace-data.mjs",
-    "build": "npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:benchmark-workspace && tsc --noEmit && vite build",
+    "validate:report-parser": "node scripts/validate-report-parser.mjs",
+    "build": "npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:benchmark-workspace && npm run validate:report-parser && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

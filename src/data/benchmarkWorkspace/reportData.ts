@@ -238,8 +238,13 @@ export function generateReport(
   ];
 
   return {
+    title: "MOSFET Simulation Verification Report",
     scenarioTitle: `${displayName} — ${sim} Verification Report`,
     generatedAt: "2026-07-24T12:00:00Z",
+    rawMarkdown: "",
+    lines: [],
+    notes: [],
+    tableOfContents: [],
     simulationSetup: [
       entry("Circuit file exists and is readable", "pass",
         "dc_circuit.cir, transient_circuit.cir, noise_circuit.cir, ac_circuit.cir"),
@@ -249,6 +254,8 @@ export function generateReport(
     ],
     summary,
     sections,
+    runIntegrity: {},
+    runIntegrityNotes: [],
   };
 }
 

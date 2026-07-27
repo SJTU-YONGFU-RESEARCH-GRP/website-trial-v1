@@ -1055,6 +1055,9 @@
   border-radius: 4px;
   overflow: hidden;
 }
+.rv-plot-image-fig {
+  width: 840px;
+}
 .rv-plot-embed-fig img {
   width: 100%;
   height: auto;
@@ -1062,6 +1065,9 @@
   min-height: 150px;
   object-fit: contain;
   background: #fafafa;
+}
+.rv-plot-image-fig img {
+  min-height: 300px;
 }
 .rv-plot-embed-fig figcaption {
   font-size: 0.65rem;

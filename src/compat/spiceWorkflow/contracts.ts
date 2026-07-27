@@ -256,6 +256,13 @@ export interface WorkflowRuntime {
 
 export type ReportStatus = "pass" | "fail" | "in-progress" | "unavailable";
 
+export interface ReportDetail {
+  text: string;
+  depth: number;
+  raw: string;
+  lineNumber: number;
+}
+
 export interface ReportEntry {
   /** Human-readable test name, e.g. "IV data file is generated" */
   testType: string;
@@ -263,6 +270,70 @@ export interface ReportEntry {
   keyFindings: string | null;
   /** Optional nested sub-details */
   children?: ReportEntry[];
+  /** Lossless, ordered detail bullets belonging to this check. */
+  details?: ReportDetail[];
+  raw?: string;
+  lineNumber?: number;
+}
+
+export interface ReportTable {
+  headers: string[];
+  rows: string[][];
+  rawLines: string[];
+  startLine: number;
+}
+
+export interface ReportPlot {
+  /** Path exactly as written in REPORT.md, relative to the report directory. */
+  src: string;
+  alt: string;
+  width: string | null;
+  caption: string | null;
+  raw: string;
+  lineNumber: number;
+}
+
+export type ReportBlockKind =
+  | "check"
+  | "detail"
+  | "paragraph"
+  | "image"
+  | "table"
+  | "bullet"
+  | "comment"
+  | "blank";
+
+export interface ReportBlock {
+  kind: ReportBlockKind;
+  lineNumber: number;
+  raw: string;
+  text?: string;
+  depth?: number;
+  status?: ReportStatus;
+  entry?: ReportEntry;
+  plot?: ReportPlot;
+  table?: ReportTable;
+}
+
+export type ReportLineKind =
+  | "blank"
+  | "heading"
+  | "generated-at"
+  | "check"
+  | "bullet"
+  | "ordered-list"
+  | "table"
+  | "image"
+  | "comment"
+  | "paragraph";
+
+export interface ReportLine {
+  lineNumber: number;
+  raw: string;
+  kind: ReportLineKind;
+  text?: string;
+  depth?: number;
+  status?: ReportStatus;
 }
 
 export interface ReportSubSection {
@@ -270,6 +341,10 @@ export interface ReportSubSection {
   entries: ReportEntry[];
   /** Optional plot image paths for this subsection */
   plots?: string[];
+  plotDetails?: ReportPlot[];
+  tables?: ReportTable[];
+  /** All subsection content in the same order as REPORT.md. */
+  blocks?: ReportBlock[];
 }
 
 export interface ReportSection {
@@ -278,11 +353,18 @@ export interface ReportSection {
   /** Top-level entries before subsections */
   entries?: ReportEntry[];
   subsections: ReportSubSection[];
+  blocks?: ReportBlock[];
 }
 
 export interface ReportStructure {
+  title: string;
   scenarioTitle: string;
   generatedAt: string;
+  rawMarkdown: string;
+  /** One classified record for every physical line in rawMarkdown. */
+  lines: ReportLine[];
+  notes: string[];
+  tableOfContents: string[];
   simulationSetup: ReportEntry[];
   summary: {
     dc: ReportEntry[];
@@ -291,6 +373,8 @@ export interface ReportStructure {
     noise: ReportEntry[];
   };
   sections: ReportSection[];
+  runIntegrity: Record<string, string>;
+  runIntegrityNotes: string[];
 }
 
 export interface ModelManifest {

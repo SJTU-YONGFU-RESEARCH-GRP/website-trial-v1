@@ -1,7 +1,7 @@
 /* ==================================================================
  *  benchmarkWorkspace data index — v4
  *
- *  Auto-discovery based. All data comes from data/spice-benchmark/.
+ *  Auto-discovery based. Current benchmark data comes from data/spice-model-benchmark/.
  * ================================================================== */
 
 export { buildScenario, fetchGlobalManifest, fetchReport } from "./dataLoader";

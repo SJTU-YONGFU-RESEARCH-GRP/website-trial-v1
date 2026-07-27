@@ -1,7 +1,7 @@
 /* ==================================================================
  *  BenchmarkWorkspacePage — v4
  *
- *  Auto-discovers models from data/spice-benchmark/manifest.json.
+ *  Auto-discovers models from data/spice-model-benchmark/manifest.json.
  *  No hardcoded model lists. Purely data-driven.
  * ================================================================== */
 

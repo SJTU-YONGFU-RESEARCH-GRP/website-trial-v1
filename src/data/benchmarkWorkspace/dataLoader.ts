@@ -1,5 +1,5 @@
 /* ==================================================================
- *  dataLoader.ts — Auto-discovery from data/spice-benchmark/
+ *  dataLoader.ts — Auto-discovery from data/spice-model-benchmark/
  *
  *  Reads the global manifest.json to discover all models, then
  *  builds the WorkflowScenario dynamically. No hardcoded models.
@@ -15,9 +15,10 @@ import type {
   ReportStructure,
   ModelManifest,
 } from "../../compat/spiceWorkflow/contracts";
+import { parseReportMD } from "./reportParser";
 
 const BASE = import.meta.env.BASE_URL || "/";
-const DATA_ROOT = `${BASE}data/spice-benchmark`;
+const DATA_ROOT = `${BASE}data/spice-model-benchmark`;
 const FALLBACK_SIMULATORS: SimulatorId[] = ["ngspice", "hspice", "spectre"];
 const FALLBACK_DOMAINS: AnalysisDomain[] = ["dc", "transient", "ac", "noise"];
 
@@ -25,10 +26,16 @@ const FALLBACK_DOMAINS: AnalysisDomain[] = ["dc", "transient", "ac", "noise"];
 
 interface GlobalManifest {
   version: string;
-  description: string;
-  models: Record<string, { md5: string; displayName: string; pdk: string; type: string; chain: string; params: number }>;
+  description?: string;
+  models: Record<string, {
+    md5: string;
+    sourceId: string;
+    kind: "original" | "processed" | string;
+    chain: string[];
+    cardCount: number;
+  }>;
   simulators: string[];
-  domains: string[];
+  modes: string[];
   generatedAt?: string;
 }
 
@@ -56,36 +63,40 @@ function manifestSimulators(manifest: GlobalManifest): SimulatorId[] {
 }
 
 function manifestDomains(manifest: GlobalManifest): AnalysisDomain[] {
-  const values = manifest.domains.filter(isDomain);
+  const values = manifest.modes.filter(isDomain);
   return values.length > 0 ? values : FALLBACK_DOMAINS;
 }
 
 /* ─── Build ModelArtifact from manifest entry ─── */
 
 function buildModelArtifact(
+  uid: string,
   md5: string,
   info: GlobalManifest["models"][string],
   parentMd5: string | null,
   sim: SimulatorId,
 ): ModelArtifact {
   const simModelId = `${md5}|${sim}`;
+  const uidParts = uid.split("__");
+  const deviceType = uidParts.includes("nmos") ? "nmos" : uidParts.includes("pmos") ? "pmos" : "unknown";
+  const chain = info.chain.map((tool) => tool.charAt(0).toUpperCase() + tool.slice(1)).join(" → ");
   return {
     modelId: simModelId,
     parentModelId: parentMd5 ? `${parentMd5}|${sim}` : null,
-    filename: `${info.type}_model.lib`,
-    displayName: `[${info.pdk}][${sim}] ${info.type.toUpperCase()}-BSIM4.8`,
-    variant: info.chain.includes("→") ? "calibrated" as const : "input" as const,
+    filename: `${uid}.lib`,
+    displayName: `${uid} · ${sim}`,
+    variant: info.kind === "processed" ? "calibrated" as const : "input" as const,
     dialect: sim,
-    modelNames: [info.type.toUpperCase()],
+    modelNames: [uid],
     deviceClass: "mos",
-    deviceType: info.type as "nmos" | "pmos",
-    modelFamily: "BSIM4.8",
-    byteSize: info.params * 35,
-    parameterCount: info.params,
+    deviceType,
+    modelFamily: uidParts[2]?.toUpperCase() ?? "Unknown",
+    byteSize: null,
+    parameterCount: info.cardCount,
     checksum: md5,
-    generatedBy: info.chain.includes("→") ? "expansion" : "user",
-    operationChain: info.chain,
-    pdkSource: info.pdk,
+    generatedBy: info.chain.includes("expansion") ? "expansion" : "user",
+    operationChain: chain || "Input",
+    pdkSource: info.sourceId,
     persistent: true,
     temporary: false,
     provenance: { origin: "existing-tool-output", sourceRepo: "spice_model_benchmark" },
@@ -174,6 +185,7 @@ function buildBenchmarkResult(
   domain: AnalysisDomain,
   report: ReportStructure | null,
   manifest: ModelManifest,
+  plotArtifactIds: string[],
 ): DomainBenchmarkResult {
   const rid = `br-${modelId}-${sim}-${domain}`;
 
@@ -195,32 +207,59 @@ function buildBenchmarkResult(
     },
     keyMetrics: metrics as Record<string, number | string | null>,
     datasetArtifactIds: [],
-    plotArtifactIds: [`plot-${rid}`],
+    plotArtifactIds,
     provenance: { origin: "existing-tool-output", sourceRepo: "spice_model_benchmark" },
   };
 }
 
 /* ─── Build Plot Artifact ─── */
 
-function buildPlotArtifact(modelId: string, sim: string, domain: string): ArtifactRef {
-  const rid = `br-${modelId}-${sim}-${domain}`;
-  return {
-    artifactId: `plot-${rid}`,
-    name: `${domain}_chart.png`,
-    toolId: "benchmark",
-    modelId,
-    domain: domain as AnalysisDomain,
-    kind: "plot",
-    format: "png",
-    sizeBytes: null,
-    hash: null,
-    displayUrl: `${DATA_ROOT}/${modelId}/${sim}/plot/${domain}_chart.png`,
-    fetchUrl: `${DATA_ROOT}/${modelId}/${sim}/plot/${domain}_chart.png`,
-    visibility: "public",
-    provenance: { origin: "existing-tool-output" },
-    comparisonKey: domain,
-    title: `${domain.toUpperCase()} Chart`,
+function buildPlotArtifacts(
+  md5: string,
+  runModelId: string,
+  sim: SimulatorId,
+  report: ReportStructure | null,
+): Record<AnalysisDomain, ArtifactRef[]> {
+  const byDomain: Record<AnalysisDomain, ArtifactRef[]> = {
+    dc: [], transient: [], ac: [], noise: [],
   };
+  if (!report) return byDomain;
+  const sectionDomains: Record<string, AnalysisDomain | undefined> = {
+    "DC Analysis": "dc",
+    "Transient Analysis": "transient",
+    "AC Analysis": "ac",
+    "Noise Analysis": "noise",
+  };
+  let sequence = 0;
+  for (const section of report.sections) {
+    const domain = sectionDomains[section.title];
+    if (!domain) continue;
+    for (const subsection of section.subsections) {
+      for (const plot of subsection.plotDetails ?? []) {
+        sequence += 1;
+        const artifactId = `plot-${runModelId}-${sequence}`;
+        const url = `${DATA_ROOT}/${md5}/${sim}/${plot.src.replace(/^\.?\//, "")}`;
+        byDomain[domain].push({
+          artifactId,
+          name: plot.src.split("/").pop() ?? plot.src,
+          toolId: "benchmark",
+          modelId: runModelId,
+          domain,
+          kind: "plot",
+          format: "png",
+          sizeBytes: null,
+          hash: null,
+          displayUrl: url,
+          fetchUrl: url,
+          visibility: "public",
+          provenance: { origin: "existing-tool-output" },
+          comparisonKey: `${section.title}/${subsection.title}/${plot.alt}`,
+          title: plot.caption ?? plot.alt,
+        });
+      }
+    }
+  }
+  return byDomain;
 }
 
 /* ─── Parse REPORT.md into ReportStructure ─── */
@@ -280,16 +319,30 @@ function normalizeRunManifest(
   const resources = asRecord(raw.resources);
   const timing = asRecord(raw.timing);
   const simulator = asRecord(raw.simulator);
+  const fallbackUid = firstString(raw.modelId, raw.model_id) ?? md5;
+  const fallbackDeviceType = fallbackUid.includes("__nmos__")
+    ? "nmos"
+    : fallbackUid.includes("__pmos__")
+      ? "pmos"
+      : "unknown";
+  const chainValue = Array.isArray(raw.chain)
+    ? raw.chain.filter((item): item is string => typeof item === "string").join(" → ")
+    : null;
+  const elapsedSeconds = firstNumber(raw.elapsedSeconds, raw.elapsed_seconds);
+  const peakRssKiB = firstNumber(raw.peakRssKiB, raw.peak_rss_kib);
+  const finishedAt = firstString(raw.finishedAt, raw.finished_at);
 
   return {
-    modelId: firstString(raw.modelId, raw.model_id) ?? md5,
-    displayName: firstString(raw.displayName, raw.display_name) ?? fallback.displayName,
+    modelId: fallbackUid,
+    displayName: firstString(raw.displayName, raw.display_name) ?? fallbackUid,
     checksum: firstString(raw.checksum, raw.md5, raw.modelMd5, raw.model_md5) ?? md5,
-    deviceType: (firstString(raw.deviceType, raw.device_type) ?? fallback.type) as ModelManifest["deviceType"],
+    deviceType: (firstString(raw.deviceType, raw.device_type) ?? fallbackDeviceType) as ModelManifest["deviceType"],
     modelFamily: firstString(raw.modelFamily, raw.model_family) ?? "Unknown",
-    pdkSource: firstString(raw.pdkSource, raw.pdk_source) ?? fallback.pdk,
-    operationChain: firstString(raw.operationChain, raw.operation_chain) ?? fallback.chain,
-    parameterCount: firstNumber(raw.parameterCount, raw.parameter_count) ?? fallback.params,
+    pdkSource: firstString(raw.pdkSource, raw.pdk_source, raw.sourceId, raw.source_id) ?? fallback.sourceId,
+    operationChain: firstString(raw.operationChain, raw.operation_chain)
+      ?? chainValue
+      ?? (fallback.chain.join(" → ") || "Input"),
+    parameterCount: firstNumber(raw.parameterCount, raw.parameter_count) ?? fallback.cardCount,
     simulators: [sim],
     simulator: sim,
     simulatorVersion: firstString(
@@ -305,22 +358,24 @@ function normalizeRunManifest(
     ),
     benchmarkEndedAt: firstString(
       raw.benchmarkEndedAt, raw.endedAt, raw.endTime,
+      raw.finishedAt,
       raw.benchmark_ended_at, raw.ended_at, raw.end_time,
       run.endedAt, run.ended_at, timing.endedAt, timing.ended_at,
     ),
     reportGeneratedAt: firstString(
       raw.reportGeneratedAt, raw.report_generated_at,
       raw.generatedAt, raw.generated_at,
+      finishedAt,
     ) ?? "",
     wallTimeMs: firstNumber(
       raw.wallTimeMs, raw.wall_time_ms,
       resources.wallTimeMs, resources.wall_time_ms,
       timing.wallTimeMs, timing.wall_time_ms,
-    ),
+    ) ?? (elapsedSeconds === null ? null : elapsedSeconds * 1000),
     peakRssMB: firstNumber(
       raw.peakRssMB, raw.peak_rss_mb,
       resources.peakRssMB, resources.peak_rss_mb,
-    ),
+    ) ?? (peakRssKiB === null ? null : peakRssKiB / 1024),
   };
 }
 
@@ -415,178 +470,26 @@ export async function loadBenchmarkRuns(selectedRunIds: string[]): Promise<Loade
     runModelIds.push(runModelId);
     manifests[runModelId] = loaded.manifest;
     if (loaded.report) reports[runModelId] = loaded.report;
+    const plotsByDomain = buildPlotArtifacts(md5, runModelId, sim, loaded.report);
+    for (const domainArtifacts of Object.values(plotsByDomain)) {
+      for (const artifact of domainArtifacts) artifacts[artifact.artifactId] = artifact;
+    }
 
     for (const domain of domains) {
       benchmarkResults.push(
-        buildBenchmarkResult(runModelId, sim, domain, loaded.report, loaded.manifest),
+        buildBenchmarkResult(
+          runModelId,
+          sim,
+          domain,
+          loaded.report,
+          loaded.manifest,
+          plotsByDomain[domain].map((artifact) => artifact.artifactId),
+        ),
       );
-      const plot = buildPlotArtifact(md5, sim, domain);
-      artifacts[plot.artifactId] = plot;
     }
   }
 
   return { reports, manifests, benchmarkResults, artifacts, runModelIds };
-}
-
-function parseReportMD(md: string, modelId: string, sim: string): ReportStructure {
-  const lines = md.split("\n");
-
-  const simulationSetup: ReportStructure["simulationSetup"] = [];
-  const summary = { dc: [] as ReportStructure["summary"]["dc"], transient: [] as ReportStructure["summary"]["transient"], ac: [] as ReportStructure["summary"]["ac"], noise: [] as ReportStructure["summary"]["noise"] };
-  const allSections: ReportStructure["sections"] = [];
-
-  let currentSection: string | null = null;
-  let currentSubSection: string | null = null;
-  let sectionSubsections: { title: string; entries: ReportStructure["summary"]["dc"]; plots: string[] }[] = [];
-  let currentBulletEntries: ReportStructure["summary"]["dc"] = [];
-  let currentPlots: string[] = [];
-  let currentKeyFindings: string[] = [];
-  let inTable = false;
-  let tableRows: string[][] = [];
-
-  function flushBullets() {
-    if (currentBulletEntries.length === 0) return;
-    if (currentSection === "setup") {
-      simulationSetup.push(...currentBulletEntries);
-    } else if (currentSection === "detail" && currentSubSection) {
-      sectionSubsections.push({ title: currentSubSection, entries: [...currentBulletEntries], plots: [...currentPlots] });
-    }
-    currentBulletEntries = [];
-    currentPlots = [];
-  }
-
-  function flushTable() {
-    if (tableRows.length === 0) return;
-    const entries = tableRows.map(row => ({
-      testType: row[0].replace(/\[.*?\]\(.*?\)/g, "").trim(), // Strip markdown links
-      status: (row[1].includes("✓") ? "pass" : row[1].includes("✗") ? "fail" : row[1].includes("○") ? "in-progress" : "unavailable") as ReportStructure["summary"]["dc"][0]["status"],
-      keyFindings: row[2] || null,
-    }));
-
-    if (currentSection === "summary" && currentSubSection) {
-      (summary as any)[currentSubSection]?.push(...entries);
-    }
-    tableRows = [];
-  }
-
-  function parseStatusFromBullet(line: string): { status: ReportStructure["summary"]["dc"][0]["status"]; testType: string } {
-    // Pattern: "- [<span ...>✓</span>] Text" or "- <span ...>✗</span> Text: *desc*"
-    const stripped = line.replace(/^-\s*/, "");
-    if (stripped.includes("color: green") || stripped.includes(">✓<")) {
-      const text = stripped.replace(/\[<span[^>]*>✓<\/span>\]\s*/, "").trim();
-      return { status: "pass", testType: text };
-    }
-    if (stripped.includes("color: red") || stripped.includes(">✗<")) {
-      const text = stripped.replace(/<span[^>]*>✗<\/span>\s*/, "").replace(/\[<span[^>]*>✗<\/span>\]\s*/, "").trim();
-      return { status: "fail", testType: text.replace(/: \*.*\*$/, "").trim() };
-    }
-    if (stripped.includes("color: gray") || stripped.includes(">✗<")) {
-      const text = stripped.replace(/<span[^>]*>✗<\/span>\s*/, "").trim();
-      return { status: "in-progress", testType: text.replace(/: \*.*\*$/, "").trim() };
-    }
-    return { status: "unavailable", testType: stripped };
-  }
-
-  for (const line of lines) {
-    // Top-level sections
-    if (line.startsWith("## ") && line.includes("Simulation Setup")) {
-      flushTable(); flushBullets();
-      currentSection = "setup";
-    } else if (line.startsWith("## ") && line.includes("Summary")) {
-      flushTable(); flushBullets();
-      currentSection = "summary";
-    } else if (line.startsWith("## ") && !line.includes("Table of Contents") && !line.includes("Notes")) {
-      flushTable(); flushBullets();
-      if (allSections.length > 0 && sectionSubsections.length > 0) {
-        const prevSec = allSections[allSections.length - 1];
-        for (const sub of sectionSubsections) {
-          if (!prevSec.subsections.find(s => s.title === sub.title)) {
-            prevSec.subsections.push(sub);
-          }
-        }
-      }
-      currentSection = "detail";
-      currentSubSection = null;
-      sectionSubsections = [];
-      currentBulletEntries = [];
-      currentPlots = [];
-      const secName = line.replace(/^## \d+\. /, "").replace(/^## /, "").trim();
-      allSections.push({ title: secName, subsections: [] });
-    }
-    // Subsection headers
-    else if (line.startsWith("### ") && currentSection === "summary") {
-      flushTable();
-      if (line.includes("DC")) currentSubSection = "dc";
-      else if (line.includes("Transient")) currentSubSection = "transient";
-      else if (line.includes("AC")) currentSubSection = "ac";
-      else if (line.includes("Noise")) currentSubSection = "noise";
-    } else if (line.startsWith("### ") && currentSection === "detail") {
-      flushBullets();
-      currentSubSection = line.replace(/^### /, "").trim();
-      currentBulletEntries = [];
-      currentPlots = [];
-      currentKeyFindings = [];
-    }
-    // Bullet entries in setup or detail sections
-    else if ((currentSection === "setup" || currentSection === "detail") && line.match(/^-\s*\[?<span/)) {
-      const { status, testType } = parseStatusFromBullet(line);
-      currentKeyFindings = [];
-      currentBulletEntries.push({ testType, status, keyFindings: null });
-    }
-    // Child bullets (indented, after a parent bullet)
-    else if (line.match(/^\s{2,}- /) && currentBulletEntries.length > 0) {
-      const detail = line.replace(/^\s+-\s*/, "").trim();
-      if (detail) {
-        currentKeyFindings.push(detail);
-        // Update the last bullet entry's keyFindings
-        const last = currentBulletEntries[currentBulletEntries.length - 1];
-        last.keyFindings = currentKeyFindings.join("; ");
-      }
-    }
-    // Image references
-    else if (line.match(/<img src='([^']+)'/)) {
-      const m = line.match(/src='([^']+)'/);
-      if (m) {
-        const plotName = m[1].replace(/^plots?\//, "");
-        if (!currentPlots.includes(plotName)) currentPlots.push(plotName);
-      }
-    }
-    // Tables (only in summary)
-    else if (line.startsWith("| Test Type |")) {
-      inTable = true;
-      tableRows = [];
-      continue;
-    } else if (inTable && line.startsWith("|---")) {
-      continue;
-    } else if (inTable && line.includes("|")) {
-      const cells = line.split("|").slice(1, -1).map(c => c.trim());
-      if (cells.length >= 3) tableRows.push(cells);
-    } else if (inTable && !line.includes("|")) {
-      inTable = false;
-    }
-  }
-
-  // Flush remaining
-  flushTable();
-  flushBullets();
-
-  // Attach remaining subsections
-  if (allSections.length > 0 && sectionSubsections.length > 0) {
-    const lastSec = allSections[allSections.length - 1];
-    for (const sub of sectionSubsections) {
-      if (!lastSec.subsections.find(s => s.title === sub.title)) {
-        lastSec.subsections.push(sub);
-      }
-    }
-  }
-
-  return {
-    scenarioTitle: `${modelId} — ${sim}`,
-    generatedAt: "2026-07-25",
-    simulationSetup,
-    summary,
-    sections: allSections,
-  };
 }
 
 /* ─── Build WorkflowScenario ─── */
@@ -603,13 +506,13 @@ export async function buildScenario(): Promise<WorkflowScenario> {
 
   // Per-run manifests are lightweight selector metadata and are loaded up
   // front. REPORT files remain lazy and are fetched only after selection.
-  for (const info of Object.values(manifest.models)) {
+  for (const [uid, info] of Object.entries(manifest.models)) {
     const md5 = info.md5;
 
     for (const sim of simulators) {
       const simModelId = `${md5}|${sim}`;
       modelIds.push(simModelId);
-      models[simModelId] = buildModelArtifact(md5, info, null, sim);
+      models[simModelId] = buildModelArtifact(uid, md5, info, null, sim);
       manifestRequests.push(
         loadRunManifest(md5, sim, info).then((runManifest) => {
           manifests[simModelId] = runManifest;
@@ -625,7 +528,7 @@ export async function buildScenario(): Promise<WorkflowScenario> {
     schemaVersion: "3.0.0",
     scenarioId: "spice-benchmark",
     title: "SPICE Model Benchmark Results",
-    description: "Auto-discovered from data/spice-benchmark/. All models benchmarked with ngspice, hspice, spectre across DC, Transient, AC, Noise domains.",
+    description: "Auto-discovered from data/spice-model-benchmark/. Each selected model/simulator run loads its own manifest, REPORT.md and plots.",
     status: "completed",
     defaultInputModelId: firstId,
     defaultCandidateModelId: modelIds[1] || firstId,

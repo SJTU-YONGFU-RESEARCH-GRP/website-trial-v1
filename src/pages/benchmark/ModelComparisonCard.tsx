@@ -38,7 +38,7 @@ function formatOperationChain(chain: string | undefined): string {
 
 function formatReportTime(value: string | undefined): string {
   if (!value) return "Not available";
-  return value.replace(/\.\d+$/, "");
+  return value.replace("T", " ").replace(/(\d{2}:\d{2}:\d{2})\.\d+/, "$1");
 }
 
 function selectableRuns(scenario: WorkflowScenario) {
@@ -238,7 +238,6 @@ export function ModelComparisonCard({ scenario }: Props) {
                   <th>Model MD5</th>
                   <th>Simulator</th>
                   <th>Status</th>
-                  <th>Simulator version</th>
                   <th>Started</th>
                   <th>Ended</th>
                   <th>Wall time</th>
@@ -256,7 +255,6 @@ export function ModelComparisonCard({ scenario }: Props) {
                       <td style={{ fontFamily: "monospace" }}>{md5}</td>
                       <td>{simulator}</td>
                       <td><StatusBadge status={manifest.status ?? "unavailable"} /></td>
-                      <td>{manifest.simulatorVersion ?? "Not available"}</td>
                       <td>{manifest.benchmarkStartedAt ?? "Not available"}</td>
                       <td>{manifest.benchmarkEndedAt ?? "Not available"}</td>
                       <td>{formatMs(manifest.wallTimeMs ?? null)}</td>

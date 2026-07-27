@@ -13,6 +13,8 @@ import type {
   ReportSection,
   ReportSubSection,
   ReportEntry,
+  ReportPlot,
+  ReportTable,
   ReportStatus,
 } from "../../compat/spiceWorkflow/contracts";
 import type { WorkflowScenario } from "../../compat/spiceWorkflow/contracts";
@@ -31,6 +33,85 @@ function StatusBadge({ status }: { status: ReportStatus }) {
   return <span className={`rv-status-badge ${cfg.cls}`}>{cfg.symbol}</span>;
 }
 
+function numericValues(text: string): number[] {
+  return Array.from(text.matchAll(/(?<![A-Za-z0-9_])[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/g))
+    .map((match) => Number(match[0]))
+    .filter(Number.isFinite);
+}
+
+function deltaText(value: number, baseline: number): string {
+  const delta = value - baseline;
+  if (delta === 0) return baseline === 0 ? "Δ 0" : "Δ 0%";
+  if (baseline === 0) return `Δ ${delta.toPrecision(3)}`;
+  const percent = (delta / Math.abs(baseline)) * 100;
+  return `Δ ${percent > 0 ? "+" : ""}${percent.toPrecision(3)}%`;
+}
+
+function metricLines(value: string): string[] {
+  return value
+    .split(/,\s+(?=[A-Za-zΑ-Ωα-ω])/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function NumericDeltas({ value, baseline }: { value: string; baseline?: string }) {
+  if (!baseline) return null;
+  const values = numericValues(value);
+  const baselines = numericValues(baseline);
+  if (values.length === 0 || values.length !== baselines.length) return null;
+  return (
+    <span style={{ color: "var(--accent, #0071e3)", fontSize: "0.62rem", marginLeft: "0.3rem" }}>
+      （{values.map((number, index) => deltaText(number, baselines[index])).join(" · ")}）
+    </span>
+  );
+}
+
+function EntryFinding({
+  entry,
+  baseline,
+}: {
+  entry: ReportEntry;
+  baseline?: ReportEntry;
+}) {
+  if (entry.details && entry.details.length > 0) {
+    const baselineDetails = baseline?.details ?? [];
+    return (
+      <div className="rv-finding-text">
+        {entry.details.map((detail, index) => (
+          <div key={detail.lineNumber} style={{ paddingLeft: `${Math.max(0, detail.depth - 2) * 0.55}rem` }}>
+            {detail.text}
+            <NumericDeltas value={detail.text} baseline={baselineDetails[index]?.text} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return entry.keyFindings
+    ? (
+      <div className="rv-finding-text">
+        {metricLines(entry.keyFindings).map((line, index) => {
+          const baselineLine = baseline?.keyFindings
+            ? metricLines(baseline.keyFindings)[index]
+            : undefined;
+          return (
+            <div key={`${line}-${index}`}>
+              {line}
+              <NumericDeltas value={line} baseline={baselineLine} />
+            </div>
+          );
+        })}
+      </div>
+    )
+    : null;
+}
+
+interface EntryScope {
+  setup?: boolean;
+  summaryKey?: keyof ReportStructure["summary"];
+  sectionTitle?: string;
+  subsectionTitle?: string;
+}
+
 /* ─── Multi-Model Entry Table ─── */
 
 function MultiModelEntryTable({
@@ -38,11 +119,13 @@ function MultiModelEntryTable({
   modelIds,
   reportMap,
   scenario,
+  scope,
 }: {
   entries: ReportEntry[];
   modelIds: string[];
   reportMap: Map<string, ReportStructure>;
   scenario: WorkflowScenario;
+  scope?: EntryScope;
 }) {
   if (!entries || entries.length === 0) return null;
   const baselineModel = modelIds[0];
@@ -75,7 +158,7 @@ function MultiModelEntryTable({
               const report = reportMap.get(mid);
               if (!report) continue;
               // Try to find matching entry by traversing the same section structure
-              const found = findMatchingEntry(report, e);
+              const found = findMatchingEntry(report, e, scope);
               if (found) otherEntries.set(mid, found);
             }
 
@@ -84,9 +167,7 @@ function MultiModelEntryTable({
                 <td className="rv-entry-test">{e.testType}</td>
                 <td style={{ textAlign: "center" }}>
                   <StatusBadge status={e.status} />
-                  {e.keyFindings && (
-                    <div className="rv-finding-text">{e.keyFindings}</div>
-                  )}
+                  <EntryFinding entry={e} />
                 </td>
                 {modelIds.slice(1).map((mid) => {
                   const oe = otherEntries.get(mid);
@@ -95,9 +176,7 @@ function MultiModelEntryTable({
                       {oe ? (
                         <>
                           <StatusBadge status={oe.status} />
-                          {oe.keyFindings && (
-                            <div className="rv-finding-text">{oe.keyFindings}</div>
-                          )}
+                          <EntryFinding entry={oe} baseline={e} />
                         </>
                       ) : (
                         <span className="rv-na">—</span>
@@ -115,7 +194,24 @@ function MultiModelEntryTable({
 }
 
 /** Find matching entry in another report by traversing same structure paths */
-function findMatchingEntry(report: ReportStructure, target: ReportEntry): ReportEntry | null {
+function findMatchingEntry(
+  report: ReportStructure,
+  target: ReportEntry,
+  scope?: EntryScope,
+): ReportEntry | null {
+  if (scope?.setup) {
+    return report.simulationSetup.find((entry) => entry.testType === target.testType) ?? null;
+  }
+  if (scope?.summaryKey) {
+    return report.summary[scope.summaryKey].find((entry) => entry.testType === target.testType) ?? null;
+  }
+  if (scope?.sectionTitle && scope.subsectionTitle) {
+    const section = report.sections.find((candidate) => candidate.title === scope.sectionTitle);
+    const subsection = section?.subsections.find(
+      (candidate) => candidate.title === scope.subsectionTitle,
+    );
+    return subsection?.entries.find((entry) => entry.testType === target.testType) ?? null;
+  }
   // Search in simulationSetup
   for (const e of report.simulationSetup) {
     if (e.testType === target.testType) return e;
@@ -168,13 +264,60 @@ function EntryTable({ entries }: { entries: ReportEntry[] }) {
               <StatusBadge status={e.status} />
             </td>
             <td className="rv-entry-findings">
-              {e.keyFindings ?? <span className="rv-na">—</span>}
+              <EntryFinding entry={e} />
+              {!e.keyFindings && (!e.details || e.details.length === 0) && <span className="rv-na">—</span>}
             </td>
           </tr>
         ))}
       </tbody>
     </table>
   );
+}
+
+function MarkdownTableView({ table }: { table: ReportTable }) {
+  return (
+    <div className="rv-table-scroll">
+      <table className="rv-entry-table">
+        <thead>
+          <tr>{table.headers.map((header, index) => <th key={index}>{header}</th>)}</tr>
+        </thead>
+        <tbody>
+          {table.rows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function findSubsection(
+  report: ReportStructure,
+  sectionTitle: string,
+  subsectionTitle: string,
+): ReportSubSection | null {
+  return report.sections
+    .find((section) => section.title === sectionTitle)
+    ?.subsections.find((subsection) => subsection.title === subsectionTitle) ?? null;
+}
+
+function samePlot(left: ReportPlot, right: ReportPlot): boolean {
+  const leftName = left.src.split("/").pop();
+  const rightName = right.src.split("/").pop();
+  return left.src === right.src || leftName === rightName || (left.alt !== "" && left.alt === right.alt);
+}
+
+function openImageOverlay(image: HTMLImageElement) {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;";
+  const clone = document.createElement("img");
+  clone.src = image.src;
+  clone.style.cssText = "max-width:95vw;max-height:95vh;object-fit:contain;";
+  overlay.appendChild(clone);
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
 }
 
 /* ─── SubSection ─── */
@@ -186,16 +329,52 @@ function SubSectionView({
   reportMap,
   scenario,
   baseImgUrl,
+  sectionTitle,
 }: {
   sub: ReportSubSection;
   defaultOpen: boolean;
   modelIds: string[];
   reportMap: Map<string, ReportStructure>;
   scenario: WorkflowScenario;
-  baseImgUrl: (modelId: string, plotName: string) => string;
+  baseImgUrl: (modelId: string, plotPath: string) => string;
+  sectionTitle: string;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const hasMulti = modelIds.length > 1;
+  const orderedContent = useMemo(() => {
+    const content: Array<
+      | { kind: "entries"; entries: ReportEntry[] }
+      | { kind: "paragraph"; text: string }
+      | { kind: "image"; plot: ReportPlot }
+      | { kind: "table"; table: ReportTable }
+    > = [];
+    let pendingEntries: ReportEntry[] = [];
+    const flushEntries = () => {
+      if (pendingEntries.length > 0) content.push({ kind: "entries", entries: pendingEntries });
+      pendingEntries = [];
+    };
+    const blocks = sub.blocks ?? [];
+    for (let blockIndex = 0; blockIndex < blocks.length; blockIndex += 1) {
+      const block = blocks[blockIndex];
+      if (block.kind === "check" && block.entry) {
+        pendingEntries.push(block.entry);
+      } else if (block.kind === "paragraph" && block.text) {
+        flushEntries();
+        const nextContentBlock = blocks.slice(blockIndex + 1).find((candidate) => candidate.kind !== "blank");
+        const isImageCaption = nextContentBlock?.kind === "image"
+          && nextContentBlock.plot?.caption === block.text;
+        if (!isImageCaption) content.push({ kind: "paragraph", text: block.text });
+      } else if (block.kind === "image" && block.plot) {
+        flushEntries();
+        content.push({ kind: "image", plot: block.plot });
+      } else if (block.kind === "table" && block.table) {
+        flushEntries();
+        content.push({ kind: "table", table: block.table });
+      }
+    }
+    flushEntries();
+    return content;
+  }, [sub]);
 
   return (
     <div className="rv-subsection">
@@ -206,40 +385,70 @@ function SubSectionView({
       </div>
       {open && (
         <div className="rv-subsection-body">
-          {hasMulti ? (
-            <MultiModelEntryTable entries={sub.entries} modelIds={modelIds} reportMap={reportMap} scenario={scenario} />
-          ) : (
-            <EntryTable entries={sub.entries} />
-          )}
-
-          {/* Embedded plot images */}
-          {sub.plots && sub.plots.length > 0 && (
-            <div className="rv-plot-embed">
-              {sub.plots.map((plotName, pi) => (
-                <div key={pi} className="rv-plot-embed-item">
-                  <div className="rv-plot-embed-label">{plotName}</div>
+          {(orderedContent.length > 0
+            ? orderedContent
+            : [{ kind: "entries" as const, entries: sub.entries }]
+          ).map((item, itemIndex) => {
+            if (item.kind === "entries") {
+              return hasMulti ? (
+                <MultiModelEntryTable
+                  key={itemIndex}
+                  entries={item.entries}
+                  modelIds={modelIds}
+                  reportMap={reportMap}
+                  scenario={scenario}
+                  scope={{ sectionTitle, subsectionTitle: sub.title }}
+                />
+              ) : <EntryTable key={itemIndex} entries={item.entries} />;
+            }
+            if (item.kind === "paragraph") {
+              return <p key={itemIndex} className="rv-plot-embed-label">{item.text}</p>;
+            }
+            if (item.kind === "table") {
+              return (
+                <div key={itemIndex} className="rv-plot-embed-row">
+                  {modelIds.map((mid) => {
+                    const otherReport = reportMap.get(mid);
+                    const otherSub = otherReport
+                      ? findSubsection(otherReport, sectionTitle, sub.title)
+                      : null;
+                    const matching = otherSub?.tables?.find(
+                      (table) => table.headers.join("|") === item.table.headers.join("|"),
+                    );
+                    return (
+                      <div key={mid} className="rv-plot-embed-fig">
+                        <strong>{scenario.models[mid]?.displayName ?? mid}</strong>
+                        {matching ? <MarkdownTableView table={matching} /> : <span className="rv-na">—</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            }
+            return (
+              <div key={itemIndex} className="rv-plot-embed">
+                <div className="rv-plot-embed-item">
+                  <div className="rv-plot-embed-label">{item.plot.caption ?? item.plot.alt}</div>
                   <div className="rv-plot-embed-row">
                     {modelIds.map((mid) => {
                       const model = scenario.models[mid];
-                      const url = baseImgUrl(mid, plotName);
+                      const otherReport = reportMap.get(mid);
+                      const otherSub = otherReport
+                        ? findSubsection(otherReport, sectionTitle, sub.title)
+                        : null;
+                      const plot = otherSub?.plotDetails?.find((candidate) => samePlot(candidate, item.plot));
+                      if (!plot) {
+                        return <div key={mid} className="rv-plot-unavailable">Image not available</div>;
+                      }
+                      const url = baseImgUrl(mid, plot.src);
                       return (
-                        <figure key={mid} className="rv-plot-embed-fig">
+                        <figure key={mid} className="rv-plot-embed-fig rv-plot-image-fig">
                           <img
                             src={url}
-                            alt={`${model?.displayName ?? mid} — ${plotName}`}
+                            alt={`${model?.displayName ?? mid} — ${plot.alt}`}
                             loading="lazy"
                             style={{ cursor: "zoom-in" }}
-                            onClick={(e) => {
-                              const img = e.target as HTMLImageElement;
-                              const overlay = document.createElement("div");
-                              overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;";
-                              const clone = document.createElement("img");
-                              clone.src = img.src;
-                              clone.style.cssText = "max-width:95vw;max-height:95vh;object-fit:contain;";
-                              overlay.appendChild(clone);
-                              overlay.onclick = () => overlay.remove();
-                              document.body.appendChild(overlay);
-                            }}
+                            onClick={(event) => openImageOverlay(event.target as HTMLImageElement)}
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = "none";
                               (e.target as HTMLImageElement).nextElementSibling?.classList.remove("rv-hidden");
@@ -252,24 +461,63 @@ function SubSectionView({
                     })}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
 
-/* ─── Domain → analysis domain mapping ─── */
-
-const DOMAIN_MAP: Record<string, string> = {
-  "DC Analysis": "dc",
-  "Transient Analysis": "transient",
-  "AC Analysis": "ac",
-  "Noise Analysis": "noise",
-  "Geometry and Layout Analysis": "geometry",
-};
+function RunIntegrityTable({
+  modelIds,
+  reportMap,
+  scenario,
+}: {
+  modelIds: string[];
+  reportMap: Map<string, ReportStructure>;
+  scenario: WorkflowScenario;
+}) {
+  const fields = Array.from(new Set(
+    modelIds.flatMap((modelId) => Object.keys(reportMap.get(modelId)?.runIntegrity ?? {})),
+  ));
+  if (fields.length === 0) return null;
+  return (
+    <div className="rv-table-scroll">
+      <table className="rv-entry-table">
+        <thead>
+          <tr>
+            <th>Run field</th>
+            {modelIds.map((modelId) => (
+              <th key={modelId}>{scenario.models[modelId]?.displayName ?? modelId}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {fields.map((field) => (
+            <tr key={field}>
+              <td className="rv-entry-test">{field}</td>
+              {modelIds.map((modelId) => (
+                <td key={modelId}>{reportMap.get(modelId)?.runIntegrity[field] ?? "—"}</td>
+              ))}
+            </tr>
+          ))}
+          <tr>
+            <td className="rv-entry-test">Integrity notes</td>
+            {modelIds.map((modelId) => (
+              <td key={modelId}>
+                {(reportMap.get(modelId)?.runIntegrityNotes ?? []).map((note, index) => (
+                  <div key={index}>{note}</div>
+                ))}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 /* ─── Section ─── */
 
@@ -286,7 +534,7 @@ function SectionView({
   modelIds: string[];
   reportMap: Map<string, ReportStructure>;
   scenario: WorkflowScenario;
-  baseImgUrl: (modelId: string, plotName: string) => string;
+  baseImgUrl: (modelId: string, plotPath: string) => string;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const totalTests =
@@ -305,6 +553,9 @@ function SectionView({
           {sect.entries && sect.entries.length > 0 && (
             <EntryTable entries={sect.entries} />
           )}
+          {sect.title === "Run Integrity" && (
+            <RunIntegrityTable modelIds={modelIds} reportMap={reportMap} scenario={scenario} />
+          )}
           {sect.subsections.map((sub, i) => (
             <SubSectionView
               key={i}
@@ -314,118 +565,11 @@ function SectionView({
               reportMap={reportMap}
               scenario={scenario}
               baseImgUrl={baseImgUrl}
+              sectionTitle={sect.title}
             />
           ))}
-          {/* Domain-specific Metric Deltas between tables and next section */}
-          {modelIds.length >= 2 && (
-            <InlineMetricDeltas
-              scenario={scenario}
-              selectedModels={modelIds}
-              domain={DOMAIN_MAP[sect.title] ?? sect.title.toLowerCase()}
-            />
-          )}
         </div>
       )}
-    </div>
-  );
-}
-
-/* ─── Inline Metric Deltas per domain ─── */
-
-function InlineMetricDeltas({
-  scenario,
-  selectedModels,
-  domain,
-}: {
-  scenario: WorkflowScenario;
-  selectedModels: string[];
-  domain: string;
-}) {
-  const metricKeys = useMemo(() => {
-    const keys = new Set<string>();
-    for (const mid of selectedModels) {
-      for (const br of scenario.benchmarkResults) {
-        if (br.modelId === mid && br.domain === domain) {
-          for (const k of Object.keys(br.keyMetrics)) {
-            keys.add(k);
-          }
-        }
-      }
-    }
-    return Array.from(keys).sort();
-  }, [scenario, selectedModels, domain]);
-
-  if (selectedModels.length < 2 || metricKeys.length === 0) return null;
-
-  const baseline = selectedModels[0];
-  const modelMetrics = new Map<string, Map<string, number | null>>();
-  for (const mid of selectedModels) {
-    const mm = new Map<string, number | null>();
-    for (const br of scenario.benchmarkResults) {
-      if (br.modelId === mid && br.domain === domain) {
-        for (const [k, v] of Object.entries(br.keyMetrics)) {
-          if (typeof v === "number") mm.set(k, v);
-        }
-      }
-    }
-    modelMetrics.set(mid, mm);
-  }
-
-  function formatDelta(baselineVal: number | null, candVal: number | null): string {
-    if (baselineVal === null || candVal === null || baselineVal === 0) return "—";
-    const delta = ((candVal - baselineVal) / Math.abs(baselineVal)) * 100;
-    const sign = delta >= 0 ? "+" : "";
-    return `${sign}${delta.toPrecision(3)}%`;
-  }
-
-  function formatValue(v: number | null): string {
-    if (v === null) return "—";
-    if (Math.abs(v) < 1e-3 || Math.abs(v) > 1e6) return v.toExponential(3);
-    return v.toPrecision(6);
-  }
-
-  return (
-    <div className="rv-metric-deltas" style={{ marginTop: "0.5rem", paddingTop: "0.5rem", borderTop: "1px dashed var(--border-light, #ddd)" }}>
-      <h4 style={{ fontSize: "0.78rem", marginBottom: "0.4rem" }}>📊 {domain.toUpperCase()} Metric Deltas (Δ vs baseline)</h4>
-      <div className="rv-verdict-scroll">
-        {metricKeys.map((metric) => (
-          <div key={metric} style={{ marginBottom: "0.35rem" }}>
-            <div style={{ fontSize: "0.65rem", fontWeight: 600, marginBottom: "0.15rem", color: "var(--text-secondary, #555)", fontFamily: "monospace", wordBreak: "break-all" }}>
-              {metric}
-            </div>
-            <table className="rv-entry-table" style={{ fontSize: "0.68rem" }}>
-              <thead>
-                <tr>
-                  {selectedModels.map((mid) => (
-                    <th key={mid} style={{ textAlign: "center", fontSize: "0.6rem" }}>
-                      {scenario.models[mid]?.displayName ?? mid}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {selectedModels.map((mid, i) => {
-                    const val = modelMetrics.get(mid)?.get(metric) ?? null;
-                    const baselineVal = modelMetrics.get(baseline)?.get(metric) ?? null;
-                    const delta = i > 0 ? formatDelta(baselineVal, val) : undefined;
-                    return (
-                      <td key={mid} className="rv-verdict-cell" style={{ fontFamily: "monospace", fontSize: "0.65rem" }}>
-                        {formatValue(val)}
-                        {delta && (
-                          <span style={{ display: "block", fontSize: "0.6rem", color: "var(--accent, #0071e3)", marginTop: "1px" }}>
-                            Δ {delta}
-                          </span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -464,10 +608,11 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
     return { report: primary?.report ?? null, reportMap: map };
   }, [scenario, selectedModels]);
 
-  // Image URL builder — modelId is `${md5}|${sim}`, we need the md5 part for the path
-  const baseImgUrl = (modelId: string, plotName: string): string => {
+  // Plot paths are kept exactly as REPORT.md wrote them and are report-directory relative.
+  const baseImgUrl = (modelId: string, plotPath: string): string => {
     const { md5, sim } = parseModelId(modelId);
-    return `${import.meta.env.BASE_URL || "/"}data/spice-benchmark/${md5}/${sim}/plot/${plotName}`;
+    const safePath = plotPath.replace(/^\.?\//, "");
+    return `${import.meta.env.BASE_URL || "/"}data/spice-model-benchmark/${md5}/${sim}/${safePath}`;
   };
 
   if (selectedModels.length === 0 || !report) {
@@ -500,11 +645,11 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
         })}
       </div>
 
-      {/* 1. Simulation Setup */}
+      {/* Simulation Setup */}
       <div className="rv-section">
         <div className="rv-section-header" onClick={() => setExpandedSetup((o) => !o)}>
           <span className="rv-caret rv-caret--lg">{expandedSetup ? "▼" : "▶"}</span>
-          <h3>1. Simulation Setup and Execution</h3>
+          <h3>Simulation Setup and Execution</h3>
           <span className="rv-entry-count">{report.simulationSetup.length} checks</span>
         </div>
         {expandedSetup && (
@@ -515,6 +660,7 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
                 modelIds={selectedModels}
                 reportMap={reportMap}
                 scenario={scenario}
+                scope={{ setup: true }}
               />
             ) : (
               <EntryTable entries={report.simulationSetup} />
@@ -523,11 +669,11 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
         )}
       </div>
 
-      {/* 2. Summary */}
+      {/* Summary */}
       <div className="rv-section">
         <div className="rv-section-header" onClick={() => setExpandedSummary((o) => !o)}>
           <span className="rv-caret rv-caret--lg">{expandedSummary ? "▼" : "▶"}</span>
-          <h3>2. Summary</h3>
+          <h3>Summary</h3>
         </div>
         {expandedSummary && (
           <div className="rv-section-body">
@@ -548,6 +694,7 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
                       modelIds={selectedModels}
                       reportMap={reportMap}
                       scenario={scenario}
+                      scope={{ summaryKey: domain }}
                     />
                   ) : (
                     <EntryTable entries={entries} />

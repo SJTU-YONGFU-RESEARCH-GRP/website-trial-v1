@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const BENCHMARK_DATA = resolve(ROOT, "data/spice-benchmark");
+const BENCHMARK_DATA = resolve(ROOT, "data/spice-model-benchmark");
 
 let errors = 0;
 let warnings = 0;
@@ -40,6 +40,7 @@ const required = [
   "src/data/benchmarkWorkspace/integratedDemo.ts", "src/data/benchmarkWorkspace/bundledModels.ts",
   "src/data/benchmarkWorkspace/selectors.ts", "src/data/benchmarkWorkspace/index.ts",
   "src/data/benchmarkWorkspace/dataLoader.ts",
+  "src/data/benchmarkWorkspace/reportParser.ts",
   "src/pages/benchmark/BenchmarkWorkspacePage.tsx",
   "src/pages/benchmark/ModelComparisonCard.tsx",
   "src/pages/benchmark/ReportViewerCard.tsx",
@@ -91,7 +92,7 @@ for (const [id, label] of expectedLabels) {
 /* ─── 4. Current benchmark result tree ─── */
 console.log("\n🖼 Benchmark result tree...");
 if (!existsSync(BENCHMARK_DATA)) {
-  err("Missing data/spice-benchmark");
+  err("Missing data/spice-model-benchmark");
 } else {
   const globalManifestPath = resolve(BENCHMARK_DATA, "manifest.json");
   if (!existsSync(globalManifestPath)) {
