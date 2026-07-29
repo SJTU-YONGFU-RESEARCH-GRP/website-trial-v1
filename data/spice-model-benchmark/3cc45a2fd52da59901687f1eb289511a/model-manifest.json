@@ -1,0 +1,81 @@
+{
+  "id": "sky130__fd__pr__special__nfet__pass__model__expansion_translation",
+  "sourceId": "sky130__fd__pr__special__nfet__pass__model",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass/sky130_fd_pr__special_nfet_pass.pm3.spice",
+  "sourceMd5": "cb1f12174045e0f4d733b5a77b432f68",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/3cc45a2fd52da59901687f1eb289511a/model.lib",
+  "md5": "3cc45a2fd52da59901687f1eb289511a",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__special_nfet_pass__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 144
+    }
+  ],
+  "completedAt": "2026-07-28T11:43:43.552201+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-28T11:43:37.484142+00:00",
+      "elapsedSeconds": 2.44861,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/original/model.lib",
+      "inputMd5": "664f48b4baecfe6c0236f013f54c0161",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "8f442c3e811e22992f1fbbc086b571e5",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "13391ffb65658bc39ebacd7a8522b20f",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "8f442c3e811e22992f1fbbc086b571e5",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "13391ffb65658bc39ebacd7a8522b20f",
+        "physicalModelSignature": "0e3e523e87dc67df7524a257d8c32b72d0b133e10ea8f63835231879d8e01660",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 144
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:43:40.011085+00:00",
+      "elapsedSeconds": 1.394821,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "13391ffb65658bc39ebacd7a8522b20f",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "065b9cef7787c0937d730e7ec360c061",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "96509d99f1cda6baf3bd818ef0ae4fe2",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "065b9cef7787c0937d730e7ec360c061",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "96509d99f1cda6baf3bd818ef0ae4fe2",
+        "physicalModelSignature": "0e3e523e87dc67df7524a257d8c32b72d0b133e10ea8f63835231879d8e01660",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 144
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}
