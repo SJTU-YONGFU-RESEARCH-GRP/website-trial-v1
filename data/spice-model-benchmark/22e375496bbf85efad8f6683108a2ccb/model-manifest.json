@@ -1,0 +1,81 @@
+{
+  "id": "sky130__fd__pr__nfet__20v0__zvt__base__expansion_translation",
+  "sourceId": "sky130__fd__pr__nfet__20v0__zvt__base",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__subcircuit.pm3.spice",
+  "sourceMd5": "19cbb5843c0569cf0c83d33369571cd4",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/22e375496bbf85efad8f6683108a2ccb/model.lib",
+  "md5": "22e375496bbf85efad8f6683108a2ccb",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__nfet_20v0_zvt__base.0",
+      "deviceType": "nmos",
+      "parameterCount": 257
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:35.663249+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-28T11:42:25.544228+00:00",
+      "elapsedSeconds": 2.376065,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/original/model.lib",
+      "inputMd5": "ab4f13adb13632e29bc430511ee15ee9",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "5fe438dd34a923562532e07cd773e982",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "a40ef3deefed7ef297f8c301c0ce3862",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "5fe438dd34a923562532e07cd773e982",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "a40ef3deefed7ef297f8c301c0ce3862",
+        "physicalModelSignature": "f9894cd7109a35d542dbe43c3a79cdeca7f80487af84bb53c9e194af19deb8df",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__nfet_20v0_zvt__base.0",
+            "deviceType": "nmos",
+            "parameterCount": 257
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:42:28.916771+00:00",
+      "elapsedSeconds": 3.082227,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "a40ef3deefed7ef297f8c301c0ce3862",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "d207858899edd3e1bbc25206a6703af6",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "916c43f518c09d2a10a860e9cdf892a0",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "d207858899edd3e1bbc25206a6703af6",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__zvt__base/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "916c43f518c09d2a10a860e9cdf892a0",
+        "physicalModelSignature": "f9894cd7109a35d542dbe43c3a79cdeca7f80487af84bb53c9e194af19deb8df",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__nfet_20v0_zvt__base.0",
+            "deviceType": "nmos",
+            "parameterCount": 257
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

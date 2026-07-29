@@ -1,0 +1,111 @@
+{
+  "id": "sky130__fd__bs__flash__special__sonosfet__star__model__expansion_translation",
+  "sourceId": "sky130__fd__bs__flash__special__sonosfet__star__model",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_e/begin_of_life.pm3.spice",
+  "sourceMd5": "74d4b419f7ef19c0761ab429ec77c1da",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/0fada072ec35587a51d7bae0b506b1a8/model.lib",
+  "md5": "0fada072ec35587a51d7bae0b506b1a8",
+  "cardCount": 3,
+  "models": [
+    {
+      "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 140
+    },
+    {
+      "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+      "deviceType": "nmos",
+      "parameterCount": 140
+    },
+    {
+      "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+      "deviceType": "nmos",
+      "parameterCount": 140
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:22.145853+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-28T11:42:15.593334+00:00",
+      "elapsedSeconds": 2.5113,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/original/model.lib",
+      "inputMd5": "de3782d51b229d96bc076cc533d33394",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "5c176bd299fa949302e7d15357db9850",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "3b882f30d2d09a0987304c66f0ffc294",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "5c176bd299fa949302e7d15357db9850",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "3b882f30d2d09a0987304c66f0ffc294",
+        "physicalModelSignature": "77e2eff23ca15edce725b81acb628c39d92e334a2f7b4cbf6e884189f5339689",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:42:18.605750+00:00",
+      "elapsedSeconds": 1.582595,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "3b882f30d2d09a0987304c66f0ffc294",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "c1dbf350c48a31f2ed6b218ad8ddb631",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "d3c3de2a1348cafd36a0c82dfd7b0c63",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "c1dbf350c48a31f2ed6b218ad8ddb631",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "d3c3de2a1348cafd36a0c82dfd7b0c63",
+        "physicalModelSignature": "77e2eff23ca15edce725b81acb628c39d92e334a2f7b4cbf6e884189f5339689",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}
