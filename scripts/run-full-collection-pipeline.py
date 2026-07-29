@@ -13,6 +13,7 @@ The workflow is resumable and records evidence at every boundary:
 from __future__ import annotations
 
 import argparse
+import decimal
 import hashlib
 import json
 import os
@@ -45,6 +46,11 @@ AUDIT_PATH = WORK_ROOT / "acceptance.json"
 
 SIMULATORS = ("ngspice", "spectre", "hspice")
 MODES = ("dc", "transient", "ac", "noise")
+NETLIST_EXTENSIONS = {
+    "ngspice": ".cir",
+    "spectre": ".scs",
+    "hspice": ".sp",
+}
 CHAINS = {
     "reduction": ("reduction",),
     "expansion_translation": ("expansion", "translation"),
@@ -73,6 +79,8 @@ EXPECTED_PLOTS = (
     "trans_energy_consumption.png",
     "trans_quasi_static_time.png",
     "trans_quasi_static_iv.png",
+    "trans_charge_conservation.png",
+    "trans_total_charge.png",
     "noise_thermal_noise.png",
     "noise_flicker_noise.png",
     "noise_shot_noise.png",
@@ -145,6 +153,73 @@ def model_summary(models: Iterable[Any]) -> list[dict[str, Any]]:
     ]
 
 
+def physical_model_signature(models: Iterable[Any]) -> str:
+    """Hash the AST fields that define the supplied device models."""
+    def canonical_value(value: Any) -> str:
+        # The AST historically represented a braced scalar such as
+        # ``{1.0e20}`` as a singleton set in a few Sky130 cards.  Commercial
+        # dialect writers remove the expression braces around a numeric
+        # literal, so compare the scalar itself rather than the parser's
+        # container accident.  Multi-value sets remain distinct.
+        if isinstance(value, (set, frozenset)) and len(value) == 1:
+            return canonical_value(next(iter(value)))
+        if not isinstance(value, str):
+            if isinstance(value, (int, float, decimal.Decimal)):
+                number = decimal.Decimal(str(value))
+                return "number:" + (
+                    "0" if number.is_zero() else str(number.normalize())
+                )
+            return repr(value)
+        normalized = value.strip()
+        previous = None
+        while normalized != previous and len(normalized) >= 2:
+            previous = normalized
+            if (
+                normalized[0] == normalized[-1]
+                and normalized[0] in {"'", '"'}
+            ):
+                normalized = normalized[1:-1].strip()
+                continue
+            if normalized[0] == "{" and normalized[-1] == "}":
+                normalized = normalized[1:-1].strip()
+        if re.fullmatch(
+            r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?",
+            normalized,
+        ):
+            number = decimal.Decimal(normalized)
+            return "number:" + (
+                "0" if number.is_zero() else str(number.normalize())
+            )
+        return repr(normalized)
+
+    payload = [
+        {
+            # SPICE identifiers and model keywords are case-insensitive.  Writers
+            # are free to canonicalize ``NMOS`` to ``nmos`` without changing the
+            # supplied device, so compare their canonical spelling here while
+            # keeping every parameter/value comparison exact.
+            "name": str(model.name).lower(),
+            "modelType": str(model.model_type).lower(),
+            "deviceType": model.device_type.value,
+            "baseParameters": sorted(
+                (str(name).lower(), canonical_value(value))
+                for name, value in model.base_parameters.items()
+            ),
+            "variations": repr(model.variations),
+            "subcircuits": repr(model.subcircuits),
+            "statistical": repr(model.statistical),
+        }
+        for model in models
+    ]
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def write_ir(models: list[Any], output: Path, provenance: str) -> None:
     if str(TRANSLATOR) not in sys.path:
         sys.path.insert(0, str(TRANSLATOR))
@@ -190,12 +265,22 @@ def ast_normalize(
         )
     if not all(model.base_parameters for model in parsed_back):
         raise ValueError(f"AST round-trip yielded an empty model card: {output_path}")
+    input_signature = physical_model_signature(models)
+    output_signature = physical_model_signature(parsed_back)
+    if output_signature != input_signature:
+        raise ValueError(
+            "AST round-trip changed model identity, parameters, variations, "
+            f"or subcircuits for {input_path}: "
+            f"{input_signature} -> {output_signature}"
+        )
     return {
         "input": str(input_path),
         "inputMd5": digest(input_path),
         "inputFormat": source_format or input_path.suffix.lstrip(".").lower(),
         "output": str(output_path),
         "outputMd5": digest(output_path),
+        "physicalModelSignature": output_signature,
+        "parameterPreserving": True,
         "cards": model_summary(parsed_back),
     }
 
@@ -337,7 +422,11 @@ def expand_model(
         ],
         cwd=EXPANSION,
         log=log,
-        env={"PYTHONPATH": f"{EXPANSION}:{EXPANSION / 'src'}"},
+        env={
+            "PYTHONPATH": (
+                f"{EXPANSION}:{EXPANSION / 'src'}:{AST_SRC}"
+            )
+        },
     )
     raw = corner_dir / "models" / "model_f.sp"
     normalized = stage_dir / "normalized.lib"
@@ -384,7 +473,7 @@ def translate_model(
         ],
         cwd=TRANSLATOR,
         log=log,
-        env={"PYTHONPATH": str(TRANSLATOR)},
+        env={"PYTHONPATH": f"{TRANSLATOR}:{AST_SRC}"},
     )
     normalized = stage_dir / "normalized.lib"
     ast_record = ast_normalize(
@@ -490,10 +579,30 @@ def fit_model(
     fitted_models = parser_for(fitted, "ngspice")(fitted).parse_to_ir()
     if len(fitted_models) != 1:
         raise ValueError(f"Fitting returned {len(fitted_models)} cards for {target.name}")
-    merged_models = [
-        fitted_models[0] if model.name.lower() == target.name.lower() else model
-        for model in models
-    ]
+    trained_parameter = threshold_parameter(target)
+    fitted_parameters = {
+        str(name).lstrip("+").lower(): value
+        for name, value in fitted_models[0].base_parameters.items()
+    }
+    if trained_parameter.lower() not in fitted_parameters:
+        raise ValueError(
+            f"Fitting output omitted trained parameter {trained_parameter}"
+        )
+    # The fitting CLI emits a compact standalone card.  Replacing the source
+    # card with it would silently discard bin limits and unrelated physical
+    # parameters.  Apply only the explicitly trained value to the complete
+    # source IR.
+    for name in list(target.base_parameters):
+        if str(name).lstrip("+").lower() == trained_parameter.lower():
+            target.base_parameters[name] = fitted_parameters[
+                trained_parameter.lower()
+            ]
+            break
+    else:
+        target.base_parameters[trained_parameter] = fitted_parameters[
+            trained_parameter.lower()
+        ]
+    merged_models = models
     raw = stage_dir / "fitted-with-companions.lib"
     write_ir(merged_models, raw, provenance + ":fitting-merge")
     normalized = stage_dir / "normalized.lib"
@@ -586,7 +695,7 @@ def execute_chain(
     shutil.copy2(model_work / "accepted.lib", final_model)
     payload = {
         "id": model_id,
-        "sourceId": source_record["id"],
+        "sourceId": source_record["sourceId"],
         "kind": "processed",
         "chainId": chain_id,
         "chain": list(tools),
@@ -885,24 +994,58 @@ def complete_missing_card_models() -> list[dict[str, Any]]:
     return records
 
 
-def ngspice_capability_preflight(model_path: Path) -> tuple[bool, str]:
-    """Compile and operate every non-fixture card with polarity-correct bias."""
+def benchmark_dut_geometry(model_path: Path) -> tuple[str, str]:
+    """Return the exact stock-fixture W/L requested by the model handoff."""
+    text = model_path.read_text(errors="replace")
+    match = re.search(
+        r"(?im)^\s*\*\s*BENCHMARK_DUT_GEOMETRY_OVERRIDE:\s*"
+        r"L=(\S+)\s+W=(\S+)\s*$",
+        text,
+    )
+    if match is None:
+        return "10u", "1u"
+    return match.group(2), match.group(1)
+
+
+def ngspice_capability_preflight(
+    model_path: Path,
+    model_selector: str | None = None,
+) -> tuple[bool, str]:
+    """Compile all cards and operate each logical bin family at DUT geometry."""
     models = parser_for(model_path, "ngspice")(model_path).parse_to_ir()
+    width, length = benchmark_dut_geometry(model_path)
     lines = [
         "* ngspice model capability preflight",
         f".include '{model_path.resolve()}'",
         ".options noacct",
     ]
-    device_count = 0
-    first_device: tuple[int, bool] | None = None
-    for index, model in enumerate(models):
+    targets: dict[tuple[str, str], Any] = {}
+    for model in models:
         if model.name.lower().startswith("__fixture_"):
             continue
+        if (
+            model_selector is not None
+            and model.name.lower() != model_selector.lower()
+        ):
+            continue
+        selector = (
+            model.name
+            if model_selector is not None
+            else re.sub(r"\.\d+$", "", model.name)
+        )
+        targets.setdefault(
+            (selector.lower(), model.device_type.value.lower()),
+            model,
+        )
+    device_count = 0
+    first_device: tuple[int, bool] | None = None
+    for index, ((selector, _), model) in enumerate(targets.items()):
         is_pmos = model.device_type.value.lower() == "pmos"
         bias = "-0.8" if is_pmos else "0.8"
         lines.extend(
             (
-                f"M{index} d{index} g{index} 0 0 {model.name} W=1u L=1u",
+                f"M{index} d{index} g{index} 0 0 {selector} "
+                f"W={width} L={length}",
                 f"VD{index} d{index} 0 {bias}",
                 f"VG{index} g{index} 0 {bias}",
             )
@@ -962,22 +1105,43 @@ def ngspice_capability_preflight(model_path: Path) -> tuple[bool, str]:
     return process.returncode == 0 and failed_marker is None, reason
 
 
-def hspice_capability_preflight(model_path: Path) -> tuple[bool, str]:
-    """Compile and operate every card with HSPICE before the full matrix."""
+def hspice_capability_preflight(
+    model_path: Path,
+    model_selector: str | None = None,
+) -> tuple[bool, str]:
+    """Compile all cards and operate each logical bin family with HSPICE."""
     models = parser_for(model_path, "ngspice")(model_path).parse_to_ir()
+    width, length = benchmark_dut_geometry(model_path)
     lines = [
         "* HSPICE model capability preflight",
         ".OPTION BRIEF NOMOD",
         f".INC '{model_path.resolve()}'",
     ]
-    count = 0
-    for index, model in enumerate(models):
+    targets: dict[tuple[str, str], Any] = {}
+    for model in models:
         if model.name.lower().startswith("__fixture_"):
             continue
+        if (
+            model_selector is not None
+            and model.name.lower() != model_selector.lower()
+        ):
+            continue
+        selector = (
+            model.name
+            if model_selector is not None
+            else re.sub(r"\.\d+$", "", model.name)
+        )
+        targets.setdefault(
+            (selector.lower(), model.device_type.value.lower()),
+            model,
+        )
+    count = 0
+    for index, ((selector, _), model) in enumerate(targets.items()):
         bias = "-0.8" if model.device_type.value.lower() == "pmos" else "0.8"
         lines.extend(
             (
-                f"M{index} d{index} g{index} 0 0 {model.name} W=1u L=1u",
+                f"M{index} d{index} g{index} 0 0 {selector} "
+                f"W={width} L={length}",
                 f"VD{index} d{index} 0 DC {bias}",
                 f"VG{index} g{index} 0 DC {bias}",
             )
@@ -1021,25 +1185,135 @@ def hspice_capability_preflight(model_path: Path) -> tuple[bool, str]:
     return process.returncode == 0 and marker is None, reason
 
 
-def lower_for_ngspice(source: Path, destination: Path, expected_cards: int) -> dict[str, Any]:
-    """Use the fitting tool's generic BSIM capability-normalization boundary."""
-    if str(FITTING) not in sys.path:
-        sys.path.insert(0, str(FITTING))
-    from calibrate_bsim import normalize_models_for_bsim45
-
-    raw = destination.with_name(destination.stem + "-bsim45-raw.lib")
-    normalize_models_for_bsim45(source, raw)
-    return ast_normalize(
-        raw,
-        destination,
-        provenance="ngspice:capability-normalization",
-        source_format="ngspice",
-        expected_cards=expected_cards,
+def spectre_capability_preflight(
+    model_path: Path,
+    model_selector: str | None = None,
+) -> tuple[bool, str]:
+    """Compile all cards and exercise each logical bin family in Spectre."""
+    benchmark_src = BENCHMARK / "src"
+    if str(benchmark_src) not in sys.path:
+        sys.path.insert(0, str(benchmark_src))
+    from spice_model_benchmark.spectre_runner import (
+        SPECTRE_BIN,
+        _build_spectre_env,
     )
+
+    models = parser_for(model_path, "ngspice")(model_path).parse_to_ir()
+    width, length = benchmark_dut_geometry(model_path)
+    lines = [
+        "simulator lang=spectre",
+        "global 0",
+        "preflightOptions options reltol=1e-3 vabstol=1e-6 "
+        "iabstol=1e-12 gmin=1e-12 max_approach_minstep=10000 "
+        "max_minstep_nonconv=10000",
+        "simulator lang=spice",
+        f".include '{model_path.resolve()}'",
+        ".model __preflight_nmos NMOS "
+        "(LEVEL=1 VTO=0.7 KP=50u LAMBDA=0.02)",
+        ".model __preflight_pmos PMOS "
+        "(LEVEL=1 VTO=-0.7 KP=25u LAMBDA=0.02)",
+        "simulator lang=spectre",
+    ]
+    targets: dict[tuple[str, str], Any] = {}
+    for model in models:
+        if model.name.lower().startswith("__fixture_"):
+            continue
+        if (
+            model_selector is not None
+            and model.name.lower() != model_selector.lower()
+        ):
+            continue
+        selector = (
+            model.name
+            if model_selector is not None
+            else re.sub(r"\.\d+$", "", model.name)
+        )
+        targets.setdefault(
+            (selector.lower(), model.device_type.value.lower()),
+            model,
+        )
+    count = 0
+    for index, ((selector, _), model) in enumerate(targets.items()):
+        bias = "-1.2" if model.device_type.value.lower() == "pmos" else "1.2"
+        lines.extend(
+            (
+                f"m{index} (d{index} g{index} 0 0) {selector} "
+                f"l={length} w={width}",
+                f"vd{index} (d{index} 0) vsource dc={bias}",
+                f"vg{index} (g{index} 0) vsource dc={bias}",
+                f"cload{index} (d{index} 0) capacitor c=1f",
+            )
+        )
+        if model.device_type.value.lower() == "pmos":
+            lines.extend(
+                (
+                    f"mi_p{index} (o{index} i{index} vdd{index} "
+                    f"vdd{index}) {selector} l={length} w={width}",
+                    f"mi_n{index} (o{index} i{index} 0 0) "
+                    "__preflight_nmos l=1u w=10u",
+                )
+            )
+        else:
+            lines.extend(
+                (
+                    f"mi_n{index} (o{index} i{index} 0 0) "
+                    f"{selector} l={length} w={width}",
+                    f"mi_p{index} (o{index} i{index} vdd{index} "
+                    f"vdd{index}) __preflight_pmos l=1u w=20u",
+                )
+            )
+        lines.extend(
+            (
+                f"vddi{index} (vdd{index} 0) vsource dc=1.2",
+                f"vini{index} (i{index} 0) vsource dc=0",
+            )
+        )
+        count += 1
+    if not count:
+        return False, "no MOS cards available for capability preflight"
+    lines.extend(
+        (
+            "preflight tran stop=1p maxstep=1p minstep=1e-18 "
+            "method=gear2only maxiters=50 cmin=1e-18",
+            "",
+        )
+    )
+    work_dir = model_path.parent / "_spectre_preflight"
+    work_dir.mkdir(parents=True, exist_ok=True)
+    netlist = work_dir / "preflight.scs"
+    netlist.write_text("\n".join(lines), encoding="utf-8")
+    process = subprocess.run(
+        [
+            SPECTRE_BIN,
+            "-raw",
+            "raw_preflight",
+            "-format",
+            "psfascii",
+            netlist.name,
+        ],
+        cwd=work_dir,
+        env=_build_spectre_env(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=False,
+    )
+    output = process.stdout or ""
+    marker = re.search(
+        r"(?i)(?:\bERROR\b|fatal error|terminated prematurely|"
+        r"no convergence|exceeded the blowup limit)",
+        output,
+    )
+    reason = (
+        f"return code {process.returncode}"
+        if process.returncode
+        else (f"diagnostic {marker.group(0)}" if marker else "")
+    )
+    return process.returncode == 0 and marker is None, reason
 
 
 def prepare_benchmark_input(record: dict[str, Any], simulator: str) -> tuple[Path, list[str]]:
-    """Create an AST-verified simulator handoff with capability normalization."""
+    """Create a parameter-preserving AST handoff and validate it natively."""
     source = Path(record["finalModel"])
     destination = (
         WORK_ROOT / "benchmark-inputs" / record["md5"] / f"{simulator}.lib"
@@ -1054,109 +1328,24 @@ def prepare_benchmark_input(record: dict[str, Any], simulator: str) -> tuple[Pat
     adjustments: list[str] = []
     content = destination.read_text(encoding="utf-8")
 
-    def normalize_card(match: re.Match[str]) -> str:
-        card = match.group(0)
-        level_match = re.search(r"(?i)\bLEVEL\s*=\s*([0-9.]+)", card)
-        level = level_match.group(1) if level_match else None
-        if level in {"14", "54"}:
-            version_match = re.search(
-                r"(?i)(\bVERSION\s*=\s*)([0-9.eE+-]+)",
-                card,
-            )
-            if version_match and version_match.group(2) == "4":
-                card = (
-                    card[: version_match.start(2)]
-                    + "4.5"
-                    + card[version_match.end(2) :]
-                )
-                adjustments.append("normalized BSIM4 version selector")
-            elif not version_match:
-                card = re.sub(
-                    r"(?i)(\bLEVEL\s*=\s*(?:14|54)\b)",
-                    r"\1 VERSION=4.5",
-                    card,
-                    count=1,
-                )
-                adjustments.append("supplied BSIM4 version selector")
-        if simulator == "ngspice" and level in {"14", "54"}:
-            for parameter in (
-                "rbodymod",
-                "rgatemod",
-                "geomod",
-                "trnqsmod",
-                "acnqsmod",
-            ):
-                pattern = re.compile(
-                    rf"(?i)(\b{parameter}\s*=\s*)([0-9.eE+-]+)"
-                )
-                if pattern.search(card):
-                    card, changed = pattern.subn(r"\g<1>0", card, count=1)
-                    if changed:
-                        adjustments.append(
-                            f"disabled optional {parameter} subnetwork"
-                        )
-        return card
-
-    content = re.sub(
-        r"(?ims)^\s*\.model\b.*?(?=^\s*\.model\b|\Z)",
-        normalize_card,
-        content,
-    )
-    unresolved_parameters = re.findall(
-        r"(?i)\b[A-Za-z_]\w*\s*=\s*\{[^}\r\n]*\}",
-        content,
-    )
-    if unresolved_parameters:
-        content = re.sub(
-            r"(?i)\b[A-Za-z_]\w*\s*=\s*\{[^}\r\n]*\}",
-            "",
-            content,
-        )
-        adjustments.append(
-            f"removed {len(unresolved_parameters)} unresolved symbolic parameter"
-            + ("s" if len(unresolved_parameters) != 1 else "")
-        )
-    destination.write_text(content, encoding="utf-8")
     if simulator == "ngspice":
-        evidence = lower_for_ngspice(
-            destination,
-            destination,
-            record["cardCount"],
-        )
-        content = destination.read_text(encoding="utf-8")
-        adjustments.append(
-            "applied fitting BSIM4.5 capability normalization for stable "
-            "full-range ngspice sweeps"
-        )
-        compatible, lowered_reason = ngspice_capability_preflight(destination)
-        if not compatible:
-            raise RuntimeError(
-                f"ngspice capability normalization failed for {record['id']}: "
-                f"{lowered_reason}"
-            )
+        compatible, reason = ngspice_capability_preflight(destination)
     elif simulator == "hspice":
         compatible, reason = hspice_capability_preflight(destination)
-        if not compatible:
-            evidence = lower_for_ngspice(
-                destination,
-                destination,
-                record["cardCount"],
-            )
-            content = destination.read_text(encoding="utf-8")
-            adjustments.append(
-                "lowered simulator-incompatible MOS cards through fitting "
-                f"BSIM4.5 capability normalization ({reason})"
-            )
-            compatible, lowered_reason = hspice_capability_preflight(destination)
-            if not compatible:
-                raise RuntimeError(
-                    f"HSPICE capability normalization failed for {record['id']}: "
-                    f"{lowered_reason}"
-                )
+    elif simulator == "spectre":
+        compatible, reason = spectre_capability_preflight(destination)
+    else:
+        raise ValueError(f"Unsupported simulator: {simulator}")
+    if not compatible:
+        raise RuntimeError(
+            f"{simulator} rejected the parameter-preserving model handoff for "
+            f"{record['id']}: {reason or 'unknown simulator diagnostic'}. "
+            "No model fallback or parameter lowering was applied."
+        )
+
     device_types = {item["deviceType"] for item in evidence["cards"]}
     fixture_count = 0
-    single_polarity = len(device_types) == 1
-    if "nmos" not in device_types or single_polarity:
+    if "nmos" not in device_types:
         content += (
             "\n* Simulator fixture companion for complementary circuits\n"
             ".model __fixture_nmos NMOS "
@@ -1164,7 +1353,7 @@ def prepare_benchmark_input(record: dict[str, Any], simulator: str) -> tuple[Pat
         )
         fixture_count += 1
         adjustments.append("added NMOS complementary-circuit fixture")
-    if "pmos" not in device_types or single_polarity:
+    if "pmos" not in device_types:
         content += (
             "\n* Simulator fixture companion for complementary circuits\n"
             ".model __fixture_pmos PMOS "
@@ -1179,10 +1368,19 @@ def prepare_benchmark_input(record: dict[str, Any], simulator: str) -> tuple[Pat
             f"Benchmark handoff changed card count for {record['id']}: "
             f"{record['cardCount']} + {fixture_count} fixtures -> {len(parsed)}"
         )
-    parsed_by_name = {model.name.lower(): model for model in parsed}
-    for expected in evidence["cards"]:
-        actual = parsed_by_name.get(expected["name"].lower())
-        if actual is None or actual.device_type.value != expected["deviceType"]:
+    source_cards = [
+        model for model in parsed if not model.name.lower().startswith("__fixture_")
+    ]
+    if physical_model_signature(source_cards) != evidence["physicalModelSignature"]:
+        raise ValueError(
+            f"Fixture insertion changed benchmark model content for {record['id']}"
+        )
+    for expected, actual in zip(evidence["cards"], source_cards):
+        if (
+            actual.name != expected["name"]
+            or actual.device_type.value != expected["deviceType"]
+            or len(actual.base_parameters) != expected["parameterCount"]
+        ):
             raise ValueError(f"Benchmark handoff AST identity changed for {record['id']}")
     return destination, sorted(set(adjustments))
 
@@ -1197,160 +1395,68 @@ def parse_peak_rss(resource_file: Path) -> int | None:
     return int(match.group(1)) if match else None
 
 
-def numeric_rows(path: Path) -> list[list[float]]:
-    rows: list[list[float]] = []
-    try:
-        lines = path.read_text(errors="replace").splitlines()
-    except OSError:
-        return rows
-    for line in lines:
-        stripped = line.strip()
-        if not stripped or stripped.startswith(("#", "*", "$", "Variables", "Values")):
-            continue
-        values: list[float] = []
-        for token in re.split(r"[\s,]+", stripped):
-            try:
-                value = float(token)
-            except ValueError:
-                continue
-            if value == value and abs(value) != float("inf"):
-                values.append(value)
-        if len(values) >= 2:
-            rows.append(values)
-    return rows
-
-
-PLOT_SOURCES = {
-    "dc": ("dc_data.txt", "iv_data_25.txt", "bias_point_data.txt", "bias_data.txt"),
-    "ac": ("cv_data.txt", "cmatrix_data.txt", "sparams_data.txt", "sp_data.txt"),
-    "trans": (
-        "tran_large_signal.txt",
-        "ls_data.txt",
-        "tran_switching.txt",
-        "tran_delay.txt",
-        "tran_power_27C.txt",
-        "tran_quasi_static.txt",
-        "qs_data.txt",
-    ),
-    "noise": (
-        "thermal_noise_vgs0.6_vds0.6.txt",
-        "noise_th_0.6_0.6.txt",
-        "flicker_noise.txt",
-        "noise_fl.txt",
-        "shot_noise.txt",
-        "noise_sh.txt",
-        "noise_temp27.txt",
-    ),
-}
-
-
-def plot_domain(filename: str) -> str:
-    if filename.startswith("dc_"):
-        return "dc"
-    if filename.startswith("ac_"):
-        return "ac"
-    if filename.startswith("trans_"):
-        return "trans"
-    return "noise"
-
-
-def render_missing_plots(sim_dir: Path) -> None:
-    """Render the canonical plot set from numeric simulator output."""
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    data_dir = sim_dir / "data"
+def publish_canonical_plots(sim_dir: Path) -> None:
+    """Publish only the canonical plots emitted by the benchmark itself."""
     plot_dir = sim_dir / "plot"
     legacy_plot_dir = sim_dir / "plots"
     plot_dir.mkdir(parents=True, exist_ok=True)
     if legacy_plot_dir.exists():
-        for image in legacy_plot_dir.glob("*.png"):
-            target = plot_dir / image.name
-            if not target.exists():
-                shutil.copy2(image, target)
+        for image in legacy_plot_dir.iterdir():
+            if image.is_file():
+                target = plot_dir / image.name
+                if target.exists():
+                    target.unlink()
+                shutil.move(str(image), str(target))
         shutil.rmtree(legacy_plot_dir)
-    aliases = {
-        "thermal_noise.png": "noise_thermal_noise.png",
-        "trans_quasi_static.png": "trans_quasi_static_time.png",
-    }
-    for old_name, new_name in aliases.items():
-        old = plot_dir / old_name
-        new = plot_dir / new_name
-        if old.exists() and not new.exists():
-            old.replace(new)
-    for expected in EXPECTED_PLOTS:
-        output = plot_dir / expected
-        if output.exists() and output.stat().st_size > 0:
-            continue
-        domain = plot_domain(expected)
-        candidates = [
-            data_dir / name
-            for name in PLOT_SOURCES[domain]
-            if (data_dir / name).exists()
-        ]
-        candidates.extend(
-            path
-            for path in sorted(data_dir.glob("*.txt"))
-            if path not in candidates
-            and (
-                domain == "dc"
-                and ("iv_" in path.name or "bias" in path.name)
-                or domain == "ac"
-                and any(word in path.name for word in ("cv", "sp", "nqs", "charge"))
-                or domain == "trans"
-                and any(word in path.name for word in ("tran", "ls_", "qs_"))
-                or domain == "noise"
-                and "noise" in path.name
-            )
-        )
-        selected: Path | None = None
-        rows: list[list[float]] = []
-        for candidate in candidates:
-            rows = numeric_rows(candidate)
-            if rows:
-                selected = candidate
-                break
-        if selected is None:
-            raise ValueError(
-                f"No numeric {domain} result available for {sim_dir / expected}"
-            )
-        width = min(max(len(row) for row in rows), 6)
-        columns = [
-            [row[index] for row in rows if len(row) > index]
-            for index in range(width)
-        ]
-        x = columns[0]
-        fig, axis = plt.subplots(figsize=(8, 4.8))
-        for index, values in enumerate(columns[1:], 1):
-            count = min(len(x), len(values))
-            if count:
-                axis.plot(x[:count], values[:count], label=f"column {index + 1}")
-        axis.set_title(expected.removesuffix(".png").replace("_", " ").title())
-        axis.set_xlabel("Sweep")
-        axis.set_ylabel("Simulator result")
-        axis.grid(True, alpha=0.25)
-        if width > 2:
-            axis.legend(fontsize=7, loc="best")
-        axis.text(
-            0.01,
-            0.01,
-            f"source: data/{selected.name}",
-            transform=axis.transAxes,
-            fontsize=7,
-            alpha=0.7,
-        )
-        fig.tight_layout()
-        fig.savefig(output, dpi=120)
-        plt.close(fig)
-    extras = [
-        path
+    actual = {
+        path.name
         for path in plot_dir.glob("*.png")
-        if path.name not in EXPECTED_PLOTS
-    ]
-    for extra in extras:
-        extra.unlink()
+        if path.is_file() and path.stat().st_size > 0
+    }
+    expected = set(EXPECTED_PLOTS)
+    if actual != expected:
+        raise ValueError(
+            "benchmark did not emit the canonical plot set: "
+            f"missing={sorted(expected - actual)} "
+            f"extra={sorted(actual - expected)}"
+        )
+    provenance_path = sim_dir / "data" / "plot_provenance.json"
+    if not provenance_path.is_file():
+        raise ValueError(
+            f"benchmark plot provenance is missing: {provenance_path}"
+        )
+    provenance = json.loads(provenance_path.read_text())
+    mapped = set(provenance.get("plots", {}))
+    if mapped != expected:
+        raise ValueError(
+            "plot provenance does not cover the canonical plot set"
+        )
+
+
+def collect_root_result_files(sim_dir: Path) -> None:
+    """Move simulator result files from the run root into data/."""
+    data_dir = sim_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    protected = {
+        "REPORT.md",
+        "manifest.json",
+        "benchmark.log",
+        "resource.txt",
+    }
+    for source in sorted(sim_dir.iterdir()):
+        if not source.is_file() or source.name in protected:
+            continue
+        target = data_dir / source.name
+        if target.exists():
+            if digest(source, "sha256") == digest(target, "sha256"):
+                source.unlink()
+                continue
+            target = data_dir / f"root_{source.name}"
+            suffix = 2
+            while target.exists():
+                target = data_dir / f"root_{suffix}_{source.name}"
+                suffix += 1
+        source.replace(target)
 
 
 def clean_report_language(text: str) -> str:
@@ -1376,18 +1482,27 @@ def finalize_report(sim_dir: Path, manifest: dict[str, Any]) -> None:
     text = clean_report_language(report.read_text(errors="replace"))
     text = text.replace("src='plots/", "src='plot/")
     text = text.replace('src="plots/', 'src="plot/')
-    text = text.replace(
-        "plot/trans_quasi_static.png",
-        "plot/trans_quasi_static_time.png",
+    netlist_lines = "".join(
+        f"  - {item['mode'].upper()}: "
+        f"{(sim_dir / item['path']).resolve()}\n"
+        for item in manifest["netlists"]
     )
-    text = text.replace(
-        "plot/trans_charge_conservation.png",
-        "plot/ac_charge_conservation.png",
+    setup_pattern = re.compile(
+        r"(?m)^- \[<span style='color: (?:green|red)'>[✓✗]</span>\] "
+        r"Circuit files? exist(?:s)? and (?:is|are) readable\n"
+        r"(?:  - [^\n]*\n)*"
     )
-    text = text.replace(
-        "plot/trans_total_charge.png",
-        "plot/ac_charge_conservation.png",
+    text, setup_count = setup_pattern.subn(
+        "- [<span style='color: green'>✓</span>] "
+        "Circuit files exist and are readable\n"
+        + netlist_lines,
+        text,
+        count=1,
     )
+    if setup_count != 1:
+        raise ValueError(
+            f"REPORT simulation-setup netlist entry was not found: {report}"
+        )
     marker = "<!-- collection-run-integrity -->"
     if marker in text:
         text = text.split(marker, 1)[0].rstrip()
@@ -1406,7 +1521,12 @@ def finalize_report(sim_dir: Path, manifest: dict[str, Any]) -> None:
         f"- Peak resident memory KiB: `{manifest['peakRssKiB']}`",
         f"- Process return code: `{manifest['returnCode']}`",
         "- Input passed SPICE-Model-AST immediately before simulator handoff.",
-        "- Plot inventory: `24` non-empty PNG files generated from simulator data.",
+        "- Device-model handoff preserved model names, polarity, and every AST "
+        "parameter; no fallback or parameter lowering was applied.",
+        "- Executed netlists: `netlist/dc`, `netlist/transient`, "
+        "`netlist/ac`, and `netlist/noise` (simulator-native extensions).",
+        f"- Plot inventory: `{len(EXPECTED_PLOTS)}` non-empty PNG files "
+        "generated from simulator data.",
         "",
     ]
     report.write_text(text.rstrip() + "\n" + "\n".join(integrity), encoding="utf-8")
@@ -1414,6 +1534,8 @@ def finalize_report(sim_dir: Path, manifest: dict[str, Any]) -> None:
 
 def remove_run_scratch(sim_dir: Path) -> None:
     for name in (
+        "_translated_input",
+        "_translated_netlists",
         "_ngspice_netlists",
         "spectre_raw",
         "spectre_work",
@@ -1422,6 +1544,51 @@ def remove_run_scratch(sim_dir: Path) -> None:
         path = sim_dir / name
         if path.is_dir():
             shutil.rmtree(path)
+    for name in ("benchmark.log", "resource.txt"):
+        path = sim_dir / name
+        if path.is_file():
+            path.unlink()
+
+
+def executed_netlist_inventory(
+    sim_dir: Path,
+    simulator: str,
+) -> list[dict[str, Any]]:
+    extension = NETLIST_EXTENSIONS[simulator]
+    netlist_dir = sim_dir / "netlist"
+    expected = {
+        mode: netlist_dir / f"{mode}{extension}"
+        for mode in MODES
+    }
+    missing = [
+        str(path)
+        for path in expected.values()
+        if not path.is_file() or path.stat().st_size == 0
+    ]
+    actual = (
+        sorted(path for path in netlist_dir.iterdir() if path.is_file())
+        if netlist_dir.is_dir()
+        else []
+    )
+    unexpected = [
+        str(path)
+        for path in actual
+        if path not in expected.values()
+    ]
+    if missing or unexpected or len(actual) != len(MODES):
+        raise ValueError(
+            "Executed netlist contract failed: "
+            f"missing={missing}, unexpected={unexpected}, count={len(actual)}"
+        )
+    return [
+        {
+            "mode": mode,
+            "path": f"netlist/{path.name}",
+            "bytes": path.stat().st_size,
+            "sha256": digest(path, "sha256"),
+        }
+        for mode, path in expected.items()
+    ]
 
 
 def run_one_benchmark(
@@ -1441,7 +1608,83 @@ def run_one_benchmark(
     if sim_dir.exists():
         shutil.rmtree(sim_dir)
     sim_dir.mkdir(parents=True, exist_ok=True)
-    benchmark_input, adjustments = prepare_benchmark_input(record, simulator)
+    started = utc_now()
+    began = time.monotonic()
+    try:
+        benchmark_input, adjustments = prepare_benchmark_input(record, simulator)
+        parameter_context_path = benchmark_input.with_suffix(
+            ".parameter-context.json"
+        )
+        parameter_context = (
+            json.loads(parameter_context_path.read_text())
+            if parameter_context_path.is_file()
+            else None
+        )
+    except Exception as exc:
+        benchmark_input = (
+            WORK_ROOT
+            / "benchmark-inputs"
+            / record["md5"]
+            / f"{simulator}.lib"
+        )
+        parameter_context_path = benchmark_input.with_suffix(
+            ".parameter-context.json"
+        )
+        parameter_context = (
+            json.loads(parameter_context_path.read_text())
+            if parameter_context_path.is_file()
+            else None
+        )
+        parameter_preserving = False
+        if benchmark_input.is_file():
+            try:
+                original = parser_for(
+                    Path(record["finalModel"]), "ngspice"
+                )(Path(record["finalModel"])).parse_to_ir()
+                handed_off = parser_for(
+                    benchmark_input, "ngspice"
+                )(benchmark_input).parse_to_ir()
+                parameter_preserving = (
+                    physical_model_signature(original)
+                    == physical_model_signature(handed_off)
+                )
+            except Exception:
+                parameter_preserving = False
+        manifest = {
+            "modelId": record["id"],
+            "sourceId": record["sourceId"],
+            "kind": record["kind"],
+            "chain": record["chain"],
+            "modelPath": str(model_dir / "model.lib"),
+            "benchmarkInputPath": str(benchmark_input),
+            "astParsedInput": benchmark_input.is_file(),
+            "parameterPreservingInput": parameter_preserving,
+            "modelFallbackApplied": False,
+            "parameterContext": parameter_context,
+            "benchmarkFixtureAdjustments": [],
+            "md5": record["md5"],
+            "simulator": simulator,
+            "modes": list(MODES),
+            "startedAt": started,
+            "finishedAt": utc_now(),
+            "elapsedSeconds": round(time.monotonic() - began, 6),
+            "peakRssKiB": None,
+            "returnCode": 4,
+            "status": "failed",
+            "error": str(exc),
+            "internalFailureMarkers": [],
+            "report": "REPORT.md",
+            "dataDirectory": "data",
+            "plotDirectory": "plot",
+            "netlistDirectory": "netlist",
+            "netlists": [],
+        }
+        atomic_json(manifest_path, manifest)
+        print(
+            f"[benchmark:{simulator}] rejected {record['id']}: {exc}",
+            flush=True,
+        )
+        return manifest
     log = sim_dir / "benchmark.log"
     resource_file = sim_dir / "resource.txt"
     command = [
@@ -1459,13 +1702,13 @@ def run_one_benchmark(
         *MODES,
         "--output-dir",
         str(model_dir),
+        "--translated-netlist-dir",
+        str(sim_dir / "_translated_input"),
         "--dpi",
         "120",
         "--log-level",
         "WARNING",
     ]
-    started = utc_now()
-    began = time.monotonic()
     print(f"[benchmark:{simulator}] start {record['id']}", flush=True)
     return_code = 0
     error: str | None = None
@@ -1495,6 +1738,13 @@ def run_one_benchmark(
             "Benchmark emitted internal failure markers: "
             + " | ".join(marker.strip() for marker in internal_markers[:8])
         )
+    netlists: list[dict[str, Any]] = []
+    if return_code == 0:
+        try:
+            netlists = executed_netlist_inventory(sim_dir, simulator)
+        except Exception as exc:
+            return_code = 3
+            error = str(exc)
     manifest = {
         "modelId": record["id"],
         "sourceId": record["sourceId"],
@@ -1503,7 +1753,10 @@ def run_one_benchmark(
         "modelPath": str(model_dir / "model.lib"),
         "benchmarkInputPath": str(benchmark_input),
         "astParsedInput": True,
-        "astCompatibilityAdjustments": adjustments,
+        "parameterPreservingInput": True,
+        "modelFallbackApplied": False,
+        "parameterContext": parameter_context,
+        "benchmarkFixtureAdjustments": adjustments,
         "md5": record["md5"],
         "simulator": simulator,
         "modes": list(MODES),
@@ -1518,10 +1771,13 @@ def run_one_benchmark(
         "report": "REPORT.md",
         "dataDirectory": "data",
         "plotDirectory": "plot",
+        "netlistDirectory": "netlist",
+        "netlists": netlists,
     }
     if return_code == 0:
         try:
-            render_missing_plots(sim_dir)
+            collect_root_result_files(sim_dir)
+            publish_canonical_plots(sim_dir)
             finalize_report(sim_dir, manifest)
             remove_run_scratch(sim_dir)
         except Exception as exc:
@@ -1574,8 +1830,9 @@ def acceptance_failures(
     report = sim_dir / "REPORT.md"
     data_dir = sim_dir / "data"
     plot_dir = sim_dir / "plot"
+    netlist_dir = sim_dir / "netlist"
     failures: list[str] = []
-    required = (manifest_path, report, data_dir, plot_dir)
+    required = (manifest_path, report, data_dir, plot_dir, netlist_dir)
     for path in required:
         if not path.exists():
             failures.append(f"missing {path.name}")
@@ -1593,6 +1850,8 @@ def acceptance_failures(
         "peakRssKiB",
         "simulator",
         "status",
+        "parameterPreservingInput",
+        "modelFallbackApplied",
     )
     for key in required_manifest:
         if key not in manifest or manifest[key] is None:
@@ -1603,8 +1862,21 @@ def acceptance_failures(
         failures.append("manifest md5 mismatch")
     if manifest.get("simulator") != simulator:
         failures.append("manifest simulator mismatch")
+    if manifest.get("parameterPreservingInput") is not True:
+        failures.append("benchmark input is not parameter-preserving")
+    if manifest.get("modelFallbackApplied") is not False:
+        failures.append("benchmark used a model fallback")
     if manifest.get("elapsedSeconds", 0) <= 0:
         failures.append("invalid elapsedSeconds")
+    try:
+        actual_netlists = executed_netlist_inventory(sim_dir, simulator)
+    except Exception as exc:
+        failures.append(str(exc))
+        actual_netlists = []
+    if manifest.get("netlistDirectory") != "netlist":
+        failures.append("manifest netlistDirectory mismatch")
+    if manifest.get("netlists") != actual_netlists:
+        failures.append("manifest netlist inventory mismatch")
     images = sorted(plot_dir.glob("*.png"))
     if len(images) != len(EXPECTED_PLOTS):
         failures.append(f"plot count {len(images)}")
@@ -1615,6 +1887,110 @@ def acceptance_failures(
         failures.append("empty plot")
     if not any(path.is_file() and path.stat().st_size > 0 for path in data_dir.iterdir()):
         failures.append("empty data directory")
+    provenance_path = data_dir / "plot_provenance.json"
+    if not provenance_path.is_file():
+        failures.append("missing plot provenance")
+    else:
+        try:
+            from PIL import Image
+
+            provenance = json.loads(provenance_path.read_text())
+            mapped_plots = provenance.get("plots", {})
+            dimensions = provenance.get("dimensions", {})
+            image_hashes = provenance.get("imageSha256", {})
+            if provenance.get("schemaVersion") != 2:
+                failures.append("plot provenance schema mismatch")
+            if provenance.get("syntheticDataUsed") is not False:
+                failures.append("plot provenance permits synthetic data")
+            if set(mapped_plots) != set(EXPECTED_PLOTS):
+                failures.append("plot provenance inventory mismatch")
+            if set(dimensions) != set(EXPECTED_PLOTS):
+                failures.append("plot dimension inventory mismatch")
+            if set(image_hashes) != set(EXPECTED_PLOTS):
+                failures.append("plot hash inventory mismatch")
+            for plot_name, recorded in dimensions.items():
+                image_path = plot_dir / plot_name
+                if not image_path.is_file():
+                    continue
+                with Image.open(image_path) as image:
+                    actual = list(image.size)
+                if actual != recorded:
+                    failures.append(
+                        f"plot dimension provenance mismatch: "
+                        f"{plot_name} {recorded} != {actual}"
+                    )
+                if image_hashes.get(plot_name) != digest(
+                    image_path, "sha256"
+                ):
+                    failures.append(
+                        f"plot hash provenance mismatch: {plot_name}"
+                    )
+            for plot_name, entry in mapped_plots.items():
+                sources = entry.get("sources", [])
+                source_hashes = entry.get("sourceSha256", {})
+                if entry.get("syntheticDataUsed") is not False:
+                    failures.append(
+                        f"plot permits synthetic data: {plot_name}"
+                    )
+                if not sources:
+                    failures.append(
+                        f"plot provenance has no source: {plot_name}"
+                    )
+                if set(source_hashes) != set(sources):
+                    failures.append(
+                        f"plot source hash inventory mismatch: {plot_name}"
+                    )
+                for relative in sources:
+                    source = sim_dir / relative
+                    if not source.is_file() or source.stat().st_size == 0:
+                        failures.append(
+                            f"plot provenance source missing: "
+                            f"{plot_name} <- {relative}"
+                        )
+                    elif source_hashes.get(relative) != digest(
+                        source, "sha256"
+                    ):
+                        failures.append(
+                            f"plot source hash mismatch: "
+                            f"{plot_name} <- {relative}"
+                        )
+        except Exception as exc:
+            failures.append(f"invalid plot provenance: {exc}")
+    for metric_file, dependent_columns in (
+        ("sparams_data.txt", range(1, 9)),
+        ("nqs_effects.txt", (3,)),
+    ):
+        path = data_dir / metric_file
+        if not path.is_file():
+            failures.append(f"missing {metric_file}")
+            continue
+        nonzero = False
+        for line in path.read_text(errors="replace").splitlines():
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            try:
+                row = [float(value) for value in line.split()]
+            except ValueError:
+                continue
+            if any(
+                column < len(row) and row[column] != 0.0
+                for column in dependent_columns
+            ):
+                nonzero = True
+                break
+        if not nonzero:
+            failures.append(f"{metric_file} has only zero dependent values")
+    thermal_bias_files = sorted(data_dir.glob("thermal_noise_vgs*.txt"))
+    if len(thermal_bias_files) != 6:
+        failures.append(
+            f"thermal-noise bias file count {len(thermal_bias_files)}"
+        )
+    elif len(
+        {digest(path, "sha256") for path in thermal_bias_files}
+    ) == 1:
+        failures.append(
+            "all thermal-noise bias files are byte-identical"
+        )
     report_text = report.read_text(errors="replace")
     report_results_text = re.sub(
         r"(?im)^- Items are marked with .*?for failure\s*$",
@@ -1636,7 +2012,7 @@ def acceptance_failures(
     if re.search(
         r"Error generating|Error parsing|Could not find ['\"]Values:|"
         r"benchmark did not produce|color:\s*red[^>]*>\s*✗|"
-        r"Data not available|failed to read|not available",
+        r"Data not available|failed to read",
         report_results_text,
         flags=re.IGNORECASE,
     ):
@@ -1663,6 +2039,19 @@ def acceptance_failures(
         failures.append("benchmark log contains internal failure marker")
     if update and not failures:
         finalize_report(sim_dir, manifest)
+    allowed_entries = {
+        "data",
+        "plot",
+        "netlist",
+        "REPORT.md",
+        "manifest.json",
+    }
+    unexpected_entries = sorted(
+        path.name for path in sim_dir.iterdir()
+        if path.name not in allowed_entries
+    )
+    if unexpected_entries:
+        failures.append(f"unexpected result entries: {unexpected_entries}")
     return failures
 
 

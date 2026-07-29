@@ -103,18 +103,77 @@ if (!existsSync(BENCHMARK_DATA)) {
     const simulators = globalManifest.simulators ?? [];
     let checkedRuns = 0;
     let checkedPlots = 0;
+    let checkedNetlists = 0;
+    const netlistExtensions = {
+      ngspice: ".cir",
+      spectre: ".scs",
+      hspice: ".sp",
+    };
 
     for (const md5 of md5s) {
       for (const simulator of simulators) {
         const runDir = resolve(BENCHMARK_DATA, md5, simulator);
         const runManifest = resolve(runDir, "manifest.json");
         const report = resolve(runDir, "REPORT.md");
+        const allowedEntries = ["REPORT.md", "data", "manifest.json", "netlist", "plot"];
+        if (existsSync(runDir)) {
+          const actualEntries = readdirSync(runDir).sort();
+          if (JSON.stringify(actualEntries) !== JSON.stringify([...allowedEntries].sort())) {
+            err(`${md5}/${simulator}: invalid result entries ${actualEntries.join(", ")}`);
+          }
+        }
         if (!existsSync(runManifest)) err(`${md5}/${simulator}: missing manifest.json`);
         if (!existsSync(report)) err(`${md5}/${simulator}: missing REPORT.md`);
         if (existsSync(runManifest)) {
           const parsed = JSON.parse(readFileSync(runManifest, "utf-8"));
           const checksum = parsed.checksum ?? parsed.md5 ?? parsed.modelMd5 ?? parsed.model_md5;
           if (checksum !== md5) err(`${md5}/${simulator}: manifest checksum mismatch`);
+          if (parsed.netlistDirectory !== "netlist") {
+            err(`${md5}/${simulator}: manifest netlistDirectory is not "netlist"`);
+          }
+          if (parsed.parameterPreservingInput !== true) {
+            err(`${md5}/${simulator}: input is not certified parameter-preserving`);
+          }
+          if (parsed.modelFallbackApplied !== false) {
+            err(`${md5}/${simulator}: model fallback status is not explicitly false`);
+          }
+          const manifestText = JSON.stringify(parsed).toLowerCase();
+          const forbiddenModelTransforms = [
+            "capability normalization",
+            "portable bsim4.5",
+            "lowered simulator-incompatible",
+            "disabled optional rbodymod",
+            "disabled optional rgatemod",
+            "disabled optional geomod",
+            "disabled optional trnqsmod",
+            "disabled optional acnqsmod",
+            "removed unresolved symbolic parameter",
+          ];
+          for (const marker of forbiddenModelTransforms) {
+            if (manifestText.includes(marker)) {
+              err(`${md5}/${simulator}: forbidden model transform "${marker}"`);
+            }
+          }
+        }
+
+        const netlistDir = resolve(runDir, "netlist");
+        const extension = netlistExtensions[simulator];
+        const expectedNetlists = ["dc", "transient", "ac", "noise"].map(
+          (mode) => `${mode}${extension}`,
+        );
+        if (!existsSync(netlistDir)) {
+          err(`${md5}/${simulator}: missing netlist directory`);
+        } else {
+          const actualNetlists = readdirSync(netlistDir).sort();
+          if (JSON.stringify(actualNetlists) !== JSON.stringify([...expectedNetlists].sort())) {
+            err(`${md5}/${simulator}: invalid netlist inventory ${actualNetlists.join(", ")}`);
+          }
+          for (const name of actualNetlists) {
+            if (statSync(resolve(netlistDir, name)).size === 0) {
+              err(`${md5}/${simulator}/netlist/${name}: empty file`);
+            }
+            checkedNetlists++;
+          }
         }
 
         const plotsDir = resolve(runDir, "plot");
@@ -138,6 +197,7 @@ if (!existsSync(BENCHMARK_DATA)) {
     }
     ok(`${checkedRuns} model/simulator run directories validated`);
     ok(`${checkedPlots} plot files validated`);
+    ok(`${checkedNetlists} executed netlist files validated`);
   }
 }
 

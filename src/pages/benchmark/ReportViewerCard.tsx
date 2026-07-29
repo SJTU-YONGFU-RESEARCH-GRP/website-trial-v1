@@ -69,20 +69,38 @@ function NumericDeltas({ value, baseline }: { value: string; baseline?: string }
 function EntryFinding({
   entry,
   baseline,
+  showDelta = true,
+  emphasizeModeLabels = false,
 }: {
   entry: ReportEntry;
   baseline?: ReportEntry;
+  showDelta?: boolean;
+  emphasizeModeLabels?: boolean;
 }) {
   if (entry.details && entry.details.length > 0) {
     const baselineDetails = baseline?.details ?? [];
     return (
       <div className="rv-finding-text">
-        {entry.details.map((detail, index) => (
-          <div key={detail.lineNumber} style={{ paddingLeft: `${Math.max(0, detail.depth - 2) * 0.55}rem` }}>
-            {detail.text}
-            <NumericDeltas value={detail.text} baseline={baselineDetails[index]?.text} />
-          </div>
-        ))}
+        {entry.details.map((detail, index) => {
+          const modeMatch = emphasizeModeLabels
+            ? detail.text.match(/^(DC|TRANSIENT|AC|NOISE):\s*(.*)$/)
+            : null;
+          return (
+            <div key={detail.lineNumber} style={{ paddingLeft: `${Math.max(0, detail.depth - 2) * 0.55}rem` }}>
+              {modeMatch ? (
+                <>
+                  <strong>{modeMatch[1]}</strong>: {modeMatch[2]}
+                </>
+              ) : detail.text}
+              {showDelta && (
+                <NumericDeltas
+                  value={detail.text}
+                  baseline={baselineDetails[index]?.text}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -96,7 +114,9 @@ function EntryFinding({
           return (
             <div key={`${line}-${index}`}>
               {line}
-              <NumericDeltas value={line} baseline={baselineLine} />
+              {showDelta && (
+                <NumericDeltas value={line} baseline={baselineLine} />
+              )}
             </div>
           );
         })}
@@ -129,20 +149,31 @@ function MultiModelEntryTable({
 }) {
   if (!entries || entries.length === 0) return null;
   const baselineModel = modelIds[0];
+  const fitsWithoutScrolling = modelIds.length <= 2;
 
   return (
-    <div className="rv-table-scroll">
+    <div className={`rv-table-scroll${fitsWithoutScrolling ? " rv-table-scroll--fit-comparison" : ""}`}>
       <table
-        className="rv-entry-table"
-        style={{ minWidth: `${Math.max(720, 260 + modelIds.length * 180)}px` }}
+        className={`rv-entry-table rv-entry-table--comparison${
+          fitsWithoutScrolling ? " rv-entry-table--fit-comparison" : ""
+        }`}
+        style={fitsWithoutScrolling
+          ? undefined
+          : { minWidth: `${Math.max(720, 260 + modelIds.length * 180)}px` }}
       >
+        {fitsWithoutScrolling && (
+          <colgroup>
+            <col className="rv-comparison-test-column" />
+            {modelIds.map((modelId) => <col key={modelId} />)}
+          </colgroup>
+        )}
         <thead>
           <tr>
-            <th style={{ width: "260px" }}>Test Type</th>
+            <th>Test Type</th>
             {modelIds.map((mid) => {
               const model = scenario.models[mid];
               return (
-                <th key={mid} style={{ minWidth: "180px", textAlign: "center" }}>
+                <th key={mid} style={{ textAlign: "center" }}>
                   {model?.displayName ?? mid}
                 </th>
               );
@@ -167,7 +198,11 @@ function MultiModelEntryTable({
                 <td className="rv-entry-test">{e.testType}</td>
                 <td style={{ textAlign: "center" }}>
                   <StatusBadge status={e.status} />
-                  <EntryFinding entry={e} />
+                  <EntryFinding
+                    entry={e}
+                    showDelta={!scope?.setup}
+                    emphasizeModeLabels={scope?.setup}
+                  />
                 </td>
                 {modelIds.slice(1).map((mid) => {
                   const oe = otherEntries.get(mid);
@@ -176,7 +211,12 @@ function MultiModelEntryTable({
                       {oe ? (
                         <>
                           <StatusBadge status={oe.status} />
-                          <EntryFinding entry={oe} baseline={e} />
+                          <EntryFinding
+                            entry={oe}
+                            baseline={e}
+                            showDelta={!scope?.setup}
+                            emphasizeModeLabels={scope?.setup}
+                          />
                         </>
                       ) : (
                         <span className="rv-na">—</span>
@@ -245,7 +285,13 @@ function findMatchingEntry(
 
 /* ─── Entry Table (single model) ─── */
 
-function EntryTable({ entries }: { entries: ReportEntry[] }) {
+function EntryTable({
+  entries,
+  setup = false,
+}: {
+  entries: ReportEntry[];
+  setup?: boolean;
+}) {
   if (!entries || entries.length === 0) return null;
   return (
     <table className="rv-entry-table">
@@ -264,7 +310,11 @@ function EntryTable({ entries }: { entries: ReportEntry[] }) {
               <StatusBadge status={e.status} />
             </td>
             <td className="rv-entry-findings">
-              <EntryFinding entry={e} />
+              <EntryFinding
+                entry={e}
+                showDelta={!setup}
+                emphasizeModeLabels={setup}
+              />
               {!e.keyFindings && (!e.details || e.details.length === 0) && <span className="rv-na">—</span>}
             </td>
           </tr>
@@ -429,7 +479,7 @@ function SubSectionView({
               <div key={itemIndex} className="rv-plot-embed">
                 <div className="rv-plot-embed-item">
                   <div className="rv-plot-embed-label">{item.plot.caption ?? item.plot.alt}</div>
-                  <div className="rv-plot-embed-row">
+                  <div className="rv-plot-embed-row rv-plot-embed-row--images">
                     {modelIds.map((mid) => {
                       const model = scenario.models[mid];
                       const otherReport = reportMap.get(mid);
@@ -663,7 +713,7 @@ export function ReportViewerCard({ scenario, selectedModels }: Props) {
                 scope={{ setup: true }}
               />
             ) : (
-              <EntryTable entries={report.simulationSetup} />
+              <EntryTable entries={report.simulationSetup} setup />
             )}
           </div>
         )}

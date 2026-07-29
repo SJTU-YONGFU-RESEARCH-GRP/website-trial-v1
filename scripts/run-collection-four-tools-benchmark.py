@@ -7,7 +7,7 @@ The pipeline deliberately uses fast tool settings and is resumable:
 2. Run Translator, Reduction, Expansion, and Fitting independently.
 3. Benchmark the 3 originals plus 12 tool outputs with all four modes on
    ngspice, Spectre, and HSPICE.
-4. Store results under data/spice-benchmark/<model-md5>/<simulator>/.
+4. Store results under data/spice-model-benchmark/<model-md5>/<simulator>/.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ from pathlib import Path
 
 HOME = Path("/home/duhaochen")
 WEBSITE = HOME / "website-trial-v1"
-DATA_ROOT = WEBSITE / "data" / "spice-benchmark"
+DATA_ROOT = WEBSITE / "data" / "spice-model-benchmark"
 WORK_ROOT = HOME / "pipeline_test" / "collection-four-tools"
 COLLECTION = HOME / "spice_model_collections"
 AST_SRC = HOME / "SPICE-Model-AST" / "src"
@@ -39,6 +39,11 @@ BENCHMARK = HOME / "spice_model_benchmark"
 
 MODES = ("dc", "transient", "ac", "noise")
 SIMULATORS = ("ngspice", "spectre", "hspice")
+NETLIST_EXTENSIONS = {
+    "ngspice": ".cir",
+    "spectre": ".scs",
+    "hspice": ".sp",
+}
 TOOLS = ("translator", "reduction", "expansion", "fitting")
 
 # Exhaustive max-sum selection over models accepted by all four tools and the
@@ -113,14 +118,39 @@ def load_ast():
     return NgspiceParser
 
 
-def canonicalize(source: Path, output: Path) -> tuple[str, int, list[str]]:
+def physical_model_signature(models: list) -> str:
+    """Hash model identity and physical AST content for handoff validation."""
+    payload = [
+        {
+            "name": model.name,
+            "modelType": model.model_type,
+            "deviceType": model.device_type.value,
+            "baseParameters": sorted(
+                (str(name).lower(), repr(value))
+                for name, value in model.base_parameters.items()
+            ),
+            "variations": repr(model.variations),
+            "subcircuits": repr(model.subcircuits),
+            "statistical": repr(model.statistical),
+        }
+        for model in models
+    ]
+    return hashlib.sha256(
+        json.dumps(
+            payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def canonicalize(source: Path, output: Path) -> tuple[str, int]:
     """Pass the collection model through AST and the Translator writer adapter."""
     parser_cls = load_ast()
     models = parser_cls(source).parse_to_ir()
     if not models:
         raise ValueError(f"AST returned no models for {source}")
-
-    lowerings: list[str] = []
 
     sys.path.insert(0, str(TRANSLATOR))
     from src.writers.ngspice_writer import NgspiceWriter
@@ -133,13 +163,17 @@ def canonicalize(source: Path, output: Path) -> tuple[str, int, list[str]]:
             f"AST round-trip count mismatch for {source}: "
             f"{len(models)} -> {len(parsed_back)}"
         )
+    if physical_model_signature(parsed_back) != physical_model_signature(models):
+        raise ValueError(
+            f"AST round-trip changed model parameters or identity for {source}"
+        )
     nmos = next(
         (model for model in parsed_back if model.device_type.value == "nmos"),
         None,
     )
     if nmos is None:
         raise ValueError(f"No NMOS model in AST output for {source}")
-    return nmos.name, len(nmos.base_parameters), lowerings
+    return nmos.name, len(nmos.base_parameters)
 
 
 def verify_model(path: Path, expected_name: str) -> int:
@@ -159,8 +193,8 @@ def verify_model(path: Path, expected_name: str) -> int:
 def prepare_benchmark_model(
     record: dict,
     simulator: str,
-) -> tuple[Path, list[str]]:
-    """Normalize a tool result through AST before simulator handoff."""
+) -> Path:
+    """Serialize a tool result through AST without changing its model content."""
     parser_cls = load_ast()
     models = parser_cls(Path(record["path"])).parse_to_ir()
     if not models:
@@ -177,80 +211,18 @@ def prepare_benchmark_model(
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     NgspiceWriter(output).write_from_ir(models)
-    adjustments: list[str] = []
-    content = output.read_text(encoding="utf-8")
-
-    def adapt_bsim4_card(match: re.Match) -> str:
-        card = match.group(0)
-        if not re.search(r"(?i)\bLEVEL\s*=\s*54\b", card):
-            return card
-        if not re.search(r"(?i)\bVERSION\s*=", card):
-            card = re.sub(
-                r"(?i)(\bLEVEL\s*=\s*54\b)",
-                r"\1 VERSION=4.5",
-                card,
-                count=1,
-            )
-            adjustments.append("defaulted missing BSIM4 VERSION to 4.5")
-        else:
-            version_match = re.search(
-                r"(?i)\bVERSION\s*=\s*([0-9.eE+-]+)",
-                card,
-            )
-            if version_match and version_match.group(1) == "4":
-                card = (
-                    card[:version_match.start(1)]
-                    + "4.5"
-                    + card[version_match.end(1):]
-                )
-                adjustments.append(
-                    "mapped unsupported bare BSIM4 VERSION=4 to 4.5"
-                )
-        at_match = re.search(
-            r"(?i)\bAT\s*=\s*([0-9.eE+-]+)",
-            card,
-        )
-        if at_match and float(at_match.group(1)) > 100000:
-            card = (
-                card[:at_match.start(1)]
-                + "33000"
-                + card[at_match.end(1):]
-            )
-            adjustments.append(
-                "bounded BSIM4 AT to 33000 for high-temperature stability"
-            )
-        if simulator == "ngspice":
-            for parameter in (
-                "rbodymod",
-                "rgatemod",
-                "geomod",
-                "trnqsmod",
-                "acnqsmod",
-            ):
-                pattern = re.compile(
-                    rf"(?i)(\b{parameter}\s*=\s*)([0-9.eE+-]+)"
-                )
-                if pattern.search(card):
-                    card, changed = pattern.subn(r"\g<1>0", card, count=1)
-                    if changed:
-                        adjustments.append(
-                            f"set {parameter}=0 for ngspice convergence"
-                        )
-        return card
-
-    content = re.sub(
-        r"(?ims)^\s*\.model\b.*?(?=^\s*\.model\b|\Z)",
-        adapt_bsim4_card,
-        content,
-    )
-    output.write_text(content, encoding="utf-8")
     parsed_back = parser_cls(output).parse_to_ir()
     if len(parsed_back) != len(models):
         raise ValueError(
             f"AST benchmark handoff mismatch for {record['id']}: "
             f"{len(models)} -> {len(parsed_back)}"
         )
-    return output, adjustments
+    if physical_model_signature(parsed_back) != physical_model_signature(models):
+        raise ValueError(
+            f"AST benchmark handoff changed model parameters or identity "
+            f"for {record['id']}"
+        )
+    return output
 
 
 def transform_one(item: dict, tool: str) -> dict:
@@ -258,7 +230,7 @@ def transform_one(item: dict, tool: str) -> dict:
     model_work = WORK_ROOT / "models" / model_id
     canonical = model_work / "canonical.lib"
     log_dir = WORK_ROOT / "logs" / "transformations" / model_id
-    model_name, canonical_params, lowerings = canonicalize(
+    model_name, canonical_params = canonicalize(
         item["source"], canonical
     )
     output_dir = model_work / tool
@@ -402,7 +374,6 @@ def transform_one(item: dict, tool: str) -> dict:
         "path": output,
         "model_name": model_name,
         "parameters": params,
-        "ast_lowerings": lowerings,
     }
 
 
@@ -422,7 +393,6 @@ def materialize_model(record: dict) -> dict:
         "model_name": record["model_name"],
         "parameters": record["parameters"],
         "source_md5": record.get("source_md5"),
-        "ast_lowerings": record.get("ast_lowerings", []),
         "checksum": checksum,
         "md5": checksum,
         "model_file": "model.lib",
@@ -444,7 +414,7 @@ def generate_models() -> list[dict]:
 
     for item in SELECTED:
         canonical = WORK_ROOT / "models" / item["id"] / "canonical.lib"
-        model_name, params, lowerings = canonicalize(item["source"], canonical)
+        model_name, params = canonicalize(item["source"], canonical)
         records.append(
             materialize_model(
                 {
@@ -456,7 +426,6 @@ def generate_models() -> list[dict]:
                     "model_name": model_name,
                     "parameters": params,
                     "source_md5": md5(item["source"]),
-                    "ast_lowerings": lowerings,
                 }
             )
         )
@@ -535,9 +504,15 @@ def update_global_manifest(records: list[dict]) -> None:
 def finalize_run(sim_dir: Path, manifest: dict) -> None:
     """Guarantee the requested data/plot/report contract without hiding failures."""
     data_dir = sim_dir / "data"
-    plots_dir = sim_dir / "plots"
+    plots_dir = sim_dir / "plot"
+    legacy_plots = sim_dir / "plots"
     data_dir.mkdir(parents=True, exist_ok=True)
     plots_dir.mkdir(parents=True, exist_ok=True)
+    if legacy_plots.is_dir():
+        for source in legacy_plots.iterdir():
+            if source.is_file():
+                shutil.move(str(source), str(plots_dir / source.name))
+        shutil.rmtree(legacy_plots)
 
     status_data = {
         "modelId": manifest["modelId"],
@@ -623,16 +598,9 @@ def finalize_run(sim_dir: Path, manifest: dict) -> None:
             f"- Simulator: `{manifest['simulator']}`",
             f"- Requested modes: `{', '.join(manifest['modes'])}`",
             f"- Model MD5: `{manifest['checksum']}`",
-            "- Simulator input: AST-normalized semantic equivalent of `model.lib`",
+            "- Simulator input: parameter-preserving AST serialization of `model.lib`",
+            "- Model fallback or parameter lowering: `none`",
             "- Fixture channel length: `1um` (shared safe collection geometry)",
-            (
-                "- AST compatibility adjustments: "
-                + (
-                    "; ".join(manifest["benchmarkInputAdjustments"])
-                    if manifest.get("benchmarkInputAdjustments")
-                    else "none"
-                )
-            ),
             (
                 "- Interpretation: the simulator completed every requested mode; "
                 "individual physical verification checks may still pass or fail."
@@ -646,9 +614,75 @@ def finalize_run(sim_dir: Path, manifest: dict) -> None:
         ]
     )
     report_text = report.read_text(encoding="utf-8")
+    report_text = report_text.replace("src='plots/", "src='plot/")
+    report_text = report_text.replace('src="plots/', 'src="plot/')
     if integrity_marker in report_text:
         report_text = report_text.split(integrity_marker, 1)[0].rstrip()
     report.write_text(report_text.rstrip() + "\n" + integrity, encoding="utf-8")
+
+
+def executed_netlists(sim_dir: Path, simulator: str) -> list[dict]:
+    extension = NETLIST_EXTENSIONS[simulator]
+    paths = {
+        mode: sim_dir / "netlist" / f"{mode}{extension}"
+        for mode in MODES
+    }
+    if any(not path.is_file() or path.stat().st_size == 0 for path in paths.values()):
+        raise RuntimeError(f"incomplete executed netlists: {paths}")
+    return [
+        {
+            "mode": mode,
+            "path": f"netlist/{path.name}",
+            "bytes": path.stat().st_size,
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        }
+        for mode, path in paths.items()
+    ]
+
+
+def collect_root_result_files(sim_dir: Path) -> None:
+    data_dir = sim_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    protected = {
+        "REPORT.md",
+        "manifest.json",
+        "benchmark.log",
+        "resource.txt",
+    }
+    for source in sorted(sim_dir.iterdir()):
+        if not source.is_file() or source.name in protected:
+            continue
+        target = data_dir / source.name
+        if target.exists():
+            if hashlib.sha256(source.read_bytes()).digest() == hashlib.sha256(
+                target.read_bytes()
+            ).digest():
+                source.unlink()
+                continue
+            target = data_dir / f"root_{source.name}"
+            suffix = 2
+            while target.exists():
+                target = data_dir / f"root_{suffix}_{source.name}"
+                suffix += 1
+        source.replace(target)
+
+
+def clean_success_run(sim_dir: Path) -> None:
+    for name in (
+        "_translated_input",
+        "_translated_netlists",
+        "_ngspice_netlists",
+        "spectre_raw",
+        "spectre_work",
+        "netlists",
+    ):
+        path = sim_dir / name
+        if path.is_dir():
+            shutil.rmtree(path)
+    for name in ("benchmark.log", "resource.txt"):
+        path = sim_dir / name
+        if path.is_file():
+            path.unlink()
 
 
 def benchmark_simulator(
@@ -660,7 +694,7 @@ def benchmark_simulator(
     for index, record in enumerate(records, 1):
         checksum = record["checksum"]
         model_path = Path(record["path"])
-        benchmark_model_path, input_adjustments = prepare_benchmark_model(
+        benchmark_model_path = prepare_benchmark_model(
             record,
             simulator,
         )
@@ -691,6 +725,8 @@ def benchmark_simulator(
             *MODES,
             "--output-dir",
             str(model_dir),
+            "--translated-netlist-dir",
+            str(sim_dir / "_translated_input"),
             "--dpi",
             "150",
             "--log-level",
@@ -714,6 +750,13 @@ def benchmark_simulator(
             return_code = 1
             error = str(exc)
         timed_out = return_code != 0 and "124" in str(error)
+        netlists = []
+        if return_code == 0:
+            try:
+                netlists = executed_netlists(sim_dir, simulator)
+            except Exception as exc:
+                return_code = 1
+                error = str(exc)
         manifest = {
             "modelId": record["id"],
             "sourceId": record["source_id"],
@@ -721,7 +764,8 @@ def benchmark_simulator(
             "modelPath": str(model_path),
             "benchmarkInputPath": str(benchmark_model_path),
             "astNormalizedInput": True,
-            "benchmarkInputAdjustments": input_adjustments,
+            "parameterPreservingInput": True,
+            "modelFallbackApplied": False,
             "checksum": checksum,
             "md5": checksum,
             "simulator": simulator,
@@ -738,10 +782,16 @@ def benchmark_simulator(
             "startedAt": started,
             "completedAt": now(),
             "dataDirectory": "data",
-            "plotsDirectory": "plots",
+            "plotDirectory": "plot",
+            "netlistDirectory": "netlist",
+            "netlists": netlists,
             "report": "REPORT.md",
         }
+        if return_code == 0:
+            collect_root_result_files(sim_dir)
         finalize_run(sim_dir, manifest)
+        if return_code == 0:
+            clean_success_run(sim_dir)
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
@@ -803,7 +853,8 @@ def audit(records: list[dict]) -> None:
                 manifest_path,
                 sim_dir / "REPORT.md",
                 sim_dir / "data",
-                sim_dir / "plots",
+                sim_dir / "plot",
+                sim_dir / "netlist",
             )
             missing = [str(path) for path in required if not path.exists()]
             if missing:

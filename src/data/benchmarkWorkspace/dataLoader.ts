@@ -1,8 +1,9 @@
 /* ==================================================================
  *  dataLoader.ts — Auto-discovery from data/spice-model-benchmark/
  *
- *  Reads the global manifest.json to discover all models, then
- *  builds the WorkflowScenario dynamically. No hardcoded models.
+ *  Reads a server-generated index containing only complete, displayable runs.
+ *  The available count is discovered from disk and is never inferred from an
+ *  expected model/simulator matrix.
  * ================================================================== */
 
 import type {
@@ -19,34 +20,52 @@ import { parseReportMD } from "./reportParser";
 
 const BASE = import.meta.env.BASE_URL || "/";
 const DATA_ROOT = `${BASE}data/spice-model-benchmark`;
-const FALLBACK_SIMULATORS: SimulatorId[] = ["ngspice", "hspice", "spectre"];
 const FALLBACK_DOMAINS: AnalysisDomain[] = ["dc", "transient", "ac", "noise"];
 
-/* ─── Global Manifest ─── */
+/* ─── Dynamically discovered complete runs ─── */
 
-interface GlobalManifest {
+interface ModelIndexInfo {
+  sourceId: string;
+  kind: "original" | "processed" | string;
+  chain: string[];
+  cardCount: number;
+}
+
+interface AvailableRun extends ModelIndexInfo {
+  modelId: string;
+  md5: string;
+  simulator: SimulatorId;
+  deviceType?: string;
+  manifest: unknown;
+}
+
+interface AvailableRunsIndex {
   version: string;
-  description?: string;
-  models: Record<string, {
-    md5: string;
-    sourceId: string;
-    kind: "original" | "processed" | string;
-    chain: string[];
-    cardCount: number;
-  }>;
-  simulators: string[];
+  runCount: number;
+  runs: AvailableRun[];
+  simulators: SimulatorId[];
   modes: string[];
   generatedAt?: string;
 }
 
-let cachedManifest: GlobalManifest | null = null;
-
-export async function fetchGlobalManifest(): Promise<GlobalManifest> {
-  if (cachedManifest) return cachedManifest;
-  const res = await fetch(`${DATA_ROOT}/manifest.json`);
-  if (!res.ok) throw new Error(`Failed to load manifest: ${res.status}`);
-  cachedManifest = await res.json();
-  return cachedManifest!;
+export async function fetchAvailableRuns(): Promise<AvailableRunsIndex> {
+  const res = await fetch(`${DATA_ROOT}/available-runs.json`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to discover completed benchmark runs: ${res.status}`);
+  }
+  const contentType = res.headers.get("content-type")?.toLowerCase() ?? "";
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      `Completed-run index returned ${contentType || "an unknown content type"} instead of JSON`,
+    );
+  }
+  const index = await res.json() as AvailableRunsIndex;
+  if (!Array.isArray(index.runs)) {
+    throw new Error("Completed-run index has no runs array");
+  }
+  return index;
 }
 
 function isSimulator(value: string): value is SimulatorId {
@@ -57,13 +76,8 @@ function isDomain(value: string): value is AnalysisDomain {
   return value === "dc" || value === "transient" || value === "ac" || value === "noise";
 }
 
-function manifestSimulators(manifest: GlobalManifest): SimulatorId[] {
-  const values = manifest.simulators.filter(isSimulator);
-  return values.length > 0 ? values : FALLBACK_SIMULATORS;
-}
-
-function manifestDomains(manifest: GlobalManifest): AnalysisDomain[] {
-  const values = manifest.modes.filter(isDomain);
+function indexDomains(index: AvailableRunsIndex): AnalysisDomain[] {
+  const values = index.modes.filter(isDomain);
   return values.length > 0 ? values : FALLBACK_DOMAINS;
 }
 
@@ -72,7 +86,7 @@ function manifestDomains(manifest: GlobalManifest): AnalysisDomain[] {
 function buildModelArtifact(
   uid: string,
   md5: string,
-  info: GlobalManifest["models"][string],
+  info: ModelIndexInfo,
   parentMd5: string | null,
   sim: SimulatorId,
 ): ModelArtifact {
@@ -269,6 +283,8 @@ export async function fetchReport(modelId: string, sim: string): Promise<ReportS
     const url = `${DATA_ROOT}/${modelId}/${sim}/REPORT.md`;
     const res = await fetch(url);
     if (!res.ok) return null;
+    const contentType = res.headers.get("content-type")?.toLowerCase() ?? "";
+    if (contentType.includes("text/html")) return null;
     const md = await res.text();
     return parseReportMD(md, modelId, sim);
   } catch {
@@ -311,7 +327,7 @@ function normalizeRunManifest(
   rawValue: unknown,
   md5: string,
   sim: SimulatorId,
-  fallback: GlobalManifest["models"][string],
+  fallback: ModelIndexInfo,
 ): ModelManifest {
   const raw = asRecord(rawValue);
   const run = asRecord(raw.run);
@@ -396,7 +412,7 @@ const manifestLoadCache = new Map<string, Promise<ModelManifest>>();
 async function loadRunManifest(
   md5: string,
   sim: SimulatorId,
-  fallback: GlobalManifest["models"][string],
+  fallback: ModelIndexInfo,
 ): Promise<ModelManifest> {
   const key = `${md5}|${sim}`;
   const cached = manifestLoadCache.get(key);
@@ -405,6 +421,10 @@ async function loadRunManifest(
   const pending = fetch(`${DATA_ROOT}/${md5}/${sim}/manifest.json`)
     .then(async (response) => {
       if (!response.ok) throw new Error(`${key}: manifest.json returned ${response.status}`);
+      const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+      if (!contentType.includes("application/json")) {
+        throw new Error(`${key}: manifest.json returned ${contentType || "non-JSON content"}`);
+      }
       const rawManifest: unknown = await response.json();
       const manifest = normalizeRunManifest(rawManifest, md5, sim, fallback);
       if (manifest.checksum !== md5) {
@@ -420,7 +440,7 @@ async function loadRunManifest(
 async function loadRun(
   md5: string,
   sim: SimulatorId,
-  fallback: GlobalManifest["models"][string],
+  fallback: ModelIndexInfo,
 ): Promise<{ report: ReportStructure | null; manifest: ModelManifest }> {
   const key = `${md5}|${sim}`;
   const cached = runLoadCache.get(key);
@@ -437,10 +457,10 @@ async function loadRun(
 
 /** Load only the exact model/simulator runs selected by the user. */
 export async function loadBenchmarkRuns(selectedRunIds: string[]): Promise<LoadedBenchmarkRuns> {
-  const globalManifest = await fetchGlobalManifest();
-  const domains = manifestDomains(globalManifest);
-  const infoByMd5 = new Map(
-    Object.values(globalManifest.models).map((info) => [info.md5, info]),
+  const index = await fetchAvailableRuns();
+  const domains = indexDomains(index);
+  const availableByRunId = new Map(
+    index.runs.map((run) => [`${run.md5}|${run.simulator}`, run]),
   );
 
   const requests = selectedRunIds.map((runModelId) => {
@@ -448,8 +468,10 @@ export async function loadBenchmarkRuns(selectedRunIds: string[]): Promise<Loade
     if (!md5 || !simulatorName || !isSimulator(simulatorName)) {
       throw new Error(`Invalid benchmark run ID: ${runModelId}`);
     }
-    const info = infoByMd5.get(md5);
-    if (!info) throw new Error(`Model ${md5} is not present in the global manifest`);
+    const info = availableByRunId.get(runModelId);
+    if (!info) {
+      throw new Error(`Benchmark run ${runModelId} is not currently complete`);
+    }
     const sim = simulatorName;
     return (async () => ({
       md5,
@@ -495,32 +517,33 @@ export async function loadBenchmarkRuns(selectedRunIds: string[]): Promise<Loade
 /* ─── Build WorkflowScenario ─── */
 
 export async function buildScenario(): Promise<WorkflowScenario> {
-  const manifest = await fetchGlobalManifest();
-  const simulators = manifestSimulators(manifest);
-  const domains = manifestDomains(manifest);
+  const index = await fetchAvailableRuns();
+  const simulators = index.simulators.filter(isSimulator);
+  const domains = indexDomains(index);
 
   const models: Record<string, ModelArtifact> = {};
   const manifests: Record<string, ModelManifest> = {};
   const modelIds: string[] = [];
-  const manifestRequests: Promise<void>[] = [];
 
-  // Per-run manifests are lightweight selector metadata and are loaded up
-  // front. REPORT files remain lazy and are fetched only after selection.
-  for (const [uid, info] of Object.entries(manifest.models)) {
-    const md5 = info.md5;
-
-    for (const sim of simulators) {
-      const simModelId = `${md5}|${sim}`;
-      modelIds.push(simModelId);
-      models[simModelId] = buildModelArtifact(uid, md5, info, null, sim);
-      manifestRequests.push(
-        loadRunManifest(md5, sim, info).then((runManifest) => {
-          manifests[simModelId] = runManifest;
-        }),
-      );
-    }
+  // Every entry is already a complete on-disk run. No Cartesian product and
+  // no requests for expected-but-not-yet-created manifests are performed.
+  for (const run of index.runs) {
+    const simModelId = `${run.md5}|${run.simulator}`;
+    modelIds.push(simModelId);
+    models[simModelId] = buildModelArtifact(
+      run.modelId,
+      run.md5,
+      run,
+      null,
+      run.simulator,
+    );
+    manifests[simModelId] = normalizeRunManifest(
+      run.manifest,
+      run.md5,
+      run.simulator,
+      run,
+    );
   }
-  await Promise.all(manifestRequests);
 
   const firstId = modelIds[0] || "";
 
@@ -528,7 +551,7 @@ export async function buildScenario(): Promise<WorkflowScenario> {
     schemaVersion: "3.0.0",
     scenarioId: "spice-benchmark",
     title: "SPICE Model Benchmark Results",
-    description: "Auto-discovered from data/spice-model-benchmark/. Each selected model/simulator run loads its own manifest, REPORT.md and plots.",
+    description: "Auto-discovered complete runs from data/spice-model-benchmark/. Each selected model/simulator run loads its own manifest, REPORT.md and plots.",
     status: "completed",
     defaultInputModelId: firstId,
     defaultCandidateModelId: modelIds[1] || firstId,
@@ -545,7 +568,7 @@ export async function buildScenario(): Promise<WorkflowScenario> {
     provenance: {
       origin: "existing-tool-output",
       sourceRepo: "spice_model_benchmark",
-      generatedAt: manifest.generatedAt,
+      generatedAt: index.generatedAt,
     },
   };
 }

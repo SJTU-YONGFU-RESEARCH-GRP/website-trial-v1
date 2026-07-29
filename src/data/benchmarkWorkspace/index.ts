@@ -4,7 +4,7 @@
  *  Auto-discovery based. Current benchmark data comes from data/spice-model-benchmark/.
  * ================================================================== */
 
-export { buildScenario, fetchGlobalManifest, fetchReport } from "./dataLoader";
+export { buildScenario, fetchAvailableRuns, fetchReport } from "./dataLoader";
 
 // Keep legacy exports for components that still reference them
 export { INTEGRATED_DEMO_SCENARIO } from "./integratedDemo";

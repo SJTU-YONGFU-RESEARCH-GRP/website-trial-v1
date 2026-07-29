@@ -471,6 +471,67 @@
   font-size: 0.75rem;
 }
 
+.bmw-result-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  align-items: end;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.bmw-cm-filters .bmw-result-search {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.2rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.bmw-result-search input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 7px 9px;
+  border: 1px solid var(--border-subtle, #d0d0d0);
+  border-radius: 6px;
+  background: var(--bg, #fff);
+  color: var(--text-primary, #222);
+  font: inherit;
+}
+
+.bmw-result-search input:focus {
+  border-color: var(--accent, #0071e3);
+  outline: 2px solid color-mix(in srgb, var(--accent, #0071e3) 18%, transparent);
+  outline-offset: 1px;
+}
+
+.bmw-cm-filters .bmw-simulator-filter {
+  min-width: max-content;
+}
+
+.bmw-cm-filters .bmw-simulator-filter legend {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #555);
+  margin-bottom: 0.2rem;
+}
+
+.bmw-simulator-filter > div {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 30px;
+}
+
+.bmw-cm-filters .bmw-simulator-filter label {
+  margin: 0;
+  text-transform: none;
+}
+
+.bmw-simulator-filter input {
+  margin: 0;
+}
+
 .bmw-multi-select-trigger {
   display: flex;
   align-items: center;
@@ -540,6 +601,7 @@
   flex-direction: column;
   gap: 1px;
   line-height: 1.25;
+  min-width: 0;
 }
 
 .bmw-multi-select-sub {
@@ -552,6 +614,24 @@
   font-size: 0.6rem;
   color: var(--muted, #aaa);
   font-family: monospace;
+}
+
+.bmw-multi-select-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--muted, #888);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 640px) {
+  .bmw-result-filter-bar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  .bmw-simulator-filter > div {
+    flex-wrap: wrap;
+  }
 }
 
 .bmw-multi-select-empty {
@@ -966,6 +1046,32 @@
   scrollbar-width: thin;
 }
 
+.rv-table-scroll--fit-comparison {
+  overflow-x: visible;
+}
+
+.rv-entry-table--fit-comparison {
+  table-layout: fixed;
+  min-width: 0;
+}
+
+.rv-entry-table--fit-comparison .rv-comparison-test-column {
+  width: clamp(130px, 22%, 220px);
+}
+
+.rv-entry-table--fit-comparison th,
+.rv-entry-table--fit-comparison td {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.rv-entry-table.rv-entry-table--comparison th,
+.rv-entry-table.rv-entry-table--comparison td {
+  text-align: center;
+  vertical-align: middle;
+}
+
 .rv-entry-table th {
   text-align: left;
   padding: 0.3rem 0.4rem;
@@ -1047,6 +1153,18 @@
   overflow-x: auto;
   padding-bottom: 0.3rem;
 }
+.rv-plot-embed-row--images {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+}
+.rv-plot-embed-row--images > .rv-plot-image-fig,
+.rv-plot-embed-row--images > .rv-plot-unavailable {
+  flex: 0 0 calc((100% - 0.5rem) / 2);
+  scroll-snap-align: start;
+}
 .rv-plot-embed-fig {
   flex: 0 0 auto;
   width: 420px;
@@ -1056,7 +1174,8 @@
   overflow: hidden;
 }
 .rv-plot-image-fig {
-  width: 840px;
+  width: 100%;
+  min-width: 0;
 }
 .rv-plot-embed-fig img {
   width: 100%;
@@ -1067,7 +1186,7 @@
   background: #fafafa;
 }
 .rv-plot-image-fig img {
-  min-height: 300px;
+  min-height: 0;
 }
 .rv-plot-embed-fig figcaption {
   font-size: 0.65rem;
@@ -1086,6 +1205,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .rv-plot-embed-row--images > .rv-plot-image-fig,
+  .rv-plot-embed-row--images > .rv-plot-unavailable {
+    flex-basis: 100%;
+  }
 }
 
 /* Multi-model finding text */

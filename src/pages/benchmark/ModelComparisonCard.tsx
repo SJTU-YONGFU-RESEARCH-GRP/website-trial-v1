@@ -12,6 +12,9 @@ interface Props {
   scenario: WorkflowScenario;
 }
 
+const SIMULATOR_FILTERS = ["ngspice", "spectre", "hspice"] as const;
+type SimulatorFilter = (typeof SIMULATOR_FILTERS)[number];
+
 function formatOperationChain(chain: string | undefined): string {
   if (!chain) return "Input";
   const toolNames: Record<string, string> = {
@@ -74,7 +77,20 @@ export function ModelComparisonCard({ scenario }: Props) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [enabledSimulators, setEnabledSimulators] = useState<Record<SimulatorFilter, boolean>>({
+    ngspice: true,
+    spectre: true,
+    hspice: true,
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setSelectedRunIds((previous) => {
+      const available = previous.filter((runId) => Boolean(scenario.models[runId]));
+      return available.length === previous.length ? previous : available;
+    });
+  }, [scenario.models]);
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -120,6 +136,27 @@ export function ModelComparisonCard({ scenario }: Props) {
   }, [selectedRunIds]);
 
   const selectableModels = useMemo(() => selectableRuns(scenario), [scenario]);
+  const filteredModels = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase();
+    return selectableModels.filter((model) => {
+      const simulator = model.dialect.toLocaleLowerCase() as SimulatorFilter;
+      if (!SIMULATOR_FILTERS.includes(simulator) || !enabledSimulators[simulator]) {
+        return false;
+      }
+      if (!query) return true;
+      const searchableText = [
+        model.checksum,
+        model.pdkSource,
+        model.displayName,
+        model.filename,
+        ...model.modelNames,
+      ]
+        .filter((value): value is string => Boolean(value))
+        .join("\n")
+        .toLocaleLowerCase();
+      return searchableText.includes(query);
+    });
+  }, [enabledSimulators, searchQuery, selectableModels]);
   const comparisonScenario = useMemo(
     () => loaded ? mergeLoadedRuns(scenario, loaded) : scenario,
     [loaded, scenario],
@@ -131,6 +168,13 @@ export function ModelComparisonCard({ scenario }: Props) {
         ? previous.filter((value) => value !== runModelId)
         : [...previous, runModelId],
     );
+  }, []);
+
+  const toggleSimulator = useCallback((simulator: SimulatorFilter) => {
+    setEnabledSimulators((previous) => ({
+      ...previous,
+      [simulator]: !previous[simulator],
+    }));
   }, []);
 
   const clearAll = useCallback(() => setSelectedRunIds([]), []);
@@ -146,9 +190,42 @@ export function ModelComparisonCard({ scenario }: Props) {
 
       <div className="bmw-cm-filters" style={{ marginBottom: "0.75rem" }}>
         <fieldset style={{ flex: "1 1 100%", minWidth: "260px" }}>
-          <legend>Model–simulator results ({selectableModels.length} available)</legend>
+          <legend>
+            Model–simulator results ({filteredModels.length} of {selectableModels.length} shown)
+          </legend>
           <div className="bmw-multi-select" ref={dropdownRef}>
+            <div className="bmw-result-filter-bar">
+              <label className="bmw-result-search">
+                <span>Search</span>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  placeholder="UID, PDK, or model name"
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setDropdownOpen(true);
+                  }}
+                  onFocus={() => setDropdownOpen(true)}
+                />
+              </label>
+              <fieldset className="bmw-simulator-filter">
+                <legend>Simulator</legend>
+                <div>
+                  {SIMULATOR_FILTERS.map((simulator) => (
+                    <label key={simulator}>
+                      <input
+                        type="checkbox"
+                        checked={enabledSimulators[simulator]}
+                        onChange={() => toggleSimulator(simulator)}
+                      />
+                      <span>{simulator}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
             <button
+              type="button"
               className="bmw-multi-select-trigger"
               onClick={() => setDropdownOpen((open) => !open)}
               onMouseDown={(event) => event.preventDefault()}
@@ -160,7 +237,7 @@ export function ModelComparisonCard({ scenario }: Props) {
             </button>
             {dropdownOpen && (
               <div className="bmw-multi-select-dropdown" onMouseDown={(event) => event.preventDefault()}>
-                {selectableModels.map((model) => {
+                {filteredModels.map((model) => {
                   const manifest = scenario.manifests?.[model.modelId];
                   return (
                     <label key={model.modelId} className="bmw-multi-select-option">
@@ -198,6 +275,11 @@ export function ModelComparisonCard({ scenario }: Props) {
                     </label>
                   );
                 })}
+                {filteredModels.length === 0 && (
+                  <div className="bmw-multi-select-empty">
+                    No model–simulator results match the current filters.
+                  </div>
+                )}
               </div>
             )}
           </div>
