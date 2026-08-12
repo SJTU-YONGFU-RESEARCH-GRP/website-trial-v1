@@ -364,6 +364,7 @@ function openImageOverlay(image: HTMLImageElement) {
   overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;";
   const clone = document.createElement("img");
   clone.src = image.src;
+  clone.className = "rv-lightbox-image";
   clone.style.cssText = "max-width:95vw;max-height:95vh;object-fit:contain;";
   overlay.appendChild(clone);
   overlay.onclick = () => overlay.remove();

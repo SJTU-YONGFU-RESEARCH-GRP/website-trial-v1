@@ -7,14 +7,29 @@
   ],
   "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/807aff9f43f8a4018247e02a6dea0f24/model.lib",
   "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/807aff9f43f8a4018247e02a6dea0f24/ngspice.lib",
-  "astParsedInput": true,
+  "benchmarkFixtureMode": "fixed-simulator-native",
+  "netlistAstUsed": false,
+  "fixtureManifest": "native-fixture-manifest.json",
+  "benchmarkContractSha256": "8b8fd67ae3dd54834b283ee6d3f132cd79406c04868a9e13f5404c2e0a8b3931",
+  "fixtureTemplateHashes": {
+    "dc": "7832c2c23e856054ef0da3446b4b57b29476f6fee0e09f8c1e4f87936e6bf966",
+    "transient": "b50b11b3ae496fbd57771e76fc8b14b955a2c2059a9154d971d0a56ac7dc8b90",
+    "ac": "af551998f5b4483bbe177eda767e14f58a7b8c011d60976bfc38c237d94e2c4b",
+    "noise": "15ed37aa61426809781e22d635e7d7759b2bebb2dd90afffbcf0bc5e4cb77632"
+  },
+  "fixtureSubmittedHashes": {
+    "dc": "ee573d3aadc37ecc1cd926789e9bde61f4a724f94e2d6e6b0ab8158c78b01842",
+    "transient": "4257dec983ef7f1f30e163dc7678a6675e8868cf16911c794f5b80ae23719ac4",
+    "ac": "f9dd97334365bcdf60915bbf3939f57c874368266356c930ffb8aab3be1194e9",
+    "noise": "4efd665220df3256ed8af4126ac700b3ed474c1b3284d6036cc416d0c42c4fd9"
+  },
   "parameterPreservingInput": true,
   "modelFallbackApplied": false,
   "parameterContext": {
     "kind": "sky130-pdk-tt",
     "guessedDefaults": false,
     "unresolvedSymbols": [],
-    "geometrySource": "benchmark netlists",
+    "geometrySource": "mosfet-fixed-native-v1 benchmark contract",
     "geometry": {
       "dc": {
         "l": "1u",
@@ -321,9 +336,9 @@
       },
       "benchmarkModelName": "__benchmark_selected_nmos"
     },
-    "sha256": "889917f7d7f085a4522871ec5a249d7045979e61de4198640449025e7961b375"
+    "sha256": "b6c2c33aaf79b94c1dd11a01afeda40130f72c657e50251e5dc10f778087b8cb"
   },
-  "benchmarkFixtureAdjustments": [
+  "modelHandoffAdjustments": [
     "added PMOS complementary-circuit fixture"
   ],
   "md5": "807aff9f43f8a4018247e02a6dea0f24",
@@ -334,10 +349,10 @@
     "ac",
     "noise"
   ],
-  "startedAt": "2026-07-28T12:26:12.463116+00:00",
-  "finishedAt": "2026-07-28T12:59:55.138511+00:00",
-  "elapsedSeconds": 2022.675409,
-  "peakRssKiB": 225264,
+  "startedAt": "2026-07-29T16:59:05.117531+00:00",
+  "finishedAt": "2026-07-29T17:01:39.629301+00:00",
+  "elapsedSeconds": 154.511775,
+  "peakRssKiB": 238284,
   "returnCode": 0,
   "status": "completed",
   "error": null,
@@ -350,26 +365,26 @@
     {
       "mode": "dc",
       "path": "netlist/dc.cir",
-      "bytes": 5882,
-      "sha256": "ac5f3af492eb829be5c029e098adba8364c6e16c6fb5db188f95fb34e79e6a45"
+      "bytes": 5967,
+      "sha256": "ee573d3aadc37ecc1cd926789e9bde61f4a724f94e2d6e6b0ab8158c78b01842"
     },
     {
       "mode": "transient",
       "path": "netlist/transient.cir",
-      "bytes": 6806,
-      "sha256": "7f81458c8b4cc788ea774ad2dc12f8afe6f332412d2aea8dac7041656312190b"
+      "bytes": 6891,
+      "sha256": "4257dec983ef7f1f30e163dc7678a6675e8868cf16911c794f5b80ae23719ac4"
     },
     {
       "mode": "ac",
       "path": "netlist/ac.cir",
-      "bytes": 11538,
-      "sha256": "17a93c292a5233922cc915d3ec8afe60ee8b70ed072757f4ba76673ceb3523fb"
+      "bytes": 11626,
+      "sha256": "f9dd97334365bcdf60915bbf3939f57c874368266356c930ffb8aab3be1194e9"
     },
     {
       "mode": "noise",
       "path": "netlist/noise.cir",
-      "bytes": 7160,
-      "sha256": "c5d2569e4367120ef8fee859b53ef7679d0c33cb29abf327960410b29575a781"
+      "bytes": 5336,
+      "sha256": "4efd665220df3256ed8af4126ac700b3ed474c1b3284d6036cc416d0c42c4fd9"
     }
   ]
 }

@@ -1,0 +1,5556 @@
+{
+  "schemaVersion": "1.3.0",
+  "manifest": {
+    "schemaVersion": "1.3.0",
+    "uid": "011803cd6cac4588e22471ad4a8be223",
+    "flow": "openroad",
+    "pdk": "sky130A",
+    "scl": "sky130_fd_sc_hd",
+    "design": "uart",
+    "runName": "RUN_2026-08-08_TECH_techfile1",
+    "variant": "techfile1",
+    "techfileRcScale": 20,
+    "sourceKind": "final-metrics-json",
+    "relativePath": "openroad/sky130A/sky130_fd_sc_hd/uart/RUN_2026-08-08_TECH_techfile1/metrics.json",
+    "filterFacets": [
+      {
+        "category": "design",
+        "categoryLabel": "Design & constraints",
+        "categoryOrder": 10,
+        "dimension": "design",
+        "dimensionLabel": "Design",
+        "value": "uart",
+        "valueLabel": "uart",
+        "dimensionOrder": 10,
+        "valueOrder": 100
+      },
+      {
+        "category": "design",
+        "categoryLabel": "Design & constraints",
+        "categoryOrder": 10,
+        "dimension": "clock_period",
+        "dimensionLabel": "Clock period",
+        "value": "10",
+        "valueLabel": "10 ns",
+        "dimensionOrder": 30,
+        "valueOrder": 10
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "pdk",
+        "dimensionLabel": "PDK",
+        "value": "sky130A",
+        "valueLabel": "sky130A",
+        "dimensionOrder": 10,
+        "valueOrder": 100
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "scl",
+        "dimensionLabel": "Standard-cell library",
+        "value": "sky130_fd_sc_hd",
+        "valueLabel": "sky130_fd_sc_hd",
+        "dimensionOrder": 20,
+        "valueOrder": 100
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "techfile_rc",
+        "dimensionLabel": "Techfile RC",
+        "value": "techfile1|20",
+        "valueLabel": "techfile1 · RC ×20",
+        "dimensionOrder": 30,
+        "valueOrder": 20
+      },
+      {
+        "category": "implementation",
+        "categoryLabel": "Implementation",
+        "categoryOrder": 30,
+        "dimension": "tool",
+        "dimensionLabel": "Tools",
+        "value": "openroad",
+        "valueLabel": "OpenROAD / ORFS",
+        "dimensionOrder": 10,
+        "valueOrder": 10
+      }
+    ],
+    "sourceSha256": "bffb59aa88822aa87b0107cad02f49450fecbbab1f9838473d7508f0b0afb547",
+    "bundleSha256": "b08c925a2cdf4005cdffdc673582ba59cc8c4cafd9f081d6449187e6e2b44d22",
+    "reportSchema": "openroad.final_metrics",
+    "tool": "OpenROAD / OpenROAD-flow-scripts",
+    "scope": "packaged final PPA, routing, artifact, and signoff summary",
+    "authoritativeOverallStatus": false,
+    "ast": {
+      "format": "json",
+      "bytesUtf8": 13159,
+      "rootKind": "object",
+      "nodeCount": 657,
+      "leafCount": 605,
+      "maxDepth": 5,
+      "standardJson": true,
+      "nonFiniteNumberNodes": 0,
+      "duplicateKeyGroups": 0,
+      "nodeKinds": {
+        "array": 2,
+        "boolean": 2,
+        "number": 160,
+        "object": 50,
+        "string": 443
+      }
+    },
+    "summary": {
+      "hasPpa": true,
+      "areaUm2": 19344.6,
+      "coreAreaUm2": 17963.5,
+      "instanceAreaUm2": 12574.6,
+      "utilization": 0.700007,
+      "instances": 1197,
+      "physicalInstances": 2259,
+      "macros": 0,
+      "ioCount": 46,
+      "totalPowerMw": 3.603090764954686,
+      "powerComparisonValid": true,
+      "powerComparisonReason": null,
+      "internalPowerMw": 2.270757919177413,
+      "switchingPowerMw": 1.3323278399184346,
+      "leakagePowerMw": 0.0000049879531616170425,
+      "referenceCorner": "tt",
+      "setupSlackNs": 6.055602857225648,
+      "holdSlackNs": 0.47735972081886946,
+      "worstSetupSlackNs": 4.240564019957814,
+      "worstHoldSlackNs": 0.2989896470589803,
+      "setupTnsNs": 0,
+      "holdTnsNs": 0,
+      "clockPeriodNs": 10,
+      "criticalPathNs": 3.944397142774352,
+      "fmaxHz": 253524167.0154529,
+      "fmaxMethod": "reported by OpenROAD report_clock_min_period",
+      "setupViolations": 0,
+      "holdViolations": 0,
+      "maxSlewViolations": 0,
+      "maxCapViolations": 0,
+      "maxFanoutViolations": 0,
+      "wirelengthUm": 22678,
+      "vias": 6028,
+      "nets": 1005,
+      "routeDrcErrors": 0,
+      "antennaViolations": 0,
+      "flowErrors": 0,
+      "flowWarnings": 2,
+      "magicDrcErrors": null,
+      "averageIrDropV": null,
+      "worstIrDropV": null,
+      "cellUsageAvailable": true,
+      "finalDefComponents": 2259,
+      "uniqueCellMasters": 119,
+      "metricCount": 67,
+      "cornerSetupSlackNs": {
+        "ff": 6.806483569420416,
+        "ss": 4.240564019957814,
+        "tt": 6.055602857225648
+      },
+      "timingEndpointSlacks": {
+        "availability": "available",
+        "referenceCorner": "tt",
+        "reason": null,
+        "setupEndpointCount": 94,
+        "holdEndpointCount": 94,
+        "setupViolationCount": 0,
+        "holdViolationCount": 0,
+        "setupSlackNs": [
+          6.06,
+          6.14,
+          6.15,
+          6.15,
+          6.16,
+          6.17,
+          6.2,
+          6.2,
+          6.21,
+          6.23,
+          6.25,
+          6.28,
+          6.3,
+          6.31,
+          6.31,
+          6.32,
+          6.35,
+          6.36,
+          6.42,
+          6.46,
+          6.47,
+          6.51,
+          6.55,
+          6.59,
+          6.64,
+          6.66,
+          6.68,
+          6.68,
+          6.69,
+          6.7,
+          6.7,
+          6.72,
+          6.73,
+          6.74,
+          6.74,
+          6.74,
+          6.74,
+          6.75,
+          6.75,
+          6.76,
+          6.76,
+          6.79,
+          6.88,
+          6.88,
+          6.9,
+          6.9,
+          6.98,
+          6.98,
+          6.98,
+          6.98,
+          6.99,
+          7,
+          7,
+          7,
+          7.01,
+          7.09,
+          7.09,
+          7.09,
+          7.09,
+          7.1,
+          7.1,
+          7.12,
+          7.12,
+          7.14,
+          7.14,
+          7.26,
+          7.26,
+          7.3,
+          7.31,
+          7.31,
+          7.31,
+          7.33,
+          7.34,
+          7.35,
+          7.36,
+          7.37,
+          7.42,
+          7.44,
+          7.45,
+          7.46,
+          7.48,
+          7.48,
+          7.48,
+          7.49,
+          7.5,
+          7.51,
+          7.52,
+          7.54,
+          7.56,
+          7.59,
+          7.64,
+          7.67,
+          7.7,
+          7.88
+        ],
+        "holdSlackNs": [
+          0.48,
+          0.5,
+          0.5,
+          0.51,
+          0.53,
+          0.53,
+          0.53,
+          0.53,
+          0.53,
+          0.53,
+          0.54,
+          0.54,
+          0.54,
+          0.55,
+          0.55,
+          0.55,
+          0.55,
+          0.55,
+          0.55,
+          0.57,
+          0.57,
+          0.58,
+          0.58,
+          0.59,
+          0.61,
+          0.61,
+          0.61,
+          0.61,
+          0.61,
+          0.62,
+          0.62,
+          0.62,
+          0.63,
+          0.63,
+          0.64,
+          0.66,
+          0.66,
+          0.66,
+          0.67,
+          0.7,
+          0.7,
+          0.71,
+          0.72,
+          0.72,
+          0.72,
+          0.72,
+          0.73,
+          0.73,
+          0.74,
+          0.75,
+          0.76,
+          0.76,
+          0.77,
+          0.77,
+          0.78,
+          0.79,
+          0.79,
+          0.8,
+          0.81,
+          0.81,
+          0.84,
+          0.86,
+          0.86,
+          0.89,
+          0.9,
+          0.9,
+          0.91,
+          0.92,
+          0.95,
+          0.95,
+          0.96,
+          0.98,
+          0.98,
+          1.01,
+          1.08,
+          1.16,
+          1.22,
+          1.22,
+          1.97,
+          2.9,
+          3.14,
+          3.16,
+          3.16,
+          3.16,
+          3.17,
+          3.17,
+          3.17,
+          3.17,
+          3.18,
+          3.18,
+          3.19,
+          3.2,
+          3.2,
+          3.2
+        ]
+      },
+      "powerBreakdownMw": {
+        "internal": 2.270757919177413,
+        "switching": 1.3323278399184346,
+        "leakage": 0.0000049879531616170425
+      },
+      "metricsByCategory": {
+        "clock": 2,
+        "design": 36,
+        "design_powergrid": 6,
+        "flow": 5,
+        "power": 4,
+        "timing": 14
+      },
+      "completionStatus": "complete"
+    },
+    "sourceBundle": {
+      "flow": "openroad",
+      "run_directory": "RUN_2026-08-08_TECH_techfile1",
+      "primary_source": "metrics.json",
+      "supporting_sources": [
+        {
+          "source": "manifest.json",
+          "format": "json",
+          "bytes": 19512,
+          "sha256": "e0cd80ef040e38c0001d49d014fcfd3088e95640cbade8427b49ed2939b17f97"
+        },
+        {
+          "source": "experiment-run.json",
+          "format": "json",
+          "bytes": 19512,
+          "sha256": "e0cd80ef040e38c0001d49d014fcfd3088e95640cbade8427b49ed2939b17f97"
+        },
+        {
+          "source": "orfs-mcmm-final/results/sky130hd/uart/techfile1/6_final.def",
+          "format": "def",
+          "bytes": 864118,
+          "sha256": "3ef24025be249a88ce156ac6cc01bd166eaf616e02e3b4fba365f9748813a640"
+        },
+        {
+          "source": "corner-reports/corner-tt-setup.rpt",
+          "format": "rpt",
+          "bytes": 178026,
+          "sha256": "521e0b8daa3edf212627bb03dca292c0e688f3b295351a3021dd237e5d794325"
+        },
+        {
+          "source": "corner-reports/corner-tt-hold.rpt",
+          "format": "rpt",
+          "bytes": 157670,
+          "sha256": "e11ce4ad0cea83af3ccf972f295d9b7e83c2683ef76061072703d429f491961c"
+        }
+      ]
+    },
+    "reportPath": "011803cd6cac4588e22471ad4a8be223/report.json"
+  },
+  "ast": {
+    "source": "openroad/sky130A/sky130_fd_sc_hd/uart/RUN_2026-08-08_TECH_techfile1/metrics.json",
+    "format": "json",
+    "bytes_utf8": 13159,
+    "sha256": "bffb59aa88822aa87b0107cad02f49450fecbbab1f9838473d7508f0b0afb547",
+    "root_kind": "object",
+    "node_count_including_keys": 657,
+    "leaf_count_including_keys": 605,
+    "max_depth": 5,
+    "node_kinds": {
+      "array": 2,
+      "boolean": 2,
+      "number": 160,
+      "object": 50,
+      "string": 443
+    },
+    "duplicate_key_groups": 0,
+    "duplicate_keys": [],
+    "non_finite_number_nodes": 0,
+    "standard_json": true
+  },
+  "source_bundle": {
+    "flow": "openroad",
+    "run_directory": "RUN_2026-08-08_TECH_techfile1",
+    "primary_source": "metrics.json",
+    "supporting_sources": [
+      {
+        "source": "manifest.json",
+        "format": "json",
+        "bytes": 19512,
+        "sha256": "e0cd80ef040e38c0001d49d014fcfd3088e95640cbade8427b49ed2939b17f97"
+      },
+      {
+        "source": "experiment-run.json",
+        "format": "json",
+        "bytes": 19512,
+        "sha256": "e0cd80ef040e38c0001d49d014fcfd3088e95640cbade8427b49ed2939b17f97"
+      },
+      {
+        "source": "orfs-mcmm-final/results/sky130hd/uart/techfile1/6_final.def",
+        "format": "def",
+        "bytes": 864118,
+        "sha256": "3ef24025be249a88ce156ac6cc01bd166eaf616e02e3b4fba365f9748813a640"
+      },
+      {
+        "source": "corner-reports/corner-tt-setup.rpt",
+        "format": "rpt",
+        "bytes": 178026,
+        "sha256": "521e0b8daa3edf212627bb03dca292c0e688f3b295351a3021dd237e5d794325"
+      },
+      {
+        "source": "corner-reports/corner-tt-hold.rpt",
+        "format": "rpt",
+        "bytes": 157670,
+        "sha256": "e11ce4ad0cea83af3ccf972f295d9b7e83c2683ef76061072703d429f491961c"
+      }
+    ]
+  },
+  "interpretation": {
+    "schema": "openroad.final_metrics",
+    "tool": "OpenROAD / OpenROAD-flow-scripts",
+    "scope": "packaged final PPA, routing, artifact, and signoff summary",
+    "authoritative_overall_status": false,
+    "metric_count": 67,
+    "metrics_by_category": {
+      "clock": 2,
+      "design": 36,
+      "design_powergrid": 6,
+      "flow": 5,
+      "power": 4,
+      "timing": 14
+    },
+    "design": {
+      "instances": 1197,
+      "standard_cells": 1197,
+      "physical_instances": 2259,
+      "macros": 0,
+      "instance_area_um2": 12574.6,
+      "die_area_um2": 19344.6,
+      "core_area_um2": 17963.5,
+      "utilization": 0.700007,
+      "io_count": 46
+    },
+    "timing_aggregate": {
+      "reference_corner": "tt",
+      "reference_setup_slack_ns": 6.055602857225648,
+      "reference_hold_slack_ns": 0.47735972081886946,
+      "setup_worst_slack_ns": 4.240564019957814,
+      "hold_worst_slack_ns": 0.2989896470589803,
+      "setup_tns_ns": 0,
+      "hold_tns_ns": 0,
+      "setup_violation_count": 0,
+      "hold_violation_count": 0,
+      "max_slew_violation_count": 0,
+      "max_cap_violation_count": 0,
+      "max_fanout_violation_count": 0,
+      "clock_period_ns": 10,
+      "critical_path_ns": 3.944397142774352,
+      "fmax_hz": 253524167.0154529,
+      "fmax_method": "reported by OpenROAD report_clock_min_period",
+      "corners": {
+        "ff": {
+          "setup_slack_ns": 6.806483569420416,
+          "hold_slack_ns": 0.2989896470589803,
+          "setup_tns_ns": 0,
+          "hold_tns_ns": 0,
+          "critical_path_ns": 3.1935164305795842,
+          "fmax_hz": 313134446.5381417
+        },
+        "ss": {
+          "setup_slack_ns": 4.240564019957814,
+          "hold_slack_ns": 0.9658034645398642,
+          "setup_tns_ns": 0,
+          "hold_tns_ns": 0,
+          "critical_path_ns": 5.759435980042186,
+          "fmax_hz": 173628112.79875973
+        },
+        "tt": {
+          "setup_slack_ns": 6.055602857225648,
+          "hold_slack_ns": 0.47735972081886946,
+          "setup_tns_ns": 0,
+          "hold_tns_ns": 0,
+          "critical_path_ns": 3.944397142774352,
+          "fmax_hz": 253524167.0154529
+        }
+      }
+    },
+    "routing": {
+      "nets": 1005,
+      "wirelength_um": 22678,
+      "vias": 6028,
+      "detailed_route_drc_errors": 0,
+      "antenna_violation_count": 0
+    },
+    "signoff_indicators": {
+      "flow_errors": 0,
+      "flow_warnings": 2,
+      "magic_drc_errors": null
+    },
+    "power_w": {
+      "internal": 0.002270757919177413,
+      "switching": 0.0013323278399184346,
+      "leakage": 4.9879531616170425e-9,
+      "total": 0.003603090764954686
+    },
+    "power_mw": {
+      "internal": 2.270757919177413,
+      "switching": 1.3323278399184346,
+      "leakage": 0.0000049879531616170425,
+      "total": 3.603090764954686
+    },
+    "power_corners_mw": {
+      "ff": {
+        "internal": 2.5518022011965513,
+        "leakage": 0.000020130482170088726,
+        "switching": 1.5636344905942678,
+        "total": 4.115456715226173
+      },
+      "ss": {
+        "internal": 1.844320329837501,
+        "leakage": 0.007693440238654148,
+        "switching": 1.0527032427489758,
+        "total": 2.9047171119600534
+      },
+      "tt": {
+        "internal": 2.270757919177413,
+        "leakage": 0.0000049879531616170425,
+        "switching": 1.3323278399184346,
+        "total": 3.603090764954686
+      }
+    },
+    "ir_drop": {
+      "average_v": null,
+      "worst_v": null,
+      "status": null,
+      "reason": null
+    },
+    "completion": {
+      "status": "complete",
+      "implementation_complete": true
+    },
+    "boundaries": [
+      "Reference PPA uses TT; timing_aggregate.corners and power_corners_mw preserve explicit final post-route TT/SS/FF analyses.",
+      "Power is vectorless/default-activity post-route power, not simulation-vector power.",
+      "Static IR drop was not run for this GF180 result and is represented as not_run, never as zero drop.",
+      "The package reports four maximum-capacitance violations, so clean setup/hold does not imply all electrical checks pass."
+    ],
+    "normalized_metric_provenance": [
+      {
+        "metric_id": "area.die_um2",
+        "value": 19344.6,
+        "unit": "um^2",
+        "source_field": "ppa.area.die_um2",
+        "transformation": "direct",
+        "raw_value": "19344.6",
+        "span": {
+          "start": {
+            "offset": 6570,
+            "line": 230,
+            "column": 18
+          },
+          "end": {
+            "offset": 6577,
+            "line": 230,
+            "column": 25
+          }
+        }
+      },
+      {
+        "metric_id": "area.core_um2",
+        "value": 17963.5,
+        "unit": "um^2",
+        "source_field": "ppa.area.core_um2",
+        "transformation": "direct",
+        "raw_value": "17963.5",
+        "span": {
+          "start": {
+            "offset": 6544,
+            "line": 229,
+            "column": 19
+          },
+          "end": {
+            "offset": 6551,
+            "line": 229,
+            "column": 26
+          }
+        }
+      },
+      {
+        "metric_id": "area.instance_um2",
+        "value": 12574.6,
+        "unit": "um^2",
+        "source_field": "ppa.area.instance_um2",
+        "transformation": "direct",
+        "raw_value": "12574.6",
+        "span": {
+          "start": {
+            "offset": 6601,
+            "line": 231,
+            "column": 23
+          },
+          "end": {
+            "offset": 6608,
+            "line": 231,
+            "column": 30
+          }
+        }
+      },
+      {
+        "metric_id": "design.logical_instances",
+        "value": 1197,
+        "unit": "count",
+        "source_field": "ppa.area.logical_and_timing_cells",
+        "transformation": "direct",
+        "raw_value": "1197",
+        "span": {
+          "start": {
+            "offset": 6644,
+            "line": 232,
+            "column": 35
+          },
+          "end": {
+            "offset": 6648,
+            "line": 232,
+            "column": 39
+          }
+        }
+      },
+      {
+        "metric_id": "design.physical_instances",
+        "value": 2259,
+        "unit": "count",
+        "source_field": "ppa.area.all_physical_instances",
+        "transformation": "direct",
+        "raw_value": "2259",
+        "span": {
+          "start": {
+            "offset": 6520,
+            "line": 228,
+            "column": 33
+          },
+          "end": {
+            "offset": 6524,
+            "line": 228,
+            "column": 37
+          }
+        }
+      },
+      {
+        "metric_id": "design.utilization",
+        "value": 0.700007,
+        "unit": "ratio",
+        "source_field": "ppa.area.utilization_fraction",
+        "transformation": "direct",
+        "raw_value": "0.700007",
+        "span": {
+          "start": {
+            "offset": 6680,
+            "line": 233,
+            "column": 31
+          },
+          "end": {
+            "offset": 6688,
+            "line": 233,
+            "column": 39
+          }
+        }
+      },
+      {
+        "metric_id": "timing.clock_period_ns",
+        "value": 10,
+        "unit": "ns",
+        "source_field": "configuration.clock_period_ns",
+        "transformation": "direct",
+        "raw_value": "10.0",
+        "span": {
+          "start": {
+            "offset": 1289,
+            "line": 35,
+            "column": 24
+          },
+          "end": {
+            "offset": 1293,
+            "line": 35,
+            "column": 28
+          }
+        }
+      },
+      {
+        "metric_id": "timing.fmax_hz",
+        "value": 253524167.0154529,
+        "unit": "Hz",
+        "source_field": "ppa.timing.fmax_hz",
+        "transformation": "direct",
+        "raw_value": "253524167.0154529",
+        "span": {
+          "start": {
+            "offset": 8706,
+            "line": 295,
+            "column": 18
+          },
+          "end": {
+            "offset": 8723,
+            "line": 295,
+            "column": 35
+          }
+        }
+      },
+      {
+        "metric_id": "timing.reference_setup_slack_ns",
+        "value": 6.055602857225648,
+        "unit": "ns",
+        "source_field": "ppa.timing.setup_wns_ns",
+        "transformation": "direct",
+        "raw_value": "6.055602857225648",
+        "span": {
+          "start": {
+            "offset": 9028,
+            "line": 304,
+            "column": 23
+          },
+          "end": {
+            "offset": 9045,
+            "line": 304,
+            "column": 40
+          }
+        }
+      },
+      {
+        "metric_id": "timing.reference_hold_slack_ns",
+        "value": 0.47735972081886946,
+        "unit": "ns",
+        "source_field": "ppa.timing.hold_wns_ns",
+        "transformation": "direct",
+        "raw_value": "0.47735972081886946",
+        "span": {
+          "start": {
+            "offset": 8772,
+            "line": 297,
+            "column": 22
+          },
+          "end": {
+            "offset": 8791,
+            "line": 297,
+            "column": 41
+          }
+        }
+      },
+      {
+        "metric_id": "timing.worst_setup_slack_ns",
+        "value": 4.240564019957814,
+        "unit": "ns",
+        "source_field": "ppa.timing.setup_worst_slack_ns",
+        "transformation": "minimum across reported corners",
+        "raw_value": "4.240564019957814",
+        "span": {
+          "start": {
+            "offset": 9077,
+            "line": 305,
+            "column": 31
+          },
+          "end": {
+            "offset": 9094,
+            "line": 305,
+            "column": 48
+          }
+        }
+      },
+      {
+        "metric_id": "timing.worst_hold_slack_ns",
+        "value": 0.2989896470589803,
+        "unit": "ns",
+        "source_field": "ppa.timing.hold_worst_slack_ns",
+        "transformation": "minimum across reported corners",
+        "raw_value": "0.2989896470589803",
+        "span": {
+          "start": {
+            "offset": 8822,
+            "line": 298,
+            "column": 30
+          },
+          "end": {
+            "offset": 8840,
+            "line": 298,
+            "column": 48
+          }
+        }
+      },
+      {
+        "metric_id": "timing.setup_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "raw_finish_metrics.finish__timing__drv__setup_violation_count",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12579,
+            "line": 373,
+            "column": 51
+          },
+          "end": {
+            "offset": 12580,
+            "line": 373,
+            "column": 52
+          }
+        }
+      },
+      {
+        "metric_id": "timing.hold_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "raw_finish_metrics.finish__timing__drv__hold_violation_count",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12252,
+            "line": 366,
+            "column": 50
+          },
+          "end": {
+            "offset": 12253,
+            "line": 366,
+            "column": 51
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_slew_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "ppa.timing.max_slew_violations",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 8944,
+            "line": 301,
+            "column": 30
+          },
+          "end": {
+            "offset": 8945,
+            "line": 301,
+            "column": 31
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_cap_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "ppa.timing.max_capacitance_violations",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 8878,
+            "line": 299,
+            "column": 37
+          },
+          "end": {
+            "offset": 8879,
+            "line": 299,
+            "column": 38
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_fanout_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "ppa.timing.max_fanout_violations",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 8912,
+            "line": 300,
+            "column": 32
+          },
+          "end": {
+            "offset": 8913,
+            "line": 300,
+            "column": 33
+          }
+        }
+      },
+      {
+        "metric_id": "power.internal_mw",
+        "value": 2.270757919177413,
+        "unit": "mW",
+        "source_field": "ppa.power.internal_w",
+        "transformation": "W * 1000",
+        "raw_value": "0.002270757919177413",
+        "span": {
+          "start": {
+            "offset": 7513,
+            "line": 259,
+            "column": 21
+          },
+          "end": {
+            "offset": 7533,
+            "line": 259,
+            "column": 41
+          }
+        }
+      },
+      {
+        "metric_id": "power.switching_mw",
+        "value": 1.3323278399184346,
+        "unit": "mW",
+        "source_field": "ppa.power.switching_w",
+        "transformation": "W * 1000",
+        "raw_value": "0.0013323278399184346",
+        "span": {
+          "start": {
+            "offset": 7709,
+            "line": 263,
+            "column": 22
+          },
+          "end": {
+            "offset": 7730,
+            "line": 263,
+            "column": 43
+          }
+        }
+      },
+      {
+        "metric_id": "power.leakage_mw",
+        "value": 0.0000049879531616170425,
+        "unit": "mW",
+        "source_field": "ppa.power.leakage_w",
+        "transformation": "W * 1000",
+        "raw_value": "4.9879531616170425e-09",
+        "span": {
+          "start": {
+            "offset": 7554,
+            "line": 260,
+            "column": 20
+          },
+          "end": {
+            "offset": 7576,
+            "line": 260,
+            "column": 42
+          }
+        }
+      },
+      {
+        "metric_id": "power.total_mw",
+        "value": 3.603090764954686,
+        "unit": "mW",
+        "source_field": "ppa.power.total_w",
+        "transformation": "W * 1000",
+        "raw_value": "0.003603090764954686",
+        "span": {
+          "start": {
+            "offset": 7786,
+            "line": 265,
+            "column": 18
+          },
+          "end": {
+            "offset": 7806,
+            "line": 265,
+            "column": 38
+          }
+        }
+      },
+      {
+        "metric_id": "routing.wirelength_um",
+        "value": 22678,
+        "unit": "um",
+        "source_field": "routing.wirelength_um",
+        "transformation": "direct",
+        "raw_value": "22678",
+        "span": {
+          "start": {
+            "offset": 12983,
+            "line": 386,
+            "column": 22
+          },
+          "end": {
+            "offset": 12988,
+            "line": 386,
+            "column": 27
+          }
+        }
+      },
+      {
+        "metric_id": "routing.vias",
+        "value": 6028,
+        "unit": "count",
+        "source_field": "routing.vias",
+        "transformation": "direct",
+        "raw_value": "6028",
+        "span": {
+          "start": {
+            "offset": 12956,
+            "line": 385,
+            "column": 13
+          },
+          "end": {
+            "offset": 12960,
+            "line": 385,
+            "column": 17
+          }
+        }
+      },
+      {
+        "metric_id": "routing.drc_errors",
+        "value": 0,
+        "unit": "count",
+        "source_field": "routing.detailed_route_drc_errors",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12916,
+            "line": 383,
+            "column": 34
+          },
+          "end": {
+            "offset": 12917,
+            "line": 383,
+            "column": 35
+          }
+        }
+      },
+      {
+        "metric_id": "timing.critical_path_ns",
+        "value": 3.944397142774352,
+        "unit": "ns",
+        "source_field": "ppa.timing.fmax_hz",
+        "transformation": "1e9 / fmax_hz",
+        "raw_value": "253524167.0154529",
+        "span": {
+          "start": {
+            "offset": 8706,
+            "line": 295,
+            "column": 18
+          },
+          "end": {
+            "offset": 8723,
+            "line": 295,
+            "column": 35
+          }
+        }
+      }
+    ],
+    "all_metrics": [
+      {
+        "index": 0,
+        "name": "finish__clock__skew__hold",
+        "category": "clock",
+        "components": [
+          "finish",
+          "clock",
+          "skew",
+          "hold"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.0314413,
+        "raw_value": "0.0314413",
+        "span": {
+          "start": {
+            "offset": 9267,
+            "line": 313,
+            "column": 34
+          },
+          "end": {
+            "offset": 9276,
+            "line": 313,
+            "column": 43
+          }
+        }
+      },
+      {
+        "index": 1,
+        "name": "finish__clock__skew__setup",
+        "category": "clock",
+        "components": [
+          "finish",
+          "clock",
+          "skew",
+          "setup"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.0314413,
+        "raw_value": "0.0314413",
+        "span": {
+          "start": {
+            "offset": 9312,
+            "line": 314,
+            "column": 35
+          },
+          "end": {
+            "offset": 9321,
+            "line": 314,
+            "column": 44
+          }
+        }
+      },
+      {
+        "index": 2,
+        "name": "finish__design__core__area",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "core",
+          "area"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 17963.5,
+        "raw_value": "17963.5",
+        "span": {
+          "start": {
+            "offset": 9357,
+            "line": 315,
+            "column": 35
+          },
+          "end": {
+            "offset": 9364,
+            "line": 315,
+            "column": 42
+          }
+        }
+      },
+      {
+        "index": 3,
+        "name": "finish__design__die__area",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "die",
+          "area"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 19344.6,
+        "raw_value": "19344.6",
+        "span": {
+          "start": {
+            "offset": 9399,
+            "line": 316,
+            "column": 34
+          },
+          "end": {
+            "offset": 9406,
+            "line": 316,
+            "column": 41
+          }
+        }
+      },
+      {
+        "index": 4,
+        "name": "finish__design__instance__area",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 12574.6,
+        "raw_value": "12574.6",
+        "span": {
+          "start": {
+            "offset": 9446,
+            "line": 317,
+            "column": 39
+          },
+          "end": {
+            "offset": 9453,
+            "line": 317,
+            "column": 46
+          }
+        }
+      },
+      {
+        "index": 5,
+        "name": "finish__design__instance__area__class:clock_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "clock_buffer"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 329.066,
+        "raw_value": "329.066",
+        "span": {
+          "start": {
+            "offset": 9513,
+            "line": 318,
+            "column": 59
+          },
+          "end": {
+            "offset": 9520,
+            "line": 318,
+            "column": 66
+          }
+        }
+      },
+      {
+        "index": 6,
+        "name": "finish__design__instance__area__class:clock_inverter",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "clock_inverter"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 40.0384,
+        "raw_value": "40.0384",
+        "span": {
+          "start": {
+            "offset": 9582,
+            "line": 319,
+            "column": 61
+          },
+          "end": {
+            "offset": 9589,
+            "line": 319,
+            "column": 68
+          }
+        }
+      },
+      {
+        "index": 7,
+        "name": "finish__design__instance__area__class:fill_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "fill_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 5388.92,
+        "raw_value": "5388.92",
+        "span": {
+          "start": {
+            "offset": 9646,
+            "line": 320,
+            "column": 56
+          },
+          "end": {
+            "offset": 9653,
+            "line": 320,
+            "column": 63
+          }
+        }
+      },
+      {
+        "index": 8,
+        "name": "finish__design__instance__area__class:inverter",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "inverter"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 76.3232,
+        "raw_value": "76.3232",
+        "span": {
+          "start": {
+            "offset": 9709,
+            "line": 321,
+            "column": 55
+          },
+          "end": {
+            "offset": 9716,
+            "line": 321,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 9,
+        "name": "finish__design__instance__area__class:multi_input_combinational_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "multi_input_combinational_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 4705.76,
+        "raw_value": "4705.76",
+        "span": {
+          "start": {
+            "offset": 9794,
+            "line": 322,
+            "column": 77
+          },
+          "end": {
+            "offset": 9801,
+            "line": 322,
+            "column": 84
+          }
+        }
+      },
+      {
+        "index": 10,
+        "name": "finish__design__instance__area__class:sequential_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "sequential_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 1854.28,
+        "raw_value": "1854.28",
+        "span": {
+          "start": {
+            "offset": 9864,
+            "line": 323,
+            "column": 62
+          },
+          "end": {
+            "offset": 9871,
+            "line": 323,
+            "column": 69
+          }
+        }
+      },
+      {
+        "index": 11,
+        "name": "finish__design__instance__area__class:tap_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "tap_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 286.525,
+        "raw_value": "286.525",
+        "span": {
+          "start": {
+            "offset": 9927,
+            "line": 324,
+            "column": 55
+          },
+          "end": {
+            "offset": 9934,
+            "line": 324,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 12,
+        "name": "finish__design__instance__area__class:timing_repair_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "timing_repair_buffer"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 5282.57,
+        "raw_value": "5282.57",
+        "span": {
+          "start": {
+            "offset": 10002,
+            "line": 325,
+            "column": 67
+          },
+          "end": {
+            "offset": 10009,
+            "line": 325,
+            "column": 74
+          }
+        }
+      },
+      {
+        "index": 13,
+        "name": "finish__design__instance__area__cover",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "cover"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 10056,
+            "line": 326,
+            "column": 46
+          },
+          "end": {
+            "offset": 10057,
+            "line": 326,
+            "column": 47
+          }
+        }
+      },
+      {
+        "index": 14,
+        "name": "finish__design__instance__area__macros",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "macros"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 10105,
+            "line": 327,
+            "column": 47
+          },
+          "end": {
+            "offset": 10106,
+            "line": 327,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 15,
+        "name": "finish__design__instance__area__padcells",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "padcells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 10156,
+            "line": 328,
+            "column": 49
+          },
+          "end": {
+            "offset": 10157,
+            "line": 328,
+            "column": 50
+          }
+        }
+      },
+      {
+        "index": 16,
+        "name": "finish__design__instance__area__stdcell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "stdcell"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 12574.6,
+        "raw_value": "12574.6",
+        "span": {
+          "start": {
+            "offset": 10206,
+            "line": 329,
+            "column": 48
+          },
+          "end": {
+            "offset": 10213,
+            "line": 329,
+            "column": 55
+          }
+        }
+      },
+      {
+        "index": 17,
+        "name": "finish__design__instance__count",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 2259,
+        "raw_value": "2259",
+        "span": {
+          "start": {
+            "offset": 10254,
+            "line": 330,
+            "column": 40
+          },
+          "end": {
+            "offset": 10258,
+            "line": 330,
+            "column": 44
+          }
+        }
+      },
+      {
+        "index": 18,
+        "name": "finish__design__instance__count__class:clock_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "clock_buffer"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 14,
+        "raw_value": "14",
+        "span": {
+          "start": {
+            "offset": 10319,
+            "line": 331,
+            "column": 60
+          },
+          "end": {
+            "offset": 10321,
+            "line": 331,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 19,
+        "name": "finish__design__instance__count__class:clock_inverter",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "clock_inverter"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 3,
+        "raw_value": "3",
+        "span": {
+          "start": {
+            "offset": 10384,
+            "line": 332,
+            "column": 62
+          },
+          "end": {
+            "offset": 10385,
+            "line": 332,
+            "column": 63
+          }
+        }
+      },
+      {
+        "index": 20,
+        "name": "finish__design__instance__count__class:fill_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "fill_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 1062,
+        "raw_value": "1062",
+        "span": {
+          "start": {
+            "offset": 10443,
+            "line": 333,
+            "column": 57
+          },
+          "end": {
+            "offset": 10447,
+            "line": 333,
+            "column": 61
+          }
+        }
+      },
+      {
+        "index": 21,
+        "name": "finish__design__instance__count__class:inverter",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "inverter"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 12,
+        "raw_value": "12",
+        "span": {
+          "start": {
+            "offset": 10504,
+            "line": 334,
+            "column": 56
+          },
+          "end": {
+            "offset": 10506,
+            "line": 334,
+            "column": 58
+          }
+        }
+      },
+      {
+        "index": 22,
+        "name": "finish__design__instance__count__class:multi_input_combinational_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "multi_input_combinational_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 411,
+        "raw_value": "411",
+        "span": {
+          "start": {
+            "offset": 10585,
+            "line": 335,
+            "column": 78
+          },
+          "end": {
+            "offset": 10588,
+            "line": 335,
+            "column": 81
+          }
+        }
+      },
+      {
+        "index": 23,
+        "name": "finish__design__instance__count__class:sequential_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "sequential_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 79,
+        "raw_value": "79",
+        "span": {
+          "start": {
+            "offset": 10652,
+            "line": 336,
+            "column": 63
+          },
+          "end": {
+            "offset": 10654,
+            "line": 336,
+            "column": 65
+          }
+        }
+      },
+      {
+        "index": 24,
+        "name": "finish__design__instance__count__class:tap_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "tap_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 229,
+        "raw_value": "229",
+        "span": {
+          "start": {
+            "offset": 10711,
+            "line": 337,
+            "column": 56
+          },
+          "end": {
+            "offset": 10714,
+            "line": 337,
+            "column": 59
+          }
+        }
+      },
+      {
+        "index": 25,
+        "name": "finish__design__instance__count__class:timing_repair_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "timing_repair_buffer"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 449,
+        "raw_value": "449",
+        "span": {
+          "start": {
+            "offset": 10783,
+            "line": 338,
+            "column": 68
+          },
+          "end": {
+            "offset": 10786,
+            "line": 338,
+            "column": 71
+          }
+        }
+      },
+      {
+        "index": 26,
+        "name": "finish__design__instance__count__cover",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "cover"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 10834,
+            "line": 339,
+            "column": 47
+          },
+          "end": {
+            "offset": 10835,
+            "line": 339,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 27,
+        "name": "finish__design__instance__count__macros",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "macros"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 10884,
+            "line": 340,
+            "column": 48
+          },
+          "end": {
+            "offset": 10885,
+            "line": 340,
+            "column": 49
+          }
+        }
+      },
+      {
+        "index": 28,
+        "name": "finish__design__instance__count__padcells",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "padcells"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 10936,
+            "line": 341,
+            "column": 50
+          },
+          "end": {
+            "offset": 10937,
+            "line": 341,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 29,
+        "name": "finish__design__instance__count__stdcell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "stdcell"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 1197,
+        "raw_value": "1197",
+        "span": {
+          "start": {
+            "offset": 10987,
+            "line": 342,
+            "column": 49
+          },
+          "end": {
+            "offset": 10991,
+            "line": 342,
+            "column": 53
+          }
+        }
+      },
+      {
+        "index": 30,
+        "name": "finish__design__instance__utilization",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "utilization"
+        ],
+        "qualifiers": [],
+        "unit": "ratio",
+        "kind": "number",
+        "value": 0.700007,
+        "raw_value": "0.700007",
+        "span": {
+          "start": {
+            "offset": 11038,
+            "line": 343,
+            "column": 46
+          },
+          "end": {
+            "offset": 11046,
+            "line": 343,
+            "column": 54
+          }
+        }
+      },
+      {
+        "index": 31,
+        "name": "finish__design__instance__utilization__stdcell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "utilization",
+          "stdcell"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.700007,
+        "raw_value": "0.700007",
+        "span": {
+          "start": {
+            "offset": 11102,
+            "line": 344,
+            "column": 55
+          },
+          "end": {
+            "offset": 11110,
+            "line": 344,
+            "column": 63
+          }
+        }
+      },
+      {
+        "index": 32,
+        "name": "finish__design__io",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "io"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 46,
+        "raw_value": "46",
+        "span": {
+          "start": {
+            "offset": 11138,
+            "line": 345,
+            "column": 27
+          },
+          "end": {
+            "offset": 11140,
+            "line": 345,
+            "column": 29
+          }
+        }
+      },
+      {
+        "index": 33,
+        "name": "finish__design__nets",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "nets"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 1005,
+        "raw_value": "1005",
+        "span": {
+          "start": {
+            "offset": 11170,
+            "line": 346,
+            "column": 29
+          },
+          "end": {
+            "offset": 11174,
+            "line": 346,
+            "column": 33
+          }
+        }
+      },
+      {
+        "index": 34,
+        "name": "finish__design__rows",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "rows"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 49,
+        "raw_value": "49",
+        "span": {
+          "start": {
+            "offset": 11204,
+            "line": 347,
+            "column": 29
+          },
+          "end": {
+            "offset": 11206,
+            "line": 347,
+            "column": 31
+          }
+        }
+      },
+      {
+        "index": 35,
+        "name": "finish__design__rows:unithd",
+        "category": "design",
+        "components": [
+          "finish",
+          "design"
+        ],
+        "qualifiers": [
+          {
+            "name": "rows",
+            "value": "unithd"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 49,
+        "raw_value": "49",
+        "span": {
+          "start": {
+            "offset": 11243,
+            "line": 348,
+            "column": 36
+          },
+          "end": {
+            "offset": 11245,
+            "line": 348,
+            "column": 38
+          }
+        }
+      },
+      {
+        "index": 36,
+        "name": "finish__design__sites",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "sites"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 14357,
+        "raw_value": "14357",
+        "span": {
+          "start": {
+            "offset": 11276,
+            "line": 349,
+            "column": 30
+          },
+          "end": {
+            "offset": 11281,
+            "line": 349,
+            "column": 35
+          }
+        }
+      },
+      {
+        "index": 37,
+        "name": "finish__design__sites:unithd",
+        "category": "design",
+        "components": [
+          "finish",
+          "design"
+        ],
+        "qualifiers": [
+          {
+            "name": "sites",
+            "value": "unithd"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 14357,
+        "raw_value": "14357",
+        "span": {
+          "start": {
+            "offset": 11319,
+            "line": 350,
+            "column": 37
+          },
+          "end": {
+            "offset": 11324,
+            "line": 350,
+            "column": 42
+          }
+        }
+      },
+      {
+        "index": 38,
+        "name": "finish__design_powergrid__drop__average__net:VDD__corner:tt",
+        "category": "design_powergrid",
+        "components": [
+          "finish",
+          "design_powergrid",
+          "drop",
+          "average"
+        ],
+        "qualifiers": [
+          {
+            "name": "net",
+            "value": "VDD"
+          },
+          {
+            "name": "corner",
+            "value": "tt"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 1.79884,
+        "raw_value": "1.79884",
+        "span": {
+          "start": {
+            "offset": 11393,
+            "line": 351,
+            "column": 68
+          },
+          "end": {
+            "offset": 11400,
+            "line": 351,
+            "column": 75
+          }
+        }
+      },
+      {
+        "index": 39,
+        "name": "finish__design_powergrid__drop__average__net:VSS__corner:tt",
+        "category": "design_powergrid",
+        "components": [
+          "finish",
+          "design_powergrid",
+          "drop",
+          "average"
+        ],
+        "qualifiers": [
+          {
+            "name": "net",
+            "value": "VSS"
+          },
+          {
+            "name": "corner",
+            "value": "tt"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 0.00074962,
+        "raw_value": "0.00074962",
+        "span": {
+          "start": {
+            "offset": 11469,
+            "line": 352,
+            "column": 68
+          },
+          "end": {
+            "offset": 11479,
+            "line": 352,
+            "column": 78
+          }
+        }
+      },
+      {
+        "index": 40,
+        "name": "finish__design_powergrid__drop__worst__net:VDD__corner:tt",
+        "category": "design_powergrid",
+        "components": [
+          "finish",
+          "design_powergrid",
+          "drop",
+          "worst"
+        ],
+        "qualifiers": [
+          {
+            "name": "net",
+            "value": "VDD"
+          },
+          {
+            "name": "corner",
+            "value": "tt"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 0.00594129,
+        "raw_value": "0.00594129",
+        "span": {
+          "start": {
+            "offset": 11546,
+            "line": 353,
+            "column": 66
+          },
+          "end": {
+            "offset": 11556,
+            "line": 353,
+            "column": 76
+          }
+        }
+      },
+      {
+        "index": 41,
+        "name": "finish__design_powergrid__drop__worst__net:VSS__corner:tt",
+        "category": "design_powergrid",
+        "components": [
+          "finish",
+          "design_powergrid",
+          "drop",
+          "worst"
+        ],
+        "qualifiers": [
+          {
+            "name": "net",
+            "value": "VSS"
+          },
+          {
+            "name": "corner",
+            "value": "tt"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 0.00351802,
+        "raw_value": "0.00351802",
+        "span": {
+          "start": {
+            "offset": 11623,
+            "line": 354,
+            "column": 66
+          },
+          "end": {
+            "offset": 11633,
+            "line": 354,
+            "column": 76
+          }
+        }
+      },
+      {
+        "index": 42,
+        "name": "finish__design_powergrid__voltage__worst__net:VDD__corner:tt",
+        "category": "design_powergrid",
+        "components": [
+          "finish",
+          "design_powergrid",
+          "voltage",
+          "worst"
+        ],
+        "qualifiers": [
+          {
+            "name": "net",
+            "value": "VDD"
+          },
+          {
+            "name": "corner",
+            "value": "tt"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 1.79406,
+        "raw_value": "1.79406",
+        "span": {
+          "start": {
+            "offset": 11703,
+            "line": 355,
+            "column": 69
+          },
+          "end": {
+            "offset": 11710,
+            "line": 355,
+            "column": 76
+          }
+        }
+      },
+      {
+        "index": 43,
+        "name": "finish__design_powergrid__voltage__worst__net:VSS__corner:tt",
+        "category": "design_powergrid",
+        "components": [
+          "finish",
+          "design_powergrid",
+          "voltage",
+          "worst"
+        ],
+        "qualifiers": [
+          {
+            "name": "net",
+            "value": "VSS"
+          },
+          {
+            "name": "corner",
+            "value": "tt"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 0.00351802,
+        "raw_value": "0.00351802",
+        "span": {
+          "start": {
+            "offset": 11780,
+            "line": 356,
+            "column": 69
+          },
+          "end": {
+            "offset": 11790,
+            "line": 356,
+            "column": 79
+          }
+        }
+      },
+      {
+        "index": 44,
+        "name": "finish__flow__errors__count",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "errors",
+          "count"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 11827,
+            "line": 357,
+            "column": 36
+          },
+          "end": {
+            "offset": 11828,
+            "line": 357,
+            "column": 37
+          }
+        }
+      },
+      {
+        "index": 45,
+        "name": "finish__flow__warnings__count",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings",
+          "count"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 2,
+        "raw_value": "2",
+        "span": {
+          "start": {
+            "offset": 11867,
+            "line": 358,
+            "column": 38
+          },
+          "end": {
+            "offset": 11868,
+            "line": 358,
+            "column": 39
+          }
+        }
+      },
+      {
+        "index": 46,
+        "name": "finish__flow__warnings__count:RCX-0514",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings"
+        ],
+        "qualifiers": [
+          {
+            "name": "count",
+            "value": "RCX-0514"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 11916,
+            "line": 359,
+            "column": 47
+          },
+          "end": {
+            "offset": 11917,
+            "line": 359,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 47,
+        "name": "finish__flow__warnings__count:STA-0450",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings"
+        ],
+        "qualifiers": [
+          {
+            "name": "count",
+            "value": "STA-0450"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 11965,
+            "line": 360,
+            "column": 47
+          },
+          "end": {
+            "offset": 11966,
+            "line": 360,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 48,
+        "name": "finish__flow__warnings__type_count",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings",
+          "type_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 2,
+        "raw_value": "2",
+        "span": {
+          "start": {
+            "offset": 12010,
+            "line": 361,
+            "column": 43
+          },
+          "end": {
+            "offset": 12011,
+            "line": 361,
+            "column": 44
+          }
+        }
+      },
+      {
+        "index": 49,
+        "name": "finish__power__internal__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "internal",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.0025518,
+        "raw_value": "0.0025518",
+        "span": {
+          "start": {
+            "offset": 12051,
+            "line": 362,
+            "column": 39
+          },
+          "end": {
+            "offset": 12060,
+            "line": 362,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 50,
+        "name": "finish__power__leakage__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "leakage",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 2.01305e-8,
+        "raw_value": "2.01305e-08",
+        "span": {
+          "start": {
+            "offset": 12099,
+            "line": 363,
+            "column": 38
+          },
+          "end": {
+            "offset": 12110,
+            "line": 363,
+            "column": 49
+          }
+        }
+      },
+      {
+        "index": 51,
+        "name": "finish__power__switching__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "switching",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.00156363,
+        "raw_value": "0.00156363",
+        "span": {
+          "start": {
+            "offset": 12151,
+            "line": 364,
+            "column": 40
+          },
+          "end": {
+            "offset": 12161,
+            "line": 364,
+            "column": 50
+          }
+        }
+      },
+      {
+        "index": 52,
+        "name": "finish__power__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.00411546,
+        "raw_value": "0.00411546",
+        "span": {
+          "start": {
+            "offset": 12191,
+            "line": 365,
+            "column": 29
+          },
+          "end": {
+            "offset": 12201,
+            "line": 365,
+            "column": 39
+          }
+        }
+      },
+      {
+        "index": 53,
+        "name": "finish__timing__drv__hold_violation_count",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "hold_violation_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12252,
+            "line": 366,
+            "column": 50
+          },
+          "end": {
+            "offset": 12253,
+            "line": 366,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 54,
+        "name": "finish__timing__drv__max_cap",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_cap"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12291,
+            "line": 367,
+            "column": 37
+          },
+          "end": {
+            "offset": 12292,
+            "line": 367,
+            "column": 38
+          }
+        }
+      },
+      {
+        "index": 55,
+        "name": "finish__timing__drv__max_cap_limit",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_cap_limit"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.676354,
+        "raw_value": "0.676354",
+        "span": {
+          "start": {
+            "offset": 12336,
+            "line": 368,
+            "column": 43
+          },
+          "end": {
+            "offset": 12344,
+            "line": 368,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 56,
+        "name": "finish__timing__drv__max_fanout",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_fanout"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12385,
+            "line": 369,
+            "column": 40
+          },
+          "end": {
+            "offset": 12386,
+            "line": 369,
+            "column": 41
+          }
+        }
+      },
+      {
+        "index": 57,
+        "name": "finish__timing__drv__max_fanout_limit",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_fanout_limit"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12433,
+            "line": 370,
+            "column": 46
+          },
+          "end": {
+            "offset": 12434,
+            "line": 370,
+            "column": 47
+          }
+        }
+      },
+      {
+        "index": 58,
+        "name": "finish__timing__drv__max_slew",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_slew"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12473,
+            "line": 371,
+            "column": 38
+          },
+          "end": {
+            "offset": 12474,
+            "line": 371,
+            "column": 39
+          }
+        }
+      },
+      {
+        "index": 59,
+        "name": "finish__timing__drv__max_slew_limit",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_slew_limit"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.502235,
+        "raw_value": "0.502235",
+        "span": {
+          "start": {
+            "offset": 12519,
+            "line": 372,
+            "column": 44
+          },
+          "end": {
+            "offset": 12527,
+            "line": 372,
+            "column": 52
+          }
+        }
+      },
+      {
+        "index": 60,
+        "name": "finish__timing__drv__setup_violation_count",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "setup_violation_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12579,
+            "line": 373,
+            "column": 51
+          },
+          "end": {
+            "offset": 12580,
+            "line": 373,
+            "column": 52
+          }
+        }
+      },
+      {
+        "index": 61,
+        "name": "finish__timing__fmax",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "fmax"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 185848000,
+        "raw_value": "185848000.0",
+        "span": {
+          "start": {
+            "offset": 12610,
+            "line": 374,
+            "column": 29
+          },
+          "end": {
+            "offset": 12621,
+            "line": 374,
+            "column": 40
+          }
+        }
+      },
+      {
+        "index": 62,
+        "name": "finish__timing__fmax__clock:clk",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "fmax"
+        ],
+        "qualifiers": [
+          {
+            "name": "clock",
+            "value": "clk"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 185848000,
+        "raw_value": "185848000.0",
+        "span": {
+          "start": {
+            "offset": 12662,
+            "line": 375,
+            "column": 40
+          },
+          "end": {
+            "offset": 12673,
+            "line": 375,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 63,
+        "name": "finish__timing__hold__tns",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "hold",
+          "tns"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12708,
+            "line": 376,
+            "column": 34
+          },
+          "end": {
+            "offset": 12709,
+            "line": 376,
+            "column": 35
+          }
+        }
+      },
+      {
+        "index": 64,
+        "name": "finish__timing__hold__ws",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "hold",
+          "ws"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.29899,
+        "raw_value": "0.29899",
+        "span": {
+          "start": {
+            "offset": 12743,
+            "line": 377,
+            "column": 33
+          },
+          "end": {
+            "offset": 12750,
+            "line": 377,
+            "column": 40
+          }
+        }
+      },
+      {
+        "index": 65,
+        "name": "finish__timing__setup__tns",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "setup",
+          "tns"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 12786,
+            "line": 378,
+            "column": 35
+          },
+          "end": {
+            "offset": 12787,
+            "line": 378,
+            "column": 36
+          }
+        }
+      },
+      {
+        "index": 66,
+        "name": "finish__timing__setup__ws",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "setup",
+          "ws"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 4.24056,
+        "raw_value": "4.24056",
+        "span": {
+          "start": {
+            "offset": 12822,
+            "line": 379,
+            "column": 34
+          },
+          "end": {
+            "offset": 12829,
+            "line": 379,
+            "column": 41
+          }
+        }
+      }
+    ],
+    "experiment": {
+      "clock_period_ns": 10,
+      "corner_analysis": {
+        "corners": {
+          "ff": {
+            "evidence": {
+              "bytes": 3686,
+              "path": "corner-summary.json",
+              "sha256": "e5f3116f559a013a3198df4b940639a5129c89d09468693c019184277891d102"
+            },
+            "library": "sky130_fd_sc_hd__ff_n40C_1v95.lib",
+            "metrics": {
+              "critical_path_ns": 3.1935164305795842,
+              "fmax_hz": 313134446.5381417,
+              "hold_endpoint_report": {
+                "bytes": 157720,
+                "path": "corner-reports/corner-ff-hold.rpt",
+                "sha256": "962cb8a4b89f15f83ee037de60427c16b0f2458ad358da9c875256f19aef9289"
+              },
+              "hold_tns_ns": 0,
+              "hold_wns_ns": 0.2989896470589803,
+              "library": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib",
+              "library_sha256": "fb61d91c55a7f85b1989e8149d040b13ba5e7f5478f5bf0c3c16c5da30720139",
+              "power": {
+                "internal_w": 0.0025518022011965513,
+                "leakage_w": 2.0130482170088726e-8,
+                "switching_w": 0.0015636344905942678,
+                "total_mw": 4.115456715226173,
+                "total_w": 0.004115456715226173
+              },
+              "setup_endpoint_report": {
+                "bytes": 167853,
+                "path": "corner-reports/corner-ff-setup.rpt",
+                "sha256": "e6108d6456f8d0183eafc62c8b266d32a91a1015be46aae452ae69709aca3642"
+              },
+              "setup_tns_ns": 0,
+              "setup_wns_ns": 6.806483569420416
+            }
+          },
+          "ss": {
+            "evidence": {
+              "bytes": 3686,
+              "path": "corner-summary.json",
+              "sha256": "e5f3116f559a013a3198df4b940639a5129c89d09468693c019184277891d102"
+            },
+            "library": "sky130_fd_sc_hd__ss_100C_1v60.lib",
+            "metrics": {
+              "critical_path_ns": 5.759435980042186,
+              "fmax_hz": 173628112.79875973,
+              "hold_endpoint_report": {
+                "bytes": 157299,
+                "path": "corner-reports/corner-ss-hold.rpt",
+                "sha256": "b8e14cf1eb78d922963aba71943380d67e89964fcac4280b6923af3774d87506"
+              },
+              "hold_tns_ns": 0,
+              "hold_wns_ns": 0.9658034645398642,
+              "library": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ss_100C_1v60.lib",
+              "library_sha256": "9b24f0db3967ac67b4cae1f74bb480fd47922d18d0ed577e3c121739b412c361",
+              "power": {
+                "internal_w": 0.001844320329837501,
+                "leakage_w": 0.000007693440238654148,
+                "switching_w": 0.0010527032427489758,
+                "total_mw": 2.9047171119600534,
+                "total_w": 0.0029047171119600534
+              },
+              "setup_endpoint_report": {
+                "bytes": 196007,
+                "path": "corner-reports/corner-ss-setup.rpt",
+                "sha256": "c3f6547d89dea43979221e252bed65416a3036dd93820f364f021e75e27fbfe5"
+              },
+              "setup_tns_ns": 0,
+              "setup_wns_ns": 4.240564019957814
+            }
+          },
+          "tt": {
+            "evidence": {
+              "bytes": 3686,
+              "path": "corner-summary.json",
+              "sha256": "e5f3116f559a013a3198df4b940639a5129c89d09468693c019184277891d102"
+            },
+            "library": "sky130_fd_sc_hd__tt_025C_1v80.lib",
+            "metrics": {
+              "critical_path_ns": 3.944397142774352,
+              "fmax_hz": 253524167.0154529,
+              "hold_endpoint_report": {
+                "bytes": 157670,
+                "path": "corner-reports/corner-tt-hold.rpt",
+                "sha256": "e11ce4ad0cea83af3ccf972f295d9b7e83c2683ef76061072703d429f491961c"
+              },
+              "hold_tns_ns": 0,
+              "hold_wns_ns": 0.47735972081886946,
+              "library": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+              "library_sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+              "power": {
+                "internal_w": 0.002270757919177413,
+                "leakage_w": 4.9879531616170425e-9,
+                "switching_w": 0.0013323278399184346,
+                "total_mw": 3.603090764954686,
+                "total_w": 0.003603090764954686
+              },
+              "setup_endpoint_report": {
+                "bytes": 178026,
+                "path": "corner-reports/corner-tt-setup.rpt",
+                "sha256": "521e0b8daa3edf212627bb03dca292c0e688f3b295351a3021dd237e5d794325"
+              },
+              "setup_tns_ns": 0,
+              "setup_wns_ns": 6.055602857225648
+            }
+          }
+        },
+        "mode": "MCMM implementation plus explicit final post-route SPEF analysis for each scene"
+      },
+      "design": "uart",
+      "flow": "openroad",
+      "pdk": "sky130A",
+      "required_artifacts": {
+        "def": {
+          "bytes": 864118,
+          "path": "orfs-mcmm-final/results/sky130hd/uart/techfile1/6_final.def",
+          "sha256": "3ef24025be249a88ce156ac6cc01bd166eaf616e02e3b4fba365f9748813a640"
+        },
+        "gds": {
+          "bytes": 1811492,
+          "path": "orfs-mcmm-final/results/sky130hd/uart/techfile1/6_final.gds",
+          "sha256": "e9e37f72d7192bf3166d66817d9211b5231bbb00aa5bd75ce19291e52af98f94"
+        },
+        "primary_metrics": {
+          "bytes": 13159,
+          "path": "metrics.json",
+          "sha256": "bffb59aa88822aa87b0107cad02f49450fecbbab1f9838473d7508f0b0afb547"
+        },
+        "spef": {
+          "bytes": 1082737,
+          "path": "orfs-mcmm-final/results/sky130hd/uart/techfile1/6_final.spef",
+          "sha256": "ffd08a629d7b8e2f2dfad5c5138507372854dc035bfb4e890f96e269fac76a44"
+        }
+      },
+      "schema": "sky130-uart-techfile-run.v1",
+      "standard_cell_library": "sky130_fd_sc_hd",
+      "status": "complete",
+      "techfile_rc_scale": 20,
+      "technology_lefs": {
+        "max": {
+          "changes": [
+            {
+              "layer": "li1",
+              "line": 78,
+              "modified": "0.00081394",
+              "original": "40.697E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "li1",
+              "line": 79,
+              "modified": "0.000739732",
+              "original": "36.9866E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "li1",
+              "line": 80,
+              "modified": "340",
+              "original": "17.0",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "mcon",
+              "line": 93,
+              "modified": "460",
+              "original": "23.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 121,
+              "modified": "0.00081134",
+              "original": "40.567E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 122,
+              "modified": "0.000515568",
+              "original": "25.7784E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met1",
+              "line": 129,
+              "modified": "2.9",
+              "original": "0.145",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via",
+              "line": 138,
+              "modified": "300",
+              "original": "15.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 162,
+              "modified": "0.00075518",
+              "original": "37.759E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 163,
+              "modified": "0.000338846",
+              "original": "16.9423E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met2",
+              "line": 164,
+              "modified": "2.9",
+              "original": "0.145",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via2",
+              "line": 183,
+              "modified": "160",
+              "original": "8.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 204,
+              "modified": "0.00081978",
+              "original": "40.989E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 205,
+              "modified": "0.000247458",
+              "original": "12.3729E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met3",
+              "line": 206,
+              "modified": "1.12",
+              "original": "0.056",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via3",
+              "line": 224,
+              "modified": "160",
+              "original": "8.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 246,
+              "modified": "0.00073352",
+              "original": "36.676E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 247,
+              "modified": "0.0001683074",
+              "original": "8.41537E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met4",
+              "line": 248,
+              "modified": "1.12",
+              "original": "0.056",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via4",
+              "line": 267,
+              "modified": "17.82",
+              "original": "0.891",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 288,
+              "modified": "0.00077702",
+              "original": "38.851E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 289,
+              "modified": "0.0001264126",
+              "original": "6.32063E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met5",
+              "line": 290,
+              "modified": "0.716",
+              "original": "0.0358",
+              "property": "RESISTANCE RPERSQ"
+            }
+          ],
+          "path": "techfiles/techfile1/sky130_fd_sc_hd__max.tlef",
+          "scaled_property_count": 23,
+          "sha256": "a40cf8ea18159dd0421235c177e00478eefd33fe478e31088ead941ddc14b9c0",
+          "source": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__max.tlef",
+          "source_sha256": "14f7e9f499076bd9b4c0f307bff8c9361ef0bfbb95a432464787b2d66a3e5c94"
+        },
+        "min": {
+          "changes": [
+            {
+              "layer": "li1",
+              "line": 78,
+              "modified": "0.00081394",
+              "original": "40.697E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "li1",
+              "line": 79,
+              "modified": "0.000739732",
+              "original": "36.9866E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "li1",
+              "line": 80,
+              "modified": "184",
+              "original": "9.2",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "mcon",
+              "line": 93,
+              "modified": "32",
+              "original": "1.6",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 121,
+              "modified": "0.00081134",
+              "original": "40.567E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 122,
+              "modified": "0.000515568",
+              "original": "25.7784E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met1",
+              "line": 129,
+              "modified": "2.1",
+              "original": "0.105",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via",
+              "line": 138,
+              "modified": "40",
+              "original": "2.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 162,
+              "modified": "0.00075518",
+              "original": "37.759E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 163,
+              "modified": "0.000338846",
+              "original": "16.9423E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met2",
+              "line": 164,
+              "modified": "2.1",
+              "original": "0.105",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via2",
+              "line": 183,
+              "modified": "10",
+              "original": "0.5",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 204,
+              "modified": "0.00081978",
+              "original": "40.989E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 205,
+              "modified": "0.000247458",
+              "original": "12.3729E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met3",
+              "line": 206,
+              "modified": "0.76",
+              "original": "0.038",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via3",
+              "line": 224,
+              "modified": "10",
+              "original": "0.5",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 246,
+              "modified": "0.00073352",
+              "original": "36.676E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 247,
+              "modified": "0.0001683074",
+              "original": "8.41537E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met4",
+              "line": 248,
+              "modified": "0.76",
+              "original": "0.038",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via4",
+              "line": 267,
+              "modified": "0.24",
+              "original": "0.012",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 288,
+              "modified": "0.00077702",
+              "original": "38.851E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 289,
+              "modified": "0.0001264126",
+              "original": "6.32063E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met5",
+              "line": 290,
+              "modified": "0.424",
+              "original": "0.0212",
+              "property": "RESISTANCE RPERSQ"
+            }
+          ],
+          "path": "techfiles/techfile1/sky130_fd_sc_hd__min.tlef",
+          "scaled_property_count": 23,
+          "sha256": "4f145617c03b64b47623ed31d0e4c9d3af101ffcf6ff28524ab622e714b61ab2",
+          "source": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__min.tlef",
+          "source_sha256": "19aaf83af18d588cca915eff29cc656e75cc0614b67fd3730d097a47362f5363"
+        },
+        "nom": {
+          "changes": [
+            {
+              "layer": "li1",
+              "line": 78,
+              "modified": "0.00081394",
+              "original": "40.697E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "li1",
+              "line": 79,
+              "modified": "0.000739732",
+              "original": "36.9866E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "li1",
+              "line": 80,
+              "modified": "256",
+              "original": "12.8",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "mcon",
+              "line": 93,
+              "modified": "186",
+              "original": "9.30",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 121,
+              "modified": "0.00081134",
+              "original": "40.567E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 122,
+              "modified": "0.000515568",
+              "original": "25.7784E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met1",
+              "line": 129,
+              "modified": "2.5",
+              "original": "0.125",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via",
+              "line": 138,
+              "modified": "90",
+              "original": "4.50",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 162,
+              "modified": "0.00075518",
+              "original": "37.759E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 163,
+              "modified": "0.000338846",
+              "original": "16.9423E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met2",
+              "line": 164,
+              "modified": "2.5",
+              "original": "0.125",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via2",
+              "line": 183,
+              "modified": "68.2",
+              "original": "3.41",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 204,
+              "modified": "0.00081978",
+              "original": "40.989E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 205,
+              "modified": "0.000247458",
+              "original": "12.3729E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met3",
+              "line": 206,
+              "modified": "0.94",
+              "original": "0.047",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via3",
+              "line": 224,
+              "modified": "68.2",
+              "original": "3.41",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 246,
+              "modified": "0.00073352",
+              "original": "36.676E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 247,
+              "modified": "0.0001683074",
+              "original": "8.41537E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met4",
+              "line": 248,
+              "modified": "0.94",
+              "original": "0.047",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via4",
+              "line": 267,
+              "modified": "7.6",
+              "original": "0.38",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 288,
+              "modified": "0.00077702",
+              "original": "38.851E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 289,
+              "modified": "0.0001264126",
+              "original": "6.32063E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met5",
+              "line": 290,
+              "modified": "0.57",
+              "original": "0.0285",
+              "property": "RESISTANCE RPERSQ"
+            }
+          ],
+          "path": "techfiles/techfile1/sky130_fd_sc_hd__nom.tlef",
+          "scaled_property_count": 23,
+          "sha256": "ebcdc85c4f6f053e29c508dce0c54a6d141ec4ed6c844e1ae694413dcf5a18d2",
+          "source": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__nom.tlef",
+          "source_sha256": "5de46c6f7c2cf82599b93d30a6459465f770f63c85b36182c672782219938519"
+        }
+      },
+      "technology_selection_proof": {
+        "bytes": 14870,
+        "path": "experiment-run.json",
+        "sha256": "1437fc5e85f2df0431dc9e53dde602caed7941afa4ec1f506f31103a119fc265"
+      },
+      "variant": "techfile1"
+    },
+    "standard_cell_usage": {
+      "schema": "def.components.v1",
+      "availability": "available",
+      "source": "orfs-mcmm-final/results/sky130hd/uart/techfile1/6_final.def",
+      "sha256": "3ef24025be249a88ce156ac6cc01bd166eaf616e02e3b4fba365f9748813a640",
+      "scope": "all final-DEF COMPONENT master instances, including functional and physical-only standard cells",
+      "declared_component_count": 2259,
+      "parsed_component_count": 2259,
+      "unique_master_count": 119,
+      "cells": [
+        {
+          "master": "sky130_fd_sc_hd__fill_8",
+          "count": 351,
+          "first_source_line": 86
+        },
+        {
+          "master": "sky130_fd_sc_hd__fill_1",
+          "count": 273,
+          "first_source_line": 94
+        },
+        {
+          "master": "sky130_fd_sc_hd__fill_2",
+          "count": 263,
+          "first_source_line": 91
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_4",
+          "count": 232,
+          "first_source_line": 1850
+        },
+        {
+          "master": "sky130_fd_sc_hd__tapvpwrvgnd_1",
+          "count": 229,
+          "first_source_line": 1149
+        },
+        {
+          "master": "sky130_fd_sc_hd__fill_4",
+          "count": 175,
+          "first_source_line": 88
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_12",
+          "count": 76,
+          "first_source_line": 1848
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2_1",
+          "count": 42,
+          "first_source_line": 1389
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_6",
+          "count": 39,
+          "first_source_line": 1847
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor2_1",
+          "count": 32,
+          "first_source_line": 1423
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_16",
+          "count": 29,
+          "first_source_line": 1846
+        },
+        {
+          "master": "sky130_fd_sc_hd__dfxtp_1",
+          "count": 28,
+          "first_source_line": 2214
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_8",
+          "count": 26,
+          "first_source_line": 1827
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkdlybuf4s50_1",
+          "count": 24,
+          "first_source_line": 1818
+        },
+        {
+          "master": "sky130_fd_sc_hd__dfxtp_4",
+          "count": 24,
+          "first_source_line": 2212
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor2_4",
+          "count": 19,
+          "first_source_line": 1422
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_2",
+          "count": 18,
+          "first_source_line": 1819
+        },
+        {
+          "master": "sky130_fd_sc_hd__edfxtp_1",
+          "count": 17,
+          "first_source_line": 2217
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_16",
+          "count": 14,
+          "first_source_line": 1801
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3_4",
+          "count": 13,
+          "first_source_line": 1419
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21oi_1",
+          "count": 10,
+          "first_source_line": 1474
+        },
+        {
+          "master": "sky130_fd_sc_hd__dfxtp_2",
+          "count": 10,
+          "first_source_line": 2240
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor2_2",
+          "count": 10,
+          "first_source_line": 1386
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21oi_2",
+          "count": 9,
+          "first_source_line": 1488
+        },
+        {
+          "master": "sky130_fd_sc_hd__ha_4",
+          "count": 9,
+          "first_source_line": 1791
+        },
+        {
+          "master": "sky130_fd_sc_hd__xnor2_2",
+          "count": 9,
+          "first_source_line": 1439
+        },
+        {
+          "master": "sky130_fd_sc_hd__xor2_1",
+          "count": 9,
+          "first_source_line": 1499
+        },
+        {
+          "master": "sky130_fd_sc_hd__and2_1",
+          "count": 8,
+          "first_source_line": 1740
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2_8",
+          "count": 8,
+          "first_source_line": 1387
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand3_4",
+          "count": 8,
+          "first_source_line": 1437
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor4_4",
+          "count": 8,
+          "first_source_line": 1417
+        },
+        {
+          "master": "sky130_fd_sc_hd__xnor2_4",
+          "count": 8,
+          "first_source_line": 1421
+        },
+        {
+          "master": "sky130_fd_sc_hd__xor2_4",
+          "count": 8,
+          "first_source_line": 1459
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkinvlp_4",
+          "count": 7,
+          "first_source_line": 1378
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3_1",
+          "count": 7,
+          "first_source_line": 1517
+        },
+        {
+          "master": "sky130_fd_sc_hd__or3_1",
+          "count": 7,
+          "first_source_line": 1430
+        },
+        {
+          "master": "sky130_fd_sc_hd__or3_4",
+          "count": 7,
+          "first_source_line": 1413
+        },
+        {
+          "master": "sky130_fd_sc_hd__xnor2_1",
+          "count": 7,
+          "first_source_line": 1528
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21oi_4",
+          "count": 6,
+          "first_source_line": 1456
+        },
+        {
+          "master": "sky130_fd_sc_hd__mux2i_1",
+          "count": 6,
+          "first_source_line": 1586
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor4b_4",
+          "count": 6,
+          "first_source_line": 1451
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21ai_1",
+          "count": 6,
+          "first_source_line": 1509
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21ai_4",
+          "count": 6,
+          "first_source_line": 1473
+        },
+        {
+          "master": "sky130_fd_sc_hd__a22oi_2",
+          "count": 5,
+          "first_source_line": 1464
+        },
+        {
+          "master": "sky130_fd_sc_hd__and3_4",
+          "count": 5,
+          "first_source_line": 1427
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2_4",
+          "count": 5,
+          "first_source_line": 1455
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21ai_2",
+          "count": 5,
+          "first_source_line": 1525
+        },
+        {
+          "master": "sky130_fd_sc_hd__o22ai_4",
+          "count": 5,
+          "first_source_line": 1629
+        },
+        {
+          "master": "sky130_fd_sc_hd__xor2_2",
+          "count": 5,
+          "first_source_line": 1489
+        },
+        {
+          "master": "sky130_fd_sc_hd__a211oi_2",
+          "count": 4,
+          "first_source_line": 1545
+        },
+        {
+          "master": "sky130_fd_sc_hd__a211oi_4",
+          "count": 4,
+          "first_source_line": 1479
+        },
+        {
+          "master": "sky130_fd_sc_hd__a221oi_4",
+          "count": 4,
+          "first_source_line": 1519
+        },
+        {
+          "master": "sky130_fd_sc_hd__inv_1",
+          "count": 4,
+          "first_source_line": 1380
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand3_1",
+          "count": 4,
+          "first_source_line": 1625
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand3_2",
+          "count": 4,
+          "first_source_line": 1429
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3b_4",
+          "count": 4,
+          "first_source_line": 1420
+        },
+        {
+          "master": "sky130_fd_sc_hd__o211ai_1",
+          "count": 4,
+          "first_source_line": 1547
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21ai_0",
+          "count": 4,
+          "first_source_line": 1549
+        },
+        {
+          "master": "sky130_fd_sc_hd__or4_4",
+          "count": 4,
+          "first_source_line": 1415
+        },
+        {
+          "master": "sky130_fd_sc_hd__a211oi_1",
+          "count": 3,
+          "first_source_line": 1481
+        },
+        {
+          "master": "sky130_fd_sc_hd__and2_2",
+          "count": 3,
+          "first_source_line": 1584
+        },
+        {
+          "master": "sky130_fd_sc_hd__mux2i_2",
+          "count": 3,
+          "first_source_line": 1589
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2_2",
+          "count": 3,
+          "first_source_line": 1524
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2b_1",
+          "count": 3,
+          "first_source_line": 1441
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21a_1",
+          "count": 3,
+          "first_source_line": 1501
+        },
+        {
+          "master": "sky130_fd_sc_hd__o22a_4",
+          "count": 3,
+          "first_source_line": 1619
+        },
+        {
+          "master": "sky130_fd_sc_hd__a22oi_1",
+          "count": 2,
+          "first_source_line": 1531
+        },
+        {
+          "master": "sky130_fd_sc_hd__a31oi_4",
+          "count": 2,
+          "first_source_line": 1718
+        },
+        {
+          "master": "sky130_fd_sc_hd__and3_1",
+          "count": 2,
+          "first_source_line": 1425
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_8",
+          "count": 2,
+          "first_source_line": 1916
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkinv_2",
+          "count": 2,
+          "first_source_line": 1816
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand4_1",
+          "count": 2,
+          "first_source_line": 1593
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor4_1",
+          "count": 2,
+          "first_source_line": 1643
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor4_2",
+          "count": 2,
+          "first_source_line": 1432
+        },
+        {
+          "master": "sky130_fd_sc_hd__o221ai_4",
+          "count": 2,
+          "first_source_line": 1636
+        },
+        {
+          "master": "sky130_fd_sc_hd__o22ai_1",
+          "count": 2,
+          "first_source_line": 1658
+        },
+        {
+          "master": "sky130_fd_sc_hd__o32ai_2",
+          "count": 2,
+          "first_source_line": 1646
+        },
+        {
+          "master": "sky130_fd_sc_hd__o32ai_4",
+          "count": 2,
+          "first_source_line": 1440
+        },
+        {
+          "master": "sky130_fd_sc_hd__a2111o_1",
+          "count": 1,
+          "first_source_line": 1690
+        },
+        {
+          "master": "sky130_fd_sc_hd__a2111oi_4",
+          "count": 1,
+          "first_source_line": 1480
+        },
+        {
+          "master": "sky130_fd_sc_hd__a211o_1",
+          "count": 1,
+          "first_source_line": 1771
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21boi_0",
+          "count": 1,
+          "first_source_line": 1533
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21o_2",
+          "count": 1,
+          "first_source_line": 1631
+        },
+        {
+          "master": "sky130_fd_sc_hd__a221o_1",
+          "count": 1,
+          "first_source_line": 1484
+        },
+        {
+          "master": "sky130_fd_sc_hd__a221o_2",
+          "count": 1,
+          "first_source_line": 1490
+        },
+        {
+          "master": "sky130_fd_sc_hd__a221oi_2",
+          "count": 1,
+          "first_source_line": 1500
+        },
+        {
+          "master": "sky130_fd_sc_hd__a311oi_2",
+          "count": 1,
+          "first_source_line": 1776
+        },
+        {
+          "master": "sky130_fd_sc_hd__a311oi_4",
+          "count": 1,
+          "first_source_line": 1702
+        },
+        {
+          "master": "sky130_fd_sc_hd__a31oi_2",
+          "count": 1,
+          "first_source_line": 1472
+        },
+        {
+          "master": "sky130_fd_sc_hd__a32oi_1",
+          "count": 1,
+          "first_source_line": 1730
+        },
+        {
+          "master": "sky130_fd_sc_hd__a32oi_2",
+          "count": 1,
+          "first_source_line": 1779
+        },
+        {
+          "master": "sky130_fd_sc_hd__and2_4",
+          "count": 1,
+          "first_source_line": 1460
+        },
+        {
+          "master": "sky130_fd_sc_hd__and3b_2",
+          "count": 1,
+          "first_source_line": 1773
+        },
+        {
+          "master": "sky130_fd_sc_hd__and4b_4",
+          "count": 1,
+          "first_source_line": 1444
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_1",
+          "count": 1,
+          "first_source_line": 1838
+        },
+        {
+          "master": "sky130_fd_sc_hd__bufinv_16",
+          "count": 1,
+          "first_source_line": 1815
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_1",
+          "count": 1,
+          "first_source_line": 1814
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_2",
+          "count": 1,
+          "first_source_line": 2292
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkinv_4",
+          "count": 1,
+          "first_source_line": 1388
+        },
+        {
+          "master": "sky130_fd_sc_hd__ha_2",
+          "count": 1,
+          "first_source_line": 1792
+        },
+        {
+          "master": "sky130_fd_sc_hd__mux2i_4",
+          "count": 1,
+          "first_source_line": 1606
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2b_2",
+          "count": 1,
+          "first_source_line": 1649
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2b_4",
+          "count": 1,
+          "first_source_line": 1418
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand3b_1",
+          "count": 1,
+          "first_source_line": 1492
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand4b_1",
+          "count": 1,
+          "first_source_line": 1554
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor2b_1",
+          "count": 1,
+          "first_source_line": 1691
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3_2",
+          "count": 1,
+          "first_source_line": 1522
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3b_1",
+          "count": 1,
+          "first_source_line": 1578
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3b_2",
+          "count": 1,
+          "first_source_line": 1620
+        },
+        {
+          "master": "sky130_fd_sc_hd__o22a_2",
+          "count": 1,
+          "first_source_line": 1645
+        },
+        {
+          "master": "sky130_fd_sc_hd__o31a_1",
+          "count": 1,
+          "first_source_line": 1540
+        },
+        {
+          "master": "sky130_fd_sc_hd__o31ai_1",
+          "count": 1,
+          "first_source_line": 1724
+        },
+        {
+          "master": "sky130_fd_sc_hd__o31ai_2",
+          "count": 1,
+          "first_source_line": 1706
+        },
+        {
+          "master": "sky130_fd_sc_hd__o32ai_1",
+          "count": 1,
+          "first_source_line": 1655
+        },
+        {
+          "master": "sky130_fd_sc_hd__or2_2",
+          "count": 1,
+          "first_source_line": 1777
+        },
+        {
+          "master": "sky130_fd_sc_hd__or2_4",
+          "count": 1,
+          "first_source_line": 1416
+        },
+        {
+          "master": "sky130_fd_sc_hd__or3_2",
+          "count": 1,
+          "first_source_line": 1486
+        },
+        {
+          "master": "sky130_fd_sc_hd__or4_1",
+          "count": 1,
+          "first_source_line": 1716
+        },
+        {
+          "master": "sky130_fd_sc_hd__or4b_4",
+          "count": 1,
+          "first_source_line": 1435
+        }
+      ]
+    },
+    "timing_endpoint_slacks": {
+      "schema": "opensta.endpoint-slacks.v1",
+      "availability": "available",
+      "reference_corner": "tt",
+      "units": "ns",
+      "scope": "one worst setup and hold check per constrained timed endpoint at the final post-route reference corner",
+      "setup": {
+        "analysis": "setup",
+        "source": "corner-reports/corner-tt-setup.rpt",
+        "sha256": "521e0b8daa3edf212627bb03dca292c0e688f3b295351a3021dd237e5d794325",
+        "endpoint_count": 94,
+        "violation_count": 0,
+        "endpoints": [
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[13]$_SDFFE_PP0P_",
+            "slack_ns": 6.06,
+            "status": "met",
+            "source_line": 2
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[18]$_SDFFE_PP0P_",
+            "slack_ns": 6.14,
+            "status": "met",
+            "source_line": 46
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[12]$_SDFFE_PP0P_",
+            "slack_ns": 6.15,
+            "status": "met",
+            "source_line": 90
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[13]$_SDFFE_PP0P_",
+            "slack_ns": 6.15,
+            "status": "met",
+            "source_line": 133
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[17]$_SDFFE_PP0P_",
+            "slack_ns": 6.16,
+            "status": "met",
+            "source_line": 175
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[14]$_SDFFE_PP0P_",
+            "slack_ns": 6.17,
+            "status": "met",
+            "source_line": 219
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[10]$_SDFFE_PP0P_",
+            "slack_ns": 6.2,
+            "status": "met",
+            "source_line": 262
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[18]$_SDFFE_PP0P_",
+            "slack_ns": 6.2,
+            "status": "met",
+            "source_line": 305
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[8]$_SDFFE_PP0P_",
+            "slack_ns": 6.21,
+            "status": "met",
+            "source_line": 349
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[10]$_SDFFE_PP0P_",
+            "slack_ns": 6.23,
+            "status": "met",
+            "source_line": 392
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[16]$_SDFFE_PP0P_",
+            "slack_ns": 6.25,
+            "status": "met",
+            "source_line": 433
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[16]$_SDFFE_PP0P_",
+            "slack_ns": 6.28,
+            "status": "met",
+            "source_line": 477
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[11]$_SDFFE_PP0P_",
+            "slack_ns": 6.3,
+            "status": "met",
+            "source_line": 521
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[14]$_SDFFE_PP0P_",
+            "slack_ns": 6.31,
+            "status": "met",
+            "source_line": 607
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[15]$_SDFFE_PP0P_",
+            "slack_ns": 6.31,
+            "status": "met",
+            "source_line": 563
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[15]$_SDFFE_PP0P_",
+            "slack_ns": 6.32,
+            "status": "met",
+            "source_line": 651
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[8]$_SDFFE_PP0P_",
+            "slack_ns": 6.35,
+            "status": "met",
+            "source_line": 695
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[9]$_SDFFE_PP0P_",
+            "slack_ns": 6.36,
+            "status": "met",
+            "source_line": 737
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[7]$_SDFFE_PP0P_",
+            "slack_ns": 6.42,
+            "status": "met",
+            "source_line": 778
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[9]$_SDFFE_PP0P_",
+            "slack_ns": 6.46,
+            "status": "met",
+            "source_line": 818
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[12]$_SDFFE_PP0P_",
+            "slack_ns": 6.47,
+            "status": "met",
+            "source_line": 861
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[11]$_SDFFE_PP0P_",
+            "slack_ns": 6.51,
+            "status": "met",
+            "source_line": 903
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[7]$_SDFFE_PP0P_",
+            "slack_ns": 6.55,
+            "status": "met",
+            "source_line": 944
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[6]$_SDFFE_PP0P_",
+            "slack_ns": 6.59,
+            "status": "met",
+            "source_line": 985
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[4]$_SDFFE_PP0P_",
+            "slack_ns": 6.64,
+            "status": "met",
+            "source_line": 1027
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[5]$_SDFFE_PP0P_",
+            "slack_ns": 6.66,
+            "status": "met",
+            "source_line": 1069
+          },
+          {
+            "endpoint": "m_axis_tvalid",
+            "slack_ns": 6.68,
+            "status": "met",
+            "source_line": 1113
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[6]$_SDFFE_PP0P_",
+            "slack_ns": 6.68,
+            "status": "met",
+            "source_line": 1141
+          },
+          {
+            "endpoint": "m_axis_tdata[1]",
+            "slack_ns": 6.69,
+            "status": "met",
+            "source_line": 1181
+          },
+          {
+            "endpoint": "s_axis_tready",
+            "slack_ns": 6.7,
+            "status": "met",
+            "source_line": 1210
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[17]$_SDFFE_PP0P_",
+            "slack_ns": 6.7,
+            "status": "met",
+            "source_line": 1238
+          },
+          {
+            "endpoint": "tx_busy",
+            "slack_ns": 6.72,
+            "status": "met",
+            "source_line": 1280
+          },
+          {
+            "endpoint": "txd",
+            "slack_ns": 6.73,
+            "status": "met",
+            "source_line": 1309
+          },
+          {
+            "endpoint": "m_axis_tdata[2]",
+            "slack_ns": 6.74,
+            "status": "met",
+            "source_line": 1367
+          },
+          {
+            "endpoint": "m_axis_tdata[6]",
+            "slack_ns": 6.74,
+            "status": "met",
+            "source_line": 1338
+          },
+          {
+            "endpoint": "m_axis_tdata[7]",
+            "slack_ns": 6.74,
+            "status": "met",
+            "source_line": 1396
+          },
+          {
+            "endpoint": "rx_frame_error",
+            "slack_ns": 6.74,
+            "status": "met",
+            "source_line": 1425
+          },
+          {
+            "endpoint": "m_axis_tdata[3]",
+            "slack_ns": 6.75,
+            "status": "met",
+            "source_line": 1483
+          },
+          {
+            "endpoint": "m_axis_tdata[5]",
+            "slack_ns": 6.75,
+            "status": "met",
+            "source_line": 1454
+          },
+          {
+            "endpoint": "m_axis_tdata[0]",
+            "slack_ns": 6.76,
+            "status": "met",
+            "source_line": 1541
+          },
+          {
+            "endpoint": "m_axis_tdata[4]",
+            "slack_ns": 6.76,
+            "status": "met",
+            "source_line": 1512
+          },
+          {
+            "endpoint": "rx_overrun_error",
+            "slack_ns": 6.79,
+            "status": "met",
+            "source_line": 1570
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[3]$_DFFE_PP_",
+            "slack_ns": 6.88,
+            "status": "met",
+            "source_line": 1635
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[5]$_DFFE_PP_",
+            "slack_ns": 6.88,
+            "status": "met",
+            "source_line": 1598
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[1]$_DFFE_PP_",
+            "slack_ns": 6.9,
+            "status": "met",
+            "source_line": 1672
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[2]$_DFFE_PP_",
+            "slack_ns": 6.9,
+            "status": "met",
+            "source_line": 1709
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[3]$_SDFFE_PP0P_",
+            "slack_ns": 6.98,
+            "status": "met",
+            "source_line": 1854
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[6]$_DFFE_PP_",
+            "slack_ns": 6.98,
+            "status": "met",
+            "source_line": 1746
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[7]$_DFFE_PP_",
+            "slack_ns": 6.98,
+            "status": "met",
+            "source_line": 1782
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[8]$_DFFE_PP_",
+            "slack_ns": 6.98,
+            "status": "met",
+            "source_line": 1818
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[4]$_DFFE_PP_",
+            "slack_ns": 6.99,
+            "status": "met",
+            "source_line": 1895
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[1]$_SDFFCE_PP0P_",
+            "slack_ns": 7,
+            "status": "met",
+            "source_line": 1931
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[3]$_SDFFCE_PP0P_",
+            "slack_ns": 7,
+            "status": "met",
+            "source_line": 1966
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[0]$_DFFE_PP_",
+            "slack_ns": 7,
+            "status": "met",
+            "source_line": 2001
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[4]$_SDFFCE_PP0P_",
+            "slack_ns": 7.01,
+            "status": "met",
+            "source_line": 2037
+          },
+          {
+            "endpoint": "rx_busy",
+            "slack_ns": 7.09,
+            "status": "met",
+            "source_line": 2073
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[0]$_SDFFCE_PP0P_",
+            "slack_ns": 7.09,
+            "status": "met",
+            "source_line": 2135
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[2]$_SDFFCE_PP0P_",
+            "slack_ns": 7.09,
+            "status": "met",
+            "source_line": 2101
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[5]$_SDFFCE_PP0P_",
+            "slack_ns": 7.09,
+            "status": "met",
+            "source_line": 2169
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[6]$_SDFFCE_PP0P_",
+            "slack_ns": 7.1,
+            "status": "met",
+            "source_line": 2243
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[3]$_SDFFE_PP0P_",
+            "slack_ns": 7.1,
+            "status": "met",
+            "source_line": 2203
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[7]$_SDFFCE_PP0P_",
+            "slack_ns": 7.12,
+            "status": "met",
+            "source_line": 2316
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[3]$_SDFFE_PP0P_",
+            "slack_ns": 7.12,
+            "status": "met",
+            "source_line": 2277
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[0]$_SDFFE_PP0P_",
+            "slack_ns": 7.14,
+            "status": "met",
+            "source_line": 2351
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[5]$_SDFFE_PP0P_",
+            "slack_ns": 7.14,
+            "status": "met",
+            "source_line": 2391
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[1]$_SDFFE_PP0P_",
+            "slack_ns": 7.26,
+            "status": "met",
+            "source_line": 2432
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[4]$_SDFFE_PP0P_",
+            "slack_ns": 7.26,
+            "status": "met",
+            "source_line": 2473
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[2]$_SDFFE_PP0P_",
+            "slack_ns": 7.3,
+            "status": "met",
+            "source_line": 2510
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[0]$_SDFFE_PP0P_",
+            "slack_ns": 7.31,
+            "status": "met",
+            "source_line": 2547
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[0]$_SDFFE_PP0P_",
+            "slack_ns": 7.31,
+            "status": "met",
+            "source_line": 2626
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[1]$_SDFFE_PP0P_",
+            "slack_ns": 7.31,
+            "status": "met",
+            "source_line": 2590
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[0]$_SDFFE_PP0P_",
+            "slack_ns": 7.33,
+            "status": "met",
+            "source_line": 2662
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[1]$_SDFFE_PP0P_",
+            "slack_ns": 7.34,
+            "status": "met",
+            "source_line": 2700
+          },
+          {
+            "endpoint": "uart_tx_inst.txd_reg$_SDFFE_PP1P_",
+            "slack_ns": 7.35,
+            "status": "met",
+            "source_line": 2740
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[2]$_SDFFE_PP0P_",
+            "slack_ns": 7.36,
+            "status": "met",
+            "source_line": 2776
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[2]$_SDFFE_PP0P_",
+            "slack_ns": 7.37,
+            "status": "met",
+            "source_line": 2815
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[0]$_SDFFE_PP0P_",
+            "slack_ns": 7.42,
+            "status": "met",
+            "source_line": 2858
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[2]$_SDFFE_PP0P_",
+            "slack_ns": 7.44,
+            "status": "met",
+            "source_line": 2899
+          },
+          {
+            "endpoint": "uart_tx_inst.s_axis_tready_reg$_SDFFE_PP0P_",
+            "slack_ns": 7.45,
+            "status": "met",
+            "source_line": 2940
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[1]$_SDFFE_PP0P_",
+            "slack_ns": 7.46,
+            "status": "met",
+            "source_line": 2976
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[1]$_SDFFE_PP0P_",
+            "slack_ns": 7.48,
+            "status": "met",
+            "source_line": 3020
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[3]$_SDFFE_PP0P_",
+            "slack_ns": 7.48,
+            "status": "met",
+            "source_line": 3104
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[6]$_SDFFE_PP0P_",
+            "slack_ns": 7.48,
+            "status": "met",
+            "source_line": 3062
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[4]$_SDFFE_PP0P_",
+            "slack_ns": 7.49,
+            "status": "met",
+            "source_line": 3146
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[5]$_SDFFE_PP0P_",
+            "slack_ns": 7.5,
+            "status": "met",
+            "source_line": 3188
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[3]$_SDFFE_PP0P_",
+            "slack_ns": 7.51,
+            "status": "met",
+            "source_line": 3230
+          },
+          {
+            "endpoint": "uart_tx_inst.busy_reg$_SDFFE_PP0P_",
+            "slack_ns": 7.52,
+            "status": "met",
+            "source_line": 3271
+          },
+          {
+            "endpoint": "uart_rx_inst.overrun_error_reg$_SDFF_PP0_",
+            "slack_ns": 7.54,
+            "status": "met",
+            "source_line": 3314
+          },
+          {
+            "endpoint": "uart_rx_inst.frame_error_reg$_SDFF_PP0_",
+            "slack_ns": 7.56,
+            "status": "met",
+            "source_line": 3353
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[7]$_SDFFE_PP0P_",
+            "slack_ns": 7.59,
+            "status": "met",
+            "source_line": 3392
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tvalid_reg$_SDFF_PP0_",
+            "slack_ns": 7.64,
+            "status": "met",
+            "source_line": 3432
+          },
+          {
+            "endpoint": "uart_rx_inst.rxd_reg$_SDFF_PP1_",
+            "slack_ns": 7.67,
+            "status": "met",
+            "source_line": 3465
+          },
+          {
+            "endpoint": "uart_rx_inst.busy_reg$_SDFFE_PP0P_",
+            "slack_ns": 7.7,
+            "status": "met",
+            "source_line": 3497
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[2]$_SDFFE_PP0P_",
+            "slack_ns": 7.88,
+            "status": "met",
+            "source_line": 3791
+          }
+        ]
+      },
+      "hold": {
+        "analysis": "hold",
+        "source": "corner-reports/corner-tt-hold.rpt",
+        "sha256": "e11ce4ad0cea83af3ccf972f295d9b7e83c2683ef76061072703d429f491961c",
+        "endpoint_count": 94,
+        "violation_count": 0,
+        "endpoints": [
+          {
+            "endpoint": "uart_tx_inst.txd_reg$_SDFFE_PP1P_",
+            "slack_ns": 0.48,
+            "status": "met",
+            "source_line": 3
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[4]$_SDFFE_PP0P_",
+            "slack_ns": 0.5,
+            "status": "met",
+            "source_line": 66
+          },
+          {
+            "endpoint": "uart_tx_inst.busy_reg$_SDFFE_PP0P_",
+            "slack_ns": 0.5,
+            "status": "met",
+            "source_line": 34
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[3]$_SDFFE_PP0P_",
+            "slack_ns": 0.51,
+            "status": "met",
+            "source_line": 98
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[1]$_SDFFE_PP0P_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 130
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[1]$_DFFE_PP_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 290
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[2]$_DFFE_PP_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 162
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[3]$_DFFE_PP_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 194
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[4]$_DFFE_PP_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 258
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[7]$_DFFE_PP_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 226
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[2]$_SDFFE_PP0P_",
+            "slack_ns": 0.54,
+            "status": "met",
+            "source_line": 322
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[0]$_DFFE_PP_",
+            "slack_ns": 0.54,
+            "status": "met",
+            "source_line": 386
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[6]$_DFFE_PP_",
+            "slack_ns": 0.54,
+            "status": "met",
+            "source_line": 354
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[3]$_SDFFE_PP0P_",
+            "slack_ns": 0.55,
+            "status": "met",
+            "source_line": 512
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[1]$_SDFFE_PP0P_",
+            "slack_ns": 0.55,
+            "status": "met",
+            "source_line": 576
+          },
+          {
+            "endpoint": "uart_rx_inst.overrun_error_reg$_SDFF_PP0_",
+            "slack_ns": 0.55,
+            "status": "met",
+            "source_line": 418
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[2]$_SDFFE_PP0P_",
+            "slack_ns": 0.55,
+            "status": "met",
+            "source_line": 544
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[5]$_DFFE_PP_",
+            "slack_ns": 0.55,
+            "status": "met",
+            "source_line": 480
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[7]$_SDFFE_PP0P_",
+            "slack_ns": 0.55,
+            "status": "met",
+            "source_line": 449
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[6]$_SDFFCE_PP0P_",
+            "slack_ns": 0.57,
+            "status": "met",
+            "source_line": 608
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tvalid_reg$_SDFF_PP0_",
+            "slack_ns": 0.57,
+            "status": "met",
+            "source_line": 639
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[3]$_SDFFCE_PP0P_",
+            "slack_ns": 0.58,
+            "status": "met",
+            "source_line": 702
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[4]$_SDFFCE_PP0P_",
+            "slack_ns": 0.58,
+            "status": "met",
+            "source_line": 671
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[11]$_SDFFE_PP0P_",
+            "slack_ns": 0.59,
+            "status": "met",
+            "source_line": 733
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[1]$_SDFFE_PP0P_",
+            "slack_ns": 0.61,
+            "status": "met",
+            "source_line": 895
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[0]$_SDFFE_PP0P_",
+            "slack_ns": 0.61,
+            "status": "met",
+            "source_line": 862
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[11]$_SDFFE_PP0P_",
+            "slack_ns": 0.61,
+            "status": "met",
+            "source_line": 829
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[6]$_SDFFE_PP0P_",
+            "slack_ns": 0.61,
+            "status": "met",
+            "source_line": 797
+          },
+          {
+            "endpoint": "uart_tx_inst.s_axis_tready_reg$_SDFFE_PP0P_",
+            "slack_ns": 0.61,
+            "status": "met",
+            "source_line": 765
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[1]$_SDFFCE_PP0P_",
+            "slack_ns": 0.62,
+            "status": "met",
+            "source_line": 990
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[5]$_SDFFCE_PP0P_",
+            "slack_ns": 0.62,
+            "status": "met",
+            "source_line": 959
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[18]$_SDFFE_PP0P_",
+            "slack_ns": 0.62,
+            "status": "met",
+            "source_line": 927
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[5]$_SDFFE_PP0P_",
+            "slack_ns": 0.63,
+            "status": "met",
+            "source_line": 1021
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[10]$_SDFFE_PP0P_",
+            "slack_ns": 0.63,
+            "status": "met",
+            "source_line": 1054
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[6]$_SDFFE_PP0P_",
+            "slack_ns": 0.64,
+            "status": "met",
+            "source_line": 1086
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[0]$_SDFFE_PP0P_",
+            "slack_ns": 0.66,
+            "status": "met",
+            "source_line": 1119
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[7]$_SDFFE_PP0P_",
+            "slack_ns": 0.66,
+            "status": "met",
+            "source_line": 1185
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[12]$_SDFFE_PP0P_",
+            "slack_ns": 0.66,
+            "status": "met",
+            "source_line": 1152
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[5]$_SDFFE_PP0P_",
+            "slack_ns": 0.67,
+            "status": "met",
+            "source_line": 1218
+          },
+          {
+            "endpoint": "uart_rx_inst.busy_reg$_SDFFE_PP0P_",
+            "slack_ns": 0.7,
+            "status": "met",
+            "source_line": 1283
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[3]$_SDFFE_PP0P_",
+            "slack_ns": 0.7,
+            "status": "met",
+            "source_line": 1251
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[0]$_SDFFCE_PP0P_",
+            "slack_ns": 0.71,
+            "status": "met",
+            "source_line": 1316
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[2]$_SDFFCE_PP0P_",
+            "slack_ns": 0.72,
+            "status": "met",
+            "source_line": 1413
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[0]$_SDFFE_PP0P_",
+            "slack_ns": 0.72,
+            "status": "met",
+            "source_line": 1348
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[0]$_SDFFE_PP0P_",
+            "slack_ns": 0.72,
+            "status": "met",
+            "source_line": 1381
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[2]$_SDFFE_PP0P_",
+            "slack_ns": 0.72,
+            "status": "met",
+            "source_line": 1445
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[17]$_SDFFE_PP0P_",
+            "slack_ns": 0.73,
+            "status": "met",
+            "source_line": 1511
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[8]$_SDFFE_PP0P_",
+            "slack_ns": 0.73,
+            "status": "met",
+            "source_line": 1478
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[0]$_SDFFE_PP0P_",
+            "slack_ns": 0.74,
+            "status": "met",
+            "source_line": 1544
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[13]$_SDFFE_PP0P_",
+            "slack_ns": 0.75,
+            "status": "met",
+            "source_line": 1577
+          },
+          {
+            "endpoint": "uart_rx_inst.frame_error_reg$_SDFF_PP0_",
+            "slack_ns": 0.76,
+            "status": "met",
+            "source_line": 1643
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[4]$_SDFFE_PP0P_",
+            "slack_ns": 0.76,
+            "status": "met",
+            "source_line": 1610
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[6]$_SDFFE_PP0P_",
+            "slack_ns": 0.77,
+            "status": "met",
+            "source_line": 1708
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[12]$_SDFFE_PP0P_",
+            "slack_ns": 0.77,
+            "status": "met",
+            "source_line": 1675
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[17]$_SDFFE_PP0P_",
+            "slack_ns": 0.78,
+            "status": "met",
+            "source_line": 1742
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[2]$_SDFFE_PP0P_",
+            "slack_ns": 0.79,
+            "status": "met",
+            "source_line": 1809
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[15]$_SDFFE_PP0P_",
+            "slack_ns": 0.79,
+            "status": "met",
+            "source_line": 1775
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[14]$_SDFFE_PP0P_",
+            "slack_ns": 0.8,
+            "status": "met",
+            "source_line": 1843
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[7]$_SDFFCE_PP0P_",
+            "slack_ns": 0.81,
+            "status": "met",
+            "source_line": 1876
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[16]$_SDFFE_PP0P_",
+            "slack_ns": 0.81,
+            "status": "met",
+            "source_line": 1908
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[16]$_SDFFE_PP0P_",
+            "slack_ns": 0.84,
+            "status": "met",
+            "source_line": 1941
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[9]$_SDFFE_PP0P_",
+            "slack_ns": 0.86,
+            "status": "met",
+            "source_line": 1976
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[1]$_SDFFE_PP0P_",
+            "slack_ns": 0.86,
+            "status": "met",
+            "source_line": 2010
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[5]$_SDFFE_PP0P_",
+            "slack_ns": 0.89,
+            "status": "met",
+            "source_line": 2043
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[14]$_SDFFE_PP0P_",
+            "slack_ns": 0.9,
+            "status": "met",
+            "source_line": 2078
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[18]$_SDFFE_PP0P_",
+            "slack_ns": 0.9,
+            "status": "met",
+            "source_line": 2113
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[10]$_SDFFE_PP0P_",
+            "slack_ns": 0.91,
+            "status": "met",
+            "source_line": 2147
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[13]$_SDFFE_PP0P_",
+            "slack_ns": 0.92,
+            "status": "met",
+            "source_line": 2182
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[3]$_SDFFE_PP0P_",
+            "slack_ns": 0.95,
+            "status": "met",
+            "source_line": 2216
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[9]$_SDFFE_PP0P_",
+            "slack_ns": 0.95,
+            "status": "met",
+            "source_line": 2250
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[7]$_SDFFE_PP0P_",
+            "slack_ns": 0.96,
+            "status": "met",
+            "source_line": 2285
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[15]$_SDFFE_PP0P_",
+            "slack_ns": 0.98,
+            "status": "met",
+            "source_line": 2354
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[4]$_SDFFE_PP0P_",
+            "slack_ns": 0.98,
+            "status": "met",
+            "source_line": 2319
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[1]$_SDFFE_PP0P_",
+            "slack_ns": 1.01,
+            "status": "met",
+            "source_line": 2389
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[2]$_SDFFE_PP0P_",
+            "slack_ns": 1.08,
+            "status": "met",
+            "source_line": 2425
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[3]$_SDFFE_PP0P_",
+            "slack_ns": 1.16,
+            "status": "met",
+            "source_line": 2462
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[8]$_DFFE_PP_",
+            "slack_ns": 1.22,
+            "status": "met",
+            "source_line": 2574
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[8]$_SDFFE_PP0P_",
+            "slack_ns": 1.22,
+            "status": "met",
+            "source_line": 2536
+          },
+          {
+            "endpoint": "uart_rx_inst.rxd_reg$_SDFF_PP1_",
+            "slack_ns": 1.97,
+            "status": "met",
+            "source_line": 3201
+          },
+          {
+            "endpoint": "rx_busy",
+            "slack_ns": 2.9,
+            "status": "met",
+            "source_line": 3234
+          },
+          {
+            "endpoint": "rx_overrun_error",
+            "slack_ns": 3.14,
+            "status": "met",
+            "source_line": 3263
+          },
+          {
+            "endpoint": "m_axis_tdata[0]",
+            "slack_ns": 3.16,
+            "status": "met",
+            "source_line": 3321
+          },
+          {
+            "endpoint": "m_axis_tdata[3]",
+            "slack_ns": 3.16,
+            "status": "met",
+            "source_line": 3292
+          },
+          {
+            "endpoint": "m_axis_tdata[4]",
+            "slack_ns": 3.16,
+            "status": "met",
+            "source_line": 3350
+          },
+          {
+            "endpoint": "m_axis_tdata[2]",
+            "slack_ns": 3.17,
+            "status": "met",
+            "source_line": 3408
+          },
+          {
+            "endpoint": "m_axis_tdata[5]",
+            "slack_ns": 3.17,
+            "status": "met",
+            "source_line": 3466
+          },
+          {
+            "endpoint": "m_axis_tdata[6]",
+            "slack_ns": 3.17,
+            "status": "met",
+            "source_line": 3437
+          },
+          {
+            "endpoint": "m_axis_tdata[7]",
+            "slack_ns": 3.17,
+            "status": "met",
+            "source_line": 3379
+          },
+          {
+            "endpoint": "rx_frame_error",
+            "slack_ns": 3.18,
+            "status": "met",
+            "source_line": 3495
+          },
+          {
+            "endpoint": "txd",
+            "slack_ns": 3.18,
+            "status": "met",
+            "source_line": 3524
+          },
+          {
+            "endpoint": "tx_busy",
+            "slack_ns": 3.19,
+            "status": "met",
+            "source_line": 3553
+          },
+          {
+            "endpoint": "m_axis_tdata[1]",
+            "slack_ns": 3.2,
+            "status": "met",
+            "source_line": 3582
+          },
+          {
+            "endpoint": "m_axis_tvalid",
+            "slack_ns": 3.2,
+            "status": "met",
+            "source_line": 3611
+          },
+          {
+            "endpoint": "s_axis_tready",
+            "slack_ns": 3.2,
+            "status": "met",
+            "source_line": 3640
+          }
+        ]
+      }
+    }
+  }
+}

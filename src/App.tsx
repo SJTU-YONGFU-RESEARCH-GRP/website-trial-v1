@@ -16,6 +16,12 @@ const ToolFlowPage = lazy(async () => ({
 const SpiceBenchmarkPage = lazy(async () => ({
   default: (await import("./pages/SpiceBenchmarkPage")).SpiceBenchmarkPage,
 }));
+const PpaPage = lazy(async () => ({
+  default: (await import("./pages/PpaPage")).PpaPage,
+}));
+const UploadProcessingPage = lazy(async () => ({
+  default: (await import("./pages/UploadProcessingPage")).UploadProcessingPage,
+}));
 
 export default function App(): ReactElement {
   return (
@@ -53,6 +59,12 @@ export default function App(): ReactElement {
           Digital
         </NavLink>
         <NavLink
+          to="/ppa"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          PPA
+        </NavLink>
+        <NavLink
           to="/analog"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
@@ -72,6 +84,8 @@ export default function App(): ReactElement {
             <Route path="/flow" element={<ToolFlowPage />} />
             <Route path="/benchmark" element={<SpiceBenchmarkPage />} />
             <Route path="/plotly" element={<PlotlyPage />} />
+            <Route path="/ppa" element={<PpaPage />} />
+            <Route path="/upload-processing/:jobId" element={<UploadProcessingPage />} />
             <Route path="/analog" element={<AnalogPage />} />
             {/* Legacy redirects (goal.md §4.1) */}
             <Route path="/translator" element={<Navigate to="/benchmark?operation=translator" replace />} />

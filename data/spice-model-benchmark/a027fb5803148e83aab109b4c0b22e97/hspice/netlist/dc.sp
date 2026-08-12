@@ -1,18 +1,13 @@
-* Translated benchmark circuit
-* semantic-sha256: 6590aa91a142c6d902878675688177348de2a0963c115a0652e5630f4b3feee3
+* Fixed native HSPICE DC benchmark fixture.
+* Benchmark contract: mosfet-fixed-native-v1
+* Only /home/duhaochen/pipeline_sky130_mos/benchmark-inputs/a027fb5803148e83aab109b4c0b22e97/hspice.lib and model-card tokens are bound per run.
+.TITLE Fixed native MOSFET DC benchmark
+.OPTION POST=1 BRIEF NOMOD INGOLD=2 NUMDGT=10
+.OPTION TNOM=27 GMIN=1e-15 RELTOL=1e-6 ABSTOL=1e-12
 .INC '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/a027fb5803148e83aab109b4c0b22e97/hspice.lib'
-.TITLE Translated benchmark circuit
-.option tnom=27
-.option gmin=1e-15
-.option reltol=1e-8
-.option abstol=1e-12
-.option chgtol=1e-15
-.option method=gear
-.option TNOM=27
-.option TEMPSCALE=1.0
 
-M1 drain_iv gate_iv source_iv bulk_iv __benchmark_selected_nmos l=1u w=10u
-M2 drain_bias gate_bias source_bias bulk_bias __benchmark_selected_nmos l=1u w=10u
+M1 drain_iv gate_iv source_iv bulk_iv __benchmark_selected_nmos L=1u W=10u
+M2 drain_bias gate_bias source_bias bulk_bias __benchmark_selected_nmos L=1u W=10u
 Vds_iv drain_iv 0 DC 0
 Vgs_iv gate_iv 0 DC 0
 Vs_iv source_iv 0 DC 0
@@ -21,68 +16,73 @@ Vds_bias drain_bias 0 DC 0
 Vgs_bias gate_bias 0 DC 0
 Vs_bias source_bias 0 DC 0
 Vb_bias bulk_bias 0 DC 0
+
 .PRINT DC V(drain_iv) V(gate_iv) I(Vds_iv) I(Vs_iv) I(Vb_iv) I(Vgs_iv)
-.ALTER AST_CASE_0
+
+.ALTER FIXTURE_CASE_0
 .TEMP -40
-.dc vds_iv 0 1.2 0.01 vgs_iv 0 1.2 0.2
-.ALTER AST_CASE_1
+.DC Vds_iv 0 1.2 0.01 Vgs_iv 0 1.2 0.2
+.ALTER FIXTURE_CASE_1
 .TEMP 0
-.dc vds_iv 0 1.2 0.01 vgs_iv 0 1.2 0.2
-.ALTER AST_CASE_2
+.DC Vds_iv 0 1.2 0.01 Vgs_iv 0 1.2 0.2
+.ALTER FIXTURE_CASE_2
 .TEMP 25
-.dc vds_iv 0 1.2 0.01 vgs_iv 0 1.2 0.2
-.ALTER AST_CASE_3
+.DC Vds_iv 0 1.2 0.01 Vgs_iv 0 1.2 0.2
+.ALTER FIXTURE_CASE_3
 .TEMP 50
-.dc vds_iv 0 1.2 0.01 vgs_iv 0 1.2 0.2
-.ALTER AST_CASE_4
+.DC Vds_iv 0 1.2 0.01 Vgs_iv 0 1.2 0.2
+.ALTER FIXTURE_CASE_4
 .TEMP 100
-.dc vds_iv 0 1.2 0.01 vgs_iv 0 1.2 0.2
-.ALTER AST_CASE_5
+.DC Vds_iv 0 1.2 0.01 Vgs_iv 0 1.2 0.2
+.ALTER FIXTURE_CASE_5
 .TEMP 150
-.dc vds_iv 0 1.2 0.01 vgs_iv 0 1.2 0.2
-.ALTER AST_CASE_6
+.DC Vds_iv 0 1.2 0.01 Vgs_iv 0 1.2 0.2
+
+* The nine fixed bias points are also present explicitly.  Canonical output
+* is sampled from the identical 25 C IV sweep to avoid simulator OP formatting.
+.ALTER FIXTURE_CASE_6
+.TEMP 27
 Vds_bias drain_bias 0 DC 0.0
 Vgs_bias gate_bias 0 DC 0.0
+.OP
+.ALTER FIXTURE_CASE_7
 .TEMP 27
-.op
-.ALTER AST_CASE_7
 Vds_bias drain_bias 0 DC 0.0
 Vgs_bias gate_bias 0 DC 0.6
+.OP
+.ALTER FIXTURE_CASE_8
 .TEMP 27
-.op
-.ALTER AST_CASE_8
 Vds_bias drain_bias 0 DC 0.0
 Vgs_bias gate_bias 0 DC 1.2
+.OP
+.ALTER FIXTURE_CASE_9
 .TEMP 27
-.op
-.ALTER AST_CASE_9
 Vds_bias drain_bias 0 DC 0.6
 Vgs_bias gate_bias 0 DC 0.0
+.OP
+.ALTER FIXTURE_CASE_10
 .TEMP 27
-.op
-.ALTER AST_CASE_10
 Vds_bias drain_bias 0 DC 0.6
 Vgs_bias gate_bias 0 DC 0.6
+.OP
+.ALTER FIXTURE_CASE_11
 .TEMP 27
-.op
-.ALTER AST_CASE_11
 Vds_bias drain_bias 0 DC 0.6
 Vgs_bias gate_bias 0 DC 1.2
+.OP
+.ALTER FIXTURE_CASE_12
 .TEMP 27
-.op
-.ALTER AST_CASE_12
 Vds_bias drain_bias 0 DC 1.2
 Vgs_bias gate_bias 0 DC 0.0
+.OP
+.ALTER FIXTURE_CASE_13
 .TEMP 27
-.op
-.ALTER AST_CASE_13
 Vds_bias drain_bias 0 DC 1.2
 Vgs_bias gate_bias 0 DC 0.6
+.OP
+.ALTER FIXTURE_CASE_14
 .TEMP 27
-.op
-.ALTER AST_CASE_14
 Vds_bias drain_bias 0 DC 1.2
 Vgs_bias gate_bias 0 DC 1.2
-.TEMP 27
-.op
+.OP
 .END

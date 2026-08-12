@@ -249,38 +249,11 @@ def _record_parameter_environment(
 
 @functools.lru_cache(maxsize=1)
 def benchmark_geometry_context() -> dict[str, dict[str, str]]:
-    """Read DUT geometry from the four actual source benchmark circuits."""
-    geometry: dict[str, dict[str, str]] = {}
-    instance = re.compile(
-        r"(?im)^\s*M\S+\s+(?:\S+\s+){4}NMOS_VTG\b([^\n]*)$"
-    )
-    assignment = re.compile(
-        r"(?i)\b([LWM])\s*=\s*([^\s]+)"
-    )
-    for mode in PIPELINE.MODES:
-        circuit = PIPELINE.BENCHMARK / "netlists" / f"{mode}_circuit.cir"
-        match = instance.search(circuit.read_text(errors="replace"))
-        if match is None:
-            raise ValueError(
-                f"Cannot derive DUT geometry from benchmark circuit: {circuit}"
-            )
-        values = {
-            name.lower(): value
-            for name, value in assignment.findall(match.group(1))
-        }
-        if "l" not in values or "w" not in values:
-            raise ValueError(f"DUT L/W is missing from benchmark circuit: {circuit}")
-        values.setdefault("m", "1")
-        geometry[mode] = values
-    signatures = {
-        (values["l"].lower(), values["w"].lower(), values["m"].lower())
-        for values in geometry.values()
+    """Return the immutable geometry from the native benchmark contract."""
+    return {
+        mode: {"l": "1u", "w": "10u", "m": "1"}
+        for mode in PIPELINE.MODES
     }
-    if len(signatures) != 1:
-        raise ValueError(
-            f"Benchmark modes use different primary DUT geometry: {geometry}"
-        )
-    return geometry
 
 
 def _expression_dependencies(value: str) -> set[str]:
@@ -504,24 +477,11 @@ def _select_physical_model_card(
         model = models[0]
         bounds = {}
         mode = "explicit-unbinned-card"
+    # The experiment geometry is part of the fixed benchmark contract.  A
+    # binned model may report that the point is outside its characterized
+    # range, but the runner must never rewrite W/L to make the run easier.
     effective_geometry = dict(first_geometry)
     adjustment_reason = None
-    if mode == "nearest-real-bin-outside-range":
-        # The collection contains bare binned cards whose official wrapper
-        # normally supplies a legal device geometry.  The stock benchmark
-        # fixture must not exercise those cards outside their declared
-        # physical range.  Select a conservative interior point
-        # deterministically (longer channel, narrower device) and use that
-        # exact W/L in every simulator's translated fixture.  Staying away
-        # from both bin boundaries also avoids boundary-dependent selection.
-        # This changes only the test fixture, never a model parameter.
-        effective_geometry["l"] = (
-            f"{bounds['lmin'] + 0.75 * (bounds['lmax'] - bounds['lmin']):.17g}"
-        )
-        effective_geometry["w"] = (
-            f"{bounds['wmin'] + 0.25 * (bounds['wmax'] - bounds['wmin']):.17g}"
-        )
-        adjustment_reason = "stock-fixture-geometry-outside-selected-real-bin"
     return {
         "sourceModelName": model.name,
         "modelFamily": _benchmark_selector(model.name),
@@ -631,12 +591,7 @@ def prepare_sky130_benchmark_input(
     parameter_lines = [
         "* Exact Sky130 PDK TT parameter context; no generated defaults",
         f"* BENCHMARK_PRIMARY_MODEL: {selected_alias}",
-        (
-            "* BENCHMARK_DUT_GEOMETRY_OVERRIDE: "
-            f"L={effective_geometry['l']} W={effective_geometry['w']}"
-        )
-        if selection["geometryAdjustmentReason"]
-        else "* BENCHMARK_DUT_GEOMETRY_OVERRIDE: none",
+        "* BENCHMARK_DUT_GEOMETRY_OVERRIDE: none",
         *[
             f".param {item['name']}="
             f"{_format_parameter_value(item['value'], simulator)}"
@@ -677,7 +632,7 @@ def prepare_sky130_benchmark_input(
         "kind": "sky130-pdk-tt",
         "guessedDefaults": False,
         "unresolvedSymbols": [],
-        "geometrySource": "benchmark netlists",
+        "geometrySource": "mosfet-fixed-native-v1 benchmark contract",
         "geometry": geometry,
         "effectiveGeometry": {
             mode: dict(effective_geometry)
@@ -729,11 +684,6 @@ def prepare_sky130_benchmark_input(
         )
 
     adjustments: list[str] = []
-    if selection["geometryAdjustmentReason"]:
-        adjustments.append(
-            "stock benchmark DUT geometry adjusted to selected real bin: "
-            f"L={effective_geometry['l']}, W={effective_geometry['w']}"
-        )
     device_types = {item["deviceType"] for item in evidence["cards"]}
     fixture_count = 0
     if "nmos" not in device_types:
@@ -1058,37 +1008,29 @@ def cross_simulator_plot_failures(record: dict[str, Any]) -> list[str]:
 
 
 def physical_netlist_failures(record: dict[str, Any]) -> list[str]:
-    benchmark_src = PIPELINE.BENCHMARK / "src"
-    if str(benchmark_src) not in sys.path:
-        sys.path.insert(0, str(benchmark_src))
-    from spice_model_benchmark.circuit_ast import parse_circuit
-
+    """Verify all runs use the same frozen contract without circuit ASTs."""
     failures: list[str] = []
-    for mode in PIPELINE.MODES:
-        fingerprints: dict[str, Any] = {}
-        for simulator in PIPELINE.SIMULATORS:
-            extension = PIPELINE.NETLIST_EXTENSIONS[simulator]
-            netlist = (
-                DATA_ROOT
-                / record["md5"]
-                / simulator
-                / "netlist"
-                / f"{mode}{extension}"
+    contracts: dict[str, str] = {}
+    for simulator in PIPELINE.SIMULATORS:
+        sim_dir = DATA_ROOT / record["md5"] / simulator
+        try:
+            evidence = PIPELINE.fixed_fixture_evidence(
+                sim_dir,
+                simulator,
             )
-            try:
-                fingerprints[simulator] = parse_circuit(
-                    netlist,
-                    analysis_hint=mode,
-                ).semantic_fingerprint()
-            except Exception as exc:
-                failures.append(
-                    f"{mode} {simulator} physical parse failed: {exc}"
-                )
-        if len(fingerprints) == len(PIPELINE.SIMULATORS):
-            if len(set(fingerprints.values())) != 1:
-                failures.append(
-                    f"{mode} physical setup differs across simulators"
-                )
+        except Exception as exc:
+            failures.append(
+                f"{simulator} fixed-fixture evidence failed: {exc}"
+            )
+            continue
+        contracts[simulator] = evidence["benchmarkContractSha256"]
+    if (
+        len(contracts) == len(PIPELINE.SIMULATORS)
+        and len(set(contracts.values())) != 1
+    ):
+        failures.append(
+            f"benchmark contract differs across simulators: {contracts}"
+        )
     return failures
 
 

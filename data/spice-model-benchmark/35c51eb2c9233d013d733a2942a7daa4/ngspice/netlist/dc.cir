@@ -1,4 +1,5 @@
 * MOSFET DC Characteristics Simulation with Temperature Analysis
+* Benchmark contract: mosfet-fixed-native-v1
 .option temp=27 tnom=27
 .option gmin=1e-15
 .option reltol=1e-8
@@ -9,14 +10,14 @@
 .option TNOM=27
 .option TEMPSCALE=1.0
 
-* Include FreePDK45 model
-.include '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/35c51eb2c9233d013d733a2942a7daa4/ngspice.lib'
+* Fixed-fixture model binding (path and card names are the only substitutions)
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/35c51eb2c9233d013d733a2942a7daa4/ngspice.lib'
 
 * MOSFET device under test 
-M1 drain_iv gate_iv source_iv bulk_iv __benchmark_selected_nmos L=5.0250000000000006e-07 W=9.9749999999999998e-07
+M1 drain_iv gate_iv source_iv bulk_iv __benchmark_selected_nmos L=1u W=10u
 
 * MOSFET device under test for bias point analysis
-M2 drain_bias gate_bias source_bias bulk_bias __benchmark_selected_nmos L=5.0250000000000006e-07 W=9.9749999999999998e-07
+M2 drain_bias gate_bias source_bias bulk_bias __benchmark_selected_nmos L=1u W=10u
 
 * IV Characteristics Circuit
 Vds_iv drain_iv 0 DC 0
@@ -35,8 +36,8 @@ Vb_bias bulk_bias 0 DC 0
 set filetype=ascii
 set wr_vecnames
 set wr_singlescale
-set wr_singleprecision
 set wr_formatted
+set numdgt=15
 
 * Run DC analysis with temperature sweep
 echo "Starting temperature sweep"

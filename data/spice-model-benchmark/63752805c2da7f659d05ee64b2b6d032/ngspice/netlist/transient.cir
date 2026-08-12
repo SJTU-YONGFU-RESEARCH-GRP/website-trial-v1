@@ -1,7 +1,8 @@
 * MOSFET Transient Analysis Simulation
+* Benchmark contract: mosfet-fixed-native-v1
 .option temp=27 tnom=27
 .option gmin=1e-15
-.option reltol=1e-4
+.option reltol=1e-6
 .option abstol=1e-12
 .option chgtol=1e-15
 .option method=gear
@@ -9,8 +10,8 @@
 .option TNOM=27
 .option TEMPSCALE=1.0
 
-* Include FreePDK45 model
-.include '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/63752805c2da7f659d05ee64b2b6d032/ngspice.lib'
+* Fixed-fixture model binding (path and card names are the only substitutions)
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/63752805c2da7f659d05ee64b2b6d032/ngspice.lib'
 
 * ----------------------------------------------------------
 * MOSFET device under test - explicit collection-wide default geometry
@@ -19,8 +20,8 @@ M_tran drain_tran gate_tran source_tran bulk_tran __benchmark_selected_pmos L=1u
 
 * Large-Signal Transient Analysis Circuit
 * Pulse input source for gate
-Vgs_tran gate_tran 0 PULSE(0 -1.2 0n 0.5n 0.5n 10n 20n)
-Vds_tran drain_tran 0 DC -1.2
+Vgs_tran gate_tran 0 PULSE(0 1.2 0n 0.5n 0.5n 10n 20n)
+Vds_tran drain_tran 0 DC 1.2
 Vs_tran source_tran 0 DC 0
 Vb_tran bulk_tran 0 DC 0
 
@@ -79,14 +80,14 @@ Cload_power out_power 0 1f
 * Charge Conservation Test Circuit using capacitance approach
 * Instead of direct charge extraction, we'll measure capacitances and integrate
 Vdd_charge vdd_charge 0 DC 1.2
-Vg_charge gate_charge 0 PULSE(0 -1.2 0n 1n 1n 10n 20n)
+Vg_charge gate_charge 0 PULSE(0 1.2 0n 1n 1n 10n 20n)
 
 * ----------------------------------------------------------
 * MOS for charge conservation test
 * ----------------------------------------------------------
 M_charge drain_charge gate_charge source_charge bulk_charge __benchmark_selected_pmos L=1u W=10u
 
-Vd_charge drain_charge 0 DC -1.2
+Vd_charge drain_charge 0 DC 1.2
 Vs_charge source_charge 0 DC 0
 Vb_charge bulk_charge 0 DC 0
 
@@ -101,8 +102,8 @@ Cb bulk_charge 0 1e-18
 * ----------------------------------------------------------
 M_qs drain_qs gate_qs source_qs bulk_qs __benchmark_selected_pmos L=1u W=10u
 
-Vgs_qs gate_qs 0 PULSE(0 -1.2 0n 20n 20n 100n 200n)
-Vds_qs drain_qs 0 DC -1.2
+Vgs_qs gate_qs 0 PULSE(0 1.2 0n 20n 20n 100n 200n)
+Vds_qs drain_qs 0 DC 1.2
 Vs_qs source_qs 0 DC 0
 Vb_qs bulk_qs 0 DC 0
 
@@ -113,8 +114,8 @@ Cload_qs drain_qs 0 10f
 set filetype=ascii
 set wr_vecnames
 set wr_singlescale
-set wr_singleprecision
 set wr_formatted
+set numdgt=15
 
 * Transient Analysis Commands
 

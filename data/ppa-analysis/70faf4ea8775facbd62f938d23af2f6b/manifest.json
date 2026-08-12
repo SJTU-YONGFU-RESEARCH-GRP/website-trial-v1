@@ -1,0 +1,205 @@
+{
+  "schemaVersion": "1.3.0",
+  "uid": "70faf4ea8775facbd62f938d23af2f6b",
+  "flow": "openlane",
+  "pdk": "gf180mcuD",
+  "scl": "gf180mcu_fd_sc_mcu9t5v0",
+  "design": "uart",
+  "runName": "RUN_2026.08.04_04.52.56",
+  "variant": null,
+  "techfileRcScale": null,
+  "sourceKind": "final-metrics-csv",
+  "relativePath": "openlane/gf180mcuD/uart/RUN_2026.08.04_04.52.56/reports/metrics.csv",
+  "filterFacets": [
+    {
+      "category": "design",
+      "categoryLabel": "Design & constraints",
+      "categoryOrder": 10,
+      "dimension": "design",
+      "dimensionLabel": "Design",
+      "value": "uart",
+      "valueLabel": "uart",
+      "dimensionOrder": 10,
+      "valueOrder": 100
+    },
+    {
+      "category": "design",
+      "categoryLabel": "Design & constraints",
+      "categoryOrder": 10,
+      "dimension": "clock_period",
+      "dimensionLabel": "Clock period",
+      "value": "24",
+      "valueLabel": "24 ns",
+      "dimensionOrder": 30,
+      "valueOrder": 24
+    },
+    {
+      "category": "technology",
+      "categoryLabel": "Technology",
+      "categoryOrder": 20,
+      "dimension": "pdk",
+      "dimensionLabel": "PDK",
+      "value": "gf180mcuD",
+      "valueLabel": "gf180mcuD",
+      "dimensionOrder": 10,
+      "valueOrder": 100
+    },
+    {
+      "category": "technology",
+      "categoryLabel": "Technology",
+      "categoryOrder": 20,
+      "dimension": "scl",
+      "dimensionLabel": "Standard-cell library",
+      "value": "gf180mcu_fd_sc_mcu9t5v0",
+      "valueLabel": "gf180mcu_fd_sc_mcu9t5v0",
+      "dimensionOrder": 20,
+      "valueOrder": 100
+    },
+    {
+      "category": "implementation",
+      "categoryLabel": "Implementation",
+      "categoryOrder": 30,
+      "dimension": "tool",
+      "dimensionLabel": "Tools",
+      "value": "openlane",
+      "valueLabel": "OpenLane",
+      "dimensionOrder": 10,
+      "valueOrder": 20
+    }
+  ],
+  "sourceSha256": "998cbf92bf7ac43d6d073eb339f9f8dc9c89efd916758750d37826d7fbf87ea1",
+  "bundleSha256": "632bc0715875f734c388619804d577530e09d5e570dfe269ab01edbc4e1ce654",
+  "reportSchema": "openlane.final_metrics",
+  "tool": "OpenLane 1 / OpenROAD",
+  "scope": "completed-run metrics CSV corroborated by final DEF and native signoff reports",
+  "authoritativeOverallStatus": false,
+  "ast": {
+    "format": "csv",
+    "bytesUtf8": 1904,
+    "rootKind": "csv-document",
+    "nodeCount": 191,
+    "leafCount": 188,
+    "maxDepth": 2,
+    "standardJson": null,
+    "nonFiniteNumberNodes": 0,
+    "duplicateKeyGroups": 0,
+    "nodeKinds": {
+      "csv-document": 1,
+      "csv-field": 188,
+      "csv-row": 2
+    }
+  },
+  "summary": {
+    "hasPpa": true,
+    "areaUm2": 67975.484025,
+    "coreAreaUm2": 55177.92,
+    "instanceAreaUm2": null,
+    "utilization": 0.4401,
+    "instances": 725,
+    "physicalInstances": 2809,
+    "macros": 0,
+    "ioCount": 46,
+    "totalPowerMw": 15.050199000000001,
+    "powerComparisonValid": true,
+    "powerComparisonReason": null,
+    "internalPowerMw": 9.440000000000001,
+    "switchingPowerMw": 5.61,
+    "leakagePowerMw": 0.00019899999999999999,
+    "referenceCorner": "typical",
+    "setupSlackNs": 15.87,
+    "holdSlackNs": 0.42,
+    "worstSetupSlackNs": 15.87,
+    "worstHoldSlackNs": 0.42,
+    "setupTnsNs": 0,
+    "holdTnsNs": 0,
+    "clockPeriodNs": 24,
+    "criticalPathNs": 8.13,
+    "fmaxHz": 123001230.0123001,
+    "fmaxMethod": "derived as 1e9 / (clock period - reference setup slack)",
+    "setupViolations": 0,
+    "holdViolations": 0,
+    "maxSlewViolations": 0,
+    "maxCapViolations": 0,
+    "maxFanoutViolations": 9,
+    "wirelengthUm": 28275,
+    "vias": 3602,
+    "nets": null,
+    "routeDrcErrors": 0,
+    "antennaViolations": 0,
+    "flowErrors": 0,
+    "flowWarnings": null,
+    "magicDrcErrors": 16,
+    "averageIrDropV": null,
+    "worstIrDropV": null,
+    "cellUsageAvailable": true,
+    "finalDefComponents": 2809,
+    "uniqueCellMasters": 50,
+    "metricCount": 93,
+    "cornerSetupSlackNs": {
+      "typical": 15.87
+    },
+    "timingEndpointSlacks": {
+      "availability": "unavailable",
+      "referenceCorner": "typical",
+      "reason": "The result bundle was pruned before both full final-reference setup and hold endpoint reports were retained.",
+      "setupEndpointCount": 0,
+      "holdEndpointCount": 0,
+      "setupViolationCount": 0,
+      "holdViolationCount": 0,
+      "setupSlackNs": [],
+      "holdSlackNs": []
+    },
+    "powerBreakdownMw": {
+      "internal": 9.440000000000001,
+      "switching": 5.61,
+      "leakage": 0.00019899999999999999
+    },
+    "metricsByCategory": {
+      "run": 26,
+      "design": 20,
+      "route": 15,
+      "signoff": 9,
+      "timing": 14,
+      "power": 9
+    },
+    "completionStatus": "flow completed"
+  },
+  "sourceBundle": {
+    "flow": "openlane",
+    "run_directory": "RUN_2026.08.04_04.52.56",
+    "primary_source": "reports/metrics.csv",
+    "supporting_sources": [
+      {
+        "source": "results/final/def/uart.def",
+        "format": "def",
+        "bytes": 712919,
+        "sha256": "6b69a6674d3aa5e2983b77004c92c4dceb44f0c658d1c31962b8d92b48e6cb05"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.summary.rpt",
+        "format": "rpt",
+        "bytes": 754,
+        "sha256": "84ecbb7a39e297b04ae660b43339f48960bb5f9a3fa61b9e624caa3dc0705696"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.power.rpt",
+        "format": "rpt",
+        "bytes": 927,
+        "sha256": "c8f9747c020ffef028d52eeb28e879dd655d146e3b56813eb86104f4ed5156fa"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.checks.rpt",
+        "format": "rpt",
+        "bytes": 6287,
+        "sha256": "9d87ba8a221e8d8c8c52645442e9334f1d9ef1982f078bed808acbfdd20109fe"
+      },
+      {
+        "source": "reports/manufacturability.rpt",
+        "format": "rpt",
+        "bytes": 808,
+        "sha256": "ea33e8296e9a649f0cf3c73ed26c7338dd54ae7d182496f8a65ff6682ab52443"
+      }
+    ]
+  },
+  "reportPath": "70faf4ea8775facbd62f938d23af2f6b/report.json"
+}

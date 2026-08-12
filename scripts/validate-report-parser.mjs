@@ -42,8 +42,68 @@ function reportEntries(report) {
 }
 
 const { parseReportMD } = await loadParser();
-const manifest = JSON.parse(await readFile(join(DATA_ROOT, "manifest.json"), "utf8"));
-const expectedRuns = Object.values(manifest.models).length * manifest.simulators.length;
+const simulatorExtensions = {
+  ngspice: ".cir",
+  hspice: ".sp",
+  spectre: ".scs",
+};
+const modes = ["dc", "transient", "ac", "noise"];
+const displayableRuns = [];
+
+// Discover completed fixed-native runs from disk.  This intentionally does
+// not expand the legacy global inventory into a model × simulator matrix.
+for (const modelEntry of await readdir(DATA_ROOT, { withFileTypes: true })) {
+  if (!modelEntry.isDirectory() || !/^[a-f0-9]{32}$/i.test(modelEntry.name)) continue;
+  const modelRoot = join(DATA_ROOT, modelEntry.name);
+  let model;
+  try {
+    model = JSON.parse(await readFile(join(modelRoot, "model-manifest.json"), "utf8"));
+  } catch {
+    continue;
+  }
+  for (const [simulator, extension] of Object.entries(simulatorExtensions)) {
+    const runRoot = join(modelRoot, simulator);
+    let run;
+    let fixture;
+    let provenance;
+    try {
+      [run, fixture, provenance] = await Promise.all([
+        readFile(join(runRoot, "manifest.json"), "utf8").then(JSON.parse),
+        readFile(join(runRoot, "native-fixture-manifest.json"), "utf8").then(JSON.parse),
+        readFile(join(runRoot, "data", "plot_provenance.json"), "utf8").then(JSON.parse),
+      ]);
+    } catch {
+      continue;
+    }
+    const netlistsExist = modes.every((mode) => (
+      existsSync(join(runRoot, "netlist", `${mode}${extension}`))
+    ));
+    if (
+      run.status !== "completed"
+      || run.returnCode !== 0
+      || run.benchmarkFixtureMode !== "fixed-simulator-native"
+      || run.netlistAstUsed !== false
+      || run.parameterPreservingInput !== true
+      || run.modelFallbackApplied !== false
+      || (Array.isArray(run.internalFailureMarkers) && run.internalFailureMarkers.length > 0)
+      || fixture.fixtureMode !== "fixed-simulator-native"
+      || fixture.netlistAstUsed !== false
+      || provenance.syntheticDataUsed !== false
+      || !existsSync(join(runRoot, "REPORT.md"))
+      || !netlistsExist
+    ) {
+      continue;
+    }
+    displayableRuns.push({
+      uid: run.modelId ?? model.id,
+      md5: modelEntry.name,
+      simulator,
+      path: join(runRoot, "REPORT.md"),
+    });
+  }
+}
+
+const expectedRuns = displayableRuns.length;
 const failures = [];
 let checked = 0;
 let imageCount = 0;
@@ -51,14 +111,13 @@ let checkCount = 0;
 let detailCount = 0;
 let tableCount = 0;
 
-for (const [uid, model] of Object.entries(manifest.models)) {
-  for (const simulator of manifest.simulators) {
-    const path = join(DATA_ROOT, model.md5, simulator, "REPORT.md");
-    const label = `${model.md5}/${simulator}/REPORT.md`;
+for (const run of displayableRuns) {
+    const { uid, md5, simulator, path } = run;
+    const label = `${md5}/${simulator}/REPORT.md`;
     try {
       const markdown = await readFile(path, "utf8");
       const normalized = markdown.replace(/\r\n?/g, "\n");
-      const report = parseReportMD(markdown, model.md5, simulator);
+      const report = parseReportMD(markdown, md5, simulator);
       const subsections = collectSubsections(report);
       const plots = subsections.flatMap((subsection) => subsection.plotDetails ?? []);
       const tables = subsections.flatMap((subsection) => subsection.tables ?? []);
@@ -102,10 +161,20 @@ for (const [uid, model] of Object.entries(manifest.models)) {
       const grayLines = classifiedChecks.filter((line) => /color\s*:\s*gray/i.test(line.raw));
       if (grayLines.some((line) => line.status !== "in-progress")) throw new Error("gray cross parsed as failure");
       if (report.runIntegrity.Model !== uid) throw new Error(`Run Integrity Model: ${report.runIntegrity.Model}`);
-      if (report.runIntegrity["Model MD5"] !== model.md5) throw new Error("Run Integrity MD5 differs");
+      if (report.runIntegrity["Model MD5"] !== md5) throw new Error("Run Integrity MD5 differs");
       if (report.runIntegrity.Simulator !== simulator) throw new Error("Run Integrity simulator differs");
-      if (!report.runIntegrityNotes.includes("Input passed SPICE-Model-AST immediately before simulator handoff.")) {
-        throw new Error("Run Integrity narrative line was not parsed");
+      if (
+        !report.runIntegrity["Benchmark circuit"]?.includes("fixed, source-controlled simulator-native fixture")
+        || !report.runIntegrity["Benchmark circuit"]?.includes("no circuit AST or netlist translation")
+      ) {
+        throw new Error("fixed-native Benchmark circuit evidence was not parsed");
+      }
+      if (
+        !report.runIntegrityNotes.some((note) => (
+          note.includes("no fallback or parameter lowering was applied")
+        ))
+      ) {
+        throw new Error("parameter-preserving handoff narrative was not parsed");
       }
       for (const required of [
         "Started",
@@ -127,9 +196,12 @@ for (const [uid, model] of Object.entries(manifest.models)) {
     } catch (error) {
       failures.push(`${label}: ${error instanceof Error ? error.message : String(error)}`);
     }
-  }
 }
 
+if (expectedRuns === 0) {
+  console.error("REPORT parser validation failed: no complete fixed-native reports found");
+  process.exit(1);
+}
 if (checked !== expectedRuns || failures.length > 0) {
   console.error(`REPORT parser validation failed: ${checked}/${expectedRuns} passed`);
   for (const failure of failures.slice(0, 50)) console.error(`- ${failure}`);

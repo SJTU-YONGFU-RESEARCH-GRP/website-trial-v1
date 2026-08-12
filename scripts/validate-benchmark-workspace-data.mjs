@@ -13,6 +13,7 @@
  * ================================================================== */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -94,110 +95,232 @@ console.log("\n🖼 Benchmark result tree...");
 if (!existsSync(BENCHMARK_DATA)) {
   err("Missing data/spice-model-benchmark");
 } else {
-  const globalManifestPath = resolve(BENCHMARK_DATA, "manifest.json");
-  if (!existsSync(globalManifestPath)) {
-    err("Missing global benchmark manifest");
-  } else {
-    const globalManifest = JSON.parse(readFileSync(globalManifestPath, "utf-8"));
-    const md5s = Object.values(globalManifest.models ?? {}).map((model) => model.md5);
-    const simulators = globalManifest.simulators ?? [];
-    let checkedRuns = 0;
-    let checkedPlots = 0;
-    let checkedNetlists = 0;
-    const netlistExtensions = {
-      ngspice: ".cir",
-      spectre: ".scs",
-      hspice: ".sp",
-    };
+  const modes = ["dc", "transient", "ac", "noise"];
+  const netlistExtensions = {
+    ngspice: ".cir",
+    spectre: ".scs",
+    hspice: ".sp",
+  };
+  const allowedEntries = [
+    "REPORT.md",
+    "data",
+    "manifest.json",
+    "native-fixture-manifest.json",
+    "netlist",
+    "plot",
+  ].sort();
+  const forbiddenModelTransforms = [
+    "capability normalization",
+    "portable bsim4.5",
+    "lowered simulator-incompatible",
+    "disabled optional rbodymod",
+    "disabled optional rgatemod",
+    "disabled optional geomod",
+    "disabled optional trnqsmod",
+    "disabled optional acnqsmod",
+    "removed unresolved symbolic parameter",
+  ];
+  let checkedRuns = 0;
+  let checkedDataFiles = 0;
+  let checkedPlots = 0;
+  let checkedNetlists = 0;
+  const dataInventoriesByModel = new Map();
 
-    for (const md5 of md5s) {
-      for (const simulator of simulators) {
-        const runDir = resolve(BENCHMARK_DATA, md5, simulator);
-        const runManifest = resolve(runDir, "manifest.json");
-        const report = resolve(runDir, "REPORT.md");
-        const allowedEntries = ["REPORT.md", "data", "manifest.json", "netlist", "plot"];
-        if (existsSync(runDir)) {
-          const actualEntries = readdirSync(runDir).sort();
-          if (JSON.stringify(actualEntries) !== JSON.stringify([...allowedEntries].sort())) {
-            err(`${md5}/${simulator}: invalid result entries ${actualEntries.join(", ")}`);
-          }
-        }
-        if (!existsSync(runManifest)) err(`${md5}/${simulator}: missing manifest.json`);
-        if (!existsSync(report)) err(`${md5}/${simulator}: missing REPORT.md`);
-        if (existsSync(runManifest)) {
-          const parsed = JSON.parse(readFileSync(runManifest, "utf-8"));
-          const checksum = parsed.checksum ?? parsed.md5 ?? parsed.modelMd5 ?? parsed.model_md5;
-          if (checksum !== md5) err(`${md5}/${simulator}: manifest checksum mismatch`);
-          if (parsed.netlistDirectory !== "netlist") {
-            err(`${md5}/${simulator}: manifest netlistDirectory is not "netlist"`);
-          }
-          if (parsed.parameterPreservingInput !== true) {
-            err(`${md5}/${simulator}: input is not certified parameter-preserving`);
-          }
-          if (parsed.modelFallbackApplied !== false) {
-            err(`${md5}/${simulator}: model fallback status is not explicitly false`);
-          }
-          const manifestText = JSON.stringify(parsed).toLowerCase();
-          const forbiddenModelTransforms = [
-            "capability normalization",
-            "portable bsim4.5",
-            "lowered simulator-incompatible",
-            "disabled optional rbodymod",
-            "disabled optional rgatemod",
-            "disabled optional geomod",
-            "disabled optional trnqsmod",
-            "disabled optional acnqsmod",
-            "removed unresolved symbolic parameter",
-          ];
-          for (const marker of forbiddenModelTransforms) {
-            if (manifestText.includes(marker)) {
-              err(`${md5}/${simulator}: forbidden model transform "${marker}"`);
-            }
-          }
-        }
+  const parseJson = (file) => {
+    try {
+      return JSON.parse(readFileSync(file, "utf-8"));
+    } catch {
+      return null;
+    }
+  };
+  const isNonEmptyFile = (file) => (
+    existsSync(file) && statSync(file).isFile() && statSync(file).size > 0
+  );
+  const sha256 = (file) => (
+    createHash("sha256").update(readFileSync(file)).digest("hex")
+  );
 
-        const netlistDir = resolve(runDir, "netlist");
-        const extension = netlistExtensions[simulator];
-        const expectedNetlists = ["dc", "transient", "ac", "noise"].map(
-          (mode) => `${mode}${extension}`,
-        );
-        if (!existsSync(netlistDir)) {
-          err(`${md5}/${simulator}: missing netlist directory`);
+  // Discover what is actually complete on disk.  Do not manufacture an
+  // expected model × simulator Cartesian product from a global inventory.
+  for (const md5Entry of readdirSync(BENCHMARK_DATA, { withFileTypes: true })) {
+    if (!md5Entry.isDirectory() || !/^[a-f0-9]{32}$/i.test(md5Entry.name)) continue;
+    const md5 = md5Entry.name;
+    const modelDir = resolve(BENCHMARK_DATA, md5);
+    if (!isNonEmptyFile(resolve(modelDir, "model-manifest.json"))) continue;
+
+    for (const [simulator, extension] of Object.entries(netlistExtensions)) {
+      const runDir = resolve(modelDir, simulator);
+      const parsed = parseJson(resolve(runDir, "manifest.json"));
+
+      // This is the same admission gate used by the Vite runtime index.
+      // Incomplete and historical pre-contract runs are intentionally hidden.
+      if (
+        parsed?.status !== "completed"
+        || parsed?.returnCode !== 0
+        || parsed?.benchmarkFixtureMode !== "fixed-simulator-native"
+        || parsed?.netlistAstUsed !== false
+        || parsed?.parameterPreservingInput !== true
+        || parsed?.modelFallbackApplied !== false
+        || (
+          Array.isArray(parsed?.internalFailureMarkers)
+          && parsed.internalFailureMarkers.length > 0
+        )
+      ) {
+        continue;
+      }
+
+      checkedRuns++;
+      const actualEntries = readdirSync(runDir).sort();
+      if (JSON.stringify(actualEntries) !== JSON.stringify(allowedEntries)) {
+        err(`${md5}/${simulator}: invalid result entries ${actualEntries.join(", ")}`);
+      }
+      if (!isNonEmptyFile(resolve(runDir, "REPORT.md"))) {
+        err(`${md5}/${simulator}: missing or empty REPORT.md`);
+      }
+      if (parsed.netlistDirectory !== "netlist") {
+        err(`${md5}/${simulator}: manifest netlistDirectory is not "netlist"`);
+      }
+      const checksum = parsed.checksum ?? parsed.md5 ?? parsed.modelMd5 ?? parsed.model_md5;
+      if (checksum !== undefined && checksum !== null && checksum !== md5) {
+        err(`${md5}/${simulator}: manifest checksum mismatch`);
+      }
+      const parameterContext = parsed.parameterContext ?? {};
+      if (
+        parameterContext.guessedDefaults === true
+        || (
+          Array.isArray(parameterContext.unresolvedSymbols)
+          && parameterContext.unresolvedSymbols.length > 0
+        )
+      ) {
+        err(`${md5}/${simulator}: unresolved or guessed model parameters`);
+      }
+      const manifestText = JSON.stringify(parsed).toLowerCase();
+      for (const marker of forbiddenModelTransforms) {
+        if (manifestText.includes(marker)) {
+          err(`${md5}/${simulator}: forbidden model transform "${marker}"`);
+        }
+      }
+
+      const dataDir = resolve(runDir, "data");
+      const dataNames = existsSync(dataDir)
+        ? readdirSync(dataDir)
+          .filter((name) => statSync(resolve(dataDir, name)).isFile())
+          .sort()
+        : [];
+      if (dataNames.length === 0) {
+        err(`${md5}/${simulator}: no data files`);
+      }
+      for (const name of dataNames) {
+        if (!isNonEmptyFile(resolve(dataDir, name))) {
+          err(`${md5}/${simulator}/data/${name}: empty file`);
+        }
+        checkedDataFiles++;
+      }
+      if (!dataInventoriesByModel.has(md5)) {
+        dataInventoriesByModel.set(md5, new Map());
+      }
+      dataInventoriesByModel.get(md5).set(simulator, dataNames);
+
+      const fixtureManifestPath = resolve(runDir, "native-fixture-manifest.json");
+      const fixtureManifest = parseJson(fixtureManifestPath);
+      if (
+        fixtureManifest?.fixtureMode !== "fixed-simulator-native"
+        || fixtureManifest?.netlistAstUsed !== false
+        || !/^[a-f0-9]{64}$/i.test(fixtureManifest?.benchmarkContractSha256 ?? "")
+      ) {
+        err(`${md5}/${simulator}: invalid native fixture manifest`);
+      }
+
+      const netlistDir = resolve(runDir, "netlist");
+      const expectedNetlists = modes.map((mode) => `${mode}${extension}`).sort();
+      const actualNetlists = existsSync(netlistDir) ? readdirSync(netlistDir).sort() : [];
+      if (JSON.stringify(actualNetlists) !== JSON.stringify(expectedNetlists)) {
+        err(`${md5}/${simulator}: invalid netlist inventory ${actualNetlists.join(", ")}`);
+      }
+      for (const mode of modes) {
+        const name = `${mode}${extension}`;
+        const file = resolve(netlistDir, name);
+        if (!isNonEmptyFile(file)) {
+          err(`${md5}/${simulator}/netlist/${name}: missing or empty file`);
+          continue;
+        }
+        const fixture = fixtureManifest?.fixtures?.[mode];
+        if (
+          !/^[a-f0-9]{64}$/i.test(fixture?.templateSha256 ?? "")
+          || !/^[a-f0-9]{64}$/i.test(fixture?.submittedSha256 ?? "")
+          || sha256(file) !== fixture.submittedSha256
+        ) {
+          err(`${md5}/${simulator}/netlist/${name}: fixture hash mismatch`);
+        }
+        checkedNetlists++;
+      }
+
+      const provenance = parseJson(resolve(runDir, "data", "plot_provenance.json"));
+      if (provenance?.syntheticDataUsed !== false) {
+        err(`${md5}/${simulator}: synthetic plot data is not explicitly disabled`);
+      }
+      const declaredPlots = provenance?.plots ?? {};
+      const plotsDir = resolve(runDir, "plot");
+      const actualPlotNames = existsSync(plotsDir)
+        ? readdirSync(plotsDir).filter((name) => name.endsWith(".png"))
+        : [];
+      if (actualPlotNames.length === 0) {
+        err(`${md5}/${simulator}: no PNG plots`);
+      }
+      for (const name of actualPlotNames) {
+        const file = resolve(plotsDir, name);
+        const buf = readFileSync(file);
+        if (
+          buf.length < 4
+          || buf[0] !== 0x89
+          || buf[1] !== 0x50
+          || buf[2] !== 0x4e
+          || buf[3] !== 0x47
+        ) {
+          err(`${md5}/${simulator}/plot/${name}: invalid PNG`);
+        }
+        const plotEvidence = declaredPlots[name];
+        if (
+          plotEvidence?.syntheticDataUsed !== false
+          || !Array.isArray(plotEvidence?.sources)
+          || plotEvidence.sources.length === 0
+        ) {
+          err(`${md5}/${simulator}/plot/${name}: incomplete provenance`);
         } else {
-          const actualNetlists = readdirSync(netlistDir).sort();
-          if (JSON.stringify(actualNetlists) !== JSON.stringify([...expectedNetlists].sort())) {
-            err(`${md5}/${simulator}: invalid netlist inventory ${actualNetlists.join(", ")}`);
-          }
-          for (const name of actualNetlists) {
-            if (statSync(resolve(netlistDir, name)).size === 0) {
-              err(`${md5}/${simulator}/netlist/${name}: empty file`);
+          for (const source of plotEvidence.sources) {
+            if (
+              typeof source !== "string"
+              || !source.startsWith("data/")
+              || !isNonEmptyFile(resolve(runDir, source))
+            ) {
+              err(`${md5}/${simulator}/plot/${name}: invalid source ${String(source)}`);
             }
-            checkedNetlists++;
           }
         }
-
-        const plotsDir = resolve(runDir, "plot");
-        if (!existsSync(plotsDir)) {
-          err(`${md5}/${simulator}: missing plots directory`);
-        } else {
-          for (const name of readdirSync(plotsDir)) {
-            if (!name.endsWith(".png")) continue;
-            const file = resolve(plotsDir, name);
-            const st = statSync(file);
-            if (st.size === 0) err(`${md5}/${simulator}/plot/${name}: empty file`);
-            const buf = readFileSync(file);
-            if (buf[0] !== 0x89 || buf[1] !== 0x50 || buf[2] !== 0x4e || buf[3] !== 0x47) {
-              err(`${md5}/${simulator}/plot/${name}: invalid PNG`);
-            }
-            checkedPlots++;
-          }
-        }
-        checkedRuns++;
+        checkedPlots++;
       }
     }
-    ok(`${checkedRuns} model/simulator run directories validated`);
-    ok(`${checkedPlots} plot files validated`);
-    ok(`${checkedNetlists} executed netlist files validated`);
+  }
+
+  for (const [md5, simulatorInventories] of dataInventoriesByModel) {
+    const signatures = new Set(
+      [...simulatorInventories.values()].map((names) => JSON.stringify(names)),
+    );
+    if (signatures.size !== 1) {
+      const details = [...simulatorInventories.entries()]
+        .map(([simulator, names]) => `${simulator}=[${names.join(", ")}]`)
+        .join("; ");
+      err(`${md5}: simulator data inventories differ: ${details}`);
+    }
+  }
+
+  if (checkedRuns === 0) {
+    err("No complete fixed-native model/simulator runs are displayable");
+  } else {
+    ok(`${checkedRuns} complete displayable model/simulator runs validated`);
+    ok(`${checkedDataFiles} non-empty data files validated`);
+    ok(`${checkedPlots} plot files and provenance records validated`);
+    ok(`${checkedNetlists} executed native netlist files validated`);
   }
 }
 
@@ -207,9 +330,12 @@ const loader = readFileSync(resolve(ROOT, "src/data/benchmarkWorkspace/dataLoade
 const comparison = readFileSync(resolve(ROOT, "src/pages/benchmark/ModelComparisonCard.tsx"), "utf-8");
 const contractChecks = [
   [loader, /loadBenchmarkRuns/, "selected-run loader exported"],
+  [loader, /fetchAvailableRuns/, "completed-run discovery exported"],
+  [loader, /available-runs\.json/, "dynamic completed-run index fetched"],
+  [loader, /for \(const run of index\.runs\)/, "scenario built from discovered runs"],
   [loader, /\$\{md5\}\/\$\{sim\}\/manifest\.json/, "per-run manifest fetched"],
   [loader, /fetchReport\(md5, sim\)/, "per-run REPORT fetched"],
-  [loader, /loadRunManifest\(md5, sim, info\)/, "selector manifests loaded per run"],
+  [loader, /loadRunManifest\(md5, sim, fallback\)/, "selected manifest loaded lazily"],
   [comparison, /selectedRunIds/, "selection keyed by model and simulator run"],
   [comparison, /loadBenchmarkRuns\(selectedRunIds\)/, "selection triggers lazy REPORT loading"],
   [comparison, /loaded\.runModelIds/, "selected simulator runs compared"],

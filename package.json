@@ -4,8 +4,11 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 3000",
+    "dev": "vite --host :: --port 3000 --strictPort",
     "generate:data": "node scripts/generate-design-data.mjs",
+    "generate:ppa": "node scripts/generate-ppa-data.mjs",
+    "generate:digital-ppa": "python3 scripts/run-digital-technology-ppa.py --technologies all && npm run generate:data",
+    "import:sky130-adders": "python3 scripts/import-sky130-libcharx-adders.py && npm run generate:data && npm run validate:digital-data",
     "generate:spice-benchmark": "node scripts/generate-spice-benchmark-data.mjs",
     "generate:translator": "node scripts/generate-spice-translator-data.mjs",
     "generate:reduction": "node scripts/generate-reduction-data.mjs",
@@ -13,11 +16,14 @@
     "validate:reduction": "node scripts/validate-reduction-data.mjs",
     "validate:expansion": "node scripts/validate-expansion-data.mjs",
     "validate:flow-data": "node scripts/validate-flow-data.mjs",
+    "validate:digital-data": "node scripts/validate-digital-technology-data.mjs",
+    "validate:ppa-data": "node scripts/validate-ppa-data.mjs",
+    "validate:uploads": "node scripts/validate-upload-integration.mjs",
     "validate:spice-benchmark-data": "node scripts/validate-spice-benchmark-data.mjs",
     "validate:translator": "node scripts/validate-spice-translator-data.mjs",
     "validate:benchmark-workspace": "node scripts/validate-benchmark-workspace-data.mjs",
     "validate:report-parser": "node scripts/validate-report-parser.mjs",
-    "build": "npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:benchmark-workspace && npm run validate:report-parser && tsc --noEmit && vite build",
+    "build": "npm run generate:data && npm run generate:ppa && npm run validate:digital-data && npm run validate:ppa-data && npm run validate:uploads && npm run validate:flow-data && npm run validate:spice-benchmark-data && npm run validate:benchmark-workspace && npm run validate:report-parser && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
@@ -32,6 +38,7 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@types/node": "^26.2.0",
     "@types/plotly.js": "^2.33.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

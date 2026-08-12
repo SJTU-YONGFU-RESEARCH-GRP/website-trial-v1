@@ -114,7 +114,9 @@ function main() {
       const run = runs[rid];
       manifestDataFiles += run.dataArtifacts.length;
       manifestPlotFiles += run.plotArtifacts.length;
-      if (run.reportSummary?.reportMarkdown) manifestReportFiles++;
+      manifestReportFiles += (run.otherArtifacts ?? []).filter(
+        artifact => artifact.kind === "report"
+      ).length;
     }
     const si = sourceInventory;
 

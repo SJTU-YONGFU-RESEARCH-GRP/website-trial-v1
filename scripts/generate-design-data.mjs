@@ -1,8 +1,8 @@
 /**
- * Merges row JSON in `data/` into `src/data/generatedDesignRows.ts`.
+ * Merges UID-addressed Digital result JSON into `src/data/generatedDesignRows.ts`.
  *
- * Row files: every `data/*.json` except reserved config files (sorted by name).
- * Add a dataset with `my_block.json` — no script list to update.
+ * Row files: every canonical
+ * `data/digital-technologies/<md5>/results/<category>/<design>/wN/result.json` leaf.
  *
  * Technology defaults and `processNode` → effective nm mappings live in
  * `data/technology-map.json` (not merged as rows).
@@ -11,34 +11,79 @@
  * - a JSON array of design objects `[{...}, {...}]` (all designs in one file), or
  * - `{ "rows": [ ... ] }` (same as above), or
  * - a single design object `{ ... }` (one design per file).
- * Rows are tagged with `category` from the filename (stem) unless `category` or legacy `designFamily`
- * is set on the object.
+ * Every result should carry `category`; legacy `designFamily` remains a fallback.
  */
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const dataDir = path.join(root, "data");
+const technologyStoreDir = path.join(dataDir, "digital-technologies");
 const outFile = path.join(root, "src", "data", "generatedDesignRows.ts");
 
-/** Basenames under `data/` that are config only, not design row JSON. */
-const DATA_CONFIG_JSON = new Set(["technology-map.json"]);
+function technologyIdentity(processNode, canonicalTechnology, isNamedPdk) {
+  return JSON.stringify({ schemaVersion: 1, processNode, canonicalTechnology, isNamedPdk });
+}
 
-/**
- * @param {string} dir
- * @returns {string[]} basenames e.g. ["adder.json", "parity.json"]
- */
-function listDataJsonFiles(dir) {
+function expectedTechnologyUid(processNode, canonicalTechnology, isNamedPdk) {
+  return createHash("md5")
+    .update(technologyIdentity(processNode, canonicalTechnology, isNamedPdk))
+    .digest("hex");
+}
+
+/** Recursively collect only canonical Digital result leaves. */
+function resultFilesUnder(dir) {
   if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir)
-    .filter(
-      (name) =>
-        name.endsWith(".json") && !name.startsWith(".") && !DATA_CONFIG_JSON.has(name),
-    )
-    .sort((a, b) => a.localeCompare(b, "en"));
+  const found = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const entryPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...resultFilesUnder(entryPath));
+    else if (entry.isFile() && entry.name === "result.json") found.push(entryPath);
+  }
+  return found.sort((a, b) => a.localeCompare(b, "en"));
+}
+
+/** Load and validate MD5-addressed Technology resources and their result leaves. */
+function loadTechnologyResources(dir) {
+  if (!fs.existsSync(dir)) return [];
+  const resources = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    if (!/^[a-f0-9]{32}$/.test(entry.name)) {
+      throw new Error(`[generate-design-data] non-MD5 directory in ${dir}: ${entry.name}`);
+    }
+    const resourceDir = path.join(dir, entry.name);
+    const manifestPath = path.join(resourceDir, "technology.json");
+    if (!fs.existsSync(manifestPath)) {
+      throw new Error(`[generate-design-data] missing ${manifestPath}`);
+    }
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    for (const key of ["uid", "processNode", "displayName", "canonicalTechnology", "isNamedPdk"]) {
+      if (manifest[key] === undefined) {
+        throw new Error(`[generate-design-data] ${manifestPath}: missing ${key}`);
+      }
+    }
+    const expectedUid = expectedTechnologyUid(
+      String(manifest.processNode),
+      String(manifest.canonicalTechnology),
+      Boolean(manifest.isNamedPdk),
+    );
+    if (manifest.uid !== entry.name || expectedUid !== entry.name) {
+      throw new Error(
+        `[generate-design-data] ${manifestPath}: directory, manifest UID, and identity MD5 must match`,
+      );
+    }
+    resources.push({
+      uid: entry.name,
+      dir: resourceDir,
+      manifest,
+      resultFiles: resultFilesUnder(path.join(resourceDir, "results")),
+    });
+  }
+  return resources.sort((a, b) => a.uid.localeCompare(b.uid, "en"));
 }
 
 /**
@@ -255,6 +300,67 @@ function uniqueCategoryIdsSorted(rows) {
 }
 
 /**
+ * Technology resources exposed to the Digital selector.
+ *
+ * @param {ReturnType<typeof normalizeRow>[]} rows
+ * @param {{
+ *   defaultProcessNode: string;
+ *   effectiveNmByProcessNode: Record<string, number>;
+ *   namedKitIds: Set<string>;
+ * }} tech
+ * @param {ReturnType<typeof loadTechnologyResources>} resources
+ */
+function technologyCatalog(rows, tech, resources) {
+  const rowNodes = new Set(rows.map((row) => row.processNode));
+  const catalog = resources
+    .filter((resource) => rowNodes.has(String(resource.manifest.processNode)))
+    .map((resource) => ({
+      uid: resource.uid,
+      processNode: String(resource.manifest.processNode),
+      displayName: String(resource.manifest.displayName),
+      canonicalTechnology: String(resource.manifest.canonicalTechnology),
+      isNamedPdk: Boolean(resource.manifest.isNamedPdk),
+      pdk: resource.manifest.pdk == null ? undefined : String(resource.manifest.pdk),
+      standardCellLibrary: resource.manifest.standardCellLibrary == null
+        ? undefined
+        : String(resource.manifest.standardCellLibrary),
+      corner: resource.manifest.corner == null ? undefined : String(resource.manifest.corner),
+    }));
+  catalog.sort((left, right) => {
+    if (left.isNamedPdk !== right.isNamedPdk) return left.isNamedPdk ? 1 : -1;
+    const leftNm = effectiveNmForProcessNode(tech.effectiveNmByProcessNode, left.processNode);
+    const rightNm = effectiveNmForProcessNode(tech.effectiveNmByProcessNode, right.processNode);
+    if (!left.isNamedPdk && leftNm !== undefined && rightNm !== undefined && leftNm !== rightNm) {
+      return leftNm - rightNm;
+    }
+    return left.processNode.localeCompare(right.processNode, "en");
+  });
+  for (const node of rowNodes) {
+    if (!catalog.some((technology) => technology.processNode === node)) {
+      throw new Error(`[generate-design-data] result rows reference technology without manifest: ${node}`);
+    }
+  }
+  const uids = catalog.map((technology) => technology.uid);
+  if (uids.some((uid) => !/^[a-f0-9]{32}$/.test(uid))) {
+    throw new Error("[generate-design-data] technology UID is not a 32-character MD5");
+  }
+  if (new Set(uids).size !== uids.length) {
+    throw new Error("[generate-design-data] duplicate technology UID");
+  }
+  return catalog;
+}
+
+/** @param {ReturnType<typeof technologyCatalog>[number]} technology */
+function formatTsTechnology(technology) {
+  const optional = [
+    technology.pdk == null ? "" : `, pdk: ${JSON.stringify(technology.pdk)}`,
+    technology.standardCellLibrary == null ? "" : `, standardCellLibrary: ${JSON.stringify(technology.standardCellLibrary)}`,
+    technology.corner == null ? "" : `, corner: ${JSON.stringify(technology.corner)}`,
+  ].join("");
+  return `  { uid: ${JSON.stringify(technology.uid)}, processNode: ${JSON.stringify(technology.processNode)}, displayName: ${JSON.stringify(technology.displayName)}, canonicalTechnology: ${JSON.stringify(technology.canonicalTechnology)}, isNamedPdk: ${technology.isNamedPdk}${optional} }`;
+}
+
+/**
  * @param {string} s
  * @returns {string}
  */
@@ -264,16 +370,25 @@ function tsStringLiteral(s) {
 
 function main() {
   const tech = loadTechnologyMap(dataDir);
-  const inputFiles = listDataJsonFiles(dataDir);
+  const resources = loadTechnologyResources(technologyStoreDir);
+  const inputFiles = resources.flatMap((resource) =>
+    resource.resultFiles.map((filePath) => ({ resource, filePath })),
+  );
   const combined = [];
 
-  for (const name of inputFiles) {
-    const filePath = path.join(dataDir, name);
-    const fileStem = path.basename(name, ".json");
+  for (const { resource, filePath } of inputFiles) {
+    const name = path.relative(dataDir, filePath);
+    const fileStem = path.basename(path.dirname(path.dirname(filePath)));
     const rows = readRowsArray(filePath);
     for (const row of rows) {
       assertRow(row, name);
-      combined.push(normalizeRow(row, fileStem, tech));
+      const normalized = normalizeRow(row, fileStem, tech);
+      if (normalized.processNode !== resource.manifest.processNode) {
+        throw new Error(
+          `[generate-design-data] ${name}: processNode ${normalized.processNode} does not match ${resource.manifest.processNode}`,
+        );
+      }
+      combined.push(normalized);
     }
   }
 
@@ -289,19 +404,33 @@ function main() {
   }
 
   const categoryIdsTs = categoryIds.map((id) => tsStringLiteral(id)).join(", ");
-  const sourceList = inputFiles.length ? inputFiles.join(", ") : "(none)";
+  const technologies = technologyCatalog(combined, tech, resources);
+  const sourceList = `${inputFiles.length} result.json leaves under data/digital-technologies/<md5>/results`;
   const namedKitSorted = [...tech.namedKitIds].sort((a, b) => a.localeCompare(b, "en"));
   const namedKitTs = namedKitSorted.map((id) => tsStringLiteral(id)).join(", ");
   const defaultNodeTs = tsStringLiteral(tech.defaultProcessNode);
 
   const header = `/**
- * Combined design rows from row JSON under \`data/\` (${sourceList}).
+ * Combined design rows from ${sourceList}.
  * Technology defaults and kit ids from \`data/technology-map.json\`.
  * AUTO-GENERATED by scripts/generate-design-data.mjs. Run: npm run generate:data
  * Do not edit by hand; change JSON under /data instead.
  */
 
 import type { DesignRow } from "./designTypes";
+
+export type DesignTechnology = {
+  /** Stable 32-character MD5 UID used by the Digital technology selector. */
+  uid: string;
+  /** Legacy row join key; retained while result rows still store \`processNode\`. */
+  processNode: string;
+  displayName: string;
+  canonicalTechnology: string;
+  isNamedPdk: boolean;
+  pdk?: string;
+  standardCellLibrary?: string;
+  corner?: string;
+};
 
 /** Distinct \`category\` values present in the merged rows (sorted). */
 export const DESIGN_CATEGORY_IDS = [${categoryIdsTs}] as const;
@@ -314,6 +443,11 @@ export const DEFAULT_TECHNOLOGY_NODE = ${defaultNodeTs};
 /** Named PDK / kit \`processNode\` ids from \`data/technology-map.json\` (sorted). */
 export const NAMED_KIT_PROCESS_NODES = [${namedKitTs}] as const;
 
+/** UID-backed technology resources available to Digital charts. */
+export const DESIGN_TECHNOLOGIES: readonly DesignTechnology[] = [
+${technologies.map(formatTsTechnology).join(",\n")}
+];
+
 export const DESIGN_ROWS: DesignRow[] = [
 ${combined.map(formatTsRow).join(",\n")}
 ];
@@ -322,7 +456,7 @@ ${combined.map(formatTsRow).join(",\n")}
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   fs.writeFileSync(outFile, header, "utf8");
   console.log(
-    `[generate-design-data] merged ${inputFiles.length} file(s) → ${combined.length} rows, categories: ${categoryIds.join(", ")} → ${path.relative(root, outFile)}`,
+    `[generate-design-data] merged ${inputFiles.length} UID-addressed result(s) → ${combined.length} rows, categories: ${categoryIds.join(", ")} → ${path.relative(root, outFile)}`,
   );
 }
 

@@ -10,6 +10,7 @@
 | `/#/flow` | Flow dashboard — CFET Standard-Cell Library P&R Algorithm Comparison Platform |
 | `/#/benchmark` | **SPICE Model Workflow & Benchmark Workspace** — unified Convert / Calibrate / Reduce / Expand / Benchmark workspace |
 | `/#/plotly` | Digital circuit charts (Pareto, bar, heatmap, 3D, …) |
+| `/#/ppa` | OpenROAD / OpenLane / LibreLane normalized PPA evidence |
 | `/#/analog` | Analog circuit charts |
 
 **Legacy redirects:**
@@ -24,6 +25,10 @@ cd website-trial-v1
 npm install
 npm run dev
 ```
+
+Benchmark, Digital, and PPA expose one persistent server-side upload workflow
+when the Vite service is running. See [docs/data-upload.md](docs/data-upload.md)
+for accepted bundles, validation rules, limits, and deployment requirements.
 
 ### npm scripts
 

@@ -1,5 +1,7 @@
 import fs from "node:fs/promises";
+import type { Dirent } from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import {
   defineConfig,
@@ -7,6 +9,7 @@ import {
   type ViteDevServer,
 } from "vite";
 import react from "@vitejs/plugin-react";
+import { createUploadMiddleware } from "./server/uploadService";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const benchmarkDataRoot = path.resolve(
@@ -20,6 +23,7 @@ const simulatorExtensions = {
   hspice: ".sp",
 } as const;
 const benchmarkModes = ["dc", "transient", "ac", "noise"] as const;
+let invalidateBenchmarkIndex = (): void => {};
 
 type JsonObject = Record<string, unknown>;
 
@@ -42,6 +46,10 @@ async function isNonEmptyFile(file: string): Promise<boolean> {
   }
 }
 
+async function sha256File(file: string): Promise<string> {
+  return createHash("sha256").update(await fs.readFile(file)).digest("hex");
+}
+
 async function isDisplayableRun(
   runDirectory: string,
   simulator: keyof typeof simulatorExtensions,
@@ -50,16 +58,13 @@ async function isDisplayableRun(
   if (
     manifest.status !== "completed"
     || manifest.returnCode !== 0
-    || manifest.astParsedInput !== true
+    || manifest.benchmarkFixtureMode !== "fixed-simulator-native"
+    || manifest.netlistAstUsed !== false
     || manifest.parameterPreservingInput !== true
     || manifest.modelFallbackApplied !== false
     || (
       Array.isArray(manifest.internalFailureMarkers)
       && manifest.internalFailureMarkers.length > 0
-    )
-    || (
-      Array.isArray(manifest.astCompatibilityAdjustments)
-      && manifest.astCompatibilityAdjustments.length > 0
     )
   ) {
     return false;
@@ -86,6 +91,41 @@ async function isDisplayableRun(
   ];
   if (!(await Promise.all(requiredFiles.map(isNonEmptyFile))).every(Boolean)) {
     return false;
+  }
+
+  let fixtureManifest: JsonObject;
+  try {
+    fixtureManifest = await readJson(
+      path.join(runDirectory, "native-fixture-manifest.json"),
+    );
+  } catch {
+    return false;
+  }
+  if (
+    fixtureManifest.fixtureMode !== "fixed-simulator-native"
+    || fixtureManifest.netlistAstUsed !== false
+    || typeof fixtureManifest.benchmarkContractSha256 !== "string"
+    || fixtureManifest.benchmarkContractSha256.length !== 64
+  ) {
+    return false;
+  }
+  const fixtures = asObject(fixtureManifest.fixtures);
+  for (const mode of benchmarkModes) {
+    const fixture = asObject(fixtures[mode]);
+    const archived = path.join(
+      runDirectory,
+      "netlist",
+      `${mode}${simulatorExtensions[simulator]}`,
+    );
+    if (
+      typeof fixture.templateSha256 !== "string"
+      || fixture.templateSha256.length !== 64
+      || typeof fixture.submittedSha256 !== "string"
+      || fixture.submittedSha256.length !== 64
+      || await sha256File(archived) !== fixture.submittedSha256
+    ) {
+      return false;
+    }
   }
 
   let provenance: JsonObject;
@@ -142,7 +182,7 @@ async function isDisplayableRun(
 
 async function discoverAvailableBenchmarkRuns() {
   const runs: JsonObject[] = [];
-  let modelDirectories: Awaited<ReturnType<typeof fs.readdir>> = [];
+  let modelDirectories: Dirent[] = [];
   try {
     modelDirectories = await fs.readdir(benchmarkDataRoot, {
       withFileTypes: true,
@@ -254,6 +294,10 @@ function benchmarkAvailableRunsPlugin() {
     }
     return activeScan;
   };
+  invalidateBenchmarkIndex = () => {
+    cachedIndex = null;
+    cacheCreatedAt = 0;
+  };
 
   return {
     name: "benchmark-available-runs",
@@ -297,10 +341,28 @@ function benchmarkAvailableRunsPlugin() {
   };
 }
 
+function uploadDataPlugin() {
+  return {
+    name: "unified-data-upload",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use(createUploadMiddleware({
+        projectRoot: __dirname,
+        parserPath: path.resolve(
+          __dirname,
+          "..",
+          "rtl2gds-copilot-orchestrator/scripts/result_json_ast.py",
+        ),
+        validateBenchmarkRun: isDisplayableRun,
+        invalidateBenchmarkIndex: () => invalidateBenchmarkIndex(),
+      }));
+    },
+  };
+}
+
 // GitHub **project** Pages serves this app at /website-trial-v1/ (not repo root).
 // Use an explicit prefix in prod so lazy chunks load from the right path.
 export default defineConfig(({ mode }) => ({
-  plugins: [benchmarkAvailableRunsPlugin(), react()],
+  plugins: [benchmarkAvailableRunsPlugin(), uploadDataPlugin(), react()],
   resolve: {
     alias: {
       "@data": path.resolve(__dirname, "data"),

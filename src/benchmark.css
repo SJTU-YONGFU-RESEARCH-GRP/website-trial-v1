@@ -257,6 +257,11 @@
   object-fit: contain;
 }
 
+:root[data-theme="dark"] .benchmark-plot-img-wrap img,
+:root[data-theme="dark"] .benchmark-lightbox img {
+  filter: invert(0.88) hue-rotate(180deg) saturate(1.05);
+}
+
 .benchmark-plot-info {
   display: flex;
   justify-content: space-between;

@@ -598,7 +598,11 @@ def finalize_run(sim_dir: Path, manifest: dict) -> None:
             f"- Simulator: `{manifest['simulator']}`",
             f"- Requested modes: `{', '.join(manifest['modes'])}`",
             f"- Model MD5: `{manifest['checksum']}`",
-            "- Simulator input: parameter-preserving AST serialization of `model.lib`",
+            "- Benchmark circuit: fixed simulator-native fixture; no circuit "
+            "AST or netlist translation",
+            f"- Benchmark contract SHA-256: "
+            f"`{manifest.get('benchmarkContractSha256')}`",
+            "- Model input: parameter-preserving AST serialization of `model.lib`",
             "- Model fallback or parameter lowering: `none`",
             "- Fixture channel length: `1um` (shared safe collection geometry)",
             (
@@ -640,12 +644,51 @@ def executed_netlists(sim_dir: Path, simulator: str) -> list[dict]:
     ]
 
 
+def fixed_fixture_evidence(sim_dir: Path, simulator: str) -> dict:
+    path = sim_dir / "native-fixture-manifest.json"
+    if not path.is_file():
+        raise RuntimeError(f"missing fixed-fixture manifest: {path}")
+    evidence = json.loads(path.read_text(encoding="utf-8"))
+    if (
+        evidence.get("fixtureMode") != "fixed-simulator-native"
+        or evidence.get("netlistAstUsed") is not False
+    ):
+        raise RuntimeError("benchmark did not use fixed native fixtures")
+    fixtures = evidence.get("fixtures")
+    if not isinstance(fixtures, dict) or set(fixtures) != set(MODES):
+        raise RuntimeError("fixed-fixture manifest is incomplete")
+    extension = NETLIST_EXTENSIONS[simulator]
+    template_hashes = {}
+    submitted_hashes = {}
+    for mode in MODES:
+        item = fixtures[mode]
+        archived = sim_dir / "netlist" / f"{mode}{extension}"
+        actual = hashlib.sha256(archived.read_bytes()).hexdigest()
+        if actual != item.get("submittedSha256"):
+            raise RuntimeError(
+                f"archived {simulator} {mode} deck differs from fixture"
+            )
+        template_hashes[mode] = item["templateSha256"]
+        submitted_hashes[mode] = item["submittedSha256"]
+    return {
+        "benchmarkFixtureMode": "fixed-simulator-native",
+        "netlistAstUsed": False,
+        "fixtureManifest": "native-fixture-manifest.json",
+        "benchmarkContractSha256": evidence.get(
+            "benchmarkContractSha256"
+        ),
+        "fixtureTemplateHashes": template_hashes,
+        "fixtureSubmittedHashes": submitted_hashes,
+    }
+
+
 def collect_root_result_files(sim_dir: Path) -> None:
     data_dir = sim_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     protected = {
         "REPORT.md",
         "manifest.json",
+        "native-fixture-manifest.json",
         "benchmark.log",
         "resource.txt",
     }
@@ -669,8 +712,6 @@ def collect_root_result_files(sim_dir: Path) -> None:
 
 def clean_success_run(sim_dir: Path) -> None:
     for name in (
-        "_translated_input",
-        "_translated_netlists",
         "_ngspice_netlists",
         "spectre_raw",
         "spectre_work",
@@ -723,11 +764,9 @@ def benchmark_simulator(
             simulator,
             "--modes",
             *MODES,
-            "--output-dir",
-            str(model_dir),
-            "--translated-netlist-dir",
-            str(sim_dir / "_translated_input"),
-            "--dpi",
+        "--output-dir",
+        str(model_dir),
+        "--dpi",
             "150",
             "--log-level",
             "WARNING",
@@ -751,9 +790,21 @@ def benchmark_simulator(
             error = str(exc)
         timed_out = return_code != 0 and "124" in str(error)
         netlists = []
+        fixture_evidence = {
+            "benchmarkFixtureMode": "fixed-simulator-native",
+            "netlistAstUsed": False,
+            "fixtureManifest": None,
+            "benchmarkContractSha256": None,
+            "fixtureTemplateHashes": {},
+            "fixtureSubmittedHashes": {},
+        }
         if return_code == 0:
             try:
                 netlists = executed_netlists(sim_dir, simulator)
+                fixture_evidence = fixed_fixture_evidence(
+                    sim_dir,
+                    simulator,
+                )
             except Exception as exc:
                 return_code = 1
                 error = str(exc)
@@ -763,7 +814,7 @@ def benchmark_simulator(
             "modelName": record["model_name"],
             "modelPath": str(model_path),
             "benchmarkInputPath": str(benchmark_model_path),
-            "astNormalizedInput": True,
+            **fixture_evidence,
             "parameterPreservingInput": True,
             "modelFallbackApplied": False,
             "checksum": checksum,

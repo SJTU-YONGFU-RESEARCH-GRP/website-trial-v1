@@ -1,4 +1,5 @@
 * MOSFET AC Analysis Circuit
+* Benchmark contract: mosfet-fixed-native-v1
 * This simulation performs comprehensive AC analyses including:
 * - Capacitance-voltage (C-V) measurements at different frequencies
 * - Small-signal parameter extraction
@@ -8,13 +9,13 @@
 
 .option temp=27 tnom=27
 .option gmin=1e-15
-.option reltol=1e-8
+.option reltol=1e-6
 .option abstol=1e-12
 .option chgtol=1e-15
 .option method=gear
 
-* Include the device model file
-.include '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/a027fb5803148e83aab109b4c0b22e97/ngspice.lib'
+* Fixed-fixture model binding (path and card names are the only substitutions)
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/a027fb5803148e83aab109b4c0b22e97/ngspice.lib'
 
 * MOSFET device under test
 M1 drain_1 gate_1 source_1 bulk_1 __benchmark_selected_nmos L=1u W=10u

@@ -208,7 +208,6 @@ export interface BenchmarkConfig {
   scope: BenchmarkScope;
   dpi: number;
   benchmarkMonteCarloSamples: number;
-  customNetlists?: string[];
   concurrencyLimit?: number;
 }
 

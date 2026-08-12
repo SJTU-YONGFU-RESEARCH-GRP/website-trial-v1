@@ -1,4 +1,5 @@
 * MOSFET AC Analysis Circuit
+* Benchmark contract: mosfet-fixed-native-v1
 * This simulation performs comprehensive AC analyses including:
 * - Capacitance-voltage (C-V) measurements at different frequencies
 * - Small-signal parameter extraction
@@ -13,11 +14,11 @@
 .option chgtol=1e-15
 .option method=gear
 
-* Include the device model file
-.include '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/35c51eb2c9233d013d733a2942a7daa4/ngspice.lib'
+* Fixed-fixture model binding (path and card names are the only substitutions)
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/35c51eb2c9233d013d733a2942a7daa4/ngspice.lib'
 
 * MOSFET device under test
-M1 drain_1 gate_1 source_1 bulk_1 __benchmark_selected_nmos L=5.0250000000000006e-07 W=9.9749999999999998e-07
+M1 drain_1 gate_1 source_1 bulk_1 __benchmark_selected_nmos L=1u W=10u
 
 * Test circuit for capacitance and small-signal parameter measurements
 * Gate voltage source with AC component for small-signal analysis
@@ -35,7 +36,7 @@ VB bulk_1 0 DC 0 AC 0
 * for high-frequency characterization
 * ------------------------------------------------------
 * S-parameter test transistor
-M2 drain_2 gate_2 0 0 __benchmark_selected_nmos L=5.0250000000000006e-07 W=9.9749999999999998e-07
+M2 drain_2 gate_2 0 0 __benchmark_selected_nmos L=1u W=10u
 
 * 2-port definition: Port1=Gate, Port2=Drain (Z0=50 ohm)
 * Use 50-ohm series resistors between the port voltage sources and the device terminals.
@@ -50,7 +51,7 @@ VDS drain_in2 0 DC 1.0 AC 0
 * Charge conservation test circuit
 * ------------------------------------------------------
 * MOSFET for charge conservation test
-M3 drain_3 gate_3 source_3 bulk_3 __benchmark_selected_nmos L=5.0250000000000006e-07 W=9.9749999999999998e-07
+M3 drain_3 gate_3 source_3 bulk_3 __benchmark_selected_nmos L=1u W=10u
 
 * Transient voltage source for gate
 VGQ gate_3 0 DC 0 PWL(0 0 1n 0 2n 1.0 5n 1.0)

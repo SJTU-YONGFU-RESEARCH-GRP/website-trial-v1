@@ -371,7 +371,7 @@
   object-fit: contain;
   border-radius: 4px;
   cursor: pointer;
-  background: #fff;
+  background: var(--plot-inset-bg, #fafafa);
 }
 
 .bmw-model-plot-panel .bmw-plot-title {
@@ -652,23 +652,23 @@
 }
 
 .bmw-status-pass {
-  background: #e6f7e6;
-  color: #1a7a1a;
+  background: var(--status-pass-bg, #e6f7e6);
+  color: var(--status-pass-text, #1a7a1a);
 }
 
 .bmw-status-fail {
-  background: #fde8e8;
-  color: #c41e1e;
+  background: var(--status-fail-bg, #fde8e8);
+  color: var(--status-fail-text, #c41e1e);
 }
 
 .bmw-status-partial {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--status-partial-bg, #fef3c7);
+  color: var(--status-partial-text, #92400e);
 }
 
 .bmw-status-unavailable {
-  background: #f3f4f6;
-  color: #9ca3af;
+  background: var(--status-unavailable-bg, #f3f4f6);
+  color: var(--status-unavailable-text, #747b87);
 }
 
 /* ─── Verdict Grid ─── */
@@ -745,10 +745,10 @@
   opacity: 0.75;
 }
 
-.bmw-verdict-cell.bmw-status-pass { background: #e6f7e6; color: #1a7a1a; }
-.bmw-verdict-cell.bmw-status-fail { background: #fde8e8; color: #c41e1e; }
-.bmw-verdict-cell.bmw-status-partial { background: #fef3c7; color: #92400e; }
-.bmw-verdict-cell.bmw-status-unavailable { background: #f9fafb; color: #bbb; }
+.bmw-verdict-cell.bmw-status-pass { background: var(--status-pass-bg, #e6f7e6); color: var(--status-pass-text, #1a7a1a); }
+.bmw-verdict-cell.bmw-status-fail { background: var(--status-fail-bg, #fde8e8); color: var(--status-fail-text, #c41e1e); }
+.bmw-verdict-cell.bmw-status-partial { background: var(--status-partial-bg, #fef3c7); color: var(--status-partial-text, #92400e); }
+.bmw-verdict-cell.bmw-status-unavailable { background: var(--status-unavailable-bg, #f3f4f6); color: var(--status-unavailable-text, #747b87); }
 
 /* ─── Lightbox ─── */
 .bmw-lightbox-overlay {
@@ -1104,10 +1104,10 @@
   font-weight: 800;
 }
 
-.rv-status-pass    { background: #e6f7e6; color: #2d8a2d; }
-.rv-status-fail    { background: #fde8e8; color: #c53030; }
-.rv-status-progress { background: #fef3c7; color: #b7791f; }
-.rv-status-unavail { background: #f0f0f0; color: #999; }
+.rv-status-pass    { background: var(--status-pass-bg, #e6f7e6); color: var(--status-pass-text, #1a7a1a); }
+.rv-status-fail    { background: var(--status-fail-bg, #fde8e8); color: var(--status-fail-text, #c41e1e); }
+.rv-status-progress { background: var(--status-partial-bg, #fef3c7); color: var(--status-partial-text, #92400e); }
+.rv-status-unavail { background: var(--status-unavailable-bg, #f3f4f6); color: var(--status-unavailable-text, #747b87); }
 
 /* Plot references */
 .rv-plot-strip {
@@ -1183,8 +1183,26 @@
   display: block;
   min-height: 150px;
   object-fit: contain;
-  background: #fafafa;
+  background: var(--plot-inset-bg, #fafafa);
 }
+
+/* The benchmark plots are raster files with a baked-in white canvas. In dark
+   mode, invert luminance while rotating hue back by 180deg: white/black become
+   dark/light, while colored traces retain approximately their original hue.
+   This is display-only and never modifies the source artifact. */
+:root[data-theme="dark"] .bmw-model-plot-panel img,
+:root[data-theme="dark"] .rv-plot-embed-fig img,
+:root[data-theme="dark"] .bmw-lightbox-img,
+:root[data-theme="dark"] .rv-lightbox-image {
+  filter: invert(0.88) hue-rotate(180deg) saturate(1.05);
+}
+
+/* Markdown reports contain legacy inline status colors. Keep their meaning,
+   but make the text readable on both theme surfaces. */
+.rv-section span[style*="color: green"] { color: var(--ok, green) !important; }
+.rv-section span[style*="color: red"] { color: var(--fail, red) !important; }
+.rv-section span[style*="color: gray"],
+.rv-section span[style*="color: grey"] { color: var(--muted, gray) !important; }
 .rv-plot-image-fig img {
   min-height: 0;
 }

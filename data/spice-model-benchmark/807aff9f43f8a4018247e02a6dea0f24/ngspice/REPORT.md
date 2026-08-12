@@ -1,5 +1,5 @@
 # MOSFET Simulation Verification Report
-Generated on: 2026-07-28 20:59:12
+Generated on: 2026-07-30 01:01:15
 
 ## Table of Contents
 1. [Simulation Setup and Execution](#1-simulation-setup-and-execution)
@@ -56,27 +56,27 @@ Generated on: 2026-07-28 20:59:12
 | Check Type | Status | Key Findings |
 |-----------|--------|-------------|
 | [Small Signal Analysis](#small-signal-analysis) | <span style='color: green'>✓</span> | Gate capacitance range: 24.20fF to 65.68fF |
-| [S-Parameter Analysis](#s-parameter-analysis) | <span style='color: green'>✓</span> | S11 range: -0dB to 0dB, S21 range: -25dB to -25dB |
+| [S-Parameter Analysis](#s-parameter-analysis) | <span style='color: green'>✓</span> | S11 range: -0.00697757dB to 0dB, S21 range: -25.4214dB to -25.1455dB |
 | [Non-Quasi-Static (NQS) Effects Analysis](#non-quasi-static-effects-analysis) | <span style='color: green'>✓</span> | Max phase shift: 179.851 |
 | [Charge Conservation Analysis](#charge-conservation-analysis) | <span style='color: green'>✓</span> | Total charge error: 0.0 |
 
 ### Transient Analysis Summary
 | Check Type | Status | Key Findings |
 |-----------|--------|-------------|
-| [Large-Signal Transient](#large-signal-transient) | <span style='color: green'>✓</span> | Max Current: 3.629e-05A, Rise Time: 0.4ps |
-| [Switching Simulations](#switching-simulations) | <span style='color: green'>✓</span> | Propagation Delay: 200.0ps, Power: 7.704e-05W (max), 1.432e-06W (avg) |
-| [Delay Effect](#delay-effect-simulations) | <span style='color: green'>✓</span> | Total Chain Delay: 1381.2ps |
-| [Power Dissipation](#transient-simulations-for-power-dissipation) | <span style='color: green'>✓</span> | Temp Coeff: 2.053330e-08W/°C |
+| [Large-Signal Transient](#large-signal-transient) | <span style='color: green'>✓</span> | Max Current: 3.588e-05A, Rise Time: 400ps |
+| [Switching Simulations](#switching-simulations) | <span style='color: green'>✓</span> | Propagation Delay: 195.316ps (sample interval 10ps), Power: 7.704e-05W (max), 1.887e-06W (avg) |
+| [Delay Effect](#delay-effect-simulations) | <span style='color: green'>✓</span> | Total Chain Delay: 1375.77ps (sample interval 10ps) |
+| [Power Dissipation](#transient-simulations-for-power-dissipation) | <span style='color: green'>✓</span> | Temp Coeff: 2.052839e-08W/°C |
 | [Quasi-Static Analysis](#quasi-static-analysis) | <span style='color: green'>✓</span> | I-V characteristics analyzed: None |
 | [Charge Conservation](#charge-conservation-checks) | <span style='color: green'>✓</span> | Error: None |
 
 ### Noise Analysis Summary
 | Check Type | Status | Key Findings |
 |-----------|--------|-------------|
-| [Thermal Noise](#thermal-noise-analysis) | <span style='color: green'>✓</span> | Floor: 3.44e-09 V²/Hz, Range: 2.16e-15 V²/Hz to 1.36e-08 V²/Hz |
-| [Flicker (1/f) Noise](#flicker-noise-analysis) | <span style='color: green'>✓</span> | Exponent: 0.4961, Corner Freq: not resolved |
-| [Shot Noise](#shot-noise-analysis) | <span style='color: green'>✓</span> | Level: 3.93e-06 V²/Hz, Variation: 2.0451 |
-| [Temperature Dependence](#temperature-dependence) | <span style='color: green'>✓</span> | Coefficient: 6.08e-12 V²/Hz/°C, Range: -40.0°C to 150.0°C |
+| [Thermal Noise](#thermal-noise-analysis) | <span style='color: green'>✓</span> | Floor: 6.86e-09 V²/Hz, Range: 2.51e-11 V²/Hz to 1.90e-07 V²/Hz |
+| [Flicker (1/f) Noise](#flicker-noise-analysis) | <span style='color: green'>✓</span> | Exponent: 0.4985, Corner Freq: not resolved |
+| [Shot Noise](#shot-noise-analysis) | <span style='color: green'>✓</span> | Level: 5.34e-07 V²/Hz, Variation: 2.0478 |
+| [Temperature Dependence](#temperature-dependence) | <span style='color: green'>✓</span> | Coefficient: 2.73e-10 V²/Hz/°C, Range: -40.0°C to 150.0°C |
 | [Bias Dependence](#bias-dependence) | <span style='color: green'>✓</span> | Analyzed at 6 bias points |
 
 ## 3. DC Analysis
@@ -140,8 +140,8 @@ Generated on: 2026-07-28 20:59:12
 ## 4. Transient Analysis
 ### Large-Signal Transient
 - [<span style='color: green'>✓</span>] Large Signal Transient Verified
-  - Maximum Drain Current: 3.628827e-05A
-  - Gate Voltage Rise Time: 0.4ps
+  - Maximum Drain Current: 3.588071e-05A
+  - Gate Voltage Rise Time: 400ps
 
 *Large-signal transient analysis showing voltages and current response*
 
@@ -149,11 +149,12 @@ Generated on: 2026-07-28 20:59:12
 
 ### Switching Simulations
 - [<span style='color: green'>✓</span>] Propagation Delay Verified
-  - Propagation Delay: 200.0ps
+  - Propagation Delay: 195.316ps
+  - Transient sample interval: 10ps
 
-  - Maximum Switching Power: 7.704165e-05W
+  - Maximum Switching Power: 7.704344e-05W
 
-  - Average Switching Power: 1.431884e-06W
+  - Average Switching Power: 1.886942e-06W
 
 *Inverter switching analysis showing input/output voltages and power*
 
@@ -161,13 +162,14 @@ Generated on: 2026-07-28 20:59:12
 
 ### Delay Effect Simulations
 - [<span style='color: green'>✓</span>] Propagation delay through inverter chain analyzed
-  - Stage 1 Delay: 322.1ps
+  - Stage 1 Delay: 316.287ps
 
-  - Stage 2 Delay: 619.0ps
+  - Stage 2 Delay: 682.888ps
 
-  - Stage 3 Delay: 440.0ps
+  - Stage 3 Delay: 440.485ps
 
-  - Total Delay: 1381.2ps
+  - Total Delay: 1375.77ps
+  - Transient sample interval: 10ps
 
 *Delay effect analysis showing signal propagation through inverter chain*
 
@@ -175,15 +177,15 @@ Generated on: 2026-07-28 20:59:12
 
 ### Transient Simulations for Power Dissipation
 - [<span style='color: green'>✓</span>] Temperature-dependent power analysis completed
-  - Maximum Power at 27°C: 7.704165e-05W
+  - Maximum Power at 27°C: 7.704344e-05W
 
-  - Maximum Power at 100°C: 7.854059e-05W
+  - Maximum Power at 100°C: 7.854201e-05W
 
-  - Average Power at 27°C: 1.431884e-06W
+  - Average Power at 27°C: 1.886942e-06W
 
-  - Average Power at 100°C: 1.467697e-06W
+  - Average Power at 100°C: 1.957242e-06W
 
-  - Power Temperature Coefficient: 2.053330e-08W/°C
+  - Power Temperature Coefficient: 2.052839e-08W/°C
 
 *Power dissipation analysis at different temperatures*
 
@@ -223,7 +225,7 @@ Generated on: 2026-07-28 20:59:12
 ### Small-Signal Analysis
 - [<span style='color: green'>✓</span>] AC small-signal simulations verified
   - Gate capacitance range: 24.20fF to 65.68fF
-  - Frequency range: 1.00e+06Hz to 1.00e+09Hz
+  - Frequency range: 1MHz to 1GHz
   - Max capacitance at: 0.00V
 
 *CV characteristics showing gate capacitance variation with gate voltage*
@@ -255,14 +257,14 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 
 ### S-Parameter Analysis
 - [<span style='color: green'>✓</span>] High-frequency AC simulations verified
-  - Frequency range: 1.0MHz to 1.0GHz
+  - Frequency range: 1MHz to 1GHz
 - [<span style='color: green'>✓</span>] S-parameter analysis verified
-  - S11 range: -0dB to 0dB
-  - S21 range: -25dB to -25dB
-  - S12 range: -113dB to -53dB
-  - S22 range: -0dB to -0dB
+  - S11 range: -0.00697757dB to 0dB
+  - S21 range: -25.4214dB to -25.1455dB
+  - S12 range: -113.253dB to -53.2602dB
+  - S22 range: -0.00311011dB to -0.0025714dB
 - [<span style='color: green'>✓</span>] RF simulations verified
-  - Isolation: >-28dB
+  - Isolation: >-28.1147dB
 
 *S-Parameter analysis showing frequency response characteristics*
 
@@ -271,7 +273,7 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 ### Non-Quasi-Static Effects Analysis
 - [<span style='color: green'>✓</span>] NQS effects verified
   - Maximum phase shift: 179.851
-  - Frequency range: 10.0MHz to 10.0GHz
+  - Frequency range: 10MHz to 10GHz
 
 *Non-quasi-static effects analysis showing phase shift between gate voltage and drain current*
 
@@ -290,11 +292,11 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 ## 6. Noise Analysis
 ### Thermal Noise Analysis
 - [<span style='color: green'>✓</span>] Thermal noise analysis completed
-  - Max Noise: 1.36e-08 V²/Hz
-  - Min Noise: 2.16e-15 V²/Hz
-  - Avg Noise: 3.79e-09 V²/Hz
-  - Noise Floor: 3.44e-09 V²/Hz
-  - Frequency Range: 0.0MHz to 1.0GHz
+  - Max Noise: 1.90e-07 V²/Hz
+  - Min Noise: 2.51e-11 V²/Hz
+  - Avg Noise: 6.30e-09 V²/Hz
+  - Noise Floor: 6.86e-09 V²/Hz
+  - Frequency Range: 1Hz to 1GHz
 
 *Thermal noise power spectral density analysis comparing different bias conditions, showing how the device noise characteristics change with bias voltage.*
 
@@ -302,9 +304,9 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 
 ### Flicker Noise Analysis
 - [<span style='color: green'>✓</span>] Flicker noise analysis completed
-  - Coefficient (K): 2.00e+04
-  - Exponent (γ): 4.96e-01 (ideally -1.0 for pure 1/f noise)
-  - Correlation (R²): 0.9999
+  - Coefficient (K): 1.90e-07
+  - Exponent (γ): 4.99e-01 (ideally -1.0 for pure 1/f noise)
+  - Correlation (R²): 1.0000
   - Corner Frequency: *Not measured*
 
 *Flicker (1/f) noise analysis showing the power spectral density decreasing with frequency, a characteristic behavior in semiconductor devices associated with trapping/detrapping processes.*
@@ -313,9 +315,9 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 
 ### Short Noise Analysis
 - [<span style='color: green'>✓</span>] Short noise analysis completed
-  - Shot Noise Level: 3.93e-06 V²/Hz
-  - Standard Deviation: 8.04e-06 V²/Hz
-  - Variation Coefficient: 2.0451
+  - Shot Noise Level: 5.34e-07 V²/Hz
+  - Standard Deviation: 1.09e-06 V²/Hz
+  - Variation Coefficient: 2.0478
 
 *Shot noise analysis showing the frequency-independent noise component that arises from the discrete nature of electric charge carriers crossing potential barriers.*
 
@@ -323,8 +325,8 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 
 ### Temperature Dependence
 - [<span style='color: green'>✓</span>] Short noise analysis completed
-  - Temperature Coefficient: 6.08e-12 V²/Hz/°C
-  - Temperature-Noise Correlation: 0.9989296819398121
+  - Temperature Coefficient: 2.73e-10 V²/Hz/°C
+  - Temperature-Noise Correlation: 0.9934622404108694
   - Temperature Range: -40.0°C to 150.0°C
 
 *Noise variation with temperature, illustrating how thermal effects influence the device's noise characteristics across the operational temperature range.*
@@ -337,12 +339,12 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 
 | Bias Condition | Max Noise (V²/Hz) | Min Noise (V²/Hz) | Avg Noise (V²/Hz) | Noise Floor (V²/Hz) |
 |----------------|-------------------|-------------------|-------------------|--------------------|
-| Vgs=0.3V, Vds=0.3V | 1.36e-08 | 2.16e-15 | 3.79e-09 | 6.90e-12 |
-| Vgs=0.3V, Vds=0.6V | 1.36e-08 | 2.16e-15 | 3.79e-09 | 6.90e-12 |
-| Vgs=0.3V, Vds=0.9V | 1.36e-08 | 2.16e-15 | 3.79e-09 | 6.90e-12 |
-| Vgs=0.3V, Vds=1.2V | 1.36e-08 | 2.16e-15 | 3.79e-09 | 6.90e-12 |
-| Vgs=0.6V, Vds=0.3V | 1.36e-08 | 2.16e-15 | 3.79e-09 | 6.90e-12 |
-| Vgs=0.6V, Vds=0.6V | 1.36e-08 | 2.16e-15 | 3.79e-09 | 6.90e-12 |
+| Vgs=0.3V, Vds=0.3V | 1.11e-10 | 2.52e-11 | 3.13e-11 | 2.52e-11 |
+| Vgs=0.3V, Vds=0.6V | 1.16e-10 | 2.51e-11 | 3.17e-11 | 2.52e-11 |
+| Vgs=0.3V, Vds=0.9V | 1.21e-10 | 2.51e-11 | 3.21e-11 | 2.52e-11 |
+| Vgs=0.3V, Vds=1.2V | 1.25e-10 | 2.51e-11 | 3.24e-11 | 2.52e-11 |
+| Vgs=0.6V, Vds=0.3V | 1.83e-07 | 8.98e-10 | 1.85e-08 | 9.52e-10 |
+| Vgs=0.6V, Vds=0.6V | 1.90e-07 | 8.97e-10 | 1.92e-08 | 9.55e-10 |
 
 <!-- collection-run-integrity -->
 ## Run Integrity
@@ -351,12 +353,13 @@ Capacitance components (Cgb, Cgs, Cgd) variation with gate voltage*
 - Model MD5: `807aff9f43f8a4018247e02a6dea0f24`
 - Simulator: `ngspice`
 - Modes: `dc, transient, ac, noise`
-- Started: `2026-07-28T12:26:12.463116+00:00`
-- Finished: `2026-07-28T12:59:55.138511+00:00`
-- Elapsed seconds: `2022.675409`
-- Peak resident memory KiB: `225264`
+- Started: `2026-07-29T16:59:05.117531+00:00`
+- Finished: `2026-07-29T17:01:39.629301+00:00`
+- Elapsed seconds: `154.511775`
+- Peak resident memory KiB: `238284`
 - Process return code: `0`
-- Input passed SPICE-Model-AST immediately before simulator handoff.
+- Benchmark circuit: fixed, source-controlled simulator-native fixture; no circuit AST or netlist translation was used.
+- Benchmark contract SHA-256: `8b8fd67ae3dd54834b283ee6d3f132cd79406c04868a9e13f5404c2e0a8b3931`
 - Device-model handoff preserved model names, polarity, and every AST parameter; no fallback or parameter lowering was applied.
 - Executed netlists: `netlist/dc`, `netlist/transient`, `netlist/ac`, and `netlist/noise` (simulator-native extensions).
 - Plot inventory: `26` non-empty PNG files generated from simulator data.

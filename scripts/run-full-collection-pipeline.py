@@ -995,16 +995,9 @@ def complete_missing_card_models() -> list[dict[str, Any]]:
 
 
 def benchmark_dut_geometry(model_path: Path) -> tuple[str, str]:
-    """Return the exact stock-fixture W/L requested by the model handoff."""
-    text = model_path.read_text(errors="replace")
-    match = re.search(
-        r"(?im)^\s*\*\s*BENCHMARK_DUT_GEOMETRY_OVERRIDE:\s*"
-        r"L=(\S+)\s+W=(\S+)\s*$",
-        text,
-    )
-    if match is None:
-        return "10u", "1u"
-    return match.group(2), match.group(1)
+    """Return the frozen native-fixture geometry (W=10 µm, L=1 µm)."""
+    del model_path
+    return "10u", "1u"
 
 
 def ngspice_capability_preflight(
@@ -1203,9 +1196,8 @@ def spectre_capability_preflight(
     lines = [
         "simulator lang=spectre",
         "global 0",
-        "preflightOptions options reltol=1e-3 vabstol=1e-6 "
-        "iabstol=1e-12 gmin=1e-12 max_approach_minstep=10000 "
-        "max_minstep_nonconv=10000",
+        "preflightOptions options reltol=1e-8 vabstol=1e-6 "
+        "iabstol=1e-12 gmin=1e-15 method=gear2only",
         "simulator lang=spice",
         f".include '{model_path.resolve()}'",
         ".model __preflight_nmos NMOS "
@@ -1273,8 +1265,7 @@ def spectre_capability_preflight(
         return False, "no MOS cards available for capability preflight"
     lines.extend(
         (
-            "preflight tran stop=1p maxstep=1p minstep=1e-18 "
-            "method=gear2only maxiters=50 cmin=1e-18",
+            "preflight tran stop=1p maxstep=1p method=gear2only",
             "",
         )
     )
@@ -1313,7 +1304,7 @@ def spectre_capability_preflight(
 
 
 def prepare_benchmark_input(record: dict[str, Any], simulator: str) -> tuple[Path, list[str]]:
-    """Create a parameter-preserving AST handoff and validate it natively."""
+    """Create a parameter-preserving model handoff and validate it natively."""
     source = Path(record["finalModel"])
     destination = (
         WORK_ROOT / "benchmark-inputs" / record["md5"] / f"{simulator}.lib"
@@ -1440,6 +1431,7 @@ def collect_root_result_files(sim_dir: Path) -> None:
     protected = {
         "REPORT.md",
         "manifest.json",
+        "native-fixture-manifest.json",
         "benchmark.log",
         "resource.txt",
     }
@@ -1520,7 +1512,10 @@ def finalize_report(sim_dir: Path, manifest: dict[str, Any]) -> None:
         f"- Elapsed seconds: `{manifest['elapsedSeconds']}`",
         f"- Peak resident memory KiB: `{manifest['peakRssKiB']}`",
         f"- Process return code: `{manifest['returnCode']}`",
-        "- Input passed SPICE-Model-AST immediately before simulator handoff.",
+        "- Benchmark circuit: fixed, source-controlled simulator-native "
+        "fixture; no circuit AST or netlist translation was used.",
+        f"- Benchmark contract SHA-256: "
+        f"`{manifest['benchmarkContractSha256']}`",
         "- Device-model handoff preserved model names, polarity, and every AST "
         "parameter; no fallback or parameter lowering was applied.",
         "- Executed netlists: `netlist/dc`, `netlist/transient`, "
@@ -1534,8 +1529,6 @@ def finalize_report(sim_dir: Path, manifest: dict[str, Any]) -> None:
 
 def remove_run_scratch(sim_dir: Path) -> None:
     for name in (
-        "_translated_input",
-        "_translated_netlists",
         "_ngspice_netlists",
         "spectre_raw",
         "spectre_work",
@@ -1589,6 +1582,66 @@ def executed_netlist_inventory(
         }
         for mode, path in expected.items()
     ]
+
+
+def fixed_fixture_evidence(
+    sim_dir: Path,
+    simulator: str,
+) -> dict[str, Any]:
+    """Validate the immutable fixture manifest against archived run decks."""
+    manifest_path = sim_dir / "native-fixture-manifest.json"
+    if not manifest_path.is_file():
+        raise ValueError(f"missing fixed-fixture manifest: {manifest_path}")
+    evidence = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if evidence.get("fixtureMode") != "fixed-simulator-native":
+        raise ValueError("benchmark did not use fixed simulator-native fixtures")
+    if evidence.get("netlistAstUsed") is not False:
+        raise ValueError("benchmark used a circuit/netlist AST")
+    contract_hash = evidence.get("benchmarkContractSha256")
+    if not isinstance(contract_hash, str) or len(contract_hash) != 64:
+        raise ValueError("fixed-fixture contract hash is missing")
+    allowed = evidence.get("allowedRuntimeBindings")
+    if allowed != [
+        "model_file",
+        "primary_model",
+        "nmos_model",
+        "pmos_model",
+    ]:
+        raise ValueError(f"unexpected runtime fixture bindings: {allowed}")
+    fixtures = evidence.get("fixtures")
+    if not isinstance(fixtures, dict) or set(fixtures) != set(MODES):
+        raise ValueError("fixed-fixture manifest does not cover four modes")
+    extension = NETLIST_EXTENSIONS[simulator]
+    template_hashes: dict[str, str] = {}
+    submitted_hashes: dict[str, str] = {}
+    for mode in MODES:
+        item = fixtures.get(mode)
+        if not isinstance(item, dict):
+            raise ValueError(f"invalid fixed-fixture entry for {mode}")
+        template_hash = item.get("templateSha256")
+        submitted_hash = item.get("submittedSha256")
+        if (
+            not isinstance(template_hash, str)
+            or len(template_hash) != 64
+            or not isinstance(submitted_hash, str)
+            or len(submitted_hash) != 64
+        ):
+            raise ValueError(f"invalid fixed-fixture hashes for {mode}")
+        archived = sim_dir / "netlist" / f"{mode}{extension}"
+        if digest(archived, "sha256") != submitted_hash:
+            raise ValueError(
+                f"archived {simulator} {mode} deck differs from submitted fixture"
+            )
+        template_hashes[mode] = template_hash
+        submitted_hashes[mode] = submitted_hash
+    return {
+        "benchmarkFixtureMode": "fixed-simulator-native",
+        "netlistAstUsed": False,
+        "fixtureManifest": "native-fixture-manifest.json",
+        "benchmarkContractSha256": contract_hash,
+        "fixtureTemplateHashes": template_hashes,
+        "fixtureSubmittedHashes": submitted_hashes,
+    }
 
 
 def run_one_benchmark(
@@ -1657,11 +1710,16 @@ def run_one_benchmark(
             "chain": record["chain"],
             "modelPath": str(model_dir / "model.lib"),
             "benchmarkInputPath": str(benchmark_input),
-            "astParsedInput": benchmark_input.is_file(),
+            "benchmarkFixtureMode": "fixed-simulator-native",
+            "netlistAstUsed": False,
+            "fixtureManifest": None,
+            "benchmarkContractSha256": None,
+            "fixtureTemplateHashes": {},
+            "fixtureSubmittedHashes": {},
             "parameterPreservingInput": parameter_preserving,
             "modelFallbackApplied": False,
             "parameterContext": parameter_context,
-            "benchmarkFixtureAdjustments": [],
+            "modelHandoffAdjustments": [],
             "md5": record["md5"],
             "simulator": simulator,
             "modes": list(MODES),
@@ -1702,8 +1760,6 @@ def run_one_benchmark(
         *MODES,
         "--output-dir",
         str(model_dir),
-        "--translated-netlist-dir",
-        str(sim_dir / "_translated_input"),
         "--dpi",
         "120",
         "--log-level",
@@ -1739,9 +1795,18 @@ def run_one_benchmark(
             + " | ".join(marker.strip() for marker in internal_markers[:8])
         )
     netlists: list[dict[str, Any]] = []
+    fixture_evidence: dict[str, Any] = {
+        "benchmarkFixtureMode": "fixed-simulator-native",
+        "netlistAstUsed": False,
+        "fixtureManifest": None,
+        "benchmarkContractSha256": None,
+        "fixtureTemplateHashes": {},
+        "fixtureSubmittedHashes": {},
+    }
     if return_code == 0:
         try:
             netlists = executed_netlist_inventory(sim_dir, simulator)
+            fixture_evidence = fixed_fixture_evidence(sim_dir, simulator)
         except Exception as exc:
             return_code = 3
             error = str(exc)
@@ -1752,11 +1817,11 @@ def run_one_benchmark(
         "chain": record["chain"],
         "modelPath": str(model_dir / "model.lib"),
         "benchmarkInputPath": str(benchmark_input),
-        "astParsedInput": True,
+        **fixture_evidence,
         "parameterPreservingInput": True,
         "modelFallbackApplied": False,
         "parameterContext": parameter_context,
-        "benchmarkFixtureAdjustments": adjustments,
+        "modelHandoffAdjustments": adjustments,
         "md5": record["md5"],
         "simulator": simulator,
         "modes": list(MODES),
@@ -1850,6 +1915,9 @@ def acceptance_failures(
         "peakRssKiB",
         "simulator",
         "status",
+        "benchmarkFixtureMode",
+        "netlistAstUsed",
+        "benchmarkContractSha256",
         "parameterPreservingInput",
         "modelFallbackApplied",
     )
@@ -1862,6 +1930,10 @@ def acceptance_failures(
         failures.append("manifest md5 mismatch")
     if manifest.get("simulator") != simulator:
         failures.append("manifest simulator mismatch")
+    if manifest.get("benchmarkFixtureMode") != "fixed-simulator-native":
+        failures.append("benchmark did not use fixed native fixtures")
+    if manifest.get("netlistAstUsed") is not False:
+        failures.append("benchmark used a circuit/netlist AST")
     if manifest.get("parameterPreservingInput") is not True:
         failures.append("benchmark input is not parameter-preserving")
     if manifest.get("modelFallbackApplied") is not False:
@@ -1870,13 +1942,18 @@ def acceptance_failures(
         failures.append("invalid elapsedSeconds")
     try:
         actual_netlists = executed_netlist_inventory(sim_dir, simulator)
+        actual_fixture = fixed_fixture_evidence(sim_dir, simulator)
     except Exception as exc:
         failures.append(str(exc))
         actual_netlists = []
+        actual_fixture = {}
     if manifest.get("netlistDirectory") != "netlist":
         failures.append("manifest netlistDirectory mismatch")
     if manifest.get("netlists") != actual_netlists:
         failures.append("manifest netlist inventory mismatch")
+    for key, value in actual_fixture.items():
+        if manifest.get(key) != value:
+            failures.append(f"manifest fixed-fixture evidence mismatch: {key}")
     images = sorted(plot_dir.glob("*.png"))
     if len(images) != len(EXPECTED_PLOTS):
         failures.append(f"plot count {len(images)}")
@@ -1887,6 +1964,9 @@ def acceptance_failures(
         failures.append("empty plot")
     if not any(path.is_file() and path.stat().st_size > 0 for path in data_dir.iterdir()):
         failures.append("empty data directory")
+    large_signal_caps = data_dir / "large_signal_caps.txt"
+    if not large_signal_caps.is_file() or large_signal_caps.stat().st_size == 0:
+        failures.append("missing large_signal_caps.txt")
     provenance_path = data_dir / "plot_provenance.json"
     if not provenance_path.is_file():
         failures.append("missing plot provenance")
@@ -2045,6 +2125,7 @@ def acceptance_failures(
         "netlist",
         "REPORT.md",
         "manifest.json",
+        "native-fixture-manifest.json",
     }
     unexpected_entries = sorted(
         path.name for path in sim_dir.iterdir()
@@ -2158,6 +2239,11 @@ def main() -> int:
 
     if args.stage in {"generate", "all"}:
         records = generate_models(force=args.force, jobs=max(1, args.tool_jobs))
+        # A fresh collection generation is file-based. Ten PTM files contain
+        # a second MOS card, so complete the logical-card inventory before an
+        # `all` run enters the benchmark matrix and final 64/256 audit.
+        if args.stage == "all":
+            records = complete_missing_card_models()
     elif args.stage == "complete":
         records = complete_missing_card_models()
     else:

@@ -6,7 +6,8 @@
 
 import type { Config, Data } from "plotly.js";
 import { usePlotlyChart } from "../../hooks/usePlotlyChart";
-import { CHART_FONT_FAMILY, CHART_FONT_SIZE } from "../../theme/chartPalette";
+import { CHART_FONT_FAMILY, CHART_FONT_SIZE, getChartPalette } from "../../theme/chartPalette";
+import { useTheme } from "../../theme/ThemeContext";
 import type { WorkflowScenario, SimulatorId, AnalysisDomain } from "../../compat/spiceWorkflow/contracts";
 import { getResultForCell } from "../../data/benchmarkWorkspace/selectors";
 import { formatMs, formatMB } from "../../compat/spiceWorkflow/formatters";
@@ -26,6 +27,8 @@ const SIM_LABELS: Record<SimulatorId, string> = {
 interface Props { scenario: WorkflowScenario; modelId: string; simulators: SimulatorId[]; domains: AnalysisDomain[] }
 
 export function ExecutionTimeChart({ scenario, modelId, simulators, domains }: Props) {
+  const { theme } = useTheme();
+  const palette = getChartPalette(theme);
   const traces: Data[] = simulators.map((sim) => {
     const values = domains.map((dom) => {
       const r = getResultForCell(scenario, modelId, sim, dom);
@@ -49,7 +52,7 @@ export function ExecutionTimeChart({ scenario, modelId, simulators, domains }: P
     traces,
     {
       barmode: "group",
-      font: { family: CHART_FONT_FAMILY, size: CHART_FONT_SIZE * 0.65, color: "#666" },
+      font: { family: CHART_FONT_FAMILY, size: CHART_FONT_SIZE * 0.65, color: palette.textMuted },
       margin: { l: 50, r: 20, t: 10, b: 40 },
       xaxis: { title: { text: "" }, tickfont: { size: 11 } },
       yaxis: { title: { text: "Elapsed time (ms)", font: { size: 11 } }, tickfont: { size: 10 } },
@@ -64,6 +67,8 @@ export function ExecutionTimeChart({ scenario, modelId, simulators, domains }: P
 }
 
 export function PeakMemoryChart({ scenario, modelId, simulators, domains }: Props) {
+  const { theme } = useTheme();
+  const palette = getChartPalette(theme);
   const traces: Data[] = simulators.map((sim) => {
     const values = domains.map((dom) => {
       const r = getResultForCell(scenario, modelId, sim, dom);
@@ -87,7 +92,7 @@ export function PeakMemoryChart({ scenario, modelId, simulators, domains }: Prop
     traces,
     {
       barmode: "group",
-      font: { family: CHART_FONT_FAMILY, size: CHART_FONT_SIZE * 0.65, color: "#666" },
+      font: { family: CHART_FONT_FAMILY, size: CHART_FONT_SIZE * 0.65, color: palette.textMuted },
       margin: { l: 50, r: 20, t: 10, b: 40 },
       xaxis: { title: { text: "" }, tickfont: { size: 11 } },
       yaxis: { title: { text: "Peak RSS (MB)", font: { size: 11 } }, tickfont: { size: 10 } },
