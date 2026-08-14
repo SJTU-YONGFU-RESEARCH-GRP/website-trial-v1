@@ -1,0 +1,133 @@
+{
+  "id": "sky130__fd__pr__rf__nfet__01v8__bm04__model__reduction",
+  "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm04__model",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/rf_nfet_01v8/sky130_fd_pr__rf_nfet_01v8_b.pm3.spice",
+  "sourceMd5": "2c565044c21d4e6fd295560eef0942df",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/8aa05da935ada851597c94c385199419/model.lib",
+  "md5": "8aa05da935ada851597c94c385199419",
+  "cardCount": 9,
+  "models": [
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.1",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.2",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.3",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.4",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.5",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.6",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.7",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    },
+    {
+      "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.8",
+      "deviceType": "nmos",
+      "parameterCount": 116
+    }
+  ],
+  "completedAt": "2026-07-28T11:43:23.595699+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:43:13.217459+00:00",
+      "elapsedSeconds": 4.983631,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__rf__nfet__01v8__bm04__model/original/model.lib",
+      "inputMd5": "b960c55faf1aab04ddb69cd49beccaf8",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__rf__nfet__01v8__bm04__model/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "884fea5de3e719d34e664b22cde36a1c",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__rf__nfet__01v8__bm04__model/reduction/01-reduction/normalized.lib",
+      "outputMd5": "1ab0d027ab39f1951f5d85694dadf8bb",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__rf__nfet__01v8__bm04__model/reduction/01-reduction/reduced.lib",
+        "inputMd5": "884fea5de3e719d34e664b22cde36a1c",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__rf__nfet__01v8__bm04__model/reduction/01-reduction/normalized.lib",
+        "outputMd5": "1ab0d027ab39f1951f5d85694dadf8bb",
+        "physicalModelSignature": "0a895560a50f4f27a4bca4979fb16148599220e2b39592e6e17c111181b35c84",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.1",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.2",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.3",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.4",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.5",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.6",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.7",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          },
+          {
+            "name": "sky130_fd_pr__rf_nfet_01v8_bM04__model.8",
+            "deviceType": "nmos",
+            "parameterCount": 116
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

@@ -1,0 +1,59 @@
+{
+  "architecture": "wallace_tree_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 16,
+  "processNode": "cfet",
+  "canonicalTechnology": "7nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 257.320114,
+  "powerMw": 0.000001275363,
+  "areaUm2": 3413.2736,
+  "yosys": {
+    "pdk": "cfet",
+    "designStem": "wallace_tree_adder",
+    "numCells": 363,
+    "numWireBits": 1424,
+    "numCellsByType": {
+      "cfet_a21o_1": 2,
+      "cfet_a21oi_1": 2,
+      "cfet_a21oi_2": 5,
+      "cfet_a32oi_2": 1,
+      "cfet_and3_1": 1,
+      "cfet_inv_1": 12,
+      "cfet_lpflow_inputiso0n_1": 3,
+      "cfet_lpflow_isobufsrc_1": 14,
+      "cfet_maj3_1": 77,
+      "cfet_maj3_2": 1,
+      "cfet_nand2_1": 14,
+      "cfet_nand2b_1": 30,
+      "cfet_nand3_1": 1,
+      "cfet_nor2_1": 4,
+      "cfet_o21ai_0": 4,
+      "cfet_o21ai_1": 1,
+      "cfet_o21ai_2": 5,
+      "cfet_o311ai_2": 1,
+      "cfet_or2_2": 4,
+      "cfet_xnor2_1": 113,
+      "cfet_xnor2_2": 1,
+      "cfet_xnor2_4": 1,
+      "cfet_xnor3_1": 11,
+      "cfet_xor2_1": 38,
+      "cfet_xor3_1": 17
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/cfet/wallace_tree_adder_w16",
+    "numOperands": 8,
+    "metrics": {
+      "criticalPathDelayPs": 3886.21,
+      "fmaxEstimateMhz": 257.320114,
+      "leakagePowerNw": 1.275363255,
+      "powerLeakageMw": 0.000001275363,
+      "powerMw": 0.000001275363,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

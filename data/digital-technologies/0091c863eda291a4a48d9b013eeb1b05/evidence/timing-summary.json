@@ -1,0 +1,60 @@
+{
+  "generated_at_utc": "2026-08-01T09:25:09.817822+00:00",
+  "opensta_version": "3.1.0",
+  "liberty": "/home/duhaochen/LibCharX/characterization/sky130_adders/results/libcharx_adder_test.lib",
+  "liberty_sha256": "fe758dc59aff5e948ce9107beec300e219185c98b434f9a614f62ad9eeb035d2",
+  "constraints": {
+    "virtual_clock_period_ns": 10.0,
+    "input_delay_ns": 0.0,
+    "output_delay_ns": 0.0,
+    "input_slew_ns": 0.0531329,
+    "output_load_pf": 0.00956858
+  },
+  "architectures": {
+    "adder8_ripple": {
+      "startpoint": "A[0] (input port clocked by vclk)",
+      "endpoint": "SUM[7] (output port clocked by vclk)",
+      "arrival_ns": 1.714447,
+      "slack_ns": 8.285554,
+      "mapped_netlist": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_ripple_mapped.v",
+      "mapped_netlist_sha256": "8681107fb8af1281b588858f8aa92f9106ed6a2812f3c8a4ac75529ac1aaefed",
+      "sta_log": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/reports/adder8_ripple_sta.log"
+    },
+    "adder8_kogge_stone": {
+      "startpoint": "A[2] (input port clocked by vclk)",
+      "endpoint": "SUM[7] (output port clocked by vclk)",
+      "arrival_ns": 1.628767,
+      "slack_ns": 8.371234,
+      "mapped_netlist": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_kogge_stone_mapped.v",
+      "mapped_netlist_sha256": "2f76adb88226ff43fd4748f626f911cd73ada9922d0986cbf89a8e92b27f6a87",
+      "sta_log": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/reports/adder8_kogge_stone_sta.log"
+    },
+    "adder8_carry_select": {
+      "startpoint": "A[4] (input port clocked by vclk)",
+      "endpoint": "SUM[7] (output port clocked by vclk)",
+      "arrival_ns": 1.025152,
+      "slack_ns": 8.974848,
+      "mapped_netlist": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_carry_select_mapped.v",
+      "mapped_netlist_sha256": "daae2908dd808d0691496ee6ff75963972b9f7379854669fe06867baf50f29f4",
+      "sta_log": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/reports/adder8_carry_select_sta.log"
+    },
+    "adder8_carry_skip": {
+      "startpoint": "A[0] (input port clocked by vclk)",
+      "endpoint": "COUT (output port clocked by vclk)",
+      "arrival_ns": 1.972122,
+      "slack_ns": 8.027878,
+      "mapped_netlist": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_carry_skip_mapped.v",
+      "mapped_netlist_sha256": "f4011921a654fa737f08de48aff2cdf90a6aec891e1d09362d40b412907f9ec7",
+      "sta_log": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/reports/adder8_carry_skip_sta.log"
+    },
+    "adder8_alternating_polarity": {
+      "startpoint": "A[0] (input port clocked by vclk)",
+      "endpoint": "SUM[7] (output port clocked by vclk)",
+      "arrival_ns": 0.884935,
+      "slack_ns": 9.115066,
+      "mapped_netlist": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_alternating_polarity_mapped.v",
+      "mapped_netlist_sha256": "58a201225aaf890d7818dcda8d03578cb925502fd216e7cbcbd8efcf113cb25d",
+      "sta_log": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/reports/adder8_alternating_polarity_sta.log"
+    }
+  }
+}

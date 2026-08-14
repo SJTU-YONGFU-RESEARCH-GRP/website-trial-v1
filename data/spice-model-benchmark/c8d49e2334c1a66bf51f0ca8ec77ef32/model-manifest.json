@@ -1,0 +1,93 @@
+{
+  "id": "sky130__fd__pr__nfet__g5v0d16v0__model__base__reduction",
+  "sourceId": "sky130__fd__pr__nfet__g5v0d16v0__model__base",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_g5v0d16v0/sky130_fd_pr__nfet_g5v0d16v0.pm3.spice",
+  "sourceMd5": "e2bf3e241f7e152ef10d6c9cabc8b16f",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/c8d49e2334c1a66bf51f0ca8ec77ef32/model.lib",
+  "md5": "c8d49e2334c1a66bf51f0ca8ec77ef32",
+  "cardCount": 5,
+  "models": [
+    {
+      "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.0",
+      "deviceType": "nmos",
+      "parameterCount": 119
+    },
+    {
+      "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.1",
+      "deviceType": "nmos",
+      "parameterCount": 119
+    },
+    {
+      "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.2",
+      "deviceType": "nmos",
+      "parameterCount": 119
+    },
+    {
+      "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.3",
+      "deviceType": "nmos",
+      "parameterCount": 119
+    },
+    {
+      "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.4",
+      "deviceType": "nmos",
+      "parameterCount": 119
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:35.141553+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:42:27.686343+00:00",
+      "elapsedSeconds": 3.911081,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__g5v0d16v0__model__base/original/model.lib",
+      "inputMd5": "a399738173e9e09e89685efb74930f6e",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__g5v0d16v0__model__base/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "5938973b71cc61ce80709143512c0105",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__g5v0d16v0__model__base/reduction/01-reduction/normalized.lib",
+      "outputMd5": "dff1759188088bb00607c271dbe0cd37",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__g5v0d16v0__model__base/reduction/01-reduction/reduced.lib",
+        "inputMd5": "5938973b71cc61ce80709143512c0105",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__g5v0d16v0__model__base/reduction/01-reduction/normalized.lib",
+        "outputMd5": "dff1759188088bb00607c271dbe0cd37",
+        "physicalModelSignature": "53521cc23c108323f4706adb3264e7bd5a345fe28f3f494efe3797b00a5b4123",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.0",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          },
+          {
+            "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.1",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          },
+          {
+            "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.2",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          },
+          {
+            "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.3",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          },
+          {
+            "name": "sky130_fd_pr__nfet_g5v0d16v0__model_base.4",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

@@ -1,0 +1,149 @@
+{
+  "id": "sky130__fd__bs__flash__special__sonosfet__star__model__fitting_reduction_translation",
+  "sourceId": "sky130__fd__bs__flash__special__sonosfet__star__model",
+  "kind": "processed",
+  "chainId": "fitting_reduction_translation",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "toolCount": 3,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_e/begin_of_life.pm3.spice",
+  "sourceMd5": "74d4b419f7ef19c0761ab429ec77c1da",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/f1e2cfd6e5626a9349961aff4ca56020/model.lib",
+  "md5": "f1e2cfd6e5626a9349961aff4ca56020",
+  "cardCount": 3,
+  "models": [
+    {
+      "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 78
+    },
+    {
+      "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+      "deviceType": "nmos",
+      "parameterCount": 78
+    },
+    {
+      "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+      "deviceType": "nmos",
+      "parameterCount": 78
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:25.993034+00:00",
+  "stages": [
+    {
+      "tool": "fitting",
+      "startedAt": "2026-07-28T11:42:15.908804+00:00",
+      "elapsedSeconds": 2.318104,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/original/model.lib",
+      "inputMd5": "de3782d51b229d96bc076cc533d33394",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+      "rawOutputMd5": "84236031e9f2c2b8e54bca12561c52e4",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/01-fitting/normalized.lib",
+      "outputMd5": "289227872c7fc3fa99350905a9607a2e",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+        "inputMd5": "84236031e9f2c2b8e54bca12561c52e4",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/01-fitting/normalized.lib",
+        "outputMd5": "289227872c7fc3fa99350905a9607a2e",
+        "physicalModelSignature": "645e455ce265d6c1e26f67b583b43c4ac58047570fb66c05464b3d031422501e",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+            "deviceType": "nmos",
+            "parameterCount": 140
+          }
+        ]
+      }
+    },
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:42:18.760706+00:00",
+      "elapsedSeconds": 2.840892,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/01-fitting/normalized.lib",
+      "inputMd5": "289227872c7fc3fa99350905a9607a2e",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/02-reduction/reduced.lib",
+      "rawOutputMd5": "edced16f7a31a5ceb82d5971b0546c17",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/02-reduction/normalized.lib",
+      "outputMd5": "b8fcf3d66c5c1e22e5ce985276b33c1c",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/02-reduction/reduced.lib",
+        "inputMd5": "edced16f7a31a5ceb82d5971b0546c17",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/02-reduction/normalized.lib",
+        "outputMd5": "b8fcf3d66c5c1e22e5ce985276b33c1c",
+        "physicalModelSignature": "a56eed50e8b335161fb44e81990c9955178e3e45f49518fb04facfd47a9cfef3",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 78
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+            "deviceType": "nmos",
+            "parameterCount": 78
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+            "deviceType": "nmos",
+            "parameterCount": 78
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:42:22.184863+00:00",
+      "elapsedSeconds": 1.234214,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/02-reduction/normalized.lib",
+      "inputMd5": "b8fcf3d66c5c1e22e5ce985276b33c1c",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/03-translation/translated.hspice",
+      "rawOutputMd5": "ca3f8a6e664d21ce8ea522677cb1c1cf",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/03-translation/normalized.lib",
+      "outputMd5": "d298d0e7bf771957c31a4ebcbb63baa6",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/03-translation/translated.hspice",
+        "inputMd5": "ca3f8a6e664d21ce8ea522677cb1c1cf",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__bs__flash__special__sonosfet__star__model/fitting_reduction_translation/03-translation/normalized.lib",
+        "outputMd5": "d298d0e7bf771957c31a4ebcbb63baa6",
+        "physicalModelSignature": "a56eed50e8b335161fb44e81990c9955178e3e45f49518fb04facfd47a9cfef3",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 78
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.1",
+            "deviceType": "nmos",
+            "parameterCount": 78
+          },
+          {
+            "name": "sky130_fd_bs_flash__special_sonosfet_star__model.2",
+            "deviceType": "nmos",
+            "parameterCount": 78
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

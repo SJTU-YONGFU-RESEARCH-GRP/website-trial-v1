@@ -1,0 +1,168 @@
+OpenSTA 3.1.0 543361765b Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Startpoint: b[1] (input port clocked by vclk)
+Endpoint: sum[3] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 ^ input external delay
+   0.016288    0.050000    0.000000    0.000000 ^ b[1] (in)
+               0.050000    0.000000    0.000000 ^ _27_/B2 (gf180mcu_fd_sc_mcu7t5v0__aoi22_1)
+   0.016074    0.407075    0.276453    0.276453 v _27_/ZN (gf180mcu_fd_sc_mcu7t5v0__aoi22_1)
+               0.407075    0.000000    0.276453 v _29_/A4 (gf180mcu_fd_sc_mcu7t5v0__or4_1)
+   0.004402    0.271220    0.843025    1.119478 v _29_/Z (gf180mcu_fd_sc_mcu7t5v0__or4_1)
+               0.271220    0.000000    1.119478 v _35_/A1 (gf180mcu_fd_sc_mcu7t5v0__nand3_1)
+   0.012467    0.425256    0.285614    1.405092 ^ _35_/ZN (gf180mcu_fd_sc_mcu7t5v0__nand3_1)
+               0.425256    0.000000    1.405092 ^ _44_/A1 (gf180mcu_fd_sc_mcu7t5v0__xor2_1)
+   0.010000    0.512105    0.496071    1.901163 ^ _44_/Z (gf180mcu_fd_sc_mcu7t5v0__xor2_1)
+               0.512105    0.000000    1.901163 ^ sum[3] (out)
+                                       1.901163   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -1.901163   data arrival time
+---------------------------------------------------------------------------------------
+                                      98.098831   slack (MET)
+
+
+Startpoint: b[1] (input port clocked by vclk)
+Endpoint: sum[2] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.016288    0.050000    0.000000    0.000000 v b[1] (in)
+               0.050000    0.000000    0.000000 v _27_/B2 (gf180mcu_fd_sc_mcu7t5v0__aoi22_1)
+   0.016074    0.745436    0.494976    0.494976 ^ _27_/ZN (gf180mcu_fd_sc_mcu7t5v0__aoi22_1)
+               0.745436    0.000000    0.494976 ^ _28_/A2 (gf180mcu_fd_sc_mcu7t5v0__nor2_1)
+   0.005262    0.297578    0.191232    0.686208 v _28_/ZN (gf180mcu_fd_sc_mcu7t5v0__nor2_1)
+               0.297578    0.000000    0.686208 v _36_/A2 (gf180mcu_fd_sc_mcu7t5v0__xor3_1)
+   0.010000    0.317098    1.133164    1.819372 v _36_/Z (gf180mcu_fd_sc_mcu7t5v0__xor3_1)
+               0.317098    0.000000    1.819372 v sum[2] (out)
+                                       1.819372   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -1.819372   data arrival time
+---------------------------------------------------------------------------------------
+                                      98.180626   slack (MET)
+
+
+Startpoint: b[1] (input port clocked by vclk)
+Endpoint: cout (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.016288    0.050000    0.000000    0.000000 v b[1] (in)
+               0.050000    0.000000    0.000000 v _27_/B2 (gf180mcu_fd_sc_mcu7t5v0__aoi22_1)
+   0.016074    0.745436    0.494976    0.494976 ^ _27_/ZN (gf180mcu_fd_sc_mcu7t5v0__aoi22_1)
+               0.745436    0.000000    0.494976 ^ _40_/A3 (gf180mcu_fd_sc_mcu7t5v0__oai31_1)
+   0.011816    0.459688    0.304464    0.799440 v _40_/ZN (gf180mcu_fd_sc_mcu7t5v0__oai31_1)
+               0.459688    0.000000    0.799440 v _43_/A3 (gf180mcu_fd_sc_mcu7t5v0__xnor3_1)
+   0.012274    0.424645    0.514417    1.313858 v _43_/ZN (gf180mcu_fd_sc_mcu7t5v0__xnor3_1)
+               0.424645    0.000000    1.313858 v _46_/A2 (gf180mcu_fd_sc_mcu7t5v0__oai21_1)
+   0.010000    0.456800    0.356474    1.670331 ^ _46_/ZN (gf180mcu_fd_sc_mcu7t5v0__oai21_1)
+               0.456800    0.000000    1.670331 ^ cout (out)
+                                       1.670331   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -1.670331   data arrival time
+---------------------------------------------------------------------------------------
+                                      98.329666   slack (MET)
+
+
+Startpoint: b[0] (input port clocked by vclk)
+Endpoint: sum[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.019659    0.050000    0.000000    0.000000 v b[0] (in)
+               0.050000    0.000000    0.000000 v _32_/A2 (gf180mcu_fd_sc_mcu7t5v0__or2_1)
+   0.007141    0.191453    0.408923    0.408923 v _32_/Z (gf180mcu_fd_sc_mcu7t5v0__or2_1)
+               0.191453    0.000000    0.408923 v _33_/A3 (gf180mcu_fd_sc_mcu7t5v0__nand3_1)
+   0.004526    0.262979    0.211457    0.620380 ^ _33_/ZN (gf180mcu_fd_sc_mcu7t5v0__nand3_1)
+               0.262979    0.000000    0.620380 ^ _37_/A2 (gf180mcu_fd_sc_mcu7t5v0__nand2_1)
+   0.007451    0.204528    0.144214    0.764594 v _37_/ZN (gf180mcu_fd_sc_mcu7t5v0__nand2_1)
+               0.204528    0.000000    0.764594 v _38_/A2 (gf180mcu_fd_sc_mcu7t5v0__xor2_1)
+   0.010000    0.290731    0.499210    1.263804 v _38_/Z (gf180mcu_fd_sc_mcu7t5v0__xor2_1)
+               0.290731    0.000000    1.263804 v sum[1] (out)
+                                       1.263804   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -1.263804   data arrival time
+---------------------------------------------------------------------------------------
+                                      98.736191   slack (MET)
+
+
+Startpoint: cin (input port clocked by vclk)
+Endpoint: sum[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.012319    0.050000    0.000000    0.000000 v cin (in)
+               0.050000    0.000000    0.000000 v _39_/A1 (gf180mcu_fd_sc_mcu7t5v0__xor3_1)
+   0.010000    0.317683    1.083385    1.083385 v _39_/Z (gf180mcu_fd_sc_mcu7t5v0__xor3_1)
+               0.317683    0.000000    1.083385 v sum[0] (out)
+                                       1.083385   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -1.083385   data arrival time
+---------------------------------------------------------------------------------------
+                                      98.916611   slack (MET)
+
+

@@ -1,0 +1,1127 @@
+{
+  "modelId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model__original",
+  "sourceId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model",
+  "kind": "original",
+  "chain": [],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/c0623e16854dd28ced33a8cf95e60c12/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/c0623e16854dd28ced33a8cf95e60c12/hspice.lib",
+  "astParsedInput": true,
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "benchmark netlists",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "5.525e-07",
+        "w": "1.44975e-05",
+        "m": "1"
+      },
+      "transient": {
+        "l": "5.525e-07",
+        "w": "1.44975e-05",
+        "m": "1"
+      },
+      "ac": {
+        "l": "5.525e-07",
+        "w": "1.44975e-05",
+        "m": "1"
+      },
+      "noise": {
+        "l": "5.525e-07",
+        "w": "1.44975e-05",
+        "m": "1"
+      }
+    },
+    "parameterCount": 195,
+    "parameters": [
+      {
+        "name": "hv_dlc_rotweak",
+        "value": ".00e-9",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/all.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__a0_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__agidl_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ags_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ajunction_mult",
+        "value": "1.0050e+0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b0_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__b1_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__bgidl_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__cgidl_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__dlc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__dlc_rotweak",
+        "value": "hv_dlc_rotweak",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/all.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__dwc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__eta0_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_0",
+        "value": "0.0025904",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_1",
+        "value": "0.0025296",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_2",
+        "value": "0.0011738",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_3",
+        "value": "0.0025033",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_4",
+        "value": "0.0027232",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_5",
+        "value": "0.0026099",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_6",
+        "value": "0.0028181",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__k2_diff_7",
+        "value": "0.0024309",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__keta_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__kt1_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_0",
+        "value": "-0.063147",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_1",
+        "value": "-0.074743",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_2",
+        "value": "-0.18372",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_3",
+        "value": "-0.088815",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_4",
+        "value": "-0.067845",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_5",
+        "value": "-0.060725",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_6",
+        "value": "-0.067505",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__nfactor_diff_7",
+        "value": "-0.053499",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__overlap_mult",
+        "value": "9.8210e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pclm_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pdits_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pditsd_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__pjunction_mult",
+        "value": "1.0090e+0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rdsw_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__rshp_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__toxe_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_3",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_4",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_5",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_6",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__tvoff_diff_7",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_0",
+        "value": "0.0013216",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_1",
+        "value": "0.0013991",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_2",
+        "value": "0.00094592",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_3",
+        "value": "0.0015269",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_4",
+        "value": "0.0010803",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_5",
+        "value": "0.0013654",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_6",
+        "value": "0.0011851",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__u0_diff_7",
+        "value": "0.0013925",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_0",
+        "value": "1.3229e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_1",
+        "value": "1.4079e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_2",
+        "value": "-1.6818e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_3",
+        "value": "1.4317e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_4",
+        "value": "1.108e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_5",
+        "value": "1.3711e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_6",
+        "value": "1.6366e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ua_diff_7",
+        "value": "1.816e-11",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_0",
+        "value": "3.1718e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_1",
+        "value": "3.1631e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_2",
+        "value": "2.8322e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_3",
+        "value": "2.9649e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_4",
+        "value": "2.8628e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_5",
+        "value": "3.6247e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_6",
+        "value": "3.713e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__ub_diff_7",
+        "value": "4.2442e-19",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_0",
+        "value": "0.019432",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_1",
+        "value": "0.018981",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_2",
+        "value": "0.016493",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_3",
+        "value": "0.020198",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_4",
+        "value": "0.021723",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_5",
+        "value": "0.022334",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_6",
+        "value": "0.022964",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__voff_diff_7",
+        "value": "0.02253",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_0",
+        "value": "-5983.8",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_1",
+        "value": "-9020.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_2",
+        "value": "-840.04",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_3",
+        "value": "-14143.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_4",
+        "value": "-2261.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_5",
+        "value": "-2378.6",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_6",
+        "value": "-232.34",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vsat_diff_7",
+        "value": "-1157.8",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_0",
+        "value": "0.0011957",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_1",
+        "value": "0.0072841",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_2",
+        "value": "0.011633",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_3",
+        "value": "0.0030122",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_4",
+        "value": "-6.9665e-6",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_5",
+        "value": "0.0011422",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_6",
+        "value": "0.0037406",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__vth0_diff_7",
+        "value": "0.0023129",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__wint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5__tt.corner.spice"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.0": "__benchmark_selected_pmos",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.1": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.1",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.2": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.2",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.3": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.3",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.4": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.4",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.5": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.5",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.6": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.6",
+      "sky130_fd_pr__esd_pfet_g5v0d10v5__model.7": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.7"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_pmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.0",
+      "modelFamily": "sky130_fd_pr__esd_pfet_g5v0d10v5__model",
+      "deviceType": "pmos",
+      "selectionMode": "nearest-real-bin-outside-range",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "5.525e-07",
+        "w": "1.44975e-05",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": "stock-fixture-geometry-outside-selected-real-bin",
+      "selectedBinBounds": {
+        "lmin": 5.45e-07,
+        "lmax": 5.55e-07,
+        "wmin": 1.4495e-05,
+        "wmax": 1.4505e-05
+      },
+      "benchmarkModelName": "__benchmark_selected_pmos"
+    },
+    "sha256": "f98619a88251732e706c38d225196dd19d0fac5c2d0e3a7a779999ef15cf3b1e"
+  },
+  "benchmarkFixtureAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "stock benchmark DUT geometry adjusted to selected real bin: L=5.525e-07, W=1.44975e-05"
+  ],
+  "md5": "c0623e16854dd28ced33a8cf95e60c12",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-28T12:22:29.419078+00:00",
+  "finishedAt": "2026-07-28T12:24:47.142124+00:00",
+  "elapsedSeconds": 137.723053,
+  "peakRssKiB": 290472,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.sp",
+      "bytes": 2100,
+      "sha256": "c611a7fb1e8b02af883458cf77bd531095bf92fab0f4040a074d8b0bb653a908"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.sp",
+      "bytes": 3531,
+      "sha256": "30fe889bb8bc043c0975339a6c3db94a6264549ddbc3160fe63ae2301322d8d3"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.sp",
+      "bytes": 54607,
+      "sha256": "501aa3929ad0010c71d55407ec4f781569c50a01808d32cd811425f58417504f"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.sp",
+      "bytes": 4639,
+      "sha256": "04935c12ac4b27d3e15db64aa921141117d1e351513153e7f670a09c32fa0c29"
+    }
+  ]
+}

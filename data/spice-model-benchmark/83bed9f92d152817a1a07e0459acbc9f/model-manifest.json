@@ -1,0 +1,81 @@
+{
+  "id": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model__expansion_translation",
+  "sourceId": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5/sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base.model.spice",
+  "sourceMd5": "28839d500d0724fa6d0c7f51e097fa01",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/83bed9f92d152817a1a07e0459acbc9f/model.lib",
+  "md5": "83bed9f92d152817a1a07e0459acbc9f",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 254
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:21.557700+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-28T11:42:15.890733+00:00",
+      "elapsedSeconds": 2.262042,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/original/model.lib",
+      "inputMd5": "7fd2e30c376f628bed7f393c6eb130c6",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "b1ea18805bbfe9a571919e01b3d8ba60",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "b53eacb4b8177f62dca043d816f1d5d8",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "b1ea18805bbfe9a571919e01b3d8ba60",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "b53eacb4b8177f62dca043d816f1d5d8",
+        "physicalModelSignature": "157a79091f4545f79403af2c35aa7eed5abf54353c491f3517f01351bbd605cd",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 254
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:42:18.381647+00:00",
+      "elapsedSeconds": 1.157329,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "b53eacb4b8177f62dca043d816f1d5d8",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "4fe80fb268acc99f162cd3a221883ee0",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "d19aee086f916520809b12b3cd91be28",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "4fe80fb268acc99f162cd3a221883ee0",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "d19aee086f916520809b12b3cd91be28",
+        "physicalModelSignature": "157a79091f4545f79403af2c35aa7eed5abf54353c491f3517f01351bbd605cd",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 254
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

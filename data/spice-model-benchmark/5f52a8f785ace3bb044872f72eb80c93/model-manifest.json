@@ -1,0 +1,53 @@
+{
+  "id": "sky130__fd__pr__nfet__20v0__base__reduction",
+  "sourceId": "sky130__fd__pr__nfet__20v0__base",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__subcircuit.pm3.spice",
+  "sourceMd5": "ecb7d899ff286792c7ea09ae827bed5e",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/5f52a8f785ace3bb044872f72eb80c93/model.lib",
+  "md5": "5f52a8f785ace3bb044872f72eb80c93",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__nfet_20v0__base.0",
+      "deviceType": "nmos",
+      "parameterCount": 127
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:29.583248+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:42:22.834435+00:00",
+      "elapsedSeconds": 3.274178,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__base/original/model.lib",
+      "inputMd5": "473951a3df6f943fdc865db307061d7c",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__base/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "6eda3afff23c8e5e5cc350a8df4383a4",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__base/reduction/01-reduction/normalized.lib",
+      "outputMd5": "fc9e571b1dacfaa11184eeb745ffea98",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__base/reduction/01-reduction/reduced.lib",
+        "inputMd5": "6eda3afff23c8e5e5cc350a8df4383a4",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__nfet__20v0__base/reduction/01-reduction/normalized.lib",
+        "outputMd5": "fc9e571b1dacfaa11184eeb745ffea98",
+        "physicalModelSignature": "48c2528587218c005f75f363b8aa281072b55a18cf9670954d81a1f926321e75",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__nfet_20v0__base.0",
+            "deviceType": "nmos",
+            "parameterCount": 127
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

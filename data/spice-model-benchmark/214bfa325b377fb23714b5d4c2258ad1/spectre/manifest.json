@@ -1,0 +1,212 @@
+{
+  "modelId": "sky130__fd__pr__pfet__20v0__base__reduction",
+  "sourceId": "sky130__fd__pr__pfet__20v0__base",
+  "kind": "processed",
+  "chain": [
+    "reduction"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/214bfa325b377fb23714b5d4c2258ad1/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/214bfa325b377fb23714b5d4c2258ad1/spectre.lib",
+  "astParsedInput": true,
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "benchmark netlists",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "transient": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "ac": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "noise": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      }
+    },
+    "parameterCount": 13,
+    "parameters": [
+      {
+        "name": "sky130_fd_pr__pfet_20v0__agidl_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__ajunction_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__dlc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__dwc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__k2_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__overlap_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__pjunction_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__rshn_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__toxe_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__u0_diff",
+        "value": "-1.2404e-3",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__vth0_diff",
+        "value": "8.3176e-2",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__wint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_pr__pfet_20v0__base.0": "__benchmark_selected_pmos"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_pmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_pr__pfet_20v0__base.0",
+      "modelFamily": "sky130_fd_pr__pfet_20v0__base",
+      "deviceType": "pmos",
+      "selectionMode": "nearest-real-bin-outside-range",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": "stock-fixture-geometry-outside-selected-real-bin",
+      "selectedBinBounds": {
+        "lmin": 4.95e-07,
+        "lmax": 5.05e-07,
+        "wmin": 1.9995e-05,
+        "wmax": 3.0005e-05
+      },
+      "benchmarkModelName": "__benchmark_selected_pmos"
+    },
+    "sha256": "fcda62f98f9a00de929a92c5b73c173acc36788ad2aa1d3274c7a5289d0356ef"
+  },
+  "benchmarkFixtureAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "stock benchmark DUT geometry adjusted to selected real bin: L=5.0250000000000006e-07, W=2.2497499999999999e-05"
+  ],
+  "md5": "214bfa325b377fb23714b5d4c2258ad1",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-28T13:54:39.901648+00:00",
+  "finishedAt": "2026-07-28T13:56:25.207818+00:00",
+  "elapsedSeconds": 105.30619,
+  "peakRssKiB": 245752,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.scs",
+      "bytes": 3476,
+      "sha256": "8d7f19b8fd781221fd52112e7314c1b063e0657026e5782d2e594930309d0f16"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.scs",
+      "bytes": 4479,
+      "sha256": "0ee7bc3e7b02fe6cdd63b51fee501b41119a96f951c79fcb6b0a80ec550989ab"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.scs",
+      "bytes": 91944,
+      "sha256": "9709795d55f0c5c3112074582bc91fd888c329c3ea60138cca5cbd6e3e944cee"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.scs",
+      "bytes": 6066,
+      "sha256": "38b3145f76ef75e380540779478d9b43f69e798fc838d7188838e8426d7c981b"
+    }
+  ]
+}

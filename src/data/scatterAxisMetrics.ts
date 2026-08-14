@@ -150,7 +150,7 @@ export const DESIGN_CATEGORIES: readonly { id: DesignCategoryId; label: string }
     label: designCategoryDefaultLabel(id),
   }));
 
-export function designCategoryLabel(id: DesignCategoryId): string {
+export function designCategoryLabel(id: string): string {
   const row = DESIGN_CATEGORIES.find((c) => c.id === id);
   return row?.label ?? id;
 }
@@ -160,16 +160,16 @@ export type ExploreAxisKey = "x" | "y" | "z";
 
 /**
  * What bar, donut, Pareto, and 3D scatter hold fixed vs sweep.
- * - `architecture`: fixed technology node + fixed bit width → one value per architecture.
- * - `bitWidth`: fixed technology; sweep bit widths (bar X / scatter points per width).
- * - `technology`: fixed bit width; sweep technology nodes (bar X / scatter points per node).
+ * - `architecture`: fixed bit width → architectures across the selected technology set.
+ * - `bitWidth`: sweep bit widths across the selected technology set.
+ * - `technology`: fixed bit width → selected technology nodes (bar X / scatter points per node).
  */
 export type BarDonutBaselineMode = "architecture" | "bitWidth" | "technology";
 
 /**
  * Short dataset name for chart titles, e.g. "Adder" (strips trailing " (dataset)" from the UI label).
  */
-export function designCategoryChartTitle(id: DesignCategoryId): string {
+export function designCategoryChartTitle(id: string): string {
   return designCategoryLabel(id).replace(/\s*\(dataset\)\s*$/i, "").trim();
 }
 
@@ -219,18 +219,18 @@ export const BAR_DONUT_BASELINE_OPTIONS: readonly {
   value: BarDonutBaselineMode;
   label: string;
 }[] = [
-  { value: "architecture", label: "Architectures (fixed technology & bit width)" },
-  { value: "bitWidth", label: "Bit widths (technology baseline)" },
-  { value: "technology", label: "Technology nodes (bit-width baseline)" },
+  { value: "architecture", label: "Architectures (selected technologies & fixed bit width)" },
+  { value: "bitWidth", label: "Bit widths (selected technologies)" },
+  { value: "technology", label: "Selected technologies (fixed bit width)" },
 ] as const;
 
 /**
  * Explore panel: dataset category, Cartesian metrics (must differ), and slice bit width for bar/pie.
  */
 export type ExploreAxesState = {
-  category: DesignCategoryId;
-  /** Selected technology node for charts that slice one corner (heatmap, bar, etc.). */
-  technologyNode: string;
+  category: string;
+  /** Primary MD5 UID retained for compatible global/local chart state; selection is managed by the page. */
+  technologyUid: string;
   bitWidth: number;
   /** Bar, donut, Pareto, 3D scatter: which dimension is fixed vs swept (see `BarDonutBaselineMode`). */
   barDonutBaseline: BarDonutBaselineMode;
@@ -253,7 +253,7 @@ const _defaultExploreSlice = defaultExploreSliceForCategory(_defaultExploreCateg
 
 export const DEFAULT_EXPLORE_AXES: ExploreAxesState = {
   category: _defaultExploreCategory,
-  technologyNode: _defaultExploreSlice.technologyNode,
+  technologyUid: _defaultExploreSlice.technologyUid,
   bitWidth: _defaultExploreSlice.bitWidth,
   barDonutBaseline: "architecture",
   numericScaleX: "linear",
@@ -266,7 +266,7 @@ export const DEFAULT_EXPLORE_AXES: ExploreAxesState = {
 
 /**
  * Updates one of X/Y/Z and reassigns duplicates so the three metrics stay distinct.
- * Preserves `category`, `technologyNode`, `bitWidth`, `barDonutBaseline`, and numeric scales (X/Y/Z).
+ * Preserves `category`, `technologyUid`, `bitWidth`, `barDonutBaseline`, and numeric scales (X/Y/Z).
  */
 export function syncExploreAxes(
   prev: ExploreAxesState,

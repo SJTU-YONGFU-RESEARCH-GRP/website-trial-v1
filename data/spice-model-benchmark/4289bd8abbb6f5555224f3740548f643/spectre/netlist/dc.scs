@@ -1,0 +1,119 @@
+* Translated benchmark circuit
+* semantic-sha256: 5c3155cef4fd9aa82b5801d2474abe7f78e43b8f8b4b3656df2a3355adc3a2d2
+simulator lang=spectre
+global 0
+benchmarkNumerics options max_approach_minstep=10000 max_minstep_nonconv=10000
+simulatorOptions options temp=27
+simulatorOptions options temp=27 tnom=27
+simulatorOptions options gmin=1e-12
+simulatorOptions options reltol=1e-3
+simulatorOptions options iabstol=1e-12
+simulatorOptions options method=gear2only
+simulatorOptions options TEMP=27
+simulatorOptions options TNOM=27
+simulator lang=spice
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/4289bd8abbb6f5555224f3740548f643/spectre.lib'
+simulator lang=spectre
+m1 (drain_iv gate_iv source_iv bulk_iv) __benchmark_selected_pmos l=5.0250000000000006e-07 w=2.2497499999999999e-05
+m2 (drain_bias gate_bias source_bias bulk_bias) __benchmark_selected_pmos l=5.0250000000000006e-07 w=2.2497499999999999e-05
+vds_iv (drain_iv 0) vsource dc=0
+vgs_iv (gate_iv 0) vsource dc=0
+vs_iv (source_iv 0) vsource dc=0
+vb_iv (bulk_iv 0) vsource dc=0
+vds_bias (drain_bias 0) vsource dc=0
+vgs_bias (gate_bias 0) vsource dc=0
+vs_bias (source_bias 0) vsource dc=0
+vb_bias (bulk_bias 0) vsource dc=0
+t0 sweep param=temp values=[-40] {
+  x0_outer sweep param=dc dev=vgs_iv start=0 stop=-1.2 step=-0.2 {
+  x0 dc start=0 stop=-1.2 step=-0.01 dev=vds_iv
+}
+}
+t1 sweep param=temp values=[0] {
+  x1_outer sweep param=dc dev=vgs_iv start=0 stop=-1.2 step=-0.2 {
+  x1 dc start=0 stop=-1.2 step=-0.01 dev=vds_iv
+}
+}
+t2 sweep param=temp values=[25] {
+  x2_outer sweep param=dc dev=vgs_iv start=0 stop=-1.2 step=-0.2 {
+  x2 dc start=0 stop=-1.2 step=-0.01 dev=vds_iv
+}
+}
+t3 sweep param=temp values=[50] {
+  x3_outer sweep param=dc dev=vgs_iv start=0 stop=-1.2 step=-0.2 {
+  x3 dc start=0 stop=-1.2 step=-0.01 dev=vds_iv
+}
+}
+t4 sweep param=temp values=[100] {
+  x4_outer sweep param=dc dev=vgs_iv start=0 stop=-1.2 step=-0.2 {
+  x4 dc start=0 stop=-1.2 step=-0.01 dev=vds_iv
+}
+}
+t5 sweep param=temp values=[150] {
+  x5_outer sweep param=dc dev=vgs_iv start=0 stop=-1.2 step=-0.2 {
+  x5 dc start=0 stop=-1.2 step=-0.01 dev=vds_iv
+}
+}
+t6 sweep param=temp values=[27] {
+  a6_1 sweep param=dc dev=vds_bias values=[0.0] {
+  a6_0 sweep param=dc dev=vgs_bias values=[0.0] {
+  op6 dc
+}
+}
+}
+t7 sweep param=temp values=[27] {
+  a7_1 sweep param=dc dev=vds_bias values=[0.0] {
+  a7_0 sweep param=dc dev=vgs_bias values=[-0.6] {
+  op7 dc
+}
+}
+}
+t8 sweep param=temp values=[27] {
+  a8_1 sweep param=dc dev=vds_bias values=[0.0] {
+  a8_0 sweep param=dc dev=vgs_bias values=[-1.2] {
+  op8 dc
+}
+}
+}
+t9 sweep param=temp values=[27] {
+  a9_1 sweep param=dc dev=vds_bias values=[-0.6] {
+  a9_0 sweep param=dc dev=vgs_bias values=[0.0] {
+  op9 dc
+}
+}
+}
+t10 sweep param=temp values=[27] {
+  a10_1 sweep param=dc dev=vds_bias values=[-0.6] {
+  a10_0 sweep param=dc dev=vgs_bias values=[-0.6] {
+  op10 dc
+}
+}
+}
+t11 sweep param=temp values=[27] {
+  a11_1 sweep param=dc dev=vds_bias values=[-0.6] {
+  a11_0 sweep param=dc dev=vgs_bias values=[-1.2] {
+  op11 dc
+}
+}
+}
+t12 sweep param=temp values=[27] {
+  a12_1 sweep param=dc dev=vds_bias values=[-1.2] {
+  a12_0 sweep param=dc dev=vgs_bias values=[0.0] {
+  op12 dc
+}
+}
+}
+t13 sweep param=temp values=[27] {
+  a13_1 sweep param=dc dev=vds_bias values=[-1.2] {
+  a13_0 sweep param=dc dev=vgs_bias values=[-0.6] {
+  op13 dc
+}
+}
+}
+t14 sweep param=temp values=[27] {
+  a14_1 sweep param=dc dev=vds_bias values=[-1.2] {
+  a14_0 sweep param=dc dev=vgs_bias values=[-1.2] {
+  op14 dc
+}
+}
+}

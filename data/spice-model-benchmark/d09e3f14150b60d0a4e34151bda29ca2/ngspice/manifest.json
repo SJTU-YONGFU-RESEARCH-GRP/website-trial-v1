@@ -1,0 +1,209 @@
+{
+  "modelId": "sky130__fd__pr__pfet__20v0__base__fitting_reduction_translation",
+  "sourceId": "sky130__fd__pr__pfet__20v0__base",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/d09e3f14150b60d0a4e34151bda29ca2/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/d09e3f14150b60d0a4e34151bda29ca2/ngspice.lib",
+  "astParsedInput": true,
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "benchmark netlists",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "transient": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "ac": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "noise": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      }
+    },
+    "parameterCount": 12,
+    "parameters": [
+      {
+        "name": "sky130_fd_pr__pfet_20v0__agidl_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__ajunction_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__dlc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__dwc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__k2_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__overlap_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__pjunction_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__rshn_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__toxe_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__u0_diff",
+        "value": "-1.2404e-3",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_20v0__wint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_20v0/sky130_fd_pr__pfet_20v0__tt_discrete.corner.spice"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_pr__pfet_20v0__base.0": "__benchmark_selected_pmos"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_pmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_pr__pfet_20v0__base.0",
+      "modelFamily": "sky130_fd_pr__pfet_20v0__base",
+      "deviceType": "pmos",
+      "selectionMode": "nearest-real-bin-outside-range",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "5.0250000000000006e-07",
+        "w": "2.2497499999999999e-05",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": "stock-fixture-geometry-outside-selected-real-bin",
+      "selectedBinBounds": {
+        "lmin": 4.95e-07,
+        "lmax": 5.05e-07,
+        "wmin": 1.9995e-05,
+        "wmax": 3.0005e-05
+      },
+      "benchmarkModelName": "__benchmark_selected_pmos"
+    },
+    "sha256": "b26742093efc9e3ea5aeeda9c1abcc14b07a0e541b6b821a486cf4910135ce96"
+  },
+  "benchmarkFixtureAdjustments": [
+    "added NMOS complementary-circuit fixture",
+    "stock benchmark DUT geometry adjusted to selected real bin: L=5.0250000000000006e-07, W=2.2497499999999999e-05"
+  ],
+  "md5": "d09e3f14150b60d0a4e34151bda29ca2",
+  "simulator": "ngspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-28T13:50:06.263462+00:00",
+  "finishedAt": "2026-07-28T14:31:14.060222+00:00",
+  "elapsedSeconds": 2467.796763,
+  "peakRssKiB": 234836,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.cir",
+      "bytes": 5996,
+      "sha256": "5b0712958d857237ac34e0fd0e82d78cd2a75350c4df9d1d4391cd1d9eec482d"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.cir",
+      "bytes": 7124,
+      "sha256": "cacb7de710fcdc7e55f27eb4ac83c49aff8d9f5ab2579bfa6697ffff211d201a"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.cir",
+      "bytes": 11571,
+      "sha256": "92bccce30b4962f78f204d3161b78774358e6b06d33b0dbee6aa20f9bb2666a4"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.cir",
+      "bytes": 7310,
+      "sha256": "59f72553b12433fa31799adfc4111def6c5fd25ce172f570f3763713123814fb"
+    }
+  ]
+}

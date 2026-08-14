@@ -1,0 +1,6 @@
+top,architecture,cell_count,area,critical_delay_ns,area_delay_product,startpoint,endpoint,cell_types,area_rank,delay_rank
+adder8_ripple,Ripple carry（普通逐位进位）,8,160.1536,1.714447,274.57485905920004,A[0] (input port clocked by vclk),SUM[7] (output port clocked by vclk),sky130_fd_sc_hd__fa_1=8,1,4
+adder8_kogge_stone,Kogge–Stone（并行前缀）,83,1226.176,1.628767,1997.155004992,A[2] (input port clocked by vclk),SUM[7] (output port clocked by vclk),sky130_fd_sc_hd__fa_1=25; sky130_fd_sc_hd__ha_1=58,5,3
+adder8_carry_select,Carry-select（4+4 分段）,27,593.0688,1.025152,607.9856664576,A[4] (input port clocked by vclk),SUM[7] (output port clocked by vclk),sky130_fd_sc_hd__fah_1=12; sky130_fd_sc_hd__ha_1=15,4,2
+adder8_carry_skip,Carry-skip（两个 4 位分组）,28,520.4992,1.972122,1026.4879233023998,A[0] (input port clocked by vclk),COUT (output port clocked by vclk),sky130_fd_sc_hd__fah_1=8; sky130_fd_sc_hd__ha_1=20,3,5
+adder8_alternating_polarity,Alternating-polarity ripple（正/反进位交替）,8,270.2592,0.884935,239.16182515200003,A[0] (input port clocked by vclk),SUM[7] (output port clocked by vclk),sky130_fd_sc_hd__fahcin_1=4; sky130_fd_sc_hd__fahcon_1=4,2,1

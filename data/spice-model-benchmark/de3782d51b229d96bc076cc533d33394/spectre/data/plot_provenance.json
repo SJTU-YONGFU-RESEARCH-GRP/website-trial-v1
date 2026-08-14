@@ -1,0 +1,470 @@
+{
+  "dimensions": {
+    "ac_charge_conservation.png": [
+      1200,
+      4320
+    ],
+    "ac_cv_characteristics.png": [
+      1440,
+      960
+    ],
+    "ac_cv_characteristics_per_gate_area.png": [
+      1440,
+      960
+    ],
+    "ac_cv_components.png": [
+      1440,
+      960
+    ],
+    "ac_cv_components_per_gate_area.png": [
+      1440,
+      960
+    ],
+    "ac_cv_nqs_effects.png": [
+      1200,
+      2160
+    ],
+    "ac_cv_sparameter_analysis.png": [
+      1200,
+      2160
+    ],
+    "ac_v_multifreq_characteristics.png": [
+      1440,
+      960
+    ],
+    "dc_iv_characteristics.png": [
+      1200,
+      1080
+    ],
+    "dc_kcl_verification.png": [
+      1200,
+      1080
+    ],
+    "dc_temperature_analysis.png": [
+      1200,
+      1080
+    ],
+    "noise_components.png": [
+      1200,
+      1080
+    ],
+    "noise_flicker_noise.png": [
+      1200,
+      1080
+    ],
+    "noise_shot_noise.png": [
+      1200,
+      1080
+    ],
+    "noise_thermal_noise.png": [
+      1200,
+      1080
+    ],
+    "noise_thermal_noise_vds_comparison.png": [
+      1200,
+      1080
+    ],
+    "noise_vs_temperature.png": [
+      1200,
+      1080
+    ],
+    "trans_charge_conservation.png": [
+      1200,
+      3240
+    ],
+    "trans_delay_effect.png": [
+      1200,
+      1080
+    ],
+    "trans_energy_consumption.png": [
+      1200,
+      1080
+    ],
+    "trans_large_signal_transient.png": [
+      1200,
+      1920
+    ],
+    "trans_power_dissipation.png": [
+      1200,
+      1080
+    ],
+    "trans_quasi_static_iv.png": [
+      1200,
+      1080
+    ],
+    "trans_quasi_static_time.png": [
+      1200,
+      1920
+    ],
+    "trans_switching_response.png": [
+      1200,
+      2880
+    ],
+    "trans_total_charge.png": [
+      1200,
+      1080
+    ]
+  },
+  "imageSha256": {
+    "ac_charge_conservation.png": "6e251812f0964e5769d372af492de60066490dc3078daabcec8f27c8cbc14c9f",
+    "ac_cv_characteristics.png": "647238bf4fb1cfdc52097aed2f948077c851b669dcc03b4eaede85d4bea036c2",
+    "ac_cv_characteristics_per_gate_area.png": "938371f3e3e477d2e4f8cb19e25150e0359828be2ff25b2d890def6839981604",
+    "ac_cv_components.png": "0d5d83891bd965e5b3400f111c9c8de73e5250ddc6558be99ced6a9428e6b6f5",
+    "ac_cv_components_per_gate_area.png": "77985e03c21292cc801f29dab965d4109cbb5750567faedf03b0a958e137d0cf",
+    "ac_cv_nqs_effects.png": "970dc24f120bce924c0856bcf54eb1e3112b76b722e40677a8736d3dc01190ae",
+    "ac_cv_sparameter_analysis.png": "0049cb2d842b1fe9d5b760e3cda43b00d18d4c4cc8516a2e28391d4d2edf7221",
+    "ac_v_multifreq_characteristics.png": "1e55b7e22fcac7f061daf2ea993215ff35709f2b08f6fcdc3b4159d4861d4ef8",
+    "dc_iv_characteristics.png": "1823280e0ebe990c346f23614b2103fc3b07b09b565e68624c196a622178206c",
+    "dc_kcl_verification.png": "a4dbac976d81360d9aa3bdd178b252677b4834d39d9a4247ccc9c98dd0e1b88f",
+    "dc_temperature_analysis.png": "28d90ae76411be5999d4b71feb13129a71559d009c215ddee6fae7cd5b26397d",
+    "noise_components.png": "375f08e3996d93ea6fa267d89f3ca4190287d3652f48d9153a97a3521808be1d",
+    "noise_flicker_noise.png": "eadfa8eb91e098eacbd29c4427738d7c091514536b2747cd01aef9dfade99cb9",
+    "noise_shot_noise.png": "c7ab3c94715f5904bbef1c6df52acc28c1c2df3caab7c5f0698041fbde741b95",
+    "noise_thermal_noise.png": "914c1c017154fa2be2cf85ce6c2b3bf386418af67a64c306cd43e31d22007c63",
+    "noise_thermal_noise_vds_comparison.png": "bcca08af0e1fb1e43fbcf547fdb860c28eb20e6c17adb96003e3d43957fac9e9",
+    "noise_vs_temperature.png": "8be98a493fcf89a5ec44acb9bdf310ea371819345b127f30e5861799f7cee451",
+    "trans_charge_conservation.png": "cd6c102803f85eb248b009b17e189ed92b54a68d961baef70d8a650d52c3a82e",
+    "trans_delay_effect.png": "076959c8b483deac61703ee330c9f2acc99bb97ff38822d72fdc7c864cfa9df5",
+    "trans_energy_consumption.png": "e41c82e83846a3fd23962b9a0803732080c68061c3fd59e00b7e77ce625b369f",
+    "trans_large_signal_transient.png": "18e55add65107bc40abcf23a4ed5b7d2e911f8b1b93f379c58fbe42de182cfcc",
+    "trans_power_dissipation.png": "bc251927c2817c85b77b45488be2d25d55a403c5380405b8547e5badc01cf3ae",
+    "trans_quasi_static_iv.png": "9f22733def690d1c01b2568ae3f0f2f789bd79699eaed3d81bdc1f381fbe24e0",
+    "trans_quasi_static_time.png": "55ff4c1b53e69775c0cff7052d3ec7d7ea17aee67c0b8ef9192ae6cc6e8a1b91",
+    "trans_switching_response.png": "42d71a9a8e4901cdf6c5ce214e5af368c5207b5da4164f3b2b585d4fbec0d751",
+    "trans_total_charge.png": "de04faf3e3fd1215753607b39691f265984d2edd6687fc1f6457f368c919a65f"
+  },
+  "plots": {
+    "ac_charge_conservation.png": {
+      "sourceSha256": {
+        "data/charge_conservation.txt": "0b5470a0bc8a36dcd40953d5d363f4a9566531ace1b6089fd28bc4b65a367843"
+      },
+      "sources": [
+        "data/charge_conservation.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "trapezoidal integration of measured terminal currents"
+    },
+    "ac_cv_characteristics.png": {
+      "sourceSha256": {
+        "data/ac_cv_caps_1MHz_per_gate_area.csv": "8e1f7495b2011d71e06e8e83fb48a00aab38c8d8a3b9a4c826740b8c35c196c5",
+        "data/cv_data.txt": "0405eaf1f300a65cac2f4ad3015f3f807dd453ff9f6c95d79e9bcc032ae4494d"
+      },
+      "sources": [
+        "data/cv_data.txt",
+        "data/ac_cv_caps_1MHz_per_gate_area.csv"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct CV plot; per-area curves divide measured capacitance by MOS W*L from netlist/ac.*"
+    },
+    "ac_cv_characteristics_per_gate_area.png": {
+      "sourceSha256": {
+        "data/ac_cv_caps_1MHz_per_gate_area.csv": "8e1f7495b2011d71e06e8e83fb48a00aab38c8d8a3b9a4c826740b8c35c196c5",
+        "data/cv_data.txt": "0405eaf1f300a65cac2f4ad3015f3f807dd453ff9f6c95d79e9bcc032ae4494d"
+      },
+      "sources": [
+        "data/cv_data.txt",
+        "data/ac_cv_caps_1MHz_per_gate_area.csv"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct CV plot; per-area curves divide measured capacitance by MOS W*L from netlist/ac.*"
+    },
+    "ac_cv_components.png": {
+      "sourceSha256": {
+        "data/ac_cv_caps_1MHz_per_gate_area.csv": "8e1f7495b2011d71e06e8e83fb48a00aab38c8d8a3b9a4c826740b8c35c196c5",
+        "data/cv_data.txt": "0405eaf1f300a65cac2f4ad3015f3f807dd453ff9f6c95d79e9bcc032ae4494d"
+      },
+      "sources": [
+        "data/cv_data.txt",
+        "data/ac_cv_caps_1MHz_per_gate_area.csv"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct CV plot; per-area curves divide measured capacitance by MOS W*L from netlist/ac.*"
+    },
+    "ac_cv_components_per_gate_area.png": {
+      "sourceSha256": {
+        "data/ac_cv_caps_1MHz_per_gate_area.csv": "8e1f7495b2011d71e06e8e83fb48a00aab38c8d8a3b9a4c826740b8c35c196c5",
+        "data/cv_data.txt": "0405eaf1f300a65cac2f4ad3015f3f807dd453ff9f6c95d79e9bcc032ae4494d"
+      },
+      "sources": [
+        "data/cv_data.txt",
+        "data/ac_cv_caps_1MHz_per_gate_area.csv"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct CV plot; per-area curves divide measured capacitance by MOS W*L from netlist/ac.*"
+    },
+    "ac_cv_nqs_effects.png": {
+      "sourceSha256": {
+        "data/nqs_effects.txt": "39a32301330af1ff451e38bd35252616e7c654d4228add3b6a606d649c449060"
+      },
+      "sources": [
+        "data/nqs_effects.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "measured complex gate-voltage/drain-current phase"
+    },
+    "ac_cv_sparameter_analysis.png": {
+      "sourceSha256": {
+        "data/sparams_data.txt": "3416a0fc96bd4a1dab73ad57ac119f78a79eb4e341e0cab4010feb90c4c2a4e8"
+      },
+      "sources": [
+        "data/sparams_data.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "Y-to-S conversion from two measured complex port excitations"
+    },
+    "ac_v_multifreq_characteristics.png": {
+      "sourceSha256": {
+        "data/ac_cv_caps_1MHz_per_gate_area.csv": "8e1f7495b2011d71e06e8e83fb48a00aab38c8d8a3b9a4c826740b8c35c196c5",
+        "data/cv_data.txt": "0405eaf1f300a65cac2f4ad3015f3f807dd453ff9f6c95d79e9bcc032ae4494d"
+      },
+      "sources": [
+        "data/cv_data.txt",
+        "data/ac_cv_caps_1MHz_per_gate_area.csv"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct CV plot; per-area curves divide measured capacitance by MOS W*L from netlist/ac.*"
+    },
+    "dc_iv_characteristics.png": {
+      "sourceSha256": {
+        "data/iv_data_-40.txt": "f1b80fb97502c52046c680a65ea0a4670672892531276ced04905888728e335c",
+        "data/iv_data_0.txt": "246dbc8afacdc08d202ecd3cdc2101a553f44d6978e9a4fd7663a9d47d9a903a",
+        "data/iv_data_100.txt": "a4ca4169f98f266bdb2f1a33938b0d9c2210239a241f651c98feae706998163c",
+        "data/iv_data_150.txt": "97d02dbc635c36d085f31eb75a2143282f9950c6a46d1744d0cb8317c2cce025",
+        "data/iv_data_25.txt": "e52517e56639f81bf5d89d7e0dadaec23191e5e82686e2bb14e5541b853c4316",
+        "data/iv_data_50.txt": "4349c55b28cb14c0a44f4a802dd15a934ed7208816267402ea79abf4c18d4996"
+      },
+      "sources": [
+        "data/iv_data_-40.txt",
+        "data/iv_data_0.txt",
+        "data/iv_data_25.txt",
+        "data/iv_data_50.txt",
+        "data/iv_data_100.txt",
+        "data/iv_data_150.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "dc_kcl_verification.png": {
+      "sourceSha256": {
+        "data/iv_data_-40.txt": "f1b80fb97502c52046c680a65ea0a4670672892531276ced04905888728e335c",
+        "data/iv_data_0.txt": "246dbc8afacdc08d202ecd3cdc2101a553f44d6978e9a4fd7663a9d47d9a903a",
+        "data/iv_data_100.txt": "a4ca4169f98f266bdb2f1a33938b0d9c2210239a241f651c98feae706998163c",
+        "data/iv_data_150.txt": "97d02dbc635c36d085f31eb75a2143282f9950c6a46d1744d0cb8317c2cce025",
+        "data/iv_data_25.txt": "e52517e56639f81bf5d89d7e0dadaec23191e5e82686e2bb14e5541b853c4316",
+        "data/iv_data_50.txt": "4349c55b28cb14c0a44f4a802dd15a934ed7208816267402ea79abf4c18d4996"
+      },
+      "sources": [
+        "data/iv_data_-40.txt",
+        "data/iv_data_0.txt",
+        "data/iv_data_25.txt",
+        "data/iv_data_50.txt",
+        "data/iv_data_100.txt",
+        "data/iv_data_150.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "dc_temperature_analysis.png": {
+      "sourceSha256": {
+        "data/iv_data_-40.txt": "f1b80fb97502c52046c680a65ea0a4670672892531276ced04905888728e335c",
+        "data/iv_data_0.txt": "246dbc8afacdc08d202ecd3cdc2101a553f44d6978e9a4fd7663a9d47d9a903a",
+        "data/iv_data_100.txt": "a4ca4169f98f266bdb2f1a33938b0d9c2210239a241f651c98feae706998163c",
+        "data/iv_data_150.txt": "97d02dbc635c36d085f31eb75a2143282f9950c6a46d1744d0cb8317c2cce025",
+        "data/iv_data_25.txt": "e52517e56639f81bf5d89d7e0dadaec23191e5e82686e2bb14e5541b853c4316",
+        "data/iv_data_50.txt": "4349c55b28cb14c0a44f4a802dd15a934ed7208816267402ea79abf4c18d4996"
+      },
+      "sources": [
+        "data/iv_data_-40.txt",
+        "data/iv_data_0.txt",
+        "data/iv_data_25.txt",
+        "data/iv_data_50.txt",
+        "data/iv_data_100.txt",
+        "data/iv_data_150.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "noise_components.png": {
+      "sourceSha256": {
+        "data/flicker_noise.txt": "0ed5a538a7c9f1fdad5437225fe19d036abe6bc64f87a3e81176c93c4ce9cdc1",
+        "data/shot_noise.txt": "c48c2c8007fd1a66e2f41c587e9f74c4d1f01ab191b2182f15a9f1272e271eae",
+        "data/thermal_noise_vgs0.6_vds0.6.txt": "7e24315bbe2e54a50e00c539362e4347300965f313e7bfec2ee90433520aa6e8"
+      },
+      "sources": [
+        "data/thermal_noise_vgs0.6_vds0.6.txt",
+        "data/flicker_noise.txt",
+        "data/shot_noise.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "log-frequency interpolation within the common measured range, then sum of measured component spectra"
+    },
+    "noise_flicker_noise.png": {
+      "sourceSha256": {
+        "data/flicker_noise.txt": "0ed5a538a7c9f1fdad5437225fe19d036abe6bc64f87a3e81176c93c4ce9cdc1"
+      },
+      "sources": [
+        "data/flicker_noise.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "noise_shot_noise.png": {
+      "sourceSha256": {
+        "data/shot_noise.txt": "c48c2c8007fd1a66e2f41c587e9f74c4d1f01ab191b2182f15a9f1272e271eae"
+      },
+      "sources": [
+        "data/shot_noise.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "noise_thermal_noise.png": {
+      "sourceSha256": {
+        "data/thermal_noise_vgs0.6_vds0.6.txt": "7e24315bbe2e54a50e00c539362e4347300965f313e7bfec2ee90433520aa6e8"
+      },
+      "sources": [
+        "data/thermal_noise_vgs0.6_vds0.6.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "noise_thermal_noise_vds_comparison.png": {
+      "sourceSha256": {
+        "data/thermal_noise_vgs0.3_vds0.3.txt": "4cf23ff7e45bb40099c702543c97f2e1cba1689c36043b4b4487873c7ca24552",
+        "data/thermal_noise_vgs0.3_vds0.6.txt": "965a8b4b16a2d9d8e01ac58257c6d66aae681bf14aaf9d67f2a17113201886c9",
+        "data/thermal_noise_vgs0.3_vds0.9.txt": "73f77439a1283333b9a90c4af375e7a32faffdd2a33754c4062745ef5178cd61",
+        "data/thermal_noise_vgs0.3_vds1.2.txt": "1f61bcdcae2f46a2655fe2323e94e885df0eb1c0f134288efa8e81efc1223e61",
+        "data/thermal_noise_vgs0.6_vds0.3.txt": "fe0a985de2ae8f06988d3c541b57938fc23b2ce51a7950a7eb161228dd781fe0",
+        "data/thermal_noise_vgs0.6_vds0.6.txt": "7e24315bbe2e54a50e00c539362e4347300965f313e7bfec2ee90433520aa6e8"
+      },
+      "sources": [
+        "data/thermal_noise_vgs0.3_vds0.3.txt",
+        "data/thermal_noise_vgs0.3_vds0.6.txt",
+        "data/thermal_noise_vgs0.3_vds0.9.txt",
+        "data/thermal_noise_vgs0.3_vds1.2.txt",
+        "data/thermal_noise_vgs0.6_vds0.3.txt",
+        "data/thermal_noise_vgs0.6_vds0.6.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "noise_vs_temperature.png": {
+      "sourceSha256": {
+        "data/noise_temp-40.txt": "942d16e66f405320b44ef8eb11a2b77a13e53623436f219713ca976da53d693e",
+        "data/noise_temp0.txt": "14b7ca99fede564f8b013368da600893db89060897532d9d9b791b2cfdd594bd",
+        "data/noise_temp100.txt": "555384654688c04f5a4013e44f52c90062b55d897dbd44ea0da43ca46521097a",
+        "data/noise_temp150.txt": "f025e63aeb27f9780674fb602d629fe0526bec9ab96bf92f41cc0e337ccd23ea",
+        "data/noise_temp27.txt": "7e24315bbe2e54a50e00c539362e4347300965f313e7bfec2ee90433520aa6e8",
+        "data/noise_temp50.txt": "1f9559bf1dcb911352fc8e286a31f65ea1dc8df6f614a5d86768a5a214754e8c"
+      },
+      "sources": [
+        "data/noise_temp-40.txt",
+        "data/noise_temp0.txt",
+        "data/noise_temp27.txt",
+        "data/noise_temp50.txt",
+        "data/noise_temp100.txt",
+        "data/noise_temp150.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "temperature comparison of measured noise spectra"
+    },
+    "trans_charge_conservation.png": {
+      "sourceSha256": {
+        "data/tran_charge.txt": "dee142fa85f164ba8fcc61212670fb68f2c7aa6ef3791242d7cd5f9d4e858042"
+      },
+      "sources": [
+        "data/tran_charge.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "plots use the existing transient-current integration result; terminal and total-charge artifacts are kept distinct"
+    },
+    "trans_delay_effect.png": {
+      "sourceSha256": {
+        "data/tran_delay.txt": "9f554c17aa3b93da2ed235215aec77ccb71926d9cdc6ac3244e15550265e6ef2"
+      },
+      "sources": [
+        "data/tran_delay.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "trans_energy_consumption.png": {
+      "sourceSha256": {
+        "data/tran_power_100C.txt": "40a0d70b50e9eb90b8bb1c28dfd33d108ba7916f1ccec6b9824f4535808835bc",
+        "data/tran_power_27C.txt": "fcc3a6eef033156f843cd526ccb280f9b67effd38e111dd75b91ad95d4aee603"
+      },
+      "sources": [
+        "data/tran_power_27C.txt",
+        "data/tran_power_100C.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "cumulative trapezoidal integration of measured power"
+    },
+    "trans_large_signal_transient.png": {
+      "sourceSha256": {
+        "data/tran_large_signal.txt": "8fadb168d2a6d1fb83dddf69bbec699975c3beda0dfbd559839770a2c4974bb7"
+      },
+      "sources": [
+        "data/tran_large_signal.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "trans_power_dissipation.png": {
+      "sourceSha256": {
+        "data/tran_power_100C.txt": "40a0d70b50e9eb90b8bb1c28dfd33d108ba7916f1ccec6b9824f4535808835bc",
+        "data/tran_power_27C.txt": "fcc3a6eef033156f843cd526ccb280f9b67effd38e111dd75b91ad95d4aee603"
+      },
+      "sources": [
+        "data/tran_power_27C.txt",
+        "data/tran_power_100C.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "trans_quasi_static_iv.png": {
+      "sourceSha256": {
+        "data/tran_quasi_static.txt": "5c258d5f93ae7eacda6a449b0b1d0fce03d55fa101f30b4b619463869ba15551"
+      },
+      "sources": [
+        "data/tran_quasi_static.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "trans_quasi_static_time.png": {
+      "sourceSha256": {
+        "data/tran_quasi_static.txt": "5c258d5f93ae7eacda6a449b0b1d0fce03d55fa101f30b4b619463869ba15551"
+      },
+      "sources": [
+        "data/tran_quasi_static.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "trans_switching_response.png": {
+      "sourceSha256": {
+        "data/tran_switching.txt": "e122e634a21c57b51974548b950de07496cd51d42054350c5577b07a2b61c4cf",
+        "data/tran_switching_power.txt": "f4bd22d236a048d88df69915ef1b6a18f6599cc486b07092f205dfe806b95434"
+      },
+      "sources": [
+        "data/tran_switching.txt",
+        "data/tran_switching_power.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "direct plot"
+    },
+    "trans_total_charge.png": {
+      "sourceSha256": {
+        "data/tran_charge.txt": "dee142fa85f164ba8fcc61212670fb68f2c7aa6ef3791242d7cd5f9d4e858042"
+      },
+      "sources": [
+        "data/tran_charge.txt"
+      ],
+      "syntheticDataUsed": false,
+      "transformation": "plots use the existing transient-current integration result; terminal and total-charge artifacts are kept distinct"
+    }
+  },
+  "schemaVersion": 2,
+  "syntheticDataUsed": false
+}
