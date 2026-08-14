@@ -10,9 +10,6 @@ const PlotlyPage = lazy(async () => ({
 const AnalogPage = lazy(async () => ({
   default: (await import("./pages/AnalogPage")).AnalogPage,
 }));
-const ToolFlowPage = lazy(async () => ({
-  default: (await import("./pages/ToolFlowPage")).ToolFlowPage,
-}));
 const SpiceBenchmarkPage = lazy(async () => ({
   default: (await import("./pages/SpiceBenchmarkPage")).SpiceBenchmarkPage,
 }));
@@ -39,12 +36,6 @@ export default function App(): ReactElement {
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           Home
-        </NavLink>
-        <NavLink
-          to="/flow"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Flow
         </NavLink>
         <NavLink
           to="/benchmark"
@@ -81,7 +72,7 @@ export default function App(): ReactElement {
         >
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/flow" element={<ToolFlowPage />} />
+            <Route path="/flow" element={<Navigate to="/" replace />} />
             <Route path="/benchmark" element={<SpiceBenchmarkPage />} />
             <Route path="/plotly" element={<PlotlyPage />} />
             <Route path="/ppa" element={<PpaPage />} />

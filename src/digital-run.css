@@ -1,0 +1,67 @@
+.digital-workflows { display: grid; gap: 1rem; margin-bottom: 1rem; }
+.digital-workflows__heading { display: grid; gap: .35rem; padding: .25rem .15rem; }
+.digital-workflows__heading span, .digital-eyebrow, .digital-section-heading span { color: var(--accent); font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.digital-workflows__heading h2, .digital-workflow-card h3, .digital-workflow-card h4 { margin: 0; letter-spacing: -.02em; }
+.digital-workflows__heading h2 { font-size: clamp(1.25rem, 3vw, 1.65rem); }
+.digital-workflows__heading p, .digital-intro { margin: 0; color: var(--text-secondary); font-size: .86rem; }
+.digital-workflow-card { overflow: hidden; border: 1px solid var(--border-subtle); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow-card); }
+.digital-workflow-card > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.15rem 1.25rem .7rem; }
+.digital-workflow-card h3 { margin-top: .18rem; font-size: 1.18rem; }
+.digital-intro { padding: 0 1.25rem 1rem; max-width: 82ch; }
+.digital-mode-badge { flex: 0 0 auto; padding: .38rem .58rem; border-radius: 999px; background: var(--accent-bg); color: var(--accent); font-size: .72rem; font-weight: 650; }
+.digital-tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .55rem; padding: 0 1.25rem 1rem; }
+.digital-tool { display: grid; gap: .18rem; padding: .7rem; border: 1px solid var(--border-light); border-radius: 12px; background: var(--surface2); }
+.digital-tool strong { font-size: .78rem; }
+.digital-tool small { min-height: 1.8em; color: var(--muted); font-size: .68rem; }
+.digital-health { width: fit-content; font-size: .7rem; font-weight: 700; }
+.digital-health--healthy { color: var(--ok); }
+.digital-health--unavailable, .digital-health--not_configured { color: var(--fail); }
+.digital-health--degraded { color: var(--warn); }
+.digital-input-section, .digital-parameter-section, .digital-submit-section, .digital-recognition, .digital-plan { padding: 1rem 1.25rem; border-top: 1px solid var(--border-light); }
+.digital-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .6rem; }
+.digital-section-heading h4 { margin-top: .1rem; font-size: .95rem; }
+.digital-section-heading > strong { color: var(--text-secondary); font-size: .75rem; }
+.digital-format { margin: 0 0 .65rem; color: var(--text-secondary); font-size: .76rem; line-height: 1.45; }
+.digital-file-actions { display: flex; flex-wrap: wrap; gap: .45rem; }
+.digital-file-actions button, .digital-primary { min-height: 38px; border: 1px solid var(--border); border-radius: 10px; padding: .48rem .7rem; background: var(--surface); color: var(--text); font: inherit; font-size: .76rem; font-weight: 650; cursor: pointer; }
+.digital-file-actions button:hover { border-color: var(--accent); color: var(--accent); }
+.digital-primary { border-color: var(--accent); background: var(--accent); color: white; }
+.digital-primary:disabled, .digital-file-actions button:disabled { cursor: not-allowed; opacity: .5; }
+.digital-table-wrap { overflow: auto; max-height: 330px; margin-top: .7rem; border: 1px solid var(--border-light); border-radius: 12px; }
+.digital-table-wrap table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .72rem; }
+.digital-table-wrap th, .digital-table-wrap td { padding: .48rem .55rem; border-bottom: 1px solid var(--border-light); text-align: left; vertical-align: middle; white-space: nowrap; }
+.digital-table-wrap th { position: sticky; top: 0; z-index: 2; background: var(--surface2); }
+.digital-table-wrap tr:last-child td { border-bottom: 0; }
+.digital-table-wrap select { max-width: 170px; }
+.digital-table-wrap code { color: var(--text-secondary); font-size: .68rem; }
+.digital-status--ok { color: var(--ok); font-weight: 650; }
+.digital-status--bad { color: var(--fail); font-weight: 650; }
+.digital-progress { position: relative; height: 20px; overflow: hidden; margin-top: .55rem; border-radius: 999px; background: var(--surface-raised); }
+.digital-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), #4c9fff); transition: width .18s ease; }
+.digital-progress label { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text); font-size: .65rem; font-weight: 700; mix-blend-mode: multiply; }
+.digital-field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .65rem; }
+.digital-field-grid label { display: grid; gap: .25rem; color: var(--text-secondary); font-size: .7rem; font-weight: 600; text-transform: capitalize; }
+.digital-field-grid input, .digital-field-grid select, .digital-table-wrap select { width: 100%; min-height: 38px; border: 1px solid var(--border); border-radius: 9px; padding: .42rem .5rem; background: var(--surface); color: var(--text); font: inherit; font-size: .76rem; }
+.digital-callout { margin: .7rem 0 0; padding: .62rem .72rem; border-left: 3px solid var(--accent); border-radius: 7px; background: var(--accent-bg); color: var(--text-secondary); font-size: .74rem; line-height: 1.45; }
+.digital-workflow-card > .digital-callout { margin: 0 1.25rem 1rem; }
+.digital-callout--warning { border-left-color: var(--warn); background: color-mix(in srgb, var(--warn) 9%, transparent); }
+.digital-callout--error { border-left-color: var(--fail); background: color-mix(in srgb, var(--fail) 8%, transparent); color: var(--fail); }
+.digital-recognition h4 { margin: 0; }
+.digital-recognition > p { margin: .25rem 0 0; color: var(--text-secondary); font-size: .74rem; }
+.digital-plan ol { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; counter-reset: steps; }
+.digital-plan li { display: grid; grid-template-columns: minmax(160px, .85fr) minmax(220px, 1.15fr); gap: .7rem; padding: .62rem .7rem; border-radius: 11px; background: var(--surface2); counter-increment: steps; }
+.digital-plan li strong::before { content: counter(steps) ". "; color: var(--accent); }
+.digital-plan li p { margin: .15rem 0 0; color: var(--text-secondary); font-size: .7rem; }
+.digital-plan__detail { display: grid; align-content: start; gap: .25rem; color: var(--text-secondary); font-size: .68rem; }
+.digital-plan__detail code { overflow: auto; padding: .3rem .4rem; border-radius: 6px; background: var(--surface); white-space: nowrap; }
+.digital-start { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-top: 1px solid var(--border-light); background: color-mix(in srgb, var(--ok) 6%, var(--surface)); }
+.digital-start p { margin: .15rem 0 0; color: var(--text-secondary); font-size: .72rem; }
+@media (max-width: 680px) {
+  .digital-workflow-card > header, .digital-start { align-items: stretch; flex-direction: column; }
+  .digital-mode-badge { width: fit-content; }
+  .digital-plan li { grid-template-columns: 1fr; }
+  .digital-field-grid { grid-template-columns: 1fr; }
+  .digital-input-section, .digital-parameter-section, .digital-submit-section, .digital-recognition, .digital-plan { padding: .85rem; }
+  .digital-workflow-card > header { padding: .9rem .85rem .6rem; }
+  .digital-intro, .digital-tool-grid { padding-left: .85rem; padding-right: .85rem; }
+}

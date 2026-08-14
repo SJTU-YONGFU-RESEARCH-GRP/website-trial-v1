@@ -8,7 +8,7 @@
 /* ═══════════════════════════════════════════════════════════════════ */
 
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { EmptyState } from "../../flow/EmptyState";
+import { EmptyState } from "../../../components/EmptyState";
 import type {
   AnalysisDomain,
   ComparisonMode,

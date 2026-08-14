@@ -59,11 +59,13 @@ jobs:
       #     cache-dependency-path: package-lock.json
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install and build
         env:
           SPICE_BENCHMARK_SOURCE: external/spice_model_benchmark
+          VITE_BASE_PATH: /website-trial-v1/
+          VITE_READ_ONLY_DEMO: "true"
         run: |
           npm ci
           npm run build

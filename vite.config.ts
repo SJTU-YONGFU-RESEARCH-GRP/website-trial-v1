@@ -9,7 +9,6 @@ import {
   type ViteDevServer,
 } from "vite";
 import react from "@vitejs/plugin-react";
-import { createUploadMiddleware } from "./server/uploadService";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const benchmarkDataRoot = path.resolve(
@@ -341,34 +340,22 @@ function benchmarkAvailableRunsPlugin() {
   };
 }
 
-function uploadDataPlugin() {
-  return {
-    name: "unified-data-upload",
-    configureServer(server: ViteDevServer) {
-      server.middlewares.use(createUploadMiddleware({
-        projectRoot: __dirname,
-        parserPath: path.resolve(
-          __dirname,
-          "..",
-          "rtl2gds-copilot-orchestrator/scripts/result_json_ast.py",
-        ),
-        validateBenchmarkRun: isDisplayableRun,
-        invalidateBenchmarkIndex: () => invalidateBenchmarkIndex(),
-      }));
-    },
-  };
-}
-
-// GitHub **project** Pages serves this app at /website-trial-v1/ (not repo root).
-// Use an explicit prefix in prod so lazy chunks load from the right path.
-export default defineConfig(({ mode }) => ({
-  plugins: [benchmarkAvailableRunsPlugin(), uploadDataPlugin(), react()],
+export default defineConfig(() => ({
+  plugins: [benchmarkAvailableRunsPlugin(), react()],
   resolve: {
     alias: {
       "@data": path.resolve(__dirname, "data"),
     },
   },
-  base: mode === "production" ? "/website-trial-v1/" : "/",
+  base: process.env.VITE_BASE_PATH ?? "/",
+  server: {
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_PROXY_TARGET ?? "http://127.0.0.1:3001",
+        changeOrigin: true,
+      },
+    },
+  },
   // plotly.js-dist-min is a browser bundle; do not bundle raw `plotly.js` (pulls Node
   // shims like stream/buffer that break under Rolldown with "undefined.prototype").
   optimizeDeps: {
