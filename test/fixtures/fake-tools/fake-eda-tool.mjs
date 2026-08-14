@@ -45,7 +45,7 @@ function option(name, fallback) {
 }
 
 function versionProbe() {
-  return argv.some((value) => value === "--version" || value === "-version" || value === "version" || value === "-V");
+  return argv.some((value) => value === "--version" || value === "-version" || value === "version" || value === "-V" || value === "--help" || value === "-W");
 }
 
 if (versionProbe()) {
@@ -123,6 +123,41 @@ if (mode === "timeout" || mode === "cancel") {
     write("output/hold-checks.rpt", "hold checks: met\n");
     write("output/min-period.rpt", "minimum period 9.60\n");
     process.stdout.write("OpenSTA fake timing completed\n");
+  } else if (tool === "ngspice") {
+    write(option("-o", "ngspice.log"), "ngspice fake operating point completed\n");
+  } else if (tool === "spice-benchmark") {
+    const directory = option("--output-dir", "output/benchmark");
+    write(path.join(directory, "REPORT.md"), "# Fake executable Benchmark report\n\nVersion: ngspice fake-eda-tool 1.0.0-test\n\n## DC\n\n✓ completed\n");
+    write(path.join(directory, "data", "dc.json"), JSON.stringify({ domain: "dc", status: "succeeded", fixture: true }, null, 2));
+  } else if (tool === "openroad-orfs" && argv.includes("metadata-generate")) {
+    write("work/orfs-run/orfs/reports/metadata.json", JSON.stringify({
+      finish__design__die__area: 200,
+      finish__design__core__area: 144,
+      finish__design__instance__area: 80,
+      finish__design__instance__count__stdcell: 42,
+      finish__design__instance__count: 42,
+      finish__design__instance__utilization: 0.4,
+      finish__design__io: 3,
+      finish__timing__setup__ws: 0.12,
+      finish__timing__hold__ws: 0.04,
+      finish__timing__setup__tns: 0,
+      finish__timing__hold__tns: 0,
+      finish__timing__fmax: 101000000,
+      finish__timing__drv__max_cap: 0,
+      finish__timing__drv__max_fanout: 0,
+      finish__timing__drv__max_slew: 0,
+      finish__power__internal__total: 0.0004,
+      finish__power__switching__total: 0.0006,
+      finish__power__leakage__total: 0.0005,
+      finish__power__total: 0.0015,
+      detailedroute__route__drc_errors: 0,
+      detailedroute__antenna__violating__nets: 0,
+      detailedroute__antenna__violating__pins: 0,
+      detailedroute__route__net: 8,
+      detailedroute__route__net__special: 2,
+      detailedroute__route__vias: 18,
+      detailedroute__route__wirelength: 333,
+    }, null, 2));
   }
 
   write(output, `${JSON.stringify({ schemaVersion: "fake.eda.v1", tool, status: "succeeded", argv }, null, 2)}\n`);

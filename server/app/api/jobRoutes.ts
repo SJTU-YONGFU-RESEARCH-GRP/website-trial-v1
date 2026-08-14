@@ -17,7 +17,7 @@ const TERMINAL = new Set<JobStatus>(["succeeded", "failed", "cancelled", "interr
 
 export function registerJobRoutes(app: FastifyInstance, repositories: Repositories, storage: StorageService, workers: WorkerSupervisor | null): void {
   app.post("/api/jobs/:jobId/start", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["jobs"] } }, async (request) => {
-    const job = ownedJob(request, repositories); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
+    const job = ownedJob(request, repositories); assertModuleAllowed(request, job); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
     if (job.plan.sweep) {
       const sweepJobs = await materializeSweepJobs(job, repositories, storage, app);
       for (const sweepJob of sweepJobs) repositories.jobs.appendEvent(sweepJob.id, null, "info", "system", `Sweep point queued (${sweepJobs.indexOf(sweepJob) + 1}/${sweepJobs.length})`, { sweepParentJobId: job.id });
@@ -68,7 +68,7 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.post("/api/jobs/:jobId/retry", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const old = ownedJob(request, repositories); if (!TERMINAL.has(old.status)) throw new ApiError(409, "JOB_NOT_RETRYABLE", "only terminal jobs can be retried");
+    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); if (!TERMINAL.has(old.status)) throw new ApiError(409, "JOB_NOT_RETRYABLE", "only terminal jobs can be retried");
     const retry = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
     const workspace = await storage.createWorkspace(retry.id); await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });
     await fsp.rm(path.join(workspace, "input"), { recursive: true }); await fsp.rename(path.join(workspace, "input-copy"), path.join(workspace, "input"));
@@ -79,7 +79,7 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.post("/api/jobs/:jobId/clone", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const old = ownedJob(request, repositories);
+    const old = ownedJob(request, repositories); assertModuleAllowed(request, old);
     const clone = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
     const workspace = await storage.createWorkspace(clone.id);
     await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });
@@ -171,4 +171,8 @@ function cartesianPoints(dimensions: Record<string, JsonPrimitive[]>): JsonObjec
 function ownedJob(request: Parameters<typeof assertOwnerOrAdmin>[0], repositories: Repositories) {
   const id = String((request.params as { jobId?: string }).jobId || ""); const job = repositories.jobs.get(id);
   if (!job) throw new ApiError(404, "NOT_FOUND", "job not found"); assertOwnerOrAdmin(request, job.ownerId); return job;
+}
+
+function assertModuleAllowed(request: Parameters<typeof assertOwnerOrAdmin>[0], job: JobRecordV1): void {
+  if (request.edaUser!.role !== "admin" && !request.edaUser!.allowedModules.includes(job.moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is no longer allowed to run this module");
 }

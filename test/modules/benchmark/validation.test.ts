@@ -34,6 +34,29 @@ async function fixtureContext(csv: string): Promise<DraftValidationContextV1> {
 }
 
 describe("Benchmark preflight validation", () => {
+  it("recursively safety-scans included model dependencies without treating them as extra roots", async () => {
+    const storageRoot = await mkdtemp(path.join(os.tmpdir(), "benchmark-include-security-")); temporaryDirectories.push(storageRoot);
+    const inputRoot = path.join(storageRoot, "jobs/job-1/input"); await mkdir(inputRoot, { recursive: true });
+    const root = ".include child.lib\n.model dut nmos level=54\n"; const child = ".control\nshell touch never\n.endc\n";
+    await writeFile(path.join(inputRoot, "main.sp"), root); await writeFile(path.join(inputRoot, "child.lib"), child);
+    const files = [inputFile("main.sp", "primary-model", Buffer.byteLength(root)), inputFile("child.lib", "model-include", Buffer.byteLength(child))];
+    const record = jobRecord({ inputManifest: { schemaVersion: "eda.input-manifest.v1", files, totalBytes: Buffer.byteLength(root) + Buffer.byteLength(child), fileCount: 2, rootHint: null, createdAt: "2026-08-14T00:00:00.000Z" }, parameters: { mode: "run", operations: { translator: true }, translator: {}, fitting: {}, reduction: {}, expansion: {}, benchmark: {} }, toolConfigurations: [toolConfiguration("translator", { interpreter: "/usr/bin/python3", entryPoint: "/opt/translator/main.py" })] });
+    const result = await new BenchmarkModuleAdapter({ health: { translator: { status: "healthy", version: "1", reason: null, adapterSelfTestPassed: true } } }).validateDraft({ moduleId: "benchmark", storageRoot, now: () => "2026-08-14T00:00:00.000Z", job: record, files, technology: null });
+    expect(result.errors).toContainEqual(expect.objectContaining({ code: "benchmark.unsafe_spice" }));
+    expect(result.errors.map((item) => item.code)).not.toContain("benchmark.processing_single_model");
+  });
+
+  it("follows Spectre include syntax and rejects ahdl_include in the dependency", async () => {
+    const storageRoot = await mkdtemp(path.join(os.tmpdir(), "benchmark-spectre-security-")); temporaryDirectories.push(storageRoot);
+    const inputRoot = path.join(storageRoot, "jobs/job-1/input"); await mkdir(inputRoot, { recursive: true });
+    const root = "include \"child.scs\" section=tt\n"; const child = "ahdl_include \"external.va\"\n";
+    await writeFile(path.join(inputRoot, "main.scs"), root); await writeFile(path.join(inputRoot, "child.scs"), child);
+    const files = [inputFile("main.scs", "primary-model", Buffer.byteLength(root)), inputFile("child.scs", "model-include", Buffer.byteLength(child))];
+    const record = jobRecord({ inputManifest: { schemaVersion: "eda.input-manifest.v1", files, totalBytes: Buffer.byteLength(root) + Buffer.byteLength(child), fileCount: 2, rootHint: null, createdAt: "2026-08-14T00:00:00.000Z" }, parameters: { mode: "run", operations: { translator: true }, translator: {}, fitting: {}, reduction: {}, expansion: {}, benchmark: {} }, toolConfigurations: [toolConfiguration("translator", { interpreter: "/usr/bin/python3", entryPoint: "/opt/translator/main.py" })] });
+    const result = await new BenchmarkModuleAdapter({ health: { translator: { status: "healthy", version: "1", reason: null, adapterSelfTestPassed: true } } }).validateDraft({ moduleId: "benchmark", storageRoot, now: () => "2026-08-14T00:00:00.000Z", job: record, files, technology: null });
+    expect(result.errors).toContainEqual(expect.objectContaining({ code: "benchmark.unsafe_spice", message: expect.stringContaining("ahdl_include") }));
+  });
+
   it("accepts measured DC IV CSV with a sweep and mapped fixed bias", async () => {
     const context = await fixtureContext("Vgs,id\n0,0\n0.5,0.0001\n1.0,0.001\n");
     const adapter = new BenchmarkModuleAdapter({ health: {

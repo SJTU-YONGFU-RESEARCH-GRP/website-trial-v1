@@ -1,12 +1,22 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { DraftValidationContextV1, InputFileV1, StructuredJobErrorV1, TechnologyLibraryV1 } from "../../../shared/contracts/v1.ts";
+import { adapterIdForTool } from "../../../shared/toolCatalog.ts";
 import { ppaFlowAdapters } from "./adapters/index.ts";
-import { normalizeParameters, objectValue, PpaAdapterError } from "./helpers.ts";
+import { normalizeParameters, objectValue, PpaAdapterError, workspacePath } from "./helpers.ts";
+import { sanitizePpaSdc } from "./security.ts";
+import { MAX_ACTIVE_SOURCE_TEXT_BYTES, SourceSecurityError, validateHdlSource } from "../../app/storage/sourceSecurity.ts";
 import { expandSweep } from "./sweep.ts";
 import type { PpaRuntimeBindings } from "./types.ts";
 
 export interface PpaInputMap { rtl: InputFileV1[]; gate: InputFileV1[]; sdc: InputFileV1[]; include: InputFileV1[]; macro_lib: InputFileV1[]; macro_lef: InputFileV1[]; macro_gds: InputFileV1[]; completed_run: InputFileV1[]; ignored: InputFileV1[]; }
 const ROLES = new Set(["rtl", "gate_netlist", "sdc", "include", "macro_lib", "macro_lef", "macro_gds", "completed_run", "ignore"]);
 const GENERATED_CONFIG_PATH = /^[A-Za-z0-9_.+@%/-]+$/;
+const ROLE_EXTENSIONS: Record<string, ReadonlySet<string>> = {
+  rtl: new Set([".v", ".sv"]), gate_netlist: new Set([".v", ".sv"]), sdc: new Set([".sdc"]),
+  include: new Set([".v", ".sv", ".vh", ".svh"]), macro_lib: new Set([".lib"]),
+  macro_lef: new Set([".lef"]), macro_gds: new Set([".gds"]),
+};
 
 export function mapPpaInputs(files: readonly InputFileV1[]): PpaInputMap {
   const mapped: PpaInputMap = { rtl: [], gate: [], sdc: [], include: [], macro_lib: [], macro_lef: [], macro_gds: [], completed_run: [], ignored: [] };
@@ -51,12 +61,37 @@ export async function validatePpaDraft(context: DraftValidationContextV1): Promi
       if (mapping.sdc.length > 1) throw new PpaAdapterError("PPA_SDC_MULTIPLE", "only one SDC may be mapped");
       const technology = selectedTechnology(context);
       if (!technology?.enabled) throw new PpaAdapterError("PPA_TECHNOLOGY_REQUIRED", "select an enabled registered technology", "configuration");
-      if (!technology.allowedAdapterIds.includes(parameters.flow)) throw new PpaAdapterError("PPA_TECHNOLOGY_NOT_ALLOWED", `${technology.technologyId} does not allow ${parameters.flow}`, "configuration");
+      const adapterId = adapterIdForTool(parameters.flow);
+      if (!adapterId || !technology.allowedAdapterIds.includes(adapterId)) throw new PpaAdapterError("PPA_TECHNOLOGY_NOT_ALLOWED", `${technology.technologyId} does not allow ${adapterId ?? parameters.flow}`, "configuration");
       for (const file of [...mapping.rtl, ...mapping.gate, ...mapping.sdc, ...mapping.include, ...mapping.macro_lib, ...mapping.macro_lef, ...mapping.macro_gds]) {
         if (!GENERATED_CONFIG_PATH.test(file.relativePath)) throw new PpaAdapterError("PPA_CONFIG_PATH_UNSAFE", `${file.relativePath} cannot be represented safely in a generated flow configuration`);
+        const allowed = file.role ? ROLE_EXTENSIONS[file.role] : undefined;
+        if (allowed && !allowed.has(path.posix.extname(file.relativePath).toLowerCase())) throw new PpaAdapterError("PPA_ROLE_EXTENSION_MISMATCH", `${file.relativePath} cannot be mapped as ${file.role}`);
       }
       const flowBinding = contextBindings(context).toolBindings?.[parameters.flow];
       if (!flowBinding || flowBinding.health !== "healthy" || flowBinding.selfTestPassed !== true) throw new PpaAdapterError("PPA_FLOW_UNAVAILABLE", `${parameters.flow} must pass its adapter minimal self-test before RTL-to-GDS can run`, "configuration");
+      const availablePaths = new Set(context.files.map((file) => file.relativePath)); const jobRoot = path.resolve(context.storageRoot, context.job.workspaceRelativePath);
+      const byPath = new Map(context.files.map((file) => [file.relativePath, file]));
+      const pending = [...mapping.rtl, ...mapping.gate, ...mapping.include]; const inspected = new Set<string>();
+      while (pending.length) {
+        const file = pending.shift()!; if (inspected.has(file.relativePath)) continue; inspected.add(file.relativePath);
+        if (file.sizeBytes > MAX_ACTIVE_SOURCE_TEXT_BYTES) throw new PpaAdapterError("PPA_HDL_TOO_LARGE_TO_VALIDATE", `${file.relativePath} exceeds the 16 MiB safety-inspection limit`);
+        const source = await fs.readFile(workspacePath(jobRoot, `input/${file.relativePath}`), "utf8");
+        try {
+          for (const dependency of validateHdlSource(file.relativePath, source, availablePaths)) {
+            const target = byPath.get(dependency); if (target && !inspected.has(dependency)) pending.push(target);
+          }
+        }
+        catch (cause) { throw new PpaAdapterError(`PPA_${cause instanceof SourceSecurityError ? cause.code : "HDL_UNREADABLE"}`, cause instanceof Error ? cause.message : String(cause)); }
+      }
+      for (const file of mapping.sdc) {
+        const source = await fs.readFile(workspacePath(jobRoot, `input/${file.relativePath}`), "utf8");
+        try {
+          sanitizePpaSdc(source);
+        } catch (cause) {
+          throw new PpaAdapterError("PPA_SDC_UNSAFE", `${file.relativePath}: ${cause instanceof Error ? cause.message : String(cause)}`);
+        }
+      }
     }
     const parserBinding = contextBindings(context).toolBindings?.["ppa-result-parser"];
     if (!parserBinding || parserBinding.health !== "healthy" || parserBinding.selfTestPassed !== true) throw new PpaAdapterError("PPA_PARSER_UNAVAILABLE", "ppa-result-parser must pass its parser self-test before use", "configuration");

@@ -9,6 +9,20 @@ function relativePath(file: File): string {
   return (folderPath || file.name).replaceAll("\\", "/");
 }
 
+function includedModelPaths(relative: string, source: string): string[] {
+  const directory = relative.split("/").slice(0, -1);
+  const result: string[] = [];
+  const expression = /^\s*\.(?:include|inc|lib)\s+(?:"([^"]+)"|'([^']+)'|([^\s*]+))/gim;
+  for (const match of source.matchAll(expression)) {
+    const target = (match[1] ?? match[2] ?? match[3] ?? "").replaceAll("\\", "/");
+    const parts = [...directory, ...target.split("/")]; const normalized: string[] = [];
+    let safe = Boolean(target) && !target.startsWith("/") && !target.startsWith("~");
+    for (const part of parts) { if (!part || part === ".") continue; if (part === "..") { safe = false; break; } normalized.push(part); }
+    if (safe) result.push(normalized.join("/"));
+  }
+  return result;
+}
+
 function recognize(path: string, mode: BenchmarkWorkflowMode): { type: string; role: string | null } {
   if (mode === "import") return { type: "completed Benchmark artifact", role: "completed-result" };
   const extension = path.split(".").pop()?.toLowerCase() ?? "";
@@ -49,6 +63,14 @@ export function BenchmarkFilePicker({ mode, files, roles, disabled, onChange }: 
       seen.add(path);
       const recognized = recognize(path, mode);
       next.push({ file, relativePath: path, sizeBytes: file.size, sha256: await sha256(file), recognizedType: recognized.type, role: recognized.role });
+    }
+    if (mode === "run") {
+      const dependencies = new Set<string>();
+      for (const item of next) {
+        if (!MODEL_EXTENSIONS.has(item.relativePath.split(".").pop()?.toLowerCase() ?? "") || item.file.size > 16 * 1024 * 1024) continue;
+        for (const dependency of includedModelPaths(item.relativePath, await item.file.text())) dependencies.add(dependency);
+      }
+      for (const item of next) if (dependencies.has(item.relativePath)) item.role = "model-include";
     }
     onChange(next);
   };

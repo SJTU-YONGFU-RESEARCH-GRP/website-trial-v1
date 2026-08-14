@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import fsp from "node:fs/promises";
 import type { FastifyInstance } from "fastify";
-import type { JsonObject, ToolConfigurationSnapshotV1 } from "../../../shared/contracts/v1.ts";
+import type { JsonObject, TechnologyLibraryV1, ToolConfigurationSnapshotV1 } from "../../../shared/contracts/v1.ts";
 import type { ServerConfig } from "../config.ts";
 import type { Repositories } from "../db/repositories.ts";
 import { ModuleRegistry, parseModuleId } from "../modules/registry.ts";
@@ -22,7 +22,8 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     const moduleId = parseModuleId((request.params as { module?: string }).module); const adapter = registry.get(moduleId);
     const toolConfigurations = repositories.tools.active(moduleId); const technologies = repositories.technologies.list(true);
     const capabilities = adapter ? await adapter.capabilities({ moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), toolConfigurations, toolHealth: Object.fromEntries(toolConfigurations.map((tool) => [tool.id, repositories.tools.latestHealth(tool.id)])), toolBindings: runtimeBindings(repositories, toolConfigurations), technologies } as never) : [];
-    return success({ moduleId, capabilities, technologies: repositories.technologies.list(true), maxSweepJobs: config.maxSweepJobs, configured: Boolean(adapter), unavailableReason: adapter ? null : `${moduleId} backend module is not registered` });
+    const publicTechnologies = repositories.technologies.list(true).map((technology) => ({ ...technology, libertyPaths: [], techLefPath: null, cellLefPaths: [] }));
+    return success({ moduleId, capabilities, technologies: publicTechnologies, maxSweepJobs: config.maxSweepJobs, configured: Boolean(adapter), unavailableReason: adapter ? null : `${moduleId} backend module is not registered` });
   });
 
   app.post("/api/modules/:module/drafts", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["drafts"], consumes: ["multipart/form-data"], params: { type: "object", required: ["module"], properties: { module: { enum: ["benchmark", "digital", "ppa"] } } } } }, async (request, reply) => {
@@ -46,6 +47,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
   app.patch("/api/jobs/:jobId/draft", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["drafts"], body: { type: "object", additionalProperties: false, properties: { fileRoles: { type: "object", additionalProperties: { type: "string" } }, parameters: { type: "object" }, technologyLibraryId: { type: ["string", "null"] } } } } }, async (request) => {
     const jobId = String((request.params as { jobId?: string }).jobId || ""); const job = repositories.jobs.get(jobId);
     if (!job || job.ownerId !== request.edaUser!.id && request.edaUser!.role !== "admin") throw new ApiError(404, "NOT_FOUND", "job not found");
+    if (request.edaUser!.role !== "admin" && !request.edaUser!.allowedModules.includes(job.moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is no longer allowed to run this module");
     if (job.status !== "draft") throw new ApiError(409, "DRAFT_IMMUTABLE", "only draft jobs may be validated");
     const body = (request.body || {}) as { fileRoles?: Record<string, string>; parameters?: JsonObject; technologyLibraryId?: string | null };
     const manifest = structuredClone(job.inputManifest);
@@ -54,8 +56,9 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     if (unsafeFile) throw new ApiError(400, "INPUT_SIGNATURE_INVALID", `${unsafeFile.relativePath}: ${unsafeFile.validationErrors.join("; ")}`);
     repositories.jobs.beginValidation(jobId);
     try {
-      const adapter = registry.require(job.moduleId); const technology = body.technologyLibraryId ? repositories.technologies.list().find((entry) => entry.id === body.technologyLibraryId) || null : null;
-      if (body.technologyLibraryId && !technology) throw new ApiError(409, "TECHNOLOGY_NOT_FOUND", "selected technology library does not exist");
+      const adapter = registry.require(job.moduleId); const registeredTechnology = body.technologyLibraryId ? repositories.technologies.list().find((entry) => entry.id === body.technologyLibraryId) || null : null;
+      if (body.technologyLibraryId && !registeredTechnology) throw new ApiError(409, "TECHNOLOGY_NOT_FOUND", "selected technology library does not exist");
+      const technology = registeredTechnology ? await resolveTechnologyFiles(registeredTechnology) : null;
       const parameters = { ...(body.parameters || {}), ...(technology ? { technologyLibraryId: technology.id, technologyRevision: technology.revision } : {}) } as JsonObject;
       const toolConfigurations = repositories.tools.active(job.moduleId); const validatingJob = { ...repositories.jobs.get(jobId)!, inputManifest: manifest, parameters, toolConfigurations: toolConfigurations.map(snapshot) };
       const context = { moduleId: job.moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), job: validatingJob, files: manifest.files, technology, toolConfigurations, toolHealth: Object.fromEntries(toolConfigurations.map((tool) => [tool.id, repositories.tools.latestHealth(tool.id)])), toolBindings: runtimeBindings(repositories, toolConfigurations), technologies: technology ? [technology] : [] } as const;
@@ -74,9 +77,33 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
       return success(ready);
     } catch (error) {
       const structured = typeof error === "object" && error && "type" in error ? error : { type: "validation", code: "PREFLIGHT_FAILED", message: error instanceof Error ? error.message : String(error), stepId: null, retryable: true, details: null };
-      repositories.jobs.returnToDraft(jobId, structured); throw error;
+      repositories.jobs.returnToDraft(jobId, structured);
+      if (error instanceof ApiError) throw error;
+      if (typeof structured === "object" && structured && "code" in structured && "message" in structured) {
+        const value = structured as { type?: string; code: string; message: string; details?: Record<string, unknown> | null };
+        throw new ApiError(value.type === "validation" ? 400 : 409, value.code, value.message, value.details ?? null);
+      }
+      throw error;
     }
   });
+}
+
+async function resolveTechnologyFiles(technology: TechnologyLibraryV1): Promise<TechnologyLibraryV1> {
+  const resolveFile = async (configuredPath: string, role: string): Promise<string> => {
+    try {
+      const real = await fsp.realpath(configuredPath); const stat = await fsp.stat(real);
+      if (!stat.isFile()) throw new Error("not a regular file");
+      return real;
+    } catch (error) {
+      throw new ApiError(409, "TECHNOLOGY_FILE_UNAVAILABLE", `${role} is unavailable: ${configuredPath}`, { reason: error instanceof Error ? error.message : String(error) });
+    }
+  };
+  return {
+    ...technology,
+    libertyPaths: await Promise.all(technology.libertyPaths.map((filename, index) => resolveFile(filename, `Liberty ${index + 1}`))),
+    techLefPath: technology.techLefPath ? await resolveFile(technology.techLefPath, "technology LEF") : null,
+    cellLefPaths: await Promise.all(technology.cellLefPaths.map((filename, index) => resolveFile(filename, `cell LEF ${index + 1}`))),
+  };
 }
 
 function runtimeBindings(repositories: Repositories, tools: Array<NonNullable<ReturnType<Repositories["tools"]["get"]>>>) {

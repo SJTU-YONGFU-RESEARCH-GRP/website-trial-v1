@@ -25,7 +25,7 @@ export {
 /** Rows whose `category` matches (empty if field missing). */
 export function designRowsForCategory(
   rows: readonly DesignRow[],
-  category: DesignCategoryId,
+  category: string,
 ): DesignRow[] {
   return rows.filter((r) => r.category === category);
 }

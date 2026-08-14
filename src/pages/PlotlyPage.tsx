@@ -103,6 +103,7 @@ import {
   DEFAULT_EXPLORE_AXES,
   DESIGN_CATEGORIES,
   designCategoryChartTitle,
+  designCategoryDefaultLabel,
   metricSupportsLogScale,
   NUMERIC_SCALE_OPTIONS,
   plotlyAxisTypeForMetric,
@@ -283,12 +284,10 @@ export function PlotlyPage(): JSX.Element {
     () => designRowsForTechnologies(allDesignRows, [...selectedTechnologyNodeSet]),
     [allDesignRows, selectedTechnologyNodeSet],
   );
-  const categoryOptionsForTechnology = useMemo(
-    () => DESIGN_CATEGORIES.filter((category) =>
-      technologyRowsForExplore.some((row) => row.category === category.id),
-    ),
-    [technologyRowsForExplore],
-  );
+  const categoryOptionsForTechnology = useMemo(() => {
+    const ids = [...new Set(technologyRowsForExplore.map((row) => row.category || "uncategorized"))];
+    return ids.map((id) => ({ id, label: DESIGN_CATEGORIES.find((category) => category.id === id)?.label ?? designCategoryDefaultLabel(id) }));
+  }, [technologyRowsForExplore]);
   const categoryForUi = categoryOptionsForTechnology.some((category) => category.id === exploreAxes.category)
     ? exploreAxes.category
     : categoryOptionsForTechnology[0]?.id ?? DESIGN_CATEGORIES[0].id;
@@ -646,9 +645,7 @@ export function PlotlyPage(): JSX.Element {
           customdata: raw,
         };
       };
-      const category = DESIGN_CATEGORIES.some((c) => c.id === categoryForUi)
-        ? categoryForUi
-        : DESIGN_CATEGORIES[0].id;
+      const category = categoryForUi;
       const categoryRowsAll = designRowsForCategory(technologyRowsForExplore, category);
       if (categoryRowsAll.length === 0) {
         const emptyPalette = getChartPalette(theme);

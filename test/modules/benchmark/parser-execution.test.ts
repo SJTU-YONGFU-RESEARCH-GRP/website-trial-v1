@@ -1,9 +1,9 @@
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { BenchmarkModuleAdapter } from "../../../server/modules/benchmark/index.ts";
-import type { SpawnRequest } from "../../../server/modules/benchmark/types.ts";
 import { executionContext, jobRecord, toolConfiguration } from "./helpers.ts";
 
 const temporaryDirectories: string[] = [];
@@ -40,7 +40,7 @@ describe("Benchmark execution and native result import", () => {
     expect(artifacts.some((artifact) => artifact.relativePath === "artifacts/normalized-result.json")).toBe(true);
   });
 
-  it("executes an immutable planned argv array through the injected process boundary", async () => {
+  it("executes an immutable planned argv array only through the shared process boundary", async () => {
     const workspace = await mkdtemp(path.join(os.tmpdir(), "benchmark-execute-"));
     temporaryDirectories.push(workspace);
     const configuration = toolConfiguration("translator", { interpreter: "/usr/bin/python3", entryPoint: "/opt/translator/cli.py" });
@@ -58,14 +58,21 @@ describe("Benchmark execution and native result import", () => {
     });
     const context = executionContext(workspace, job);
     context.step.stepKey = "translator";
-    const spawnProcess = vi.fn(async (_request: SpawnRequest) => ({ exitCode: 0, signal: null, timedOut: false, stdoutBytes: 12, stderrBytes: 0 }));
-    const adapter = new BenchmarkModuleAdapter({ spawnProcess });
+    const runPlannedProcess = vi.fn(async () => ({ exitCode: 0, signal: null, timedOut: false, outputLimitExceeded: false }));
+    Object.assign(context, { runPlannedProcess });
+    const adapter = new BenchmarkModuleAdapter();
     const result = await adapter.executeStep(context);
     expect(result.exitCode).toBe(0);
-    expect(spawnProcess).toHaveBeenCalledOnce();
-    const request = spawnProcess.mock.calls[0][0];
-    expect(request.executable).toBe("/usr/bin/python3");
-    expect(request.argv).toEqual(["/opt/translator/cli.py", ...process.argv]);
-    expect(request.env.HOME).toBe(path.join(workspace, "work/home"));
+    expect(runPlannedProcess).toHaveBeenCalledOnce();
+  });
+
+  it("rechecks the frozen Benchmark input SHA-256 before any tool step", async () => {
+    const workspace = await mkdtemp(path.join(os.tmpdir(), "benchmark-input-integrity-")); temporaryDirectories.push(workspace);
+    await mkdir(path.join(workspace, "input"), { recursive: true }); await writeFile(path.join(workspace, "input/model.lib"), "b");
+    const file = { relativePath: "model.lib", sizeBytes: 1, sha256: createHash("sha256").update("a").digest("hex"), mediaType: "text/plain", recognizedType: "spice", role: "primary-model", required: true, usedByStepIds: [], unresolvedIncludes: [], validationErrors: [] };
+    const job = jobRecord({ inputManifest: { schemaVersion: "eda.input-manifest.v1", files: [file], totalBytes: 1, fileCount: 1, rootHint: null, createdAt: "2026-08-14T00:00:00.000Z" },
+      plan: { schemaVersion: "eda.job-plan.v1", capabilityVersion: "benchmark.capability.v1", steps: [{ id: "validate-input", name: "Validate", description: "", required: true, weight: 1, process: null, inputRoles: [], outputRoles: [] }], sweep: null, warnings: [] } });
+    const context = executionContext(workspace, job); context.step.stepKey = "validate-input";
+    await expect(new BenchmarkModuleAdapter().executeStep(context)).rejects.toThrow(/SHA-256 changed/);
   });
 });

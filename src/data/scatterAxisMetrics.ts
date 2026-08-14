@@ -150,7 +150,7 @@ export const DESIGN_CATEGORIES: readonly { id: DesignCategoryId; label: string }
     label: designCategoryDefaultLabel(id),
   }));
 
-export function designCategoryLabel(id: DesignCategoryId): string {
+export function designCategoryLabel(id: string): string {
   const row = DESIGN_CATEGORIES.find((c) => c.id === id);
   return row?.label ?? id;
 }
@@ -169,7 +169,7 @@ export type BarDonutBaselineMode = "architecture" | "bitWidth" | "technology";
 /**
  * Short dataset name for chart titles, e.g. "Adder" (strips trailing " (dataset)" from the UI label).
  */
-export function designCategoryChartTitle(id: DesignCategoryId): string {
+export function designCategoryChartTitle(id: string): string {
   return designCategoryLabel(id).replace(/\s*\(dataset\)\s*$/i, "").trim();
 }
 
@@ -228,7 +228,7 @@ export const BAR_DONUT_BASELINE_OPTIONS: readonly {
  * Explore panel: dataset category, Cartesian metrics (must differ), and slice bit width for bar/pie.
  */
 export type ExploreAxesState = {
-  category: DesignCategoryId;
+  category: string;
   /** Primary MD5 UID retained for compatible global/local chart state; selection is managed by the page. */
   technologyUid: string;
   bitWidth: number;

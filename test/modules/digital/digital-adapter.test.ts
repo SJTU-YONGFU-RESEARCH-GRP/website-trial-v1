@@ -16,6 +16,7 @@ import { normalizeImportedRecord, parseCompletedDigitalFiles } from "../../../se
 import { parseLiberty } from "../../../server/modules/digital/parsers/liberty";
 import { buildDigitalPlan } from "../../../server/modules/digital/planner";
 import { materializeSafeSdc, validateWorkspaceInputs } from "../../../server/modules/digital/security";
+import { validateInputMapping } from "../../../server/modules/digital/inputs";
 import type { DigitalExecutionContext } from "../../../server/modules/digital/types";
 
 const temporaryDirectories: string[] = [];
@@ -151,6 +152,53 @@ describe("Digital plan and preflight", () => {
     const validation = await digitalModuleAdapter.validateDraft(validationContext(record));
     expect(validation.valid).toBe(false);
     expect(validation.errors.filter((error) => error.code === "DIGITAL_TOOL_NOT_CONFIGURED")).toHaveLength(2);
+  });
+
+  it("rejects unsafe uploaded SDC during preflight, before the job can be started", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "digital-preflight-sdc-"));
+    temporaryDirectories.push(storageRoot);
+    const record = job([input("constraints.sdc", "sdc"), input("adder.v", "rtl"), input("cells.lib", "liberty")]);
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input");
+    await fs.mkdir(inputRoot, { recursive: true });
+    await fs.writeFile(path.join(inputRoot, "constraints.sdc"), "create_clock -period 10 [exec touch /tmp/pwned]\n");
+    const validation = await validateInputMapping({ ...validationContext(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "DIGITAL_SDC_UNSAFE" }));
+  });
+
+  it("rejects an external-process primitive located in RTL during preflight", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "digital-preflight-rtl-")); temporaryDirectories.push(storageRoot);
+    const source = "module adder_top; initial $system(\"never-executed\"); endmodule\n";
+    const record = job([input("adder.v", "rtl", { sizeBytes: Buffer.byteLength(source) }), input("cells.lib", "liberty")]);
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input"); await fs.mkdir(inputRoot, { recursive: true }); await fs.writeFile(path.join(inputRoot, "adder.v"), source);
+    const validation = await validateInputMapping({ ...validationContext(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "DIGITAL_HDL_EXTERNAL_PRIMITIVE" }));
+  });
+
+  it("recursively scans unassigned include dependencies and rejects host file I/O", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "digital-preflight-closure-")); temporaryDirectories.push(storageRoot);
+    const root = "`include \"secret.vh\"\nmodule adder_top; endmodule\n"; const dependency = "initial $fopen(\"/etc/passwd\", \"r\");\n";
+    const record = job([input("rtl/adder.v", "rtl", { sizeBytes: Buffer.byteLength(root) }), input("rtl/secret.vh", "unassigned", { sizeBytes: Buffer.byteLength(dependency) }), input("cells.lib", "liberty")]);
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input", "rtl"); await fs.mkdir(inputRoot, { recursive: true }); await fs.writeFile(path.join(inputRoot, "adder.v"), root); await fs.writeFile(path.join(inputRoot, "secret.vh"), dependency);
+    const validation = await validateInputMapping({ ...validationContext(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "DIGITAL_HDL_EXTERNAL_PRIMITIVE" }));
+  });
+
+  it("recognizes an include directive after a block comment and ordinary tokens", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "digital-inline-include-")); temporaryDirectories.push(storageRoot);
+    const root = "/* comment */ wire marker; `include \"secret.vh\"\nmodule adder_top; endmodule\n"; const dependency = "initial $readmemh(\"/etc/passwd\", memory);\n";
+    const record = job([input("rtl/adder.v", "rtl", { sizeBytes: Buffer.byteLength(root) }), input("rtl/secret.vh", "unassigned", { sizeBytes: Buffer.byteLength(dependency) }), input("cells.lib", "liberty")]);
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input", "rtl"); await fs.mkdir(inputRoot, { recursive: true }); await fs.writeFile(path.join(inputRoot, "adder.v"), root); await fs.writeFile(path.join(inputRoot, "secret.vh"), dependency);
+    const validation = await validateInputMapping({ ...validationContext(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "DIGITAL_HDL_EXTERNAL_PRIMITIVE" }));
+  });
+
+  it("scans includes beyond the upload preview window and rejects a missing dependency", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "digital-preflight-late-include-")); temporaryDirectories.push(storageRoot);
+    const source = `${"// padding\n".repeat(210_000)}\`include \"missing.vh\"\nmodule adder_top; endmodule\n`;
+    const record = job([input("adder.v", "rtl", { sizeBytes: Buffer.byteLength(source) }), input("cells.lib", "liberty")]);
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input"); await fs.mkdir(inputRoot, { recursive: true }); await fs.writeFile(path.join(inputRoot, "adder.v"), source);
+    const validation = await validateInputMapping({ ...validationContext(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "DIGITAL_HDL_INCLUDE_UNRESOLVED" }));
   });
 
   it("detects a changed input using the frozen SHA-256 manifest", async () => {

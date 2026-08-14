@@ -21,8 +21,8 @@ function blankInput(entry: AdminToolCatalogEntry): ToolConfigurationInput {
   return {
     toolId: entry.toolId, moduleId: entry.moduleId, enabled: true, rootPath: null,
     executablePath: null, interpreterPath: null, entryPoint: null, workingDirectory: null,
-    timeoutSeconds: 300, maxConcurrency: 1, environmentNames: entry.allowedEnvironmentNames,
-    environment: {}, versionProbeArgv: entry.versionProbeArgv, adapterId: entry.adapterId,
+    timeoutSeconds: 300, maxConcurrency: 1, environmentNames: [...entry.allowedEnvironmentNames],
+    environment: {}, versionProbeArgv: [...entry.versionProbeArgv], adapterId: entry.adapterId,
     adapterVersion: entry.adapterVersion,
   };
 }
@@ -36,7 +36,7 @@ export function ToolsPanel(): JSX.Element {
   const [configurations, setConfigurations] = useState<ToolConfigurationV1[]>([]);
   const [capabilities, setCapabilities] = useState<ToolCapabilityV1[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [catalogId, setCatalogId] = useState(ADMIN_TOOL_CATALOG[0].toolId);
+  const [catalogId, setCatalogId] = useState<string>(ADMIN_TOOL_CATALOG[0].toolId);
   const catalog = ADMIN_TOOL_CATALOG.find((entry) => entry.toolId === catalogId) || ADMIN_TOOL_CATALOG[0];
   const [draft, setDraft] = useState<ToolConfigurationInput>(() => blankInput(ADMIN_TOOL_CATALOG[0]));
   const [health, setHealth] = useState<Record<string, ToolHealthCheckV1>>({});

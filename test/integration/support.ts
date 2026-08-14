@@ -15,6 +15,7 @@ import type {
   ToolCapabilityV1,
   ToolConfigurationSnapshotV1,
 } from "../../shared/contracts/v1.ts";
+import { TOOL_CATALOG_BY_ID } from "../../shared/toolCatalog.ts";
 import { createEdaApp } from "../../server/app/app.ts";
 import { loadConfig, type ServerConfig } from "../../server/app/config.ts";
 import { ModuleRegistry } from "../../server/app/modules/registry.ts";
@@ -201,6 +202,7 @@ export async function configureFixtureTool(app: FastifyInstance, admin: SessionH
 }
 
 export async function configureTestTool(app: FastifyInstance, admin: SessionHeaders, input: { toolId: string; moduleId: ModuleId; fakeKind?: string; mode?: string; timeoutSeconds?: number; adapterId: string }) {
+  const catalog = TOOL_CATALOG_BY_ID[input.toolId];
   const response = await app.inject({
     method: "POST",
     url: "/api/admin/tools",
@@ -218,16 +220,16 @@ export async function configureTestTool(app: FastifyInstance, admin: SessionHead
       maxConcurrency: 1,
       environmentNames: ["FAKE_EDA_TOOL", "FAKE_EDA_MODE"],
       environment: { FAKE_EDA_TOOL: input.fakeKind ?? input.toolId, FAKE_EDA_MODE: input.mode ?? "success" },
-      versionProbeArgv: ["--version"],
-      adapterId: input.adapterId,
-      adapterVersion: "1.0.0",
+      versionProbeArgv: catalog ? [...catalog.versionProbeArgv] : ["--version"],
+      adapterId: catalog?.adapterId ?? input.adapterId,
+      adapterVersion: catalog?.adapterVersion ?? "1.0.0",
     },
   });
   if (response.statusCode !== 201) throw new Error(`tool create failed: ${response.statusCode} ${response.body}`);
   const tool = response.json().data;
   const probe = await app.inject({ method: "POST", url: `/api/admin/tools/${tool.id}/probe`, headers: { cookie: admin.cookie, "x-csrf-token": admin.csrf } });
   if (probe.statusCode !== 200 || probe.json().data.status !== "healthy") throw new Error(`tool probe failed: ${probe.statusCode} ${probe.body}`);
-  if (["yosys", "opensta", "iverilog", "vvp", "ppa-result-parser"].includes(input.toolId)) {
+  if (catalog) {
     const selfTest = await app.inject({ method: "POST", url: `/api/admin/tools/${tool.id}/self-test`, headers: { cookie: admin.cookie, "x-csrf-token": admin.csrf } });
     if (selfTest.statusCode !== 200 || selfTest.json().data.selfTestPassed !== true) throw new Error(`tool self-test failed: ${selfTest.statusCode} ${selfTest.body}`);
   }

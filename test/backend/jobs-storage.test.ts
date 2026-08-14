@@ -39,4 +39,22 @@ describe("job state and storage", () => {
     expect(await fsp.readFile(path.join(finalPath, "result.txt"), "utf8")).toBe("real output");
     await expect(fsp.access(staging)).rejects.toThrow();
   });
+
+  it("reconciles stale staging and a crash-orphaned final result on worker startup", async () => {
+    const root = await fsp.mkdtemp(path.join(os.tmpdir(), "eda-storage-recovery-")); roots.push(root);
+    const storage = new StorageService(root); await storage.initialize();
+    const staging = await storage.beginPublication("digital", "not-committed");
+    await fsp.writeFile(path.join(staging, "partial.txt"), "partial");
+    const renamed = await storage.beginPublication("digital", "orphan-result");
+    await fsp.writeFile(path.join(renamed, "result.txt"), "complete but not committed");
+    await storage.commitPublication(renamed, "digital", "orphan-result");
+    const retained = await storage.beginPublication("digital", "retained-result");
+    await fsp.writeFile(path.join(retained, "result.txt"), "committed");
+    await storage.commitPublication(retained, "digital", "retained-result");
+    const outcome = await storage.reconcilePublications({ benchmark: new Set(), digital: new Set(["retained-result"]), ppa: new Set() });
+    expect(outcome).toEqual({ stagingRemoved: 1, orphanResultsRemoved: 1 });
+    await expect(fsp.access(staging)).rejects.toThrow();
+    await expect(fsp.access(storage.resolve("results/digital/orphan-result"))).rejects.toThrow();
+    expect(await fsp.readFile(storage.resolve("results/digital/retained-result/result.txt"), "utf8")).toBe("committed");
+  });
 });

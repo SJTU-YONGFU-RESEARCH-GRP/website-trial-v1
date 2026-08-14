@@ -36,6 +36,12 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   const database = options.database || new EdaDatabase(config.databasePath); database.migrate();
   bootLog("database migrated");
   const repositories = makeRepositories(database); const storage = new StorageService(config.storageRoot); await storage.initialize();
+  if (options.startWorkers) {
+    const reconciled = await storage.reconcilePublications(Object.fromEntries(
+      (["benchmark", "digital", "ppa"] as const).map((moduleId) => [moduleId, new Set(repositories.results.allIds(moduleId))]),
+    ) as Record<"benchmark" | "digital" | "ppa", Set<string>>);
+    bootLog(`publication storage reconciled (${reconciled.stagingRemoved} staging, ${reconciled.orphanResultsRemoved} orphan)`);
+  }
   bootLog("storage initialized");
   const registry = options.registry || new ModuleRegistry(); const runner = new SafeProcessRunner(config.cancelGraceMs);
   const probeRoot = storage.resolve("work-probes"); await fs.promises.mkdir(probeRoot, { recursive: true, mode: 0o750 });

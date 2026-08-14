@@ -5,6 +5,7 @@ import type { ModuleId } from "../../shared/contracts/v1.ts";
 import type { TestEnvironment } from "./support.ts";
 import {
   TEST_PASSWORD,
+  FAKE_TOOL,
   configureFixtureTool,
   createReadyDraft,
   login,
@@ -121,6 +122,28 @@ describe("failure containment and publication boundary", () => {
 });
 
 describe("authorization, CSRF, upload safety, and limits", () => {
+  it("enforces the server-owned tool adapter, probe, and environment contracts", async () => {
+    const environment = await makeEnvironment({ modules: ["digital"], startWorkers: false }); environments.push(environment);
+    const { app } = environment;
+    app.eda.repositories.users.create({ username: "catalog-admin", password: TEST_PASSWORD, role: "admin" });
+    const admin = await login(app, "catalog-admin");
+    const base = {
+      toolId: "yosys", moduleId: "digital", enabled: true, rootPath: path.dirname(FAKE_TOOL), executablePath: FAKE_TOOL,
+      interpreterPath: null, entryPoint: null, workingDirectory: null, timeoutSeconds: 5, maxConcurrency: 1,
+      environmentNames: ["FAKE_EDA_TOOL", "FAKE_EDA_MODE"], environment: { FAKE_EDA_TOOL: "yosys", FAKE_EDA_MODE: "success" },
+      versionProbeArgv: ["-V"], adapterId: "digital-yosys-opensta-v1", adapterVersion: "1.0.0",
+    };
+    const request = (payload: object) => app.inject({ method: "POST", url: "/api/admin/tools", headers: { cookie: admin.cookie, "x-csrf-token": admin.csrf }, payload });
+    const adapter = await request({ ...base, adapterId: "attacker-selected-adapter" });
+    expect(adapter.statusCode).toBe(400); expect(adapter.json().error.code).toBe("TOOL_ADAPTER_CONTRACT_INVALID");
+    const probe = await request({ ...base, versionProbeArgv: ["-c", "touch /tmp/should-never-run"] });
+    expect(probe.statusCode).toBe(400); expect(probe.json().error.code).toBe("TOOL_PROBE_CONTRACT_INVALID");
+    const environmentInjection = await request({ ...base, environmentNames: [...base.environmentNames, "LD_PRELOAD"], environment: { ...base.environment, LD_PRELOAD: "/tmp/evil.so" } });
+    expect(environmentInjection.statusCode).toBe(400); expect(environmentInjection.json().error.code).toBe("TOOL_ENV_INVALID");
+    const unknown = await request({ ...base, toolId: "arbitrary-command", rootPath: path.dirname(process.execPath), executablePath: process.execPath, versionProbeArgv: ["--version"], adapterId: "arbitrary" });
+    expect(unknown.statusCode).toBe(400); expect(unknown.json().error.code).toBe("TOOL_NOT_AUDITED");
+  });
+
   it("hides one user's job from another user and denies non-admin admin access", async () => {
     const environment = await makeEnvironment({ modules: ["digital"], startWorkers: false }); environments.push(environment);
     const { app } = environment;

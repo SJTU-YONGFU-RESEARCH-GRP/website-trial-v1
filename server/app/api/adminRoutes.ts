@@ -3,6 +3,7 @@ import { PassThrough } from "node:stream";
 import { ZipArchive } from "archiver";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { JobStatus, ModuleId, ResultLifecycle, TechnologyLibraryV1, ToolConfigurationV1, UserRole } from "../../../shared/contracts/v1.ts";
+import { TECHNOLOGY_ADAPTER_IDS, TOOL_CATALOG } from "../../../shared/toolCatalog.ts";
 import type { Repositories } from "../db/repositories.ts";
 import type { ToolHealthService } from "../tools/health.ts";
 import type { StorageService } from "../storage/storage.ts";
@@ -29,11 +30,17 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
   });
   app.post("/api/admin/users", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request, reply) => {
     const body = request.body as { username?: string; password?: string; role?: UserRole; allowedModules?: ModuleId[]; maxConcurrentJobs?: number; storageQuotaBytes?: number };
-    if (!body?.username || !body.password) throw new ApiError(400, "USER_INVALID", "username and password are required");
-    const user = repositories.users.create({ ...body, username: body.username, password: body.password }); auditRequest(repositories, request, "user.create", "user", user.id, { username: user.username }); reply.code(201); return success(user);
+    if (typeof body?.username !== "string" || typeof body.password !== "string") throw new ApiError(400, "USER_INVALID", "username and password are required");
+    let user;
+    try { user = repositories.users.create({ ...body, username: body.username, password: body.password }); }
+    catch (error) { throw new ApiError(/unique/i.test(error instanceof Error ? error.message : "") ? 409 : 400, "USER_INVALID", error instanceof Error ? error.message : String(error)); }
+    auditRequest(repositories, request, "user.create", "user", user.id, { username: user.username }); reply.code(201); return success(user);
   });
   app.patch("/api/admin/users/:id", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
-    const id = String((request.params as { id?: string }).id || ""); const patch = request.body as { password?: string; enabled?: boolean; delete?: boolean }; const user = repositories.users.patch(id, patch as never);
+    const id = String((request.params as { id?: string }).id || ""); if (!repositories.users.get(id)) throw new ApiError(404, "NOT_FOUND", "user not found");
+    if (!request.body || typeof request.body !== "object" || Array.isArray(request.body)) throw new ApiError(400, "USER_INVALID", "user patch must be an object");
+    const patch = request.body as { password?: string; enabled?: boolean; delete?: boolean }; let user;
+    try { user = repositories.users.patch(id, patch as never); } catch (error) { throw new ApiError(400, "USER_INVALID", error instanceof Error ? error.message : String(error)); }
     if (patch.password || patch.enabled === false || patch.delete) repositories.sessions.revokeUser(id);
     auditRequest(repositories, request, "user.update", "user", id, { fields: Object.keys((request.body || {}) as object) }); return success(user);
   });
@@ -91,13 +98,14 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
   });
 
   app.get("/api/admin/results", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
-    const query = request.query as { moduleId?: ModuleId; lifecycle?: ResultLifecycle; limit?: string }; const modules = query.moduleId ? [query.moduleId] : ["benchmark", "digital", "ppa"] as ModuleId[];
-    return sendList(reply, modules.flatMap((moduleId) => repositories.results.list(moduleId, request.edaUser!.id, true, query.lifecycle, Number(query.limit || 100))));
+    const query = request.query as { moduleId?: ModuleId; lifecycle?: ResultLifecycle; ownerId?: string; limit?: string }; const modules = query.moduleId ? [query.moduleId] : ["benchmark", "digital", "ppa"] as ModuleId[];
+    return sendList(reply, modules.flatMap((moduleId) => repositories.results.list(moduleId, request.edaUser!.id, true, query.lifecycle, Number(query.limit || 100), query.ownerId)));
   });
   app.patch("/api/admin/results/:module/:id", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
     const params = request.params as { module?: ModuleId; id?: string }; const body = request.body as { lifecycle?: ResultLifecycle };
     if (!params.module || !["benchmark", "digital", "ppa"].includes(params.module) || !body.lifecycle || !["private", "published", "unpublished", "deleted"].includes(body.lifecycle)) throw new ApiError(400, "RESULT_PATCH_INVALID", "module and lifecycle are required");
-    repositories.results.patchLifecycle(params.module, String(params.id || ""), body.lifecycle); auditRequest(repositories, request, "result.lifecycle", "result", String(params.id || ""), { moduleId: params.module, lifecycle: body.lifecycle });
+    const resultId = String(params.id || ""); if (!repositories.results.get(params.module, resultId, request.edaUser!.id, true)) throw new ApiError(404, "NOT_FOUND", "result not found");
+    repositories.results.patchLifecycle(params.module, resultId, body.lifecycle); auditRequest(repositories, request, "result.lifecycle", "result", resultId, { moduleId: params.module, lifecycle: body.lifecycle });
     return success(repositories.results.get(params.module, String(params.id || ""), request.edaUser!.id, true));
   });
 
@@ -114,20 +122,48 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
 }
 
 function saveTool(repositories: Repositories, value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new ApiError(400, "TOOL_CONFIG_INVALID", "tool configuration must be an object");
   const body = value as Omit<ToolConfigurationV1, "id" | "revision" | "createdAt" | "updatedAt" | "capturedAt">;
+  const catalog = TOOL_CATALOG.find((entry) => entry.toolId === body?.toolId);
+  const configuredPaths = [body?.rootPath, body?.executablePath, body?.interpreterPath];
+  const testFixture = process.env.NODE_ENV === "test" && configuredPaths.some((candidate) => candidate?.includes("test/fixtures/fake-tools"));
+  if (!catalog && !testFixture) throw new ApiError(400, "TOOL_NOT_AUDITED", "toolId is not present in the server-owned adapter catalog");
   for (const candidate of [body.rootPath, body.executablePath, body.interpreterPath, body.workingDirectory]) if (candidate && !path.isAbsolute(candidate)) throw new ApiError(400, "TOOL_PATH_INVALID", "tool paths must be absolute");
   if (process.env.NODE_ENV !== "test" && [body.rootPath, body.executablePath, body.interpreterPath].some((candidate) => candidate?.includes("test/fixtures/fake-tools"))) throw new ApiError(400, "FAKE_TOOL_FORBIDDEN", "test fake tools cannot be configured outside NODE_ENV=test");
   if (!body.toolId || !body.moduleId || !body.adapterId || !Array.isArray(body.versionProbeArgv) || !Array.isArray(body.environmentNames) || !body.environment || typeof body.environment !== "object") throw new ApiError(400, "TOOL_CONFIG_INVALID", "toolId, moduleId, adapterId, environment allowlist and versionProbeArgv are required");
   if (!(["benchmark", "digital", "ppa"] as string[]).includes(body.moduleId) || !Number.isSafeInteger(body.timeoutSeconds) || body.timeoutSeconds <= 0 || !Number.isSafeInteger(body.maxConcurrency) || body.maxConcurrency <= 0) throw new ApiError(400, "TOOL_CONFIG_INVALID", "module, timeout and concurrency are invalid");
-  if (!body.environmentNames.every((name) => /^[A-Z_][A-Z0-9_]*$/.test(name)) || Object.keys(body.environment).some((name) => !body.environmentNames.includes(name))) throw new ApiError(400, "TOOL_ENV_INVALID", "environment values must use configured allowlisted names");
-  return repositories.tools.save(body);
+  if (!catalog) return repositories.tools.save(body);
+  if (body.moduleId !== catalog.moduleId || body.adapterId !== catalog.adapterId || body.adapterVersion !== catalog.adapterVersion) throw new ApiError(400, "TOOL_ADAPTER_CONTRACT_INVALID", "module and adapter identity are fixed by the server-owned tool catalog");
+  if (JSON.stringify(body.versionProbeArgv) !== JSON.stringify(catalog.versionProbeArgv)) throw new ApiError(400, "TOOL_PROBE_CONTRACT_INVALID", "version probe arguments are fixed by the audited adapter");
+  const testEnvironmentNames = testFixture ? ["FAKE_EDA_TOOL", "FAKE_EDA_MODE"] : [];
+  const allowedEnvironment = new Set<string>([...catalog.allowedEnvironmentNames, ...testEnvironmentNames]);
+  if (!body.environmentNames.every((name) => allowedEnvironment.has(name)) || Object.keys(body.environment).some((name) => !allowedEnvironment.has(name)) || Object.values(body.environment).some((entry) => typeof entry !== "string")) throw new ApiError(400, "TOOL_ENV_INVALID", "environment values must use the adapter-owned allowlist");
+  return repositories.tools.save({
+    ...body,
+    moduleId: catalog.moduleId,
+    adapterId: catalog.adapterId,
+    adapterVersion: catalog.adapterVersion,
+    versionProbeArgv: [...catalog.versionProbeArgv],
+    environmentNames: [...catalog.allowedEnvironmentNames, ...testEnvironmentNames],
+  });
 }
 
 function validateTechnology(value: unknown): Omit<TechnologyLibraryV1, "id" | "revision" | "createdAt" | "updatedAt"> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new ApiError(400, "TECHNOLOGY_INVALID", "technology configuration must be an object");
   const technology = value as Omit<TechnologyLibraryV1, "id" | "revision" | "createdAt" | "updatedAt">;
-  if (!technology.technologyId || !technology.pdk || !technology.standardCellLibrary || !Array.isArray(technology.libertyPaths) || !Array.isArray(technology.cellLefPaths) || !Array.isArray(technology.allowedAdapterIds)) throw new ApiError(400, "TECHNOLOGY_INVALID", "technology identity and path lists are required");
+  const identifier = /^[A-Za-z0-9][A-Za-z0-9_.+-]{0,127}$/; const label = /^[A-Za-z0-9][A-Za-z0-9_.+ -]{0,127}$/;
+  if (!identifier.test(technology.technologyId) || !identifier.test(technology.pdk) || !identifier.test(technology.standardCellLibrary) || !label.test(technology.processNode) || !identifier.test(technology.corner)
+    || !Array.isArray(technology.libertyPaths) || !technology.libertyPaths.length || !Array.isArray(technology.cellLefPaths) || !Array.isArray(technology.allowedAdapterIds) || typeof technology.enabled !== "boolean") {
+    throw new ApiError(400, "TECHNOLOGY_INVALID", "technology identity, Liberty paths, adapter list, and enabled state are invalid");
+  }
+  if (technology.voltage !== null && (typeof technology.voltage !== "number" || !Number.isFinite(technology.voltage) || technology.voltage <= 0)) throw new ApiError(400, "TECHNOLOGY_INVALID", "technology voltage must be a positive finite number or null");
+  if (technology.rcCorner !== null && !identifier.test(technology.rcCorner)) throw new ApiError(400, "TECHNOLOGY_INVALID", "RC corner is invalid");
   const paths = [...technology.libertyPaths, ...technology.cellLefPaths, ...(technology.techLefPath ? [technology.techLefPath] : [])];
-  if (paths.some((candidate) => !path.isAbsolute(candidate))) throw new ApiError(400, "TECHNOLOGY_PATH_INVALID", "technology file paths must be absolute");
+  if (paths.some((candidate) => typeof candidate !== "string" || !path.isAbsolute(candidate))) throw new ApiError(400, "TECHNOLOGY_PATH_INVALID", "technology file paths must be absolute");
+  if (new Set(paths).size !== paths.length) throw new ApiError(400, "TECHNOLOGY_PATH_INVALID", "technology file paths must not be duplicated");
+  const knownAdapters = new Set<string>(TECHNOLOGY_ADAPTER_IDS);
+  if (!technology.allowedAdapterIds.length || technology.allowedAdapterIds.some((adapterId) => !knownAdapters.has(adapterId))) throw new ApiError(400, "TECHNOLOGY_ADAPTER_INVALID", "technology adapters must come from the audited server catalog");
+  technology.allowedAdapterIds = [...new Set(technology.allowedAdapterIds)];
   return technology;
 }
 

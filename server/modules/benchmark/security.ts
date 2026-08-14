@@ -1,6 +1,8 @@
-import { realpath } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { createReadStream } from "node:fs";
+import { lstat, realpath } from "node:fs/promises";
 import path from "node:path";
-import type { ToolConfigurationSnapshotV1 } from "../../../shared/contracts/v1.ts";
+import type { InputFileV1, ToolConfigurationSnapshotV1 } from "../../../shared/contracts/v1.ts";
 import type { BenchmarkToolId, CommandSpec } from "./types.ts";
 
 const PYTHON_MODULE_BY_TOOL: Partial<Record<BenchmarkToolId, string>> = {
@@ -39,6 +41,26 @@ export async function assertExistingPathWithin(root: string, target: string): Pr
     throw new Error("Filesystem path escapes the permitted root");
   }
   return realTarget;
+}
+
+export async function validateFrozenBenchmarkInputs(workspaceRoot: string, files: readonly InputFileV1[]): Promise<void> {
+  const inputRoot = await realpath(workspacePath(workspaceRoot, "input"));
+  for (const file of files) {
+    const filename = workspacePath(workspaceRoot, `input/${assertSafeRelativePath(file.relativePath, "input path")}`);
+    const stat = await lstat(filename);
+    if (!stat.isFile() || stat.isSymbolicLink()) throw new Error(`${file.relativePath} is not a regular frozen input`);
+    const resolved = await realpath(filename);
+    if (!resolved.startsWith(`${inputRoot}${path.sep}`)) throw new Error(`${file.relativePath} escapes the frozen input tree`);
+    if (stat.size !== file.sizeBytes) throw new Error(`${file.relativePath} size changed after preflight`);
+    const digest = createHash("sha256");
+    await new Promise<void>((resolvePromise, reject) => {
+      const stream = createReadStream(filename);
+      stream.on("data", (chunk: Buffer) => digest.update(chunk));
+      stream.once("error", reject);
+      stream.once("end", resolvePromise);
+    });
+    if (digest.digest("hex") !== file.sha256) throw new Error(`${file.relativePath} SHA-256 changed after preflight`);
+  }
 }
 
 function isPathLike(value: string): boolean {
@@ -112,7 +134,8 @@ export function isUnsafeSpiceText(text: string): string | null {
     if (inControl || /^(shell|system|source)\b/.test(line) || /^\.?(shell|system)\b/.test(line)) {
       return "SPICE input contains an external-command directive";
     }
-    if (/^\.include\s+["']?\s*(?:\/|~|[a-z]:[\\/]|\.\.\/)/i.test(rawLine.trim())) {
+    if (/^ahdl_include\b/i.test(line)) return "Spectre ahdl_include is forbidden because it invokes an external Verilog-A compilation boundary";
+    if (/^\.?(?:include|inc|lib)\s+["']?\s*(?:\/|~|[a-z]:[\\/]|\.\.\/)/i.test(rawLine.trim())) {
       return "SPICE include must stay inside the uploaded input tree";
     }
   }

@@ -4,6 +4,8 @@ import { expansionAdapter } from "../../../server/modules/benchmark/adapters/exp
 import { fittingAdapter } from "../../../server/modules/benchmark/adapters/fitting.ts";
 import { translatorAdapter } from "../../../server/modules/benchmark/adapters/translator.ts";
 import { toolConfiguration } from "./helpers.ts";
+import { inputFile, jobRecord } from "./helpers.ts";
+import { validateBenchmarkDraft } from "../../../server/modules/benchmark/validation.ts";
 
 describe("Benchmark audited adapters", () => {
   it("reports tools as not configured instead of returning mock success", () => {
@@ -88,5 +90,12 @@ describe("Benchmark audited adapters", () => {
     expect(commands[0].argv).toContain("--step-tol");
     expect(commands[0].argv).not.toContain("--step-tolerance");
     expect(commands[0].argv).toContain("/usr/bin/ngspice");
+  });
+
+  it("fails closed when an active SPICE model is too large for complete safety inspection", async () => {
+    const model = inputFile("model.lib", "primary-model", 16 * 1024 * 1024 + 1);
+    const record = jobRecord({ inputManifest: { schemaVersion: "eda.input-manifest.v1", files: [model], totalBytes: model.sizeBytes, fileCount: 1, rootHint: null, createdAt: "2026-08-14T00:00:00.000Z" } });
+    const validation = await validateBenchmarkDraft({ moduleId: "benchmark", storageRoot: "/unread", now: () => "2026-08-14T00:00:00.000Z", job: record, files: [model], technology: null }, {});
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "benchmark.model_too_large_to_validate" }));
   });
 });

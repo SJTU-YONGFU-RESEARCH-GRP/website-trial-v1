@@ -1,6 +1,9 @@
+import fs from "node:fs/promises";
 import path from "node:path";
 import type { DraftValidationContextV1, InputFileV1, StructuredJobErrorV1 } from "../../../shared/contracts/v1.js";
-import { DigitalAdapterError, normalizeRelativePath, structuredError } from "./helpers.js";
+import { MAX_ACTIVE_SOURCE_TEXT_BYTES, SourceSecurityError, validateHdlSource } from "../../app/storage/sourceSecurity.js";
+import { DigitalAdapterError, normalizeRelativePath, structuredError, workspacePath } from "./helpers.js";
+import { sanitizeDigitalSdc } from "./sdc.js";
 import type { DigitalInputMapping, DigitalInputRole } from "./types.js";
 
 const ROLE_SET = new Set<DigitalInputRole>([
@@ -41,7 +44,45 @@ export function mapDigitalInputs(files: InputFileV1[]): DigitalInputMapping {
   return result;
 }
 
-export function validateInputMapping(context: DraftValidationContextV1): { errors: StructuredJobErrorV1[]; warnings: string[]; mapping: DigitalInputMapping } {
+async function inspectActiveTextInputs(
+  context: DraftValidationContextV1,
+  mapping: DigitalInputMapping,
+): Promise<StructuredJobErrorV1[]> {
+  const errors: StructuredJobErrorV1[] = [];
+  const jobRoot = path.resolve(context.storageRoot, ...normalizeRelativePath(context.job.workspaceRelativePath).split("/"));
+  const availablePaths = new Set(context.files.map((file) => normalizeRelativePath(file.relativePath)));
+  for (const input of mapping.sdc) {
+    try {
+      const source = await fs.readFile(workspacePath(jobRoot, "input", input.relativePath), "utf8");
+      sanitizeDigitalSdc(source, input.relativePath);
+    } catch (error) {
+      errors.push(structuredError(error));
+    }
+  }
+  const byPath = new Map(context.files.map((file) => [normalizeRelativePath(file.relativePath), file]));
+  const pending = [...mapping.rtl, ...mapping.gateNetlists, ...mapping.testbench, ...mapping.includes];
+  const inspected = new Set<string>();
+  while (pending.length) {
+    const input = pending.shift()!;
+    if (inspected.has(input.relativePath)) continue;
+    inspected.add(input.relativePath);
+    try {
+      if (input.sizeBytes > MAX_ACTIVE_SOURCE_TEXT_BYTES) throw new DigitalAdapterError("DIGITAL_HDL_TOO_LARGE_TO_VALIDATE", `${input.relativePath} exceeds the 16 MiB safety-inspection limit`);
+      const source = await fs.readFile(workspacePath(jobRoot, "input", input.relativePath), "utf8");
+      for (const dependency of validateHdlSource(input.relativePath, source, availablePaths)) {
+        const target = byPath.get(dependency);
+        if (target && !inspected.has(dependency)) pending.push(target);
+      }
+    } catch (error) {
+      errors.push(structuredError(error instanceof SourceSecurityError
+        ? new DigitalAdapterError(`DIGITAL_${error.code}`, error.message)
+        : error));
+    }
+  }
+  return errors;
+}
+
+export async function validateInputMapping(context: DraftValidationContextV1): Promise<{ errors: StructuredJobErrorV1[]; warnings: string[]; mapping: DigitalInputMapping }> {
   const errors: StructuredJobErrorV1[] = [];
   const warnings: string[] = [];
   let mapping: DigitalInputMapping;
@@ -84,6 +125,7 @@ export function validateInputMapping(context: DraftValidationContextV1): { error
     if (mapping.testbench.length > 0 && mapping.rtl.length === 0) {
       errors.push(structuredError(new DigitalAdapterError("DIGITAL_TESTBENCH_WITHOUT_RTL", "RTL simulation requires RTL sources")));
     }
+    errors.push(...await inspectActiveTextInputs(context, mapping));
   }
   const unresolved = context.files.flatMap((file) => file.unresolvedIncludes.map((include) => `${file.relativePath}: ${include}`));
   if (unresolved.length > 0) {

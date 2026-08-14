@@ -35,7 +35,7 @@ export const digitalModuleAdapter: ModuleAdapterV1 = {
   },
 
   async validateDraft(context: DraftValidationContextV1) {
-    const validation = validateInputMapping(context);
+    const validation = await validateInputMapping(context);
     if (context.job.operation !== "import") {
       try {
         const parameters = normalizeRunParameters(context.job.parameters);

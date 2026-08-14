@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL = process.env.EDA_E2E_BASE_URL ?? "http://127.0.0.1:4173";
+const serverPort = process.env.EDA_E2E_PORT ?? "4173";
+const baseURL = process.env.EDA_E2E_BASE_URL ?? `http://127.0.0.1:${serverPort}`;
 
 export default defineConfig({
   testDir: "./test/e2e",
@@ -23,11 +24,11 @@ export default defineConfig({
     command: "npm run build && npx tsx test/e2e/serve-e2e.ts",
     url: `${baseURL}/api/health`,
     timeout: 180_000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     env: {
       ...process.env,
       NODE_ENV: "test",
-      EDA_PORT: "4173",
+      EDA_PORT: serverPort,
       EDA_HOST: "127.0.0.1",
       EDA_E2E_ADMIN_PASSWORD: "E2e-admin-only-correct-horse-battery-staple",
       EDA_E2E_USER_PASSWORD: "E2e-user-only-correct-horse-battery-staple",

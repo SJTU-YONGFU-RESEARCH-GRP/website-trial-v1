@@ -40,7 +40,6 @@ export function usePlotlyChart(
       ro.disconnect();
       void Plotly.purge(el);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, layout, config]);
 
   return ref;

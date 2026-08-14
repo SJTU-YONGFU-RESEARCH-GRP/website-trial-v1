@@ -1,4 +1,6 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
+import { createReadStream } from "node:fs";
 import path from "node:path";
 import type { JsonObject } from "../../../shared/contracts/v1.ts";
 import { ppaFlowAdapters } from "./adapters/index.ts";
@@ -7,6 +9,8 @@ import { parseParserOutput, validatePpaParsedResult } from "./parser.ts";
 import { expandSweep } from "./sweep.ts";
 import type { PpaExecutionContext } from "./types.ts";
 import { mapPpaInputs } from "./validation.ts";
+import { sanitizePpaSdc } from "./security.ts";
+import { MAX_ACTIVE_SOURCE_TEXT_BYTES, SourceSecurityError, validateHdlSource } from "../../app/storage/sourceSecurity.ts";
 
 function baseStepKey(stepKey: string): string { return stepKey.includes(":") ? stepKey.slice(stepKey.indexOf(":") + 1) : stepKey; }
 function pointRoot(stepKey: string): string { return stepKey.includes(":") ? stepKey.slice(0, stepKey.indexOf(":")) : ""; }
@@ -16,26 +20,22 @@ async function validateWorkspace(context: PpaExecutionContext): Promise<void> {
   for (const input of context.job.inputManifest.files) {
     const filename = workspacePath(context.workspacePath, `input/${input.relativePath}`); const stat = await fs.lstat(filename);
     if (!stat.isFile() || stat.isSymbolicLink() || stat.size !== input.sizeBytes) throw new Error(`input changed after upload: ${input.relativePath}`);
+    const hash = createHash("sha256");
+    await new Promise<void>((resolve, reject) => {
+      const stream = createReadStream(filename);
+      stream.on("data", (chunk: Buffer) => hash.update(chunk));
+      stream.once("error", reject);
+      stream.once("end", resolve);
+    });
+    if (hash.digest("hex") !== input.sha256) throw new Error(`input hash changed after upload: ${input.relativePath}`);
   }
-}
-
-const SDC_COMMANDS = new Set(["create_clock", "set_input_delay", "set_output_delay", "set_clock_uncertainty", "set_input_transition", "set_load", "set_false_path", "set_multicycle_path", "set_max_delay", "set_min_delay", "set_clock_groups"]);
-const SDC_QUERIES = new Set(["get_ports", "get_pins", "get_clocks", "get_cells", "get_nets", "all_inputs", "all_outputs", "all_registers"]);
-
-export function sanitizePpaSdc(source: string): string {
-  const accepted: string[] = [];
-  for (const [index, raw] of source.split(/\r?\n/).entries()) {
-    const line = raw.trim(); if (!line || line.startsWith("#")) continue;
-    if (/[;\0`$]/.test(line) || line.endsWith("\\")) throw new Error(`unsafe SDC syntax on line ${index + 1}`);
-    const command = /^(\S+)/.exec(line)?.[1] ?? ""; if (!SDC_COMMANDS.has(command)) throw new Error(`unsupported SDC command ${command || "<empty>"} on line ${index + 1}`);
-    for (const match of line.matchAll(/\[([^\[\]]+)\]/g)) {
-      const query = match[1].trim().split(/\s+/, 1)[0]; if (!SDC_QUERIES.has(query)) throw new Error(`unsafe SDC query ${query} on line ${index + 1}`);
-    }
-    const withoutAllowed = line.replaceAll(/\[[^\[\]]+\]/g, ""); if (withoutAllowed.includes("[") || withoutAllowed.includes("]")) throw new Error(`nested or unmatched SDC query on line ${index + 1}`);
-    accepted.push(line);
+  const mapping = mapPpaInputs(context.job.inputManifest.files); const availablePaths = new Set(context.job.inputManifest.files.map((file) => file.relativePath));
+  for (const input of [...mapping.rtl, ...mapping.gate, ...mapping.include]) {
+    if (input.sizeBytes > MAX_ACTIVE_SOURCE_TEXT_BYTES) throw new Error(`${input.relativePath} exceeds the 16 MiB safety-inspection limit`);
+    const source = await fs.readFile(workspacePath(context.workspacePath, `input/${input.relativePath}`), "utf8");
+    try { validateHdlSource(input.relativePath, source, availablePaths); }
+    catch (error) { throw error instanceof SourceSecurityError ? new Error(`${error.code}: ${error.message}`) : error; }
   }
-  if (!accepted.length) throw new Error("SDC contains no supported constraints");
-  return `${accepted.join("\n")}\n`;
 }
 
 async function generateConfiguration(context: PpaExecutionContext): Promise<JsonObject> {

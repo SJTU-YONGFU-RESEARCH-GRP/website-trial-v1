@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { InputRoleDefinitionV1, JobRecordV1, JsonObject, ToolCapabilityV1 } from "../../../../shared/contracts/v1";
 import {
   createBenchmarkDraft,
@@ -33,6 +34,7 @@ interface BenchmarkRunPanelProps {
 
 export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<BenchmarkWorkflowMode>("run");
   const [capabilities, setCapabilities] = useState<BenchmarkCapabilities | null>(null);
   const [capabilityError, setCapabilityError] = useState<string | null>(null);
@@ -43,7 +45,6 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [started, setStarted] = useState<JobRecordV1 | null>(null);
 
   useEffect(() => {
     if (READ_ONLY_DEMO) return undefined;
@@ -75,7 +76,6 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
 
   const invalidateDraft = () => {
     setDraft(null);
-    setStarted(null);
     setError(null);
   };
 
@@ -118,8 +118,8 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
     setError(null);
     try {
       const response = await startBenchmarkJob(draft.id);
-      setStarted(response.job);
       onJobStarted?.(response.job);
+      navigate(`/jobs/${response.job.id}`);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : String(reason));
     } finally {
@@ -204,7 +204,6 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
         <div><strong>Start is explicit</strong><span>The validated draft enters the persistent Benchmark queue only after this click.</span></div>
         <button type="button" disabled={busy || READ_ONLY_DEMO || !user || !draft || draft.status !== "ready"} onClick={() => void start()}>Start</button>
       </div>
-      {started ? <div className="benchmark-run-notice is-success">Job {started.id} is {started.status}. <a href={`/jobs/${encodeURIComponent(started.id)}`}>Open backend processing</a></div> : null}
     </section>
   );
 }

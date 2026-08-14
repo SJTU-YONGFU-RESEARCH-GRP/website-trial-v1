@@ -385,13 +385,16 @@ export class ResultRepository {
     this.db.sqlite.prepare(`INSERT INTO ${this.table(record.moduleId)}(id,owner_id,lifecycle,record_json,created_at,updated_at,published_at) VALUES (?,?,?,?,?,?,?)`)
       .run(record.id, record.ownerId, record.lifecycle, json(record), record.createdAt, record.updatedAt, record.publishedAt);
   }
+  allIds(moduleId: ModuleId): string[] {
+    return (this.db.sqlite.prepare(`SELECT id FROM ${this.table(moduleId)}`).all() as Array<{ id: unknown }>).map((row) => String(row.id));
+  }
   get(moduleId: ModuleId, id: string, viewerId: string | null, admin: boolean): ResultRecordV1 | null {
-    const row = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE id=? AND lifecycle!='deleted' AND (lifecycle='published' OR owner_id=? OR ?=1)`).get(id, viewerId, Number(admin)) as { record_json?: unknown } | undefined;
+    const row = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE id=? AND (lifecycle!='deleted' OR ?=1) AND (lifecycle='published' OR owner_id=? OR ?=1)`).get(id, Number(admin), viewerId, Number(admin)) as { record_json?: unknown } | undefined;
     return row ? parsed(row.record_json) : null;
   }
-  list(moduleId: ModuleId, viewerId: string | null, admin: boolean, lifecycle?: ResultLifecycle, limit = 100): ResultRecordV1[] {
-    const rows = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE lifecycle!='deleted' AND (lifecycle='published' OR owner_id=? OR ?=1) AND (? IS NULL OR lifecycle=?) ORDER BY updated_at DESC LIMIT ?`)
-      .all(viewerId, Number(admin), lifecycle || null, lifecycle || null, Math.min(limit, 500)) as { record_json: unknown }[];
+  list(moduleId: ModuleId, viewerId: string | null, admin: boolean, lifecycle?: ResultLifecycle, limit = 100, ownerId?: string): ResultRecordV1[] {
+    const rows = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE (lifecycle!='deleted' OR ?=1) AND (lifecycle='published' OR owner_id=? OR ?=1) AND (? IS NULL OR lifecycle=?) AND (? IS NULL OR owner_id=?) ORDER BY updated_at DESC LIMIT ?`)
+      .all(Number(admin), viewerId, Number(admin), lifecycle || null, lifecycle || null, ownerId || null, ownerId || null, Math.min(limit, 500)) as { record_json: unknown }[];
     return rows.map((row) => parsed(row.record_json));
   }
   query(moduleId: ModuleId, viewerId: string | null, admin: boolean, input: { lifecycle?: ResultLifecycle; ownerId?: string; cursor?: string; search?: string; filters?: Record<string, Array<string | number | boolean | null>>; limit?: number }): ResultRecordV1[] {

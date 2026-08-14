@@ -13,7 +13,6 @@ import type {
   AnalysisDomain,
 } from "./contracts";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeLegacyBenchmarkManifest(raw: any): {
   results: DomainBenchmarkResult[];
   artifacts: Record<string, ArtifactRef>;

@@ -1,7 +1,7 @@
 # Production deployment
 
 The full platform is a same-origin React application, Fastify API, persistent
-SQLite database, and one or more workers. GitHub Pages is only the read-only
+SQLite database, and one worker supervisor with independent per-module concurrency. GitHub Pages is only the read-only
 published-results build; it cannot authenticate users or run EDA tools.
 
 ## Host prerequisites
@@ -27,11 +27,15 @@ cp .env.example /etc/website-trial-v1.env
 npm run build
 set -a; . /etc/website-trial-v1.env; set +a
 npm run db:migrate
+npm run db:import-legacy
 EDA_ADMIN_PASSWORD='a-new-long-random-secret' npm run admin:create -- --username platform-admin
 ```
 
 Remove `EDA_ADMIN_PASSWORD` from the environment immediately after bootstrap.
 There is no default account, default password, or public registration.
+`db:import-legacy` is idempotent: it seeds the retained Benchmark, Digital, and
+PPA datasets as published `origin=legacy-bundled` records without changing the
+source `data/` tree.
 
 The production environment must set at least:
 
@@ -76,7 +80,9 @@ WantedBy=multi-user.target
 
 Create `eda-worker.service` with the same isolation and
 `ExecStart=/usr/bin/npm run worker`. Do not set `EDA_EMBED_WORKER=1` when a
-standalone worker is running. For local development only, `npm run dev:full`
+standalone worker is running, and do not start a second worker process against
+the same SQLite database (the configured per-module concurrency is handled
+inside this supervisor). For local development only, `npm run dev:full`
 starts Vite, API, and worker together.
 
 The API serves `dist/` and `/api/*` on `EDA_PORT`. A reverse proxy should pass

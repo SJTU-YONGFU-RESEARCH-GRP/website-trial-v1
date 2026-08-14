@@ -7,6 +7,7 @@ import { ModuleRegistry } from "../../server/app/modules/registry.ts";
 import { createBenchmarkModule } from "../../server/modules/benchmark/index.ts";
 import digitalModuleAdapter from "../../server/modules/digital/index.ts";
 import ppaModuleAdapter from "../../server/modules/ppa/index.ts";
+import { TOOL_CATALOG_BY_ID } from "../../shared/toolCatalog.ts";
 
 if (process.env.NODE_ENV !== "test") throw new Error("the E2E fixture server is test-only");
 
@@ -44,7 +45,9 @@ if (!cookie) throw new Error("E2E admin login did not establish a cookie");
 process.stderr.write("[e2e-server] admin session created\n");
 
 const fixture = path.resolve("test/fixtures/fake-tools/fake-eda-tool.mjs");
-async function configure(toolId: string, moduleId: "digital" | "ppa", fakeKind: string, adapterId: string): Promise<void> {
+async function configure(toolId: string, moduleId: "benchmark" | "digital" | "ppa", fakeKind: string): Promise<void> {
+  const catalog = TOOL_CATALOG_BY_ID[toolId];
+  if (!catalog || catalog.moduleId !== moduleId) throw new Error(`E2E tool ${toolId} is absent from the audited catalog`);
   process.stderr.write(`[e2e-server] configuring ${toolId}\n`);
   const created = await app.inject({
     method: "POST",
@@ -54,7 +57,7 @@ async function configure(toolId: string, moduleId: "digital" | "ppa", fakeKind: 
       toolId, moduleId, enabled: true, rootPath: path.dirname(fixture), executablePath: fixture,
       interpreterPath: null, entryPoint: null, workingDirectory: null, timeoutSeconds: 5, maxConcurrency: 1,
       environmentNames: ["FAKE_EDA_TOOL", "FAKE_EDA_MODE"], environment: { FAKE_EDA_TOOL: fakeKind, FAKE_EDA_MODE: "success" },
-      versionProbeArgv: ["--version"], adapterId, adapterVersion: "1.0.0",
+      versionProbeArgv: [...catalog.versionProbeArgv], adapterId: catalog.adapterId, adapterVersion: catalog.adapterVersion,
     },
   });
   if (created.statusCode !== 201) throw new Error(`E2E tool setup failed: ${created.body}`);
@@ -64,9 +67,41 @@ async function configure(toolId: string, moduleId: "digital" | "ppa", fakeKind: 
   if (selfTest.statusCode !== 200 || selfTest.json().data.selfTestPassed !== true) throw new Error(`E2E tool self-test failed: ${selfTest.body}`);
 }
 
-await configure("yosys", "digital", "yosys", "digital-yosys-opensta-v1");
-await configure("opensta", "digital", "opensta", "digital-yosys-opensta-v1");
-await configure("ppa-result-parser", "ppa", "ppa-result-parser", "ppa-result-parser-v1");
+await configure("ngspice", "benchmark", "ngspice");
+await configure("spice-benchmark", "benchmark", "spice-benchmark");
+await configure("yosys", "digital", "yosys");
+await configure("opensta", "digital", "opensta");
+await configure("openroad-orfs", "ppa", "openroad-orfs");
+await configure("ppa-result-parser", "ppa", "ppa-result-parser");
+
+const technologyRoot = path.join(storageRoot, "registered-technology");
+await fs.mkdir(technologyRoot, { recursive: true });
+const libertyPath = path.join(technologyRoot, "e2e.lib");
+const techLefPath = path.join(technologyRoot, "e2e-tech.lef");
+const cellLefPath = path.join(technologyRoot, "e2e-cells.lef");
+await fs.writeFile(libertyPath, "library(e2e) {\nleakage_power_unit : \"1nW\";\ncell(INVX1) {\narea : 1.25;\ncell_leakage_power : 2.0;\n}\n}\n");
+await fs.writeFile(techLefPath, "VERSION 5.8 ;\nEND LIBRARY\n");
+await fs.writeFile(cellLefPath, "VERSION 5.8 ;\nMACRO INVX1\n  CLASS CORE ;\nEND INVX1\nEND LIBRARY\n");
+const technology = await app.inject({
+  method: "POST",
+  url: "/api/admin/technologies",
+  headers: { cookie, "x-csrf-token": loginBody.csrfToken },
+  payload: {
+    technologyId: "e2e-nangate45",
+    processNode: "45nm",
+    pdk: "nangate45",
+    standardCellLibrary: "NangateOpenCellLibrary",
+    libertyPaths: [libertyPath],
+    techLefPath,
+    cellLefPaths: [cellLefPath],
+    corner: "tt_1v10_25c",
+    voltage: 1.1,
+    rcCorner: "nominal",
+    allowedAdapterIds: ["digital-yosys-opensta-v1", "ppa-openroad-orfs-v1"],
+    enabled: true,
+  },
+});
+if (technology.statusCode !== 201) throw new Error(`E2E technology setup failed: ${technology.body}`);
 
 await app.listen({ host: config.host, port: config.port });
 process.stderr.write(`[e2e-server] listening on ${config.host}:${config.port}\n`);

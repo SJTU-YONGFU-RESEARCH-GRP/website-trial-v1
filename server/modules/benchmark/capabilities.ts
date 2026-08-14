@@ -28,6 +28,15 @@ const baseModelRole: InputRoleDefinitionV1 = {
   multiple: false,
 };
 
+const modelIncludeRole: InputRoleDefinitionV1 = {
+  ...spiceModelRole,
+  id: "model-include",
+  label: "Included model dependency",
+  description: "A model/library reached from the root model include closure; validated recursively but not launched as a second root.",
+  required: false,
+  multiple: true,
+};
+
 const measuredCsvRole: InputRoleDefinitionV1 = {
   id: "measured-csv",
   label: "Measured DC IV CSV",
@@ -143,7 +152,7 @@ export function createBenchmarkCapabilities(options: BenchmarkModuleOptions): To
       healthReason: translatorHealth.reason,
       toolVersion: translatorHealth.version,
       operations: ["translate"],
-      inputRoles: [spiceModelRole, completedRole],
+      inputRoles: [spiceModelRole, modelIncludeRole, completedRole],
       parameters: [
         parameter("sourceDialect", "Source dialect", "Dialect parsed by the real translator CLI.", "enum", "ngspice", "--source", { required: true, enumValues: ["spectre", "hspice", "ngspice"] }),
         parameter("targetDialect", "Target dialect", "Dialect emitted by the real translator CLI.", "enum", "ngspice", "--target", { required: true, enumValues: ["spectre", "hspice", "ngspice"] }),
@@ -164,7 +173,7 @@ export function createBenchmarkCapabilities(options: BenchmarkModuleOptions): To
       healthReason: fittingHealth.reason,
       toolVersion: fittingHealth.version,
       operations: ["fit-dc-iv"],
-      inputRoles: [measuredCsvRole, baseModelRole, completedRole],
+      inputRoles: [measuredCsvRole, baseModelRole, modelIncludeRole, completedRole],
       parameters: [
         parameter("modelName", "Model name", "Model card to calibrate.", "string", "nmos_bsim45", "--model-name"),
         parameter("deviceType", "Device type", "Current polarity and generated testbench device type.", "enum", "nmos", "--device-type", { enumValues: ["nmos", "pmos"] }),
@@ -192,7 +201,7 @@ export function createBenchmarkCapabilities(options: BenchmarkModuleOptions): To
       healthReason: reductionHealth.reason,
       toolVersion: reductionHealth.version,
       operations: ["reduce"],
-      inputRoles: [spiceModelRole, completedRole],
+      inputRoles: [spiceModelRole, modelIncludeRole, completedRole],
       parameters: [
         parameter("errorTolerance", "Error tolerance", "Target normalized error tolerance.", "number", 0.05, "positional:error_tolerance", { minimum: 0 }),
         parameter("minimumParameters", "Minimum parameters", "Minimum retained parameter count.", "integer", 10, "positional:min_params", { minimum: 1 }),
@@ -213,7 +222,7 @@ export function createBenchmarkCapabilities(options: BenchmarkModuleOptions): To
       healthReason: expansionHealth.reason,
       toolVersion: expansionHealth.version,
       operations: ["generate-corners", "iv", "cv", "monte-carlo"],
-      inputRoles: [spiceModelRole, sigmaRole, completedRole],
+      inputRoles: [spiceModelRole, modelIncludeRole, sigmaRole, completedRole],
       parameters: [
         parameter("modelName", "Model name", "Optional single model card selection.", "string", "", "--model-name"),
         parameter("nSigma", "Sigma multiplier", "T/S/F corner displacement.", "number", 3, "--n-sigma", { minimum: 0, maximum: 20 }),
@@ -242,7 +251,7 @@ export function createBenchmarkCapabilities(options: BenchmarkModuleOptions): To
       healthReason: simulators.length ? benchmarkHealth.reason : "No simulator adapter is currently healthy",
       toolVersion: benchmarkHealth.version,
       operations: ["benchmark"],
-      inputRoles: [spiceModelRole, completedRole],
+      inputRoles: [spiceModelRole, modelIncludeRole, completedRole],
       parameters: [
         parameter("simulators", "Simulators", "Only simulators with a healthy executable and adapter self-test.", "string-list", simulators.length ? [simulators[0]] : [], "--simulator", { required: true, enumValues: simulators }),
         parameter("modes", "Analysis domains", "Domains implemented by the fixed benchmark circuit.", "string-list", ["dc", "transient", "ac", "noise"], "--modes", { required: true, enumValues: ["dc", "transient", "ac", "noise"] }),

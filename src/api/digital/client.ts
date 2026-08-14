@@ -92,7 +92,7 @@ export function digitalChartRows(results: ResultRecordV1[]): DesignRow[] {
         fmaxMhz,
         powerMw,
         areaUm2,
-        category: typeof design.category === "string" ? design.category : undefined,
+        category: typeof design.category === "string" && design.category.trim() ? design.category.trim() : "uncategorized",
       });
     }
   }

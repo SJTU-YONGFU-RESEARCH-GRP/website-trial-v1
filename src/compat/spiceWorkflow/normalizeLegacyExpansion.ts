@@ -8,7 +8,6 @@ import type {
   ToolExecutionResult,
 } from "./contracts";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeLegacyExpansionManifest(raw: any): {
   executions: ToolExecutionResult[];
   artifacts: Record<string, ArtifactRef>;

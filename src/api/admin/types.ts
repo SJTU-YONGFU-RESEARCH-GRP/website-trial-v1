@@ -22,6 +22,7 @@ export interface AdminJobFilters {
 export interface AdminResultFilters {
   moduleId?: ModuleId;
   lifecycle?: ResultLifecycle;
+  ownerId?: string;
   limit?: number;
 }
 

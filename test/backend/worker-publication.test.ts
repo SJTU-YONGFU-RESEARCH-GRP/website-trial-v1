@@ -42,4 +42,35 @@ describe("worker execution and atomic publication", () => {
     const artifacts = repositories.artifacts.listJob(job.id); expect(artifacts.map((item) => item.role)).toEqual(expect.arrayContaining(["execute.stdout", "execute.stderr", "result"]));
     expect(await fsp.readFile(storage.resolve(`results/digital/${result.id}/output/result.json`), "utf8")).toContain("42"); database.close();
   });
+
+  it("removes a final directory when storage fails immediately after its atomic rename", async () => {
+    class RenameThenFailStorage extends StorageService {
+      override async commitPublication(stagingPath: string, moduleId: string, resultId: string): Promise<string> {
+        await super.commitPublication(stagingPath, moduleId, resultId);
+        throw new Error("injected failure after rename");
+      }
+    }
+    const root = await fsp.mkdtemp(path.join(os.tmpdir(), "eda-publish-rename-failure-")); roots.push(root);
+    const storage = new RenameThenFailStorage(root); await storage.initialize();
+    const database = new EdaDatabase(":memory:"); database.migrate(); const repositories = makeRepositories(database);
+    const user = repositories.users.create({ username: "rename-failure-user", password: "a sufficiently strong password" });
+    const at = new Date().toISOString(); const manifest: InputManifestV1 = { schemaVersion: "eda.input-manifest.v1", files: [], totalBytes: 0, fileCount: 0, rootHint: null, createdAt: at };
+    const job = repositories.jobs.createDraft(user.id, "digital", "run", "publication-failure", manifest); const workspace = await storage.createWorkspace(job.id);
+    repositories.jobs.beginValidation(job.id);
+    repositories.jobs.setDraft(job.id, manifest, {}, "test-capability", [], {}, { schemaVersion: "eda.job-plan.v1", capabilityVersion: "test-capability",
+      steps: [{ id: "produce", name: "Produce", description: "write real output", required: true, weight: 1, process: null, inputRoles: [], outputRoles: ["result"] }], sweep: null, warnings: [] });
+    repositories.jobs.start(job.id);
+    const adapter: ModuleAdapterV1 = {
+      moduleId: "digital", capabilities: async () => [], validateDraft: async () => ({ valid: true, errors: [], warnings: [] }), buildPlan: async () => { throw new Error("not used"); },
+      executeStep: async () => { await fsp.writeFile(path.join(workspace, "output", "result.json"), JSON.stringify({ value: 42 })); return { exitCode: 0, outputs: {} }; },
+      parseResult: async () => ({ title: "Result", summary: { value: 42 }, data: { value: 42 }, artifactRoles: ["result"], parserId: "test-parser", parserVersion: "1" }),
+      publishResult: async () => {}, collectArtifacts: async () => [{ role: "result", relativePath: "output/result.json", mediaType: "application/json", required: true, publish: true }],
+    };
+    const registry = new ModuleRegistry(); registry.register(adapter);
+    await new JobRunner(repositories, registry, storage, new SafeProcessRunner(100)).run(repositories.jobs.claim("digital")!);
+    expect(repositories.jobs.get(job.id)).toMatchObject({ status: "failed", resultId: null });
+    expect(repositories.results.list("digital", user.id, false)).toEqual([]);
+    expect(await fsp.readdir(storage.resolve("results/digital"))).toEqual([]);
+    database.close();
+  });
 });

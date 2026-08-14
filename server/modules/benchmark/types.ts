@@ -29,8 +29,6 @@ export interface ToolRuntimeHealth {
 export interface BenchmarkModuleOptions {
   configurations?: ToolConfigurationSnapshotV1[];
   health?: Partial<Record<BenchmarkToolId | SimulatorId, ToolRuntimeHealth>>;
-  environment?: Partial<Record<BenchmarkToolId, Record<string, string>>>;
-  spawnProcess?: ProcessSpawner;
 }
 
 export interface BenchmarkRunParameters extends JsonObject {
@@ -69,27 +67,6 @@ export interface BenchmarkToolAdapter {
   readonly description: string;
   buildCommands(context: AdapterPlanContext): CommandSpec[];
 }
-
-export interface SpawnRequest {
-  executable: string;
-  argv: string[];
-  cwd: string;
-  env: NodeJS.ProcessEnv;
-  timeoutSeconds: number;
-  abortSignal: AbortSignal;
-  onStdout(chunk: string): Promise<void>;
-  onStderr(chunk: string): Promise<void>;
-}
-
-export interface SpawnResult {
-  exitCode: number;
-  signal: NodeJS.Signals | null;
-  timedOut: boolean;
-  stdoutBytes: number;
-  stderrBytes: number;
-}
-
-export type ProcessSpawner = (request: SpawnRequest) => Promise<SpawnResult>;
 
 export interface NativeArtifact {
   role: string;

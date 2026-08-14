@@ -13,7 +13,6 @@ import { translatorAdapter } from "./translatorAdapter";
 import { fittingAdapter } from "./fittingAdapter";
 import { reductionAdapter } from "./reductionAdapter";
 import { expansionAdapter } from "./expansionAdapter";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyInvocation = ToolInvocation<any>;
 
 /* ─── Tool capabilities ─── */

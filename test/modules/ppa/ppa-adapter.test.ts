@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -6,7 +7,8 @@ import type { DraftValidationContextV1, InputFileV1, JobRecordV1, TechnologyLibr
 import { ppaModuleAdapter } from "../../../server/modules/ppa/index.ts";
 import { ppaCapabilities } from "../../../server/modules/ppa/capabilities.ts";
 import { parseParserOutput } from "../../../server/modules/ppa/parser.ts";
-import { sanitizePpaSdc, stageCompletedRun } from "../../../server/modules/ppa/executor.ts";
+import { executePpaStep, stageCompletedRun } from "../../../server/modules/ppa/executor.ts";
+import { sanitizePpaSdc } from "../../../server/modules/ppa/security.ts";
 import { buildPpaPlan, buildPpaSweepChildPlans } from "../../../server/modules/ppa/planner.ts";
 import { expandSweep } from "../../../server/modules/ppa/sweep.ts";
 import { openRoadOrfsAdapter } from "../../../server/modules/ppa/adapters/openroadOrfs.ts";
@@ -27,7 +29,7 @@ function file(relativePath: string, role: string, recognizedType = "verilog"): I
 
 const technology: TechnologyLibraryV1 = { id: "tech-1", technologyId: "sky130hd", processNode: "130nm", pdk: "sky130A", standardCellLibrary: "sky130_fd_sc_hd",
   libertyPaths: ["/pdk/cells.lib"], techLefPath: "/pdk/tech.lef", cellLefPaths: ["/pdk/cells.lef"], corner: "tt", voltage: 1.8, rcCorner: "nominal",
-  allowedAdapterIds: ["openroad-orfs", "openlane1", "librelane"], enabled: true, revision: 1, createdAt: "2026-08-14T00:00:00.000Z", updatedAt: "2026-08-14T00:00:00.000Z" };
+  allowedAdapterIds: ["ppa-openroad-orfs-v1", "ppa-openlane1-v1", "ppa-librelane-v1"], enabled: true, revision: 1, createdAt: "2026-08-14T00:00:00.000Z", updatedAt: "2026-08-14T00:00:00.000Z" };
 
 function job(overrides: Partial<JobRecordV1> = {}): JobRecordV1 {
   const at = "2026-08-14T00:00:00.000Z"; const files = [file("rtl/uart.v", "rtl")];
@@ -61,6 +63,32 @@ describe("PPA capabilities and validation", () => {
     const value = context(); delete value.toolBindings["openroad-orfs"];
     const validation = await ppaModuleAdapter.validateDraft(value);
     expect(validation.valid).toBe(false); expect(validation.errors[0]?.code).toBe("PPA_FLOW_UNAVAILABLE");
+  });
+
+  it("rejects unsafe uploaded SDC during preflight", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "ppa-preflight-sdc-")); temporary.push(storageRoot);
+    const record = job();
+    record.inputManifest.files.push(file("constraints.sdc", "sdc", "sdc"));
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input");
+    await fs.mkdir(path.join(inputRoot, "rtl"), { recursive: true });
+    await fs.writeFile(path.join(inputRoot, "rtl", "uart.v"), "m");
+    await fs.writeFile(path.join(inputRoot, "constraints.sdc"), "create_clock -period 10 [exec touch /tmp/pwned]\n");
+    const validation = await ppaModuleAdapter.validateDraft({ ...context(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "PPA_SDC_UNSAFE" }));
+  });
+
+  it("rejects an unsafe or missing HDL include during source-run preflight", async () => {
+    const storageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "ppa-preflight-include-")); temporary.push(storageRoot);
+    const source = "`include \"missing.vh\"\nmodule uart; endmodule\n"; const record = job(); record.inputManifest.files[0].sizeBytes = Buffer.byteLength(source);
+    const inputRoot = path.join(storageRoot, record.workspaceRelativePath, "input", "rtl"); await fs.mkdir(inputRoot, { recursive: true }); await fs.writeFile(path.join(inputRoot, "uart.v"), source);
+    const validation = await ppaModuleAdapter.validateDraft({ ...context(record), storageRoot });
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "PPA_HDL_INCLUDE_UNRESOLVED" }));
+  });
+
+  it("rejects JSON mapped as executable RTL instead of passing it to the flow", async () => {
+    const record = job(); record.inputManifest.files.push(file("config.json", "rtl", "json"));
+    const validation = await ppaModuleAdapter.validateDraft(context(record));
+    expect(validation.errors).toContainEqual(expect.objectContaining({ code: "PPA_ROLE_EXTENSION_MISMATCH" }));
   });
 
   it("accepts completed-run import with only the healthy configured parser and no technology", async () => {
@@ -121,5 +149,17 @@ describe("PPA generated configuration security", () => {
     expect(() => sanitizePpaSdc("create_clock -period 10 [exec touch /tmp/pwned]\n")).toThrow(/unsafe SDC query/);
     expect(() => sanitizePpaSdc("source user.tcl\n")).toThrow(/unsupported SDC command/);
     expect(() => sanitizePpaSdc("set x [get_ports clk]\n")).toThrow(/unsafe SDC syntax|unsupported SDC command/);
+  });
+
+  it("rejects an uploaded input whose bytes changed without changing its size", async () => {
+    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ppa-input-hash-")); temporary.push(directory);
+    await fs.mkdir(path.join(directory, "input", "rtl"), { recursive: true });
+    await fs.writeFile(path.join(directory, "input", "rtl", "uart.v"), "b");
+    const record = job();
+    record.inputManifest.files[0].sha256 = createHash("sha256").update("a").digest("hex");
+    const step = { id: "validate-step", jobId: record.id, ordinal: 0, stepKey: "validate-input", name: "validate", status: "running" as const,
+      progress: 0, processId: null, processGroupId: null, exitCode: null, startedAt: null, finishedAt: null, error: null };
+    await expect(executePpaStep({ moduleId: "ppa", storageRoot: directory, now: () => "2026-08-14T00:00:00.000Z", job: record,
+      step, workspacePath: directory, abortSignal: new AbortController().signal, emit: async () => undefined })).rejects.toThrow(/input hash changed/);
   });
 });

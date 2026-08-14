@@ -76,6 +76,8 @@ export class JobRunner {
       const interrupted = this.shutdownJobs.has(job.id);
       const structured = interrupted
         ? { type: "internal", code: "WORKER_SHUTDOWN", message: "worker shut down while the job was running", stepId: currentStepId, retryable: true, details: null } satisfies StructuredJobErrorV1
+        : controller.signal.aborted
+          ? { type: "cancelled", code: "JOB_CANCELLED", message: "job cancelled", stepId: currentStepId, retryable: true, details: null } satisfies StructuredJobErrorV1
         : errorRecord(error, currentStepId);
       if (currentStepId) {
         const step = this.repositories.jobs.steps(job.id).find((row) => String(row.id) === currentStepId);
@@ -89,7 +91,7 @@ export class JobRunner {
 
   private async publish(job: JobRecordV1, parsed: { title: string; summary: JsonObject; data: JsonObject; artifactRoles: string[]; parserId: string; parserVersion: string }, declarations: CollectedArtifactV1[], workspacePath: string): Promise<void> {
     if (declarations.length > 4096) throw { type: "storage", code: "ARTIFACT_COUNT_LIMIT", message: "result declares more than 4096 artifacts", stepId: job.currentStepId, retryable: false, details: null };
-    const resultId = randomUUID(); const staging = await this.storage.beginPublication(job.moduleId, resultId); const artifacts: ArtifactRecordV1[] = [];
+    const resultId = randomUUID(); const staging = await this.storage.beginPublication(job.moduleId, resultId); const artifacts: ArtifactRecordV1[] = []; let databaseCommitted = false;
     try {
       for (const declaration of declarations) {
         const relative = normalizeRelativePath(declaration.relativePath); const source = path.resolve(workspacePath, ...relative.split("/"));
@@ -116,9 +118,14 @@ export class JobRunner {
         artifactIds: artifacts.map((artifact) => artifact.id), createdAt: at, updatedAt: at, publishedAt: null };
       try {
         this.repositories.jobs.transaction(() => { this.repositories.results.insert(record); for (const artifact of artifacts) this.repositories.artifacts.insert(artifact); this.repositories.jobs.transition(job.id, "succeeded", { resultId }); });
+        databaseCommitted = true;
       } catch (error) { await this.storage.removePublication(job.moduleId, resultId); throw error; }
       this.repositories.jobs.appendEvent(job.id, null, "success", "artifact", "Result published atomically", { resultId });
-    } catch (error) { await fsp.rm(staging, { recursive: true, force: true }); throw error; }
+    } catch (error) {
+      await fsp.rm(staging, { recursive: true, force: true });
+      if (!databaseCommitted) await this.storage.removePublication(job.moduleId, resultId);
+      throw error;
+    }
   }
 }
 

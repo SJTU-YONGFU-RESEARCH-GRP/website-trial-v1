@@ -91,9 +91,10 @@ async function readInputText(context: DraftValidationContextV1, file: InputFileV
   }
 }
 
-function unresolvedIncludes(file: InputFileV1, text: string, availablePaths: Set<string>): string[] {
+function analyzeIncludes(file: InputFileV1, text: string, availablePaths: Set<string>): { missing: string[]; dependencies: string[] } {
   const missing: string[] = [];
-  const expression = /^\s*\.(?:include|inc|lib)\s+(?:"([^"]+)"|'([^']+)'|([^\s*]+))/gim;
+  const dependencies: string[] = [];
+  const expression = /^\s*\.?(?:include|inc|lib)\s+(?:"([^"]+)"|'([^']+)'|([^\s*]+))/gim;
   for (const match of text.matchAll(expression)) {
     const include = match[1] ?? match[2] ?? match[3] ?? "";
     if (!include || path.posix.isAbsolute(include) || include.startsWith("~") || include.split("/").includes("..")) {
@@ -102,8 +103,9 @@ function unresolvedIncludes(file: InputFileV1, text: string, availablePaths: Set
     }
     const resolved = path.posix.normalize(path.posix.join(path.posix.dirname(file.relativePath), include));
     if (!availablePaths.has(resolved)) missing.push(include);
+    else dependencies.push(resolved);
   }
-  return missing;
+  return { missing, dependencies };
 }
 
 async function validateCsv(
@@ -184,7 +186,10 @@ export async function validateBenchmarkDraft(
 
   const modelFiles = context.files.filter((file) => file.role === "primary-model" || file.role === "base-model");
   const availablePaths = new Set(context.files.map((file) => file.relativePath));
-  for (const file of modelFiles) {
+  const filesByPath = new Map(context.files.map((file) => [file.relativePath, file]));
+  const pending = [...modelFiles]; const inspected = new Set<string>();
+  while (pending.length) {
+    const file = pending.shift()!; if (inspected.has(file.relativePath)) continue; inspected.add(file.relativePath);
     if (!MODEL_EXTENSIONS.has(path.posix.extname(file.relativePath).toLowerCase())) {
       errors.push(validationError("benchmark.model_extension", `${file.relativePath} is not an accepted SPICE model extension`));
       continue;
@@ -193,9 +198,13 @@ export async function validateBenchmarkDraft(
     if (text !== null) {
       const danger = isUnsafeSpiceText(text);
       if (danger) errors.push(validationError("benchmark.unsafe_spice", `${file.relativePath}: ${danger}`));
-      const missing = unresolvedIncludes(file, text, availablePaths);
+      const { missing, dependencies } = analyzeIncludes(file, text, availablePaths);
       if (missing.length) errors.push(validationError("benchmark.unresolved_include", `${file.relativePath} has unresolved include(s): ${missing.join(", ")}`));
-    }
+      for (const dependency of dependencies) {
+        const target = filesByPath.get(dependency); if (target && !inspected.has(dependency)) pending.push(target);
+      }
+    } else if (file.sizeBytes > MAX_VALIDATION_TEXT_BYTES) errors.push(validationError("benchmark.model_too_large_to_validate", `${file.relativePath} exceeds the ${MAX_VALIDATION_TEXT_BYTES / (1024 * 1024)} MiB safety-inspection limit`));
+    else errors.push(validationError("benchmark.model_unreadable", `${file.relativePath} could not be inspected safely`));
   }
 
   const tools = selectedTools(parameters);

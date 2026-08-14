@@ -2,6 +2,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
+import { StringDecoder } from "node:string_decoder";
 import type { ToolConfigurationV1 } from "../../../shared/contracts/v1.ts";
 
 export interface ProcessRunOptions {
@@ -30,6 +31,7 @@ export class SafeProcessRunner {
   constructor(private readonly cancelGraceMs = 10_000, private readonly defaultMaxOutputBytes = 256 * 1024 * 1024) {}
 
   async run(key: string, options: ProcessRunOptions): Promise<ProcessRunResult> {
+    if (options.abortSignal?.aborted) throw new Error("process start aborted before spawn");
     if (!options.tool.enabled) throw new Error("tool configuration is disabled");
     const configuredExecutable = options.tool.interpreterPath || options.tool.executablePath;
     if (!configuredExecutable || !path.isAbsolute(configuredExecutable)) throw new Error("configured executable must be an absolute path");
@@ -60,6 +62,7 @@ export class SafeProcessRunner {
       const value = options.tool.environment[name];
       if (value !== undefined) environment[name] = value;
     }
+    if (options.abortSignal?.aborted) throw new Error("process start aborted before spawn");
     const stdout = options.stdoutPath ? fs.createWriteStream(options.stdoutPath, { flags: "a", mode: 0o640 }) : null;
     const stderr = options.stderrPath ? fs.createWriteStream(options.stderrPath, { flags: "a", mode: 0o640 }) : null;
     const child = spawn(executable, adapterArgv, { cwd, env: environment, shell: false, detached: process.platform !== "win32", stdio: ["ignore", "pipe", "pipe"] });
@@ -70,12 +73,22 @@ export class SafeProcessRunner {
     let timedOut = false; let outputLimitExceeded = false; let outputBytes = 0; let timer: NodeJS.Timeout | null = null;
     const abort = () => { void this.terminate(child); };
     options.abortSignal?.addEventListener("abort", abort, { once: true });
+    if (options.abortSignal?.aborted) abort();
     const timeoutSeconds = options.timeoutSeconds || options.tool.timeoutSeconds;
     if (timeoutSeconds > 0) timer = setTimeout(() => { timedOut = true; void this.terminate(child); }, timeoutSeconds * 1000);
+    const redactors = {
+      stdout: new StreamingRedactor(options.tool),
+      stderr: new StreamingRedactor(options.tool),
+    };
+    const emitSafeOutput = (stream: "stdout" | "stderr", safeText: string) => {
+      if (!safeText) return;
+      (stream === "stdout" ? stdout : stderr)?.write(safeText);
+      void options.onOutput?.(stream, safeText);
+    };
     const handleOutput = (stream: "stdout" | "stderr", chunk: Buffer) => {
       outputBytes += chunk.length;
       if (outputBytes > (options.maxOutputBytes || this.defaultMaxOutputBytes)) { outputLimitExceeded = true; void this.terminate(child); return; }
-      (stream === "stdout" ? stdout : stderr)?.write(chunk); void options.onOutput?.(stream, redact(chunk.toString("utf8"), options.tool));
+      emitSafeOutput(stream, redactors[stream].write(chunk));
     };
     child.stdout?.on("data", (chunk: Buffer) => handleOutput("stdout", chunk)); child.stderr?.on("data", (chunk: Buffer) => handleOutput("stderr", chunk));
     try {
@@ -87,6 +100,8 @@ export class SafeProcessRunner {
       if (timer) clearTimeout(timer);
       options.abortSignal?.removeEventListener("abort", abort);
       this.children.delete(key);
+      emitSafeOutput("stdout", redactors.stdout.end());
+      emitSafeOutput("stderr", redactors.stderr.end());
       await Promise.all([closeWriteStream(stdout), closeWriteStream(stderr)]);
     }
   }
@@ -119,10 +134,66 @@ function signalProcessGroup(pid: number, signal: NodeJS.Signals): void {
   catch (error) { if ((error as NodeJS.ErrnoException).code !== "ESRCH") throw error; }
 }
 
-function redact(text: string, tool: ToolConfigurationV1): string {
+function secretValues(tool: ToolConfigurationV1): string[] {
+  return Object.entries(tool.environment)
+    .filter(([name, value]) => /pass|secret|token|license|key/i.test(name) && Boolean(value))
+    .map(([, value]) => value)
+    .sort((left, right) => right.length - left.length);
+}
+
+function redact(text: string, secrets: readonly string[]): string {
   let output = text;
-  for (const [name, value] of Object.entries(tool.environment)) {
-    if (/pass|secret|token|license|key/i.test(name) && value) output = output.replaceAll(value, "[REDACTED]");
-  }
+  for (const value of secrets) output = output.replaceAll(value, "[REDACTED]");
   return output;
+}
+
+/**
+ * Holds enough raw suffix to recognize a secret split across arbitrary stream
+ * chunks. No possible secret prefix is emitted before it can be classified.
+ */
+class StreamingRedactor {
+  private readonly decoder = new StringDecoder("utf8");
+  private readonly secrets: string[];
+  private readonly retainedCharacters: number;
+  private pending = "";
+
+  constructor(tool: ToolConfigurationV1) {
+    this.secrets = secretValues(tool);
+    this.retainedCharacters = Math.max(0, ...this.secrets.map((value) => value.length - 1));
+  }
+
+  write(chunk: Buffer): string {
+    this.pending += this.decoder.write(chunk);
+    if (!this.secrets.length) return this.take(this.pending.length);
+    let cutoff = Math.max(0, this.pending.length - this.retainedCharacters);
+    // If a complete secret crosses the provisional suffix boundary, retain it
+    // from its first character. Repeat because moving the boundary may expose
+    // another overlapping match.
+    let previous = -1;
+    while (cutoff !== previous) {
+      previous = cutoff;
+      for (const secret of this.secrets) {
+        let index = this.pending.indexOf(secret);
+        while (index >= 0 && index < cutoff) {
+          if (index + secret.length > cutoff) {
+            cutoff = index;
+            break;
+          }
+          index = this.pending.indexOf(secret, index + 1);
+        }
+      }
+    }
+    return this.take(cutoff);
+  }
+
+  end(): string {
+    this.pending += this.decoder.end();
+    return this.take(this.pending.length);
+  }
+
+  private take(characters: number): string {
+    const ready = this.pending.slice(0, characters);
+    this.pending = this.pending.slice(characters);
+    return redact(ready, this.secrets);
+  }
 }

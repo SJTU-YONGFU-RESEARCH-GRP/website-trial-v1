@@ -147,18 +147,27 @@ async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools:
     const simulator = tools.active("benchmark").find((candidate) => ["ngspice", "spectre", "hspice"].includes(candidate.toolId) && tools.latestHealth(candidate.id)?.selfTestPassed === true);
     if (!simulator) throw new Error("Benchmark self-test requires a simulator that passed its native self-test");
     const source = path.join(directory, "selftest.lib"); await writeMosModel(source);
-    return { argv: [source, "--simulator", simulator.toolId, "--modes", "dc", "--output-dir", path.join(directory, "benchmark"), "--dpi", "72", "--log-level", "WARNING"], requiredFiles: [], verifyOutput() { /* Exit success proves the CLI parsed its generated native result. */ } };
+    return { argv: [source, "--simulator", simulator.toolId, "--modes", "dc", "--output-dir", path.join(directory, "benchmark"), "--dpi", "72", "--log-level", "WARNING"], requiredFiles: ["benchmark/REPORT.md"] };
   }
   if (tool.toolId === "ppa-result-parser") {
     const run = path.join(directory, "openroad-run"); await fsp.mkdir(run);
     await fsp.writeFile(path.join(run, "metrics.json"), `${JSON.stringify({ design: "selftest", flow: "openroad", area: 1 })}\n`, { mode: 0o600 });
     return { argv: ["run", "--flow", "openroad", "--include-all", run], requiredFiles: [], verifyOutput(stdout) { const value = JSON.parse(stdout) as { normalized?: unknown }; if (!value.normalized) throw new Error("PPA parser self-test did not emit normalized data"); } };
   }
-  if (tool.toolId === "openroad") {
-    const script = path.join(directory, "selftest.tcl");
-    await fsp.writeFile(script, "puts EDA_SELF_TEST_OK\nexit\n", { mode: 0o600 });
-    return { argv: ["-no_init", "-exit", script], requiredFiles: [] };
+  if (tool.toolId === "openroad-orfs") {
+    if (!tool.rootPath) throw new Error("OpenROAD ORFS self-test requires the flow repository root");
+    const makefile = path.join(tool.rootPath, "flow", "Makefile");
+    const designConfig = path.join(tool.rootPath, "flow", "designs", "nangate45", "gcd", "config.mk");
+    for (const [label, filename] of [["flow/Makefile", makefile], ["nangate45/gcd config", designConfig]] as const) {
+      const stat = await fsp.stat(filename).catch(() => null);
+      if (!stat?.isFile()) throw new Error(`OpenROAD ORFS ${label} is missing`);
+    }
+    return { argv: ["-f", makefile, `DESIGN_CONFIG=${designConfig}`, "print-FLOW_HOME"], requiredFiles: [] };
   }
+  if (tool.toolId === "openlane1") return { argv: ["--help"], requiredFiles: [] };
+  if (tool.toolId === "librelane") return { argv: ["--help"], requiredFiles: [] };
+  if (tool.toolId === "magic") return { argv: ["--version"], requiredFiles: [] };
+  if (tool.toolId === "klayout") return { argv: ["-v"], requiredFiles: [] };
   throw new Error(`No adapter-owned minimal self-test is implemented for ${tool.toolId}`);
 }
 
