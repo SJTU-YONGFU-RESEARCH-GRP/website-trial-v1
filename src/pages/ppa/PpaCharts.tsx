@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
 import type { Config, Data, Layout } from "plotly.js";
+import { seriesRgbByIndex } from "../../data/design";
 import type { PpaRunManifest } from "../../data/ppaTypes";
 import { useNarrowScreen } from "../../hooks/useNarrowScreen";
 import { usePlotlyChart } from "../../hooks/usePlotlyChart";
 import { useTheme } from "../../theme/ThemeContext";
 import {
+  CHART_LINE_WIDTH,
+  CHART_MARKER_OUTLINE_RGB,
   getChartPalette,
   plotAxisFont,
   plotFont,
@@ -30,14 +33,11 @@ interface MetricSpec {
   hoverUnit: string;
 }
 
-const BEST_COLOR = "#248a3d";
-const BASELINE_COLOR = "#0071e3";
-const CANDIDATE_COLOR = "#ff9500";
-const NOT_COMPARABLE_COLOR = "#8e8e93";
-const HISTOGRAM_COLORS = [
-  "#0071e3", "#ff9500", "#34c759", "#af52de", "#ff3b30", "#5ac8fa",
-  "#ff2d55", "#5856d6", "#30b0c7", "#a2845e", "#64d2ff", "#bf5af2",
-] as const;
+const FAILURE_COLOR = seriesRgbByIndex(0);
+const BEST_COLOR = seriesRgbByIndex(1);
+const BASELINE_COLOR = seriesRgbByIndex(2);
+const CANDIDATE_COLOR = seriesRgbByIndex(6);
+const NOT_COMPARABLE_COLOR = seriesRgbByIndex(7);
 
 type TimingAnalysis = "setup" | "hold";
 
@@ -197,7 +197,7 @@ export function PpaCharts({ runs }: Props): JSX.Element {
               : best !== null && sameValue(value, best)
                 ? BEST_COLOR
                 : index === 0 ? BASELINE_COLOR : CANDIDATE_COLOR),
-          line: { color: palette.axisBorderRgb, width: 1.5 },
+          line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
         },
         text: values.map(({ value, comparable }) =>
           !comparable
@@ -237,7 +237,7 @@ export function PpaCharts({ runs }: Props): JSX.Element {
         x: slackRuns.map((run) => run.summary.setupSlackNs),
         y: slackLabels,
         customdata: slackRuns.map((run) => `${technology(run)}<br>UID ${run.uid}`),
-        marker: { color: BASELINE_COLOR, line: { color: palette.axisBorderRgb, width: 1 } },
+        marker: { color: BASELINE_COLOR, line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH } },
         hovertemplate: "<b>%{customdata}</b><br>Setup slack: %{x:.7g} ns<extra></extra>",
       } as Data,
       {
@@ -247,7 +247,7 @@ export function PpaCharts({ runs }: Props): JSX.Element {
         x: slackRuns.map((run) => run.summary.holdSlackNs),
         y: slackLabels,
         customdata: slackRuns.map((run) => `${technology(run)}<br>UID ${run.uid}`),
-        marker: { color: CANDIDATE_COLOR, line: { color: palette.axisBorderRgb, width: 1 } },
+        marker: { color: CANDIDATE_COLOR, line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH } },
         hovertemplate: "<b>%{customdata}</b><br>Hold slack: %{x:.7g} ns<extra></extra>",
       } as Data,
     ];
@@ -304,8 +304,8 @@ export function PpaCharts({ runs }: Props): JSX.Element {
       opacity: 0.56,
       xbins: { start: histogramStart, end: histogramEnd, size: histogramStep },
       marker: {
-        color: HISTOGRAM_COLORS[index % HISTOGRAM_COLORS.length],
-        line: { color: palette.axisBorderRgb, width: 0.8 },
+        color: seriesRgbByIndex(index),
+        line: { color: CHART_MARKER_OUTLINE_RGB, width: CHART_LINE_WIDTH },
       },
       meta: [technology(run), run.uid, timingAnalysis],
       hovertemplate: [
@@ -358,11 +358,11 @@ export function PpaCharts({ runs }: Props): JSX.Element {
       annotations: histogramData.length === 0 ? [] : [
         {
           x: (histogramStart + 0) / 2, y: 1, xref: "x", yref: "paper", text: "Violation",
-          showarrow: false, yshift: 12, font: { ...compactTickFont, color: "#d70015" },
+          showarrow: false, yshift: 12, font: { ...compactTickFont, color: FAILURE_COLOR },
         },
         {
           x: histogramEnd / 2, y: 1, xref: "x", yref: "paper", text: "Meets timing",
-          showarrow: false, yshift: 12, font: { ...compactTickFont, color: "#248a3d" },
+          showarrow: false, yshift: 12, font: { ...compactTickFont, color: BEST_COLOR },
         },
       ],
     };

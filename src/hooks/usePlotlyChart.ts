@@ -1,5 +1,5 @@
 import { useEffect, useRef, type RefObject } from "react";
-import type { Config, Data, Layout } from "plotly.js";
+import type { Config, Data, Layout, PlotMouseEvent } from "plotly.js";
 import Plotly from "plotly.js-dist-min";
 
 /**
@@ -10,8 +10,11 @@ export function usePlotlyChart(
   data: Data[],
   layout: Partial<Layout>,
   config: Partial<Config>,
+  onPointClick?: (event: PlotMouseEvent) => void,
 ): RefObject<HTMLDivElement> {
   const ref = useRef<HTMLDivElement>(null);
+  const pointClickRef = useRef(onPointClick);
+  pointClickRef.current = onPointClick;
 
   useEffect(() => {
     const el = ref.current;
@@ -19,8 +22,11 @@ export function usePlotlyChart(
 
     let cancelled = false;
     const plot = Plotly.newPlot(el, data, layout, config);
-    void plot.then(() => {
+    void plot.then((plotElement) => {
       if (cancelled) return;
+      if (pointClickRef.current) {
+        plotElement.on("plotly_click", (event) => pointClickRef.current?.(event));
+      }
       void Plotly.Plots.resize(el);
     });
 

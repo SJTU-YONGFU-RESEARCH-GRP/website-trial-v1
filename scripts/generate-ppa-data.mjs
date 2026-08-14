@@ -276,7 +276,6 @@ const facetDimensions = {
   pvt: { category: "technology", label: "PVT", order: 50 },
   tool: { category: "implementation", label: "Tools", order: 10 },
   floorplan_target: { category: "implementation", label: "Floorplan target", order: 20 },
-  seed: { category: "implementation", label: "Seed", order: 30 },
   swept_input: { category: "experiment", label: "Swept input", order: 10 },
 };
 
@@ -425,9 +424,6 @@ export function buildFilterFacets(identity, interpretation, summary, scenarioCon
       coreUtilization ?? 100,
     );
   }
-
-  const seed = finite(concrete?.execution?.seed);
-  if (seed !== null) add("seed", String(seed), String(seed), seed);
 
   const sweptInputLabels = {
     "technology.beol": "Techfile RC",

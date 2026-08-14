@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DataUploadCard } from "../components/DataUploadCard";
 import { loadPpaRunIndex } from "../data/ppaDataLoader";
 import type { PpaRunIndex } from "../data/ppaTypes";
@@ -7,6 +7,7 @@ import { PpaNormalizedComparison } from "./ppa/PpaNormalizedComparison";
 import { PpaReportDetail } from "./ppa/PpaReportDetail";
 import { PpaRunSelector } from "./ppa/PpaRunSelector";
 import { PpaSummary } from "./ppa/PpaSummary";
+import { PpaTrendExplorer } from "./ppa/PpaTrendExplorer";
 import "../ppa.css";
 
 function number(value: number | null, options?: Intl.NumberFormatOptions): string {
@@ -55,6 +56,11 @@ export function PpaPage(): JSX.Element {
     setSelectedUids(published);
     setActiveUid(null);
   };
+  const inspectTrendRun = useCallback((uid: string) => {
+    setSelectedUids((previous) => previous.includes(uid) ? previous : [...previous, uid]);
+    setActiveUid(uid);
+    window.setTimeout(() => document.getElementById("ppa-report-detail")?.scrollIntoView({ behavior: "smooth" }), 0);
+  }, []);
   const uploadCard = (
     <DataUploadCard dataset="ppa" onPublished={(result) => handlePublished(result.publishedIds)} />
   );
@@ -102,9 +108,14 @@ export function PpaPage(): JSX.Element {
           reports used by KPIs, plots, the full normalized-entry comparison, and the summary table. A new tool,
           RC scale, PVT corner, or source revision appears here automatically when it first occurs in the data.
         </p>
-        <PpaRunSelector runs={index.runs} selectedUids={selectedUids} onChange={setSelectedUids} />
+        <PpaRunSelector
+          runs={index.runs}
+          selectedUids={selectedUids}
+          onChange={setSelectedUids}
+        />
       </section>
 
+      <PpaTrendExplorer runs={selectedRuns} onInspectRun={inspectTrendRun} />
       <PpaSummary runs={selectedRuns} />
       <PpaNormalizedComparison runs={selectedRuns} />
       <PpaCharts runs={selectedRuns} />
