@@ -63,13 +63,14 @@ export class ToolHealthService {
       const specification = await selfTestSpec(tool, directory, this.tools, this.runner);
       const stdout: string[] = []; const stderr: string[] = [];
       const result = await this.runner.run(`self-test:${tool.id}:${randomUUID()}`, { tool, argv: specification.argv, cwd: directory, allowedCwdRoot: directory, timeoutSeconds: Math.min(tool.timeoutSeconds, 120), onOutput: (stream, output) => { (stream === "stdout" ? stdout : stderr).push(output); } });
-      passed = result.exitCode === 0 && !result.timedOut && !result.outputLimitExceeded;
-      if (!passed) throw new Error(`adapter self-test exited ${result.exitCode}${result.timedOut ? " after timeout" : ""}`);
+      const processSucceeded = result.exitCode === 0 && !result.timedOut && !result.outputLimitExceeded;
+      if (!processSucceeded) throw new Error(`adapter self-test exited ${result.exitCode}${result.timedOut ? " after timeout" : ""}`);
       for (const required of specification.requiredFiles) {
         const stat = await fsp.stat(path.join(directory, required)).catch(() => null);
         if (!stat?.isFile() || stat.size === 0) throw new Error(`adapter self-test did not produce ${required}`);
       }
       if (specification.verifyOutput) specification.verifyOutput(stdout.join(""), stderr.join(""));
+      passed = true;
     } catch (error) { status = "unavailable"; message = error instanceof Error ? error.message : String(error); }
     finally { await fsp.rm(directory, { recursive: true, force: true }); }
     const previous = this.tools.latestHealth(tool.id);
@@ -147,12 +148,13 @@ async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools:
     const simulator = tools.active("benchmark").find((candidate) => ["ngspice", "spectre", "hspice"].includes(candidate.toolId) && tools.latestHealth(candidate.id)?.selfTestPassed === true);
     if (!simulator) throw new Error("Benchmark self-test requires a simulator that passed its native self-test");
     const source = path.join(directory, "selftest.lib"); await writeMosModel(source);
-    return { argv: [source, "--simulator", simulator.toolId, "--modes", "dc", "--output-dir", path.join(directory, "benchmark"), "--dpi", "72", "--log-level", "WARNING"], requiredFiles: ["benchmark/REPORT.md"] };
+    await fsp.appendFile(source, ".model pmos_bsim45 pmos level=54 version=4.8.2 vth0=-0.7 u0=120 tox=1.5e-9 ndep=1e17\n");
+    return { argv: [source, "--simulator", simulator.toolId, "--modes", "dc", "--output-dir", path.join(directory, "benchmark"), "--dpi", "72", "--log-level", "WARNING"], requiredFiles: [`benchmark/${simulator.toolId}/REPORT.md`] };
   }
   if (tool.toolId === "ppa-result-parser") {
     const run = path.join(directory, "openroad-run"); await fsp.mkdir(run);
     await fsp.writeFile(path.join(run, "metrics.json"), `${JSON.stringify({ design: "selftest", flow: "openroad", area: 1 })}\n`, { mode: 0o600 });
-    return { argv: ["run", "--flow", "openroad", "--include-all", run], requiredFiles: [], verifyOutput(stdout) { const value = JSON.parse(stdout) as { normalized?: unknown }; if (!value.normalized) throw new Error("PPA parser self-test did not emit normalized data"); } };
+    return { argv: ["run", "--flow", "openroad", "--include-all", run], requiredFiles: [], verifyOutput(stdout) { const value = JSON.parse(stdout) as { normalized?: unknown; interpretation?: unknown }; if (!value.normalized && !value.interpretation) throw new Error("PPA parser self-test did not emit an interpretation or normalized data"); } };
   }
   if (tool.toolId === "openroad-orfs") {
     if (!tool.rootPath) throw new Error("OpenROAD ORFS self-test requires the flow repository root");
