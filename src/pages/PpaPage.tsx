@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { DataUploadCard } from "../components/DataUploadCard";
+import { listPpaResults } from "../api/ppa";
+import { dynamicPpaRuns } from "../api/ppa/results";
 import { loadPpaRunIndex } from "../data/ppaDataLoader";
 import type { PpaRunIndex } from "../data/ppaTypes";
 import { PpaCharts } from "./ppa/PpaCharts";
@@ -8,6 +9,7 @@ import { PpaReportDetail } from "./ppa/PpaReportDetail";
 import { PpaRunSelector } from "./ppa/PpaRunSelector";
 import { PpaSummary } from "./ppa/PpaSummary";
 import { PpaTrendExplorer } from "./ppa/PpaTrendExplorer";
+import { PpaWorkflowPanel } from "./ppa/PpaWorkflowPanel";
 import "../ppa.css";
 
 function number(value: number | null, options?: Intl.NumberFormatOptions): string {
@@ -19,13 +21,21 @@ export function PpaPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [selectedUids, setSelectedUids] = useState<string[]>([]);
   const [activeUid, setActiveUid] = useState<string | null>(null);
+  const [filteredRuns, setFilteredRuns] = useState<readonly PpaRunIndex["runs"][number][]>([]);
+  const [dynamicLoadWarning, setDynamicLoadWarning] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    loadPpaRunIndex()
-      .then((value) => {
+    Promise.allSettled([loadPpaRunIndex(), listPpaResults()])
+      .then(([legacyResult, dynamicResult]) => {
         if (cancelled) return;
-        setIndex(value);
+        if (legacyResult.status === "rejected") throw legacyResult.reason;
+        const dynamicRuns = dynamicResult.status === "fulfilled" ? dynamicPpaRuns(dynamicResult.value) : [];
+        const known = new Set(legacyResult.value.runs.map((run) => run.uid));
+        const merged = [...legacyResult.value.runs, ...dynamicRuns.filter((run) => !known.has(run.uid))];
+        const value = { ...legacyResult.value, runs: merged, runCount: merged.length, flows: [...new Set(merged.map((run) => run.flow))], pdks: [...new Set(merged.map((run) => run.pdk))], designs: [...new Set(merged.map((run) => run.design))] };
+        setIndex(value); setFilteredRuns(value.runs);
+        setDynamicLoadWarning(dynamicResult.status === "rejected" ? "Dynamic PPA results are temporarily unavailable; bundled legacy results remain visible." : null);
         setSelectedUids([]);
       })
       .catch((reason: unknown) => {
@@ -48,22 +58,13 @@ export function PpaPage(): JSX.Element {
     if (activeUid && !selectedUids.includes(activeUid)) setActiveUid(null);
   }, [activeUid, selectedUids]);
 
-  const handlePublished = async (publishedIds: string[]): Promise<void> => {
-    const next = await loadPpaRunIndex();
-    setIndex(next);
-    setError(null);
-    const published = publishedIds.filter((uid) => next.runs.some((run) => run.uid === uid));
-    setSelectedUids(published);
-    setActiveUid(null);
-  };
   const inspectTrendRun = useCallback((uid: string) => {
     setSelectedUids((previous) => previous.includes(uid) ? previous : [...previous, uid]);
     setActiveUid(uid);
     window.setTimeout(() => document.getElementById("ppa-report-detail")?.scrollIntoView({ behavior: "smooth" }), 0);
   }, []);
-  const uploadCard = (
-    <DataUploadCard dataset="ppa" onPublished={(result) => handlePublished(result.publishedIds)} />
-  );
+  const handleFilteredRuns = useCallback((runs: readonly PpaRunIndex["runs"][number][]) => setFilteredRuns(runs), []);
+  const uploadCard = <PpaWorkflowPanel />;
 
   if (error) {
     return (
@@ -85,6 +86,7 @@ export function PpaPage(): JSX.Element {
   return (
     <div className="ppa-page">
       {uploadCard}
+      {dynamicLoadWarning ? <p className="digital-callout digital-callout--warning">{dynamicLoadWarning}</p> : null}
       <section className="chart-card ppa-hero">
         <div>
           <span className="ppa-eyebrow">OpenROAD + OpenLane + LibreLane · final-run AST evidence</span>
@@ -112,10 +114,11 @@ export function PpaPage(): JSX.Element {
           runs={index.runs}
           selectedUids={selectedUids}
           onChange={setSelectedUids}
+          onFilteredRunsChange={handleFilteredRuns}
         />
       </section>
 
-      <PpaTrendExplorer runs={selectedRuns} onInspectRun={inspectTrendRun} />
+      <PpaTrendExplorer runs={filteredRuns} onInspectRun={inspectTrendRun} />
       <PpaSummary runs={selectedRuns} />
       <PpaNormalizedComparison runs={selectedRuns} />
       <PpaCharts runs={selectedRuns} />

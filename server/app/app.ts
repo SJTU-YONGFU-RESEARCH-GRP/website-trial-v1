@@ -30,13 +30,13 @@ export interface EdaAppOptions { config?: ServerConfig; registry?: ModuleRegistr
 export async function createEdaApp(options: EdaAppOptions = {}): Promise<FastifyInstance> {
   const config = options.config || loadConfig();
   if (process.env.NODE_ENV === "production" && typeof process.getuid === "function" && process.getuid() === 0) throw new Error("the production EDA backend must not run as root");
-  const app = Fastify({ logger: options.logger ?? true, requestIdHeader: "x-request-id", genReqId: () => randomUUID(), bodyLimit: 1_048_576 });
+  const app = Fastify({ logger: options.logger ?? true, trustProxy: config.trustProxy, requestIdHeader: "x-request-id", genReqId: () => randomUUID(), bodyLimit: 1_048_576 });
   const database = options.database || new EdaDatabase(config.databasePath); database.migrate();
   const repositories = makeRepositories(database); const storage = new StorageService(config.storageRoot); await storage.initialize();
   const registry = options.registry || new ModuleRegistry(); const runner = new SafeProcessRunner(config.cancelGraceMs);
   const probeRoot = storage.resolve("work-probes"); await fs.promises.mkdir(probeRoot, { recursive: true, mode: 0o750 });
   const health = new ToolHealthService(repositories.tools, runner, probeRoot);
-  const workers = options.startWorkers ? new WorkerSupervisor(repositories, registry, storage, config.queueConcurrency, config.cancelGraceMs) : null;
+  const workers = options.startWorkers ? new WorkerSupervisor(repositories, registry, storage, config.queueConcurrency, config.cancelGraceMs, config.maxLogBytes) : null;
 
   app.decorate("eda", { config, database, repositories, storage, registry, workers });
   app.decorateRequest("edaUser", null); app.decorateRequest("edaSessionId", null); app.decorateRequest("edaCsrfHash", null);
@@ -45,7 +45,18 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   await app.register(swagger, { openapi: { info: { title: "EDA Compute Platform API", version: "1.0.0", description: "Persistent Benchmark, Digital and PPA computation API" }, tags: ["auth", "modules", "drafts", "jobs", "artifacts", "results", "admin"].map((name) => ({ name })) } });
   await app.register(swaggerUi, { routePrefix: "/api/docs" });
   app.addHook("onRequest", installAuthResolution(repositories, config.cookieName));
-  app.addHook("onSend", async (_request, reply, payload) => { reply.header("X-Content-Type-Options", "nosniff").header("Referrer-Policy", "same-origin").header("X-Frame-Options", "DENY"); return payload; });
+  app.addHook("onRequest", async (request) => {
+    if (!["POST", "PUT", "PATCH", "DELETE"].includes(request.method) || !config.publicOrigin) return;
+    const origin = request.headers.origin;
+    if (origin && origin !== config.publicOrigin) throw new ApiError(403, "ORIGIN_INVALID", "cross-origin state changes are not permitted");
+  });
+  app.addHook("onSend", async (_request, reply, payload) => {
+    reply.header("X-Content-Type-Options", "nosniff")
+      .header("Referrer-Policy", "same-origin")
+      .header("X-Frame-Options", "DENY")
+      .header("Content-Security-Policy", "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'");
+    return payload;
+  });
   app.setErrorHandler((error, request, reply) => {
     const normalized = error instanceof Error ? error : new Error(String(error));
     const apiError = normalized instanceof ApiError ? normalized : null; const status = apiError?.statusCode || ("statusCode" in normalized && typeof normalized.statusCode === "number" ? normalized.statusCode : 500);
@@ -54,7 +65,7 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   });
 
   app.get("/api/health", { schema: { tags: ["modules"] } }, async () => success({ status: "healthy", database: "sqlite", queues: ["benchmark", "digital", "ppa"] }));
-  registerAuthRoutes(app, repositories, config); registerModuleRoutes(app, repositories, registry, storage, config); registerJobRoutes(app, repositories, storage, workers); registerResultRoutes(app, repositories); registerAdminRoutes(app, repositories, health);
+  registerAuthRoutes(app, repositories, config); registerModuleRoutes(app, repositories, registry, storage, config); registerJobRoutes(app, repositories, storage, workers); registerResultRoutes(app, repositories); registerAdminRoutes(app, repositories, health, storage, workers);
 
   const frontendRoot = path.resolve(process.cwd(), "dist");
   if (options.serveFrontend !== false && fs.existsSync(frontendRoot)) {

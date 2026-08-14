@@ -1,8 +1,14 @@
 import { createEdaApp } from "./app/app.ts";
 import { loadConfig } from "./app/config.ts";
+import { createDefaultModuleRegistry } from "./app/modules/defaultRegistry.ts";
 
 const config = loadConfig();
-const app = await createEdaApp({ config, startWorkers: process.env.EDA_EMBED_WORKER === "1", serveFrontend: true });
+const app = await createEdaApp({
+  config,
+  registry: createDefaultModuleRegistry(),
+  startWorkers: process.env.EDA_EMBED_WORKER === "1",
+  serveFrontend: true,
+});
 await app.listen({ host: config.host, port: config.port });
 
 async function shutdown(signal: string): Promise<void> {

@@ -22,7 +22,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     const moduleId = parseModuleId((request.params as { module?: string }).module); const adapter = registry.get(moduleId);
     const toolConfigurations = repositories.tools.active(moduleId); const technologies = repositories.technologies.list(true);
     const capabilities = adapter ? await adapter.capabilities({ moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), toolConfigurations, toolHealth: Object.fromEntries(toolConfigurations.map((tool) => [tool.id, repositories.tools.latestHealth(tool.id)])), toolBindings: runtimeBindings(repositories, toolConfigurations), technologies } as never) : [];
-    return success({ moduleId, capabilities, technologies: repositories.technologies.list(true), maxSweepJobs: 256, configured: Boolean(adapter), unavailableReason: adapter ? null : `${moduleId} backend module is not registered` });
+    return success({ moduleId, capabilities, technologies: repositories.technologies.list(true), maxSweepJobs: config.maxSweepJobs, configured: Boolean(adapter), unavailableReason: adapter ? null : `${moduleId} backend module is not registered` });
   });
 
   app.post("/api/modules/:module/drafts", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["drafts"], consumes: ["multipart/form-data"], params: { type: "object", required: ["module"], properties: { module: { enum: ["benchmark", "digital", "ppa"] } } } } }, async (request, reply) => {
@@ -62,7 +62,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
       const validation = await adapter.validateDraft(context);
       if (!validation.valid || validation.errors.length) throw validation.errors[0] || new Error("draft validation failed");
       const plan = await adapter.buildPlan(context); if (!plan.steps.length) throw new ApiError(409, "EMPTY_PLAN", "module returned an empty execution plan");
-      if (plan.sweep && (plan.sweep.runCount > plan.sweep.maxRunCount || plan.sweep.runCount > 256)) throw new ApiError(409, "SWEEP_LIMIT", "sweep exceeds the validated run limit");
+      if (plan.sweep && (plan.sweep.runCount > plan.sweep.maxRunCount || plan.sweep.runCount > config.maxSweepJobs)) throw new ApiError(409, "SWEEP_LIMIT", "sweep exceeds the validated run limit");
       const ids = [...new Set(plan.steps.map((step) => step.process?.toolConfigurationId).filter((id): id is string => Boolean(id)))];
       for (const id of ids) {
         const state = repositories.tools.latestHealth(id);
@@ -74,11 +74,11 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
       return success(ready);
     } catch (error) {
       const structured = typeof error === "object" && error && "type" in error ? error : { type: "validation", code: "PREFLIGHT_FAILED", message: error instanceof Error ? error.message : String(error), stepId: null, retryable: true, details: null };
-      repositories.jobs.transition(jobId, "failed", { error: structured }); throw error;
+      repositories.jobs.returnToDraft(jobId, structured); throw error;
     }
   });
 }
 
 function runtimeBindings(repositories: Repositories, tools: Array<NonNullable<ReturnType<Repositories["tools"]["get"]>>>) {
-  return Object.fromEntries(tools.map((tool) => [tool.toolId, { configuration: snapshot(tool), health: repositories.tools.latestHealth(tool.id)?.status || "not_configured", environment: tool.environment }]));
+  return Object.fromEntries(tools.map((tool) => { const latest = repositories.tools.latestHealth(tool.id); return [tool.toolId, { configuration: snapshot(tool), health: latest?.status || "not_configured", version: latest?.version || null, selfTestPassed: latest?.selfTestPassed ?? null, environment: tool.environment }]; }));
 }

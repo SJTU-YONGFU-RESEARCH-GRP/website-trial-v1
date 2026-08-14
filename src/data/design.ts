@@ -170,8 +170,21 @@ const TECHNOLOGY_BY_UID = new Map(
 /** UID-backed technology resources present in the row set, in chart node order. */
 export function designTechnologiesForRows(rows: readonly DesignRow[]): DesignTechnology[] {
   return designTechnologyNodesForRows(rows)
-    .map((processNode) => TECHNOLOGY_BY_PROCESS_NODE.get(processNode))
-    .filter((technology): technology is DesignTechnology => technology !== undefined);
+    .map((processNode) => TECHNOLOGY_BY_PROCESS_NODE.get(processNode) ?? dynamicTechnology(processNode, rows));
+}
+
+function dynamicTechnology(processNode: string, rows: readonly DesignRow[]): DesignTechnology {
+  const row = rows.find((candidate) => candidate.processNode === processNode);
+  let hash = 0x811c9dc5;
+  for (const character of processNode) { hash ^= character.charCodeAt(0); hash = Math.imul(hash, 0x01000193) >>> 0; }
+  const hex = hash.toString(16).padStart(8, "0").repeat(4);
+  return {
+    uid: hex,
+    processNode,
+    displayName: processNode,
+    canonicalTechnology: row?.canonicalTechnology ?? processNode,
+    isNamedPdk: row?.isNamedPdk ?? !/^\d+(?:\.\d+)?nm$/i.test(processNode),
+  };
 }
 
 /** Resolve the selected frontend UID to its technology metadata. */

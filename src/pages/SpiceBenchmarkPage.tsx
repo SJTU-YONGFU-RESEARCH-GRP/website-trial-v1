@@ -1,9 +1,11 @@
-/* ==================================================================
- *  SpiceBenchmarkPage — re-exports the unified BenchmarkWorkspacePage
- *  (goal.md §23.3)
- *
- *  The original standalone implementation is preserved in the git
- *  history and will be fully migrated in Phase 5.
- * ================================================================== */
+import { BenchmarkWorkspacePage } from "./benchmark/BenchmarkWorkspacePage";
+import { BenchmarkRunPanel } from "./benchmark/run";
 
-export { BenchmarkWorkspacePage as SpiceBenchmarkPage } from "./benchmark/BenchmarkWorkspacePage";
+export function SpiceBenchmarkPage() {
+  return (
+    <>
+      <BenchmarkRunPanel />
+      <BenchmarkWorkspacePage />
+    </>
+  );
+}

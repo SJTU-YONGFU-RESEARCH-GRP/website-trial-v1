@@ -179,7 +179,7 @@ export async function runConfiguredProcess(
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
   const binding = configurationFor(context, toolId);
   const executable = binding.configuration.executablePath;
-  if (!path.isAbsolute(executable)) {
+  if (!executable || !path.isAbsolute(executable)) {
     throw new DigitalAdapterError("DIGITAL_EXECUTABLE_NOT_ABSOLUTE", `${toolId} executable must be an absolute administrator-configured path`, "configuration");
   }
   await fs.mkdir(workspacePath(context.workspacePath, "work", "tmp"), { recursive: true });

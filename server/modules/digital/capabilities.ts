@@ -8,7 +8,7 @@ function health(context: DigitalModuleContext, toolId: DigitalToolId): { status:
   if (!binding) return { status: "not_configured", reason: "No administrator-owned tool configuration and successful health probe are available.", version: null };
   if (!binding.configuration.enabled) return { status: "unavailable", reason: "The administrator disabled this tool configuration.", version: null };
   if (!binding.configuration.executablePath) return { status: "not_configured", reason: "Executable path is not configured.", version: null };
-  return { status: binding.health, reason: binding.health === "healthy" ? null : `Latest health check: ${binding.health}.`, version: null };
+  return { status: binding.health, reason: binding.health === "healthy" ? null : `Latest health check: ${binding.health}.`, version: binding.version ?? null };
 }
 
 function parameter(

@@ -3,6 +3,48 @@
   gap: 0.85rem;
 }
 
+.ppa-workflows {
+  margin-bottom: 24px;
+}
+
+.ppa-workflow-card {
+  scroll-margin-top: 84px;
+}
+
+.ppa-parameter {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.ppa-parameter > label small {
+  display: block;
+  margin-top: 5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.ppa-sweep {
+  display: grid;
+  gap: 7px;
+  padding: 9px;
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  background: var(--surface-inset);
+}
+
+.ppa-sweep > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.ppa-sweep input,
+.ppa-sweep select {
+  min-width: 0;
+  width: 100%;
+}
+
 .ppa-page > .chart-card,
 .ppa-chart-grid > .chart-card {
   margin-bottom: 0;

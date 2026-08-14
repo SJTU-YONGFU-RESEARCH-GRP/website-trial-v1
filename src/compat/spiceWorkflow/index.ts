@@ -12,7 +12,6 @@ export * from "./fittingAdapter";
 export * from "./reductionAdapter";
 export * from "./expansionAdapter";
 export * from "./benchmarkAdapter";
-export * from "./mockRuntime";
 export { normalizeLegacyBenchmarkManifest } from "./normalizeLegacyBenchmark";
 export { normalizeLegacyTranslatorManifest } from "./normalizeLegacyTranslator";
 export { normalizeLegacyReductionManifest } from "./normalizeLegacyReduction";

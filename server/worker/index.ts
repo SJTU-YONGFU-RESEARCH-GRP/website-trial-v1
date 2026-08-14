@@ -8,12 +8,12 @@ import { SafeProcessRunner } from "../app/process/safeProcess.ts";
 export class WorkerSupervisor {
   readonly runner: JobRunner;
   private readonly queues: ModuleQueueWorker[];
-  constructor(repositories: Repositories, registry: ModuleRegistry, storage: StorageService, concurrency: Record<ModuleId, number>, cancelGraceMs = 10_000) {
-    this.runner = new JobRunner(repositories, registry, storage, new SafeProcessRunner(cancelGraceMs));
+  constructor(repositories: Repositories, registry: ModuleRegistry, storage: StorageService, concurrency: Record<ModuleId, number>, cancelGraceMs = 10_000, maxLogBytes = 256 * 1024 * 1024) {
+    this.runner = new JobRunner(repositories, registry, storage, new SafeProcessRunner(cancelGraceMs, maxLogBytes));
     this.queues = (["benchmark", "digital", "ppa"] as ModuleId[]).map((moduleId) => new ModuleQueueWorker(moduleId, concurrency[moduleId], repositories.jobs, this.runner));
     repositories.jobs.recoverRunning();
   }
   start(): void { for (const queue of this.queues) queue.start(); }
-  async stop(): Promise<void> { await Promise.all(this.queues.map((queue) => queue.stop())); }
+  async stop(): Promise<void> { for (const queue of this.queues) queue.requestStop(); this.runner.cancelAll(); await Promise.all(this.queues.map((queue) => queue.stop())); }
   cancel(jobId: string): boolean { return this.runner.cancel(jobId); }
 }

@@ -10,7 +10,9 @@ import type { Config, Data, Layout } from "plotly.js";
 // Pre-minified browser build — avoids Vite bundling plotly's Node-only trace helpers.
 import Plotly from "plotly.js-dist-min";
 import { TechnologySelector } from "../components/TechnologySelector";
-import { DataUploadCard } from "../components/DataUploadCard";
+import { DigitalWorkflowPanel } from "./digital";
+import { digitalChartRows, listDigitalResults } from "../api/digital/client";
+import { READ_ONLY_DEMO } from "../api/client";
 
 /** Plot container shape: flexible heights vs fixed aspect for export / mobile shells. */
 export type PlotAspectMode = "flexible" | "16:9" | "4:3" | "1:1";
@@ -194,6 +196,21 @@ export function PlotlyPage(): JSX.Element {
   const [chartOverrides, setChartOverrides] = useState<
     Partial<Record<DigitalChartId, Partial<ExploreAxesState>>>
   >({});
+  const [dynamicRows, setDynamicRows] = useState<DesignRow[]>([]);
+  useEffect(() => {
+    if (READ_ONLY_DEMO) return;
+    let active = true;
+    void listDigitalResults().then((results) => { if (active) setDynamicRows(digitalChartRows(results)); }).catch(() => { /* Static legacy rows remain available when the API is offline. */ });
+    return () => { active = false; };
+  }, []);
+  const allDesignRows = useMemo(() => {
+    const rows = [...DESIGN_ROWS]; const keys = new Set(rows.map((row) => `${row.category ?? ""}\0${row.architecture}\0${row.bitWidth}\0${row.processNode}`));
+    for (const row of dynamicRows) {
+      const key = `${row.category ?? ""}\0${row.architecture}\0${row.bitWidth}\0${row.processNode}`;
+      if (!keys.has(key)) { rows.push(row); keys.add(key); }
+    }
+    return rows;
+  }, [dynamicRows]);
 
   const updateGlobalExploreAxes = (
     updater: (previous: ExploreAxesState) => ExploreAxesState,
@@ -249,10 +266,10 @@ export function PlotlyPage(): JSX.Element {
 
   /** Backend hierarchy: Technology UID -> category -> architecture -> bit width. */
   const technologyOptions = useMemo(
-    () => [...designTechnologiesForRows(DESIGN_ROWS)].sort((left, right) =>
+    () => [...designTechnologiesForRows(allDesignRows)].sort((left, right) =>
       left.uid.localeCompare(right.uid, "en"),
     ),
-    [],
+    [allDesignRows],
   );
   const selectedTechnologiesForExplore = useMemo(() => {
     const selected = new Set(selectedTechnologyUids);
@@ -263,8 +280,8 @@ export function PlotlyPage(): JSX.Element {
     [selectedTechnologiesForExplore],
   );
   const technologyRowsForExplore = useMemo(
-    () => designRowsForTechnologies(DESIGN_ROWS, [...selectedTechnologyNodeSet]),
-    [selectedTechnologyNodeSet],
+    () => designRowsForTechnologies(allDesignRows, [...selectedTechnologyNodeSet]),
+    [allDesignRows, selectedTechnologyNodeSet],
   );
   const categoryOptionsForTechnology = useMemo(
     () => DESIGN_CATEGORIES.filter((category) =>
@@ -1742,12 +1759,7 @@ export function PlotlyPage(): JSX.Element {
 
   return (
     <div>
-      <DataUploadCard
-        dataset="digital"
-        onPublished={() => {
-          window.setTimeout(() => window.location.reload(), 900);
-        }}
-      />
+      <DigitalWorkflowPanel />
       <div className="chart-card">
         <h2>Explore metrics</h2>
         <div className="hint-block">

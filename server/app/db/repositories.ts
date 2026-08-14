@@ -130,6 +130,7 @@ export class SessionRepository {
     return token;
   }
   revoke(id: string): void { this.db.sqlite.prepare("UPDATE sessions SET revoked_at=? WHERE id=? AND revoked_at IS NULL").run(now(), id); }
+  revokeUser(userId: string): void { this.db.sqlite.prepare("UPDATE sessions SET revoked_at=? WHERE user_id=? AND revoked_at IS NULL").run(now(), userId); }
   cleanup(): void { this.db.sqlite.prepare("DELETE FROM sessions WHERE expires_at<? OR revoked_at IS NOT NULL").run(now()); }
 }
 
@@ -176,12 +177,14 @@ export class JobRepository {
     return row ? jobFromRow(row) : null;
   }
 
-  list(input: { ownerId?: string; moduleId?: ModuleId; status?: JobStatus; limit?: number; cursor?: string } = {}): JobRecordV1[] {
+  list(input: { ownerId?: string; moduleId?: ModuleId; status?: JobStatus; limit?: number; cursor?: string; from?: string; to?: string } = {}): JobRecordV1[] {
     const clauses: string[] = []; const values: (string | number)[] = [];
     if (input.ownerId) { clauses.push("owner_id=?"); values.push(input.ownerId); }
     if (input.moduleId) { clauses.push("module_id=?"); values.push(input.moduleId); }
     if (input.status) { clauses.push("status=?"); values.push(input.status); }
     if (input.cursor) { clauses.push("updated_at<?"); values.push(input.cursor); }
+    if (input.from) { clauses.push("created_at>=?"); values.push(input.from); }
+    if (input.to) { clauses.push("created_at<=?"); values.push(input.to); }
     values.push(Math.min(input.limit || 50, 200));
     const rows = this.db.sqlite.prepare(`SELECT * FROM jobs ${clauses.length ? `WHERE ${clauses.join(" AND ")}` : ""} ORDER BY updated_at DESC,id DESC LIMIT ?`).all(...values) as Record<string, unknown>[];
     return rows.map(jobFromRow);
@@ -196,6 +199,16 @@ export class JobRepository {
   }
 
   beginValidation(id: string): void { this.transition(id, "validating"); }
+  returnToDraft(id: string, error: unknown): JobRecordV1 {
+    const current = this.get(id); if (!current || current.status !== "validating") throw new Error("job is not validating");
+    this.db.sqlite.prepare("UPDATE jobs SET status='draft',error_json=?,updated_at=? WHERE id=?").run(json(error), now(), id);
+    return this.get(id)!;
+  }
+  updateDraftContent(id: string, manifest: InputManifestV1, parameters: JsonObject): JobRecordV1 {
+    const current = this.get(id); if (!current || current.status !== "draft") throw new Error("job is not an editable draft");
+    this.db.sqlite.prepare("UPDATE jobs SET input_manifest_json=?,parameters_json=?,error_json=NULL,updated_at=? WHERE id=?").run(json(manifest), json(parameters), now(), id);
+    return this.get(id)!;
+  }
   transition(id: string, next: JobStatus, extra: { error?: unknown; exitCode?: number | null; resultId?: string | null } = {}): JobRecordV1 {
     const current = this.get(id); if (!current) throw new Error("job not found");
     if (!TRANSITIONS[current.status].includes(next)) throw new Error(`invalid job transition ${current.status} -> ${next}`);
@@ -346,6 +359,19 @@ export class ResultRepository {
       .all(viewerId, Number(admin), lifecycle || null, lifecycle || null, Math.min(limit, 500)) as { record_json: unknown }[];
     return rows.map((row) => parsed(row.record_json));
   }
+  query(moduleId: ModuleId, viewerId: string | null, admin: boolean, input: { lifecycle?: ResultLifecycle; ownerId?: string; cursor?: string; search?: string; filters?: Record<string, Array<string | number | boolean | null>>; limit?: number }): ResultRecordV1[] {
+    const clauses = ["lifecycle!='deleted'", "(lifecycle='published' OR owner_id=? OR ?=1)"];
+    const values: Array<string | number | null> = [viewerId, Number(admin)];
+    if (input.lifecycle) { clauses.push("lifecycle=?"); values.push(input.lifecycle); }
+    if (input.ownerId && admin) { clauses.push("owner_id=?"); values.push(input.ownerId); }
+    if (input.cursor) { clauses.push("updated_at<?"); values.push(input.cursor); }
+    if (input.search?.trim()) { clauses.push("LOWER(record_json) LIKE ? ESCAPE '\\'"); values.push(`%${escapeLike(input.search.trim().toLowerCase())}%`); }
+    const requested = Math.min(Math.max(input.limit || 100, 1), 500);
+    values.push(input.filters && Object.keys(input.filters).length ? 2_000 : requested);
+    const rows = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE ${clauses.join(" AND ")} ORDER BY updated_at DESC,id DESC LIMIT ?`).all(...values) as { record_json: unknown }[];
+    const records = rows.map((row) => parsed<ResultRecordV1>(row.record_json));
+    return records.filter((record) => matchesResultFilters(record, input.filters)).slice(0, requested);
+  }
   patchLifecycle(moduleId: ModuleId, id: string, lifecycle: ResultLifecycle): void {
     const row = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE id=?`).get(id) as { record_json?: unknown } | undefined;
     if (!row) throw new Error("result not found");
@@ -356,6 +382,22 @@ export class ResultRepository {
       this.db.sqlite.prepare("UPDATE artifacts SET visibility=? WHERE result_id=?").run(lifecycle === "published" ? "published" : "private", id);
     });
   }
+}
+
+function escapeLike(value: string): string { return value.replaceAll("\\", "\\\\").replaceAll("%", "\\%").replaceAll("_", "\\_"); }
+
+function matchesResultFilters(record: ResultRecordV1, filters?: Record<string, Array<string | number | boolean | null>>): boolean {
+  if (!filters) return true;
+  for (const [key, accepted] of Object.entries(filters)) {
+    if (!accepted.length) continue;
+    let value: unknown = record;
+    for (const segment of key.split(".")) {
+      if (!value || typeof value !== "object" || Array.isArray(value)) { value = undefined; break; }
+      value = (value as Record<string, unknown>)[segment];
+    }
+    if (!accepted.some((candidate) => candidate === value)) return false;
+  }
+  return true;
 }
 
 export class ToolRepository {

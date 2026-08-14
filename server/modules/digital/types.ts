@@ -57,6 +57,8 @@ export interface DigitalRunParameters {
 export interface DigitalToolBinding {
   configuration: ToolConfigurationSnapshotV1;
   health: ToolHealthStatus;
+  version?: string | null;
+  selfTestPassed?: boolean | null;
   environment: Record<string, string>;
 }
 

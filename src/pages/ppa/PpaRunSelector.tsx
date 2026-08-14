@@ -5,6 +5,7 @@ interface Props {
   runs: readonly PpaRunManifest[];
   selectedUids: readonly string[];
   onChange: (uids: string[]) => void;
+  onFilteredRunsChange?: (runs: readonly PpaRunManifest[]) => void;
 }
 
 interface FacetOption {
@@ -103,7 +104,7 @@ function matchesSearch(run: PpaRunManifest, needle: string): boolean {
     .includes(needle);
 }
 
-export function PpaRunSelector({ runs, selectedUids, onChange }: Props): JSX.Element {
+export function PpaRunSelector({ runs, selectedUids, onChange, onFilteredRunsChange }: Props): JSX.Element {
   const [query, setQuery] = useState("");
   const [facetSelections, setFacetSelections] = useState<FacetSelections>({});
   const [openDimensions, setOpenDimensions] = useState<Set<string>>(() => new Set());
@@ -198,6 +199,7 @@ export function PpaRunSelector({ runs, selectedUids, onChange }: Props): JSX.Ele
     () => searchMatches.filter((run) => matchesFacetSelections(run, facetSelections)),
     [facetSelections, searchMatches],
   );
+  useEffect(() => onFilteredRunsChange?.(filtered), [filtered, onFilteredRunsChange]);
   const availableValues = useMemo(() => {
     const values = new Map<string, Set<string>>();
     for (const dimension of dimensions) {

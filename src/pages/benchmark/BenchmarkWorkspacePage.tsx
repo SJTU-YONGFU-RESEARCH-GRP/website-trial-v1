@@ -6,10 +6,10 @@
  * ================================================================== */
 
 import { useEffect, useState } from "react";
-import { DataUploadCard } from "../../components/DataUploadCard";
 import type { WorkflowScenario } from "../../compat/spiceWorkflow/contracts";
 import { buildScenario } from "../../data/benchmarkWorkspace/dataLoader";
 import { ModelComparisonCard } from "./ModelComparisonCard";
+import { DynamicBenchmarkResults } from "./DynamicBenchmarkResults";
 import "../../benchmark.css";
 import "../../benchmark-workspace.css";
 
@@ -18,7 +18,6 @@ const DISCOVERY_REFRESH_MS = 10_000;
 export function BenchmarkWorkspacePage() {
   const [scenario, setScenario] = useState<WorkflowScenario | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [refreshVersion, setRefreshVersion] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,11 +51,11 @@ export function BenchmarkWorkspacePage() {
       cancelled = true;
       window.clearInterval(timer);
     };
-  }, [refreshVersion]);
+  }, []);
 
   return (
     <div>
-      <DataUploadCard dataset="benchmark" onPublished={() => setRefreshVersion((value) => value + 1)} />
+      <DynamicBenchmarkResults />
       {error ? (
         <div className="chart-card" style={{ textAlign: "center", padding: "3rem" }}>
           <h2>Error</h2>

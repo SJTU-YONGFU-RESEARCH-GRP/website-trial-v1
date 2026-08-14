@@ -1,6 +1,5 @@
 import type {
-  InputFileV1,
-  JobPlanV1,
+  InputManifestV1,
   JobRecordV1,
   JsonObject,
   ModuleCapabilityResponseV1,
@@ -31,8 +30,7 @@ export interface BenchmarkCapabilities extends ModuleCapabilityResponseV1 {
 
 export interface BenchmarkDraftResponse {
   job: JobRecordV1;
-  files: InputFileV1[];
-  plan: JobPlanV1 | null;
+  recognition: InputManifestV1;
 }
 
 export interface BenchmarkStartResponse {

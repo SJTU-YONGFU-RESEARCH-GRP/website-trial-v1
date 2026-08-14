@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
+import { PassThrough } from "node:stream";
+import { ZipArchive } from "archiver";
 import type { FastifyInstance } from "fastify";
 import type { JobStatus, ModuleId } from "../../../shared/contracts/v1.ts";
 import type { Repositories } from "../db/repositories.ts";
@@ -22,9 +24,9 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.get("/api/jobs", { preHandler: [requireUser], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const query = request.query as { moduleId?: ModuleId; status?: JobStatus; ownerId?: string; cursor?: string; limit?: string };
+    const query = request.query as { moduleId?: ModuleId; status?: JobStatus; ownerId?: string; cursor?: string; limit?: string; from?: string; to?: string };
     const ownerId = request.edaUser!.role === "admin" ? query.ownerId : request.edaUser!.id;
-    const rows = repositories.jobs.list({ ownerId, moduleId: query.moduleId, status: query.status, cursor: query.cursor, limit: Number(query.limit || 50) });
+    const rows = repositories.jobs.list({ ownerId, moduleId: query.moduleId, status: query.status, cursor: query.cursor, limit: Number(query.limit || 50), from: query.from, to: query.to });
     return sendList(reply, rows, rows.length ? rows.at(-1)!.updatedAt : null);
   });
 
@@ -69,7 +71,39 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
     reply.code(201); return success(repositories.jobs.get(retry.id));
   });
 
+  app.post("/api/jobs/:jobId/clone", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
+    const old = ownedJob(request, repositories);
+    const clone = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
+    const workspace = await storage.createWorkspace(clone.id);
+    await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });
+    await fsp.rm(path.join(workspace, "input"), { recursive: true });
+    await fsp.rename(path.join(workspace, "input-copy"), path.join(workspace, "input"));
+    repositories.jobs.updateDraftContent(clone.id, old.inputManifest, old.parameters);
+    await storage.writeManifest(clone.id, old.inputManifest);
+    repositories.jobs.appendEvent(clone.id, null, "info", "system", `Cloned inputs and parameters from ${old.id}; preflight must run again`);
+    repositories.audit.write(request.edaUser!.id, "job.clone", "job", old.id, { cloneJobId: clone.id });
+    reply.code(201); return success(repositories.jobs.get(clone.id));
+  });
+
+  app.get("/api/jobs/:jobId/manifest", { preHandler: [requireUser], schema: { tags: ["artifacts"] } }, async (request, reply) => {
+    const job = ownedJob(request, repositories);
+    reply.type("application/json").header("Content-Disposition", `attachment; filename=\"${job.id}-input-manifest.json\"`);
+    return `${JSON.stringify(job.inputManifest, null, 2)}\n`;
+  });
+
   app.get("/api/jobs/:jobId/artifacts", { preHandler: [requireUser], schema: { tags: ["artifacts"] } }, async (request) => { const job = ownedJob(request, repositories); return success(repositories.artifacts.listJob(job.id)); });
+  app.get("/api/jobs/:jobId/artifacts.zip", { preHandler: [requireUser], schema: { tags: ["artifacts"] } }, async (request, reply) => {
+    const job = ownedJob(request, repositories); const artifacts = repositories.artifacts.listJob(job.id);
+    const output = new PassThrough(); const archive = new ZipArchive({ zlib: { level: 6 } });
+    archive.once("error", (error: Error) => output.destroy(error)); archive.pipe(output);
+    archive.append(`${JSON.stringify({ job, artifacts }, null, 2)}\n`, { name: "job.json" });
+    for (const artifact of artifacts) {
+      try { archive.file(await storage.resolveExisting(artifact.relativePath), { name: `artifacts/${artifact.role}/${path.basename(artifact.relativePath)}` }); }
+      catch { archive.append(`Missing retained artifact: ${artifact.relativePath}\n`, { name: `missing/${artifact.id}.txt` }); }
+    }
+    void archive.finalize();
+    reply.type("application/zip").header("Content-Disposition", `attachment; filename=\"${job.id}-artifacts.zip\"`); return reply.send(output);
+  });
   app.get("/api/artifacts/:artifactId/download", { schema: { tags: ["artifacts"] } }, async (request, reply) => {
     const artifact = repositories.artifacts.get(String((request.params as { artifactId?: string }).artifactId || "")); if (!artifact) throw new ApiError(404, "NOT_FOUND", "artifact not found");
     if (artifact.visibility !== "published") {

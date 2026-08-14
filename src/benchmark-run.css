@@ -14,6 +14,17 @@
   box-shadow: 0 8px 24px rgb(17 32 58 / 6%);
 }
 
+.benchmark-live-results { display: grid; gap: .75rem; }
+.benchmark-live-result { display: grid; grid-template-columns: minmax(15rem, 1fr) minmax(18rem, 1.5fr); gap: 1rem; align-items: center; padding: .9rem 1rem; border: 1px solid var(--border); border-radius: .75rem; color: inherit; text-decoration: none; background: var(--surface); }
+.benchmark-live-result:hover { border-color: var(--accent); }
+.benchmark-live-result > div { display: grid; gap: .25rem; min-width: 0; }
+.benchmark-live-result > div span { color: var(--text-muted); font-size: .82rem; }
+.benchmark-live-result dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin: 0; }
+.benchmark-live-result dl div { min-width: 0; text-align: center; }
+.benchmark-live-result dt { color: var(--text-muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; }
+.benchmark-live-result dd { margin: .2rem 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 720px) { .benchmark-live-result { grid-template-columns: 1fr; } }
+
 .benchmark-run-hero {
   display: flex;
   align-items: end;

@@ -1024,3 +1024,14 @@ code {
 .theme-toggle__label {
   line-height: 1.2;
 }
+
+.result-detail-page { display: grid; gap: 1rem; }
+.result-detail-hero { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
+.result-detail-eyebrow { color: var(--text-secondary); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.result-detail-table { display: grid; gap: .4rem; margin: 0; }
+.result-detail-table > div { display: grid; grid-template-columns: minmax(10rem, .35fr) minmax(0, 1fr); gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--border-subtle); }
+.result-detail-table dt { color: var(--text-secondary); }
+.result-detail-table dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.result-detail-json { max-height: 42rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.result-detail-artifacts { display: grid; gap: .5rem; }
+@media (max-width: 680px) { .result-detail-hero { display: grid; } .result-detail-table > div { grid-template-columns: 1fr; gap: .25rem; } }

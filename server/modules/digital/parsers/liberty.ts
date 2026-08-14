@@ -36,7 +36,9 @@ function matchingBrace(text: string, opening: number): number {
 function unitToMw(text: string): number | null {
   const match = /leakage_power_unit\s*:\s*"?\s*([0-9.eE+-]+)\s*(pW|nW|uW|mW|W)\s*"?/i.exec(text);
   if (!match) return null;
-  const scale = { pw: 1e-9, nw: 1e-6, uw: 1e-3, mw: 1, w: 1e3 }[match[2].toLowerCase()];
+  const unit = match[2]?.toLowerCase();
+  const scale = unit ? ({ pw: 1e-9, nw: 1e-6, uw: 1e-3, mw: 1, w: 1e3 } as Record<string, number>)[unit] : undefined;
+  if (scale === undefined) return null;
   const factor = Number(match[1]) * scale;
   return Number.isFinite(factor) && factor > 0 ? factor : null;
 }

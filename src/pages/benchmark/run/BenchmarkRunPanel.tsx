@@ -10,6 +10,7 @@ import {
   type BrowserInputFile,
 } from "../../../api/benchmark";
 import { READ_ONLY_DEMO } from "../../../api/client";
+import { useAuth } from "../../../auth/AuthContext";
 import { BenchmarkFilePicker } from "./BenchmarkFilePicker";
 import { BenchmarkParameterEditor } from "./BenchmarkParameterEditor";
 import { BenchmarkPlanPreview } from "./BenchmarkPlanPreview";
@@ -31,6 +32,7 @@ interface BenchmarkRunPanelProps {
 }
 
 export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
+  const { user } = useAuth();
   const [mode, setMode] = useState<BenchmarkWorkflowMode>("run");
   const [capabilities, setCapabilities] = useState<BenchmarkCapabilities | null>(null);
   const [capabilityError, setCapabilityError] = useState<string | null>(null);
@@ -133,6 +135,7 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
       </div>
 
       {READ_ONLY_DEMO ? <div className="benchmark-run-notice is-warning">This deployment is a read-only demo. Upload and Start are disabled.</div> : null}
+      {!READ_ONLY_DEMO && !user ? <div className="benchmark-run-notice is-warning">Sign in to upload inputs, run preflight, and start a Benchmark job.</div> : null}
       {capabilityError ? <div className="benchmark-run-notice is-error">Capabilities unavailable: {capabilityError}</div> : null}
 
       {mode === "run" ? (
@@ -187,14 +190,14 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
             {draft.inputManifest.files.map((file) => <div key={file.relativePath}><strong>{file.relativePath}</strong><span>{file.recognizedType} · {file.role ?? "unmapped"}</span>{file.validationErrors.length ? <em>{file.validationErrors.join("; ")}</em> : null}{file.unresolvedIncludes.length ? <em>Missing includes: {file.unresolvedIncludes.join(", ")}</em> : null}</div>)}
           </div>
         ) : null}
-        <button className="benchmark-primary-action" type="button" disabled={busy || READ_ONLY_DEMO || !files.length || !capabilities} onClick={() => void preflight()}>{busy ? "Working…" : draft ? "Run preflight again" : "Upload and preflight"}</button>
+        <button className="benchmark-primary-action" type="button" disabled={busy || READ_ONLY_DEMO || !user || !files.length || !capabilities} onClick={() => void preflight()}>{busy ? "Working…" : draft ? "Run preflight again" : "Upload and preflight"}</button>
       </section>
 
       <BenchmarkPlanPreview plan={draft?.plan ?? null} />
       {error ? <div className="benchmark-run-notice is-error">{error}</div> : null}
       <div className="benchmark-start-bar">
         <div><strong>Start is explicit</strong><span>The validated draft enters the persistent Benchmark queue only after this click.</span></div>
-        <button type="button" disabled={busy || READ_ONLY_DEMO || !draft || draft.status !== "ready"} onClick={() => void start()}>Start</button>
+        <button type="button" disabled={busy || READ_ONLY_DEMO || !user || !draft || draft.status !== "ready"} onClick={() => void start()}>Start</button>
       </div>
       {started ? <div className="benchmark-run-notice is-success">Job {started.id} is {started.status}. <a href={`/jobs/${encodeURIComponent(started.id)}`}>Open backend processing</a></div> : null}
     </section>

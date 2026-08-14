@@ -1,22 +1,40 @@
 import path from "node:path";
+import { PassThrough } from "node:stream";
+import { ZipArchive } from "archiver";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { JobStatus, ModuleId, ResultLifecycle, TechnologyLibraryV1, ToolConfigurationV1, UserRole } from "../../../shared/contracts/v1.ts";
 import type { Repositories } from "../db/repositories.ts";
 import type { ToolHealthService } from "../tools/health.ts";
+import type { StorageService } from "../storage/storage.ts";
+import type { WorkerSupervisor } from "../../worker/index.ts";
 import { csrfGuard, requireAdmin } from "../auth/guards.ts";
 import { ApiError } from "./errors.ts";
 import { sendList, success } from "./http.ts";
 
-export function registerAdminRoutes(app: FastifyInstance, repositories: Repositories, health: ToolHealthService): void {
+export function registerAdminRoutes(app: FastifyInstance, repositories: Repositories, health: ToolHealthService, storage: StorageService, workers: WorkerSupervisor | null): void {
   const guarded = [requireAdmin, csrfGuard(repositories)];
-  app.get("/api/admin/users", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (_request, reply) => sendList(reply, repositories.users.list()));
+  app.get("/api/admin/overview", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async () => {
+    const sqlite = app.eda.database.sqlite;
+    const userCount = Number((sqlite.prepare("SELECT COUNT(*) count FROM users WHERE deleted_at IS NULL").get() as { count: number }).count);
+    const jobStatus = Object.fromEntries((sqlite.prepare("SELECT status,COUNT(*) count FROM jobs GROUP BY status").all() as Array<{ status: string; count: number }>).map((row) => [row.status, Number(row.count)]));
+    const moduleQueues = Object.fromEntries((sqlite.prepare("SELECT module_id,SUM(status='queued') queued,SUM(status='running') running FROM jobs GROUP BY module_id").all() as Array<{ module_id: string; queued: number; running: number }>).map((row) => [row.module_id, { queued: Number(row.queued), running: Number(row.running) }]));
+    const resultCounts = Object.fromEntries((["benchmark", "digital", "ppa"] as ModuleId[]).map((moduleId) => [moduleId, Number((sqlite.prepare(`SELECT COUNT(*) count FROM ${moduleId}_results WHERE lifecycle!='deleted'`).get() as { count: number }).count)]));
+    const tools = repositories.tools.list().map((tool) => ({ id: tool.id, toolId: tool.toolId, moduleId: tool.moduleId, enabled: tool.enabled, health: repositories.tools.latestHealth(tool.id) }));
+    return success({ userCount, jobStatus, moduleQueues, resultCounts, tools, storage: await storage.usage(), recentFailures: [...repositories.jobs.list({ status: "failed", limit: 10 }), ...repositories.jobs.list({ status: "interrupted", limit: 10 })].sort((left, right) => right.updatedAt.localeCompare(left.updatedAt)).slice(0, 10) });
+  });
+  app.get("/api/admin/storage", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async () => success(await storage.usage()));
+  app.get("/api/admin/users", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
+    const search = String((request.query as { search?: string }).search || "").trim().toLowerCase();
+    const rows = repositories.users.list(500).filter((user) => !search || user.username.toLowerCase().includes(search)); return sendList(reply, rows);
+  });
   app.post("/api/admin/users", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request, reply) => {
     const body = request.body as { username?: string; password?: string; role?: UserRole; allowedModules?: ModuleId[]; maxConcurrentJobs?: number; storageQuotaBytes?: number };
     if (!body?.username || !body.password) throw new ApiError(400, "USER_INVALID", "username and password are required");
     const user = repositories.users.create({ ...body, username: body.username, password: body.password }); auditRequest(repositories, request, "user.create", "user", user.id, { username: user.username }); reply.code(201); return success(user);
   });
   app.patch("/api/admin/users/:id", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
-    const id = String((request.params as { id?: string }).id || ""); const user = repositories.users.patch(id, request.body as never);
+    const id = String((request.params as { id?: string }).id || ""); const patch = request.body as { password?: string; enabled?: boolean; delete?: boolean }; const user = repositories.users.patch(id, patch as never);
+    if (patch.password || patch.enabled === false || patch.delete) repositories.sessions.revokeUser(id);
     auditRequest(repositories, request, "user.update", "user", id, { fields: Object.keys((request.body || {}) as object) }); return success(user);
   });
 
@@ -32,6 +50,14 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
     const tool = repositories.tools.get(String((request.params as { id?: string }).id || "")); if (!tool) throw new ApiError(404, "NOT_FOUND", "tool configuration not found");
     const result = await health.probe(tool); auditRequest(repositories, request, "tool.probe", "tool_configuration", tool.id, { status: result.status }); return success(result);
   });
+  app.post("/api/admin/tools/:id/check", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
+    const tool = repositories.tools.get(String((request.params as { id?: string }).id || "")); if (!tool) throw new ApiError(404, "NOT_FOUND", "tool configuration not found");
+    const result = await health.checkPaths(tool); auditRequest(repositories, request, "tool.check_path", "tool_configuration", tool.id, { ok: result.ok }); return success(result);
+  });
+  app.post("/api/admin/tools/:id/self-test", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
+    const tool = repositories.tools.get(String((request.params as { id?: string }).id || "")); if (!tool) throw new ApiError(404, "NOT_FOUND", "tool configuration not found");
+    const result = await health.selfTest(tool); auditRequest(repositories, request, "tool.self_test", "tool_configuration", tool.id, { status: result.status, passed: result.selfTestPassed }); return success(result);
+  });
 
   app.get("/api/admin/jobs", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
     const query = request.query as { ownerId?: string; moduleId?: ModuleId; status?: JobStatus; limit?: string };
@@ -40,10 +66,28 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
   app.patch("/api/admin/jobs/:id", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
     const id = String((request.params as { id?: string }).id || ""); const job = repositories.jobs.get(id); if (!job) throw new ApiError(404, "NOT_FOUND", "job not found");
     const body = request.body as { status?: "cancelled" | "interrupted" };
-    if (body.status === "cancelled" && job.status === "queued") repositories.jobs.transition(id, "cancelled");
-    else if (body.status === "interrupted" && job.status === "running") repositories.jobs.transition(id, "interrupted");
+    if (body.status === "cancelled" && (job.status === "queued" || job.status === "running")) { repositories.jobs.requestCancel(id); workers?.cancel(id); }
+    else if (body.status === "interrupted" && job.status === "running") {
+      if (workers?.cancel(id)) throw new ApiError(409, "JOB_PROCESS_ACTIVE", "active process cancellation was requested; wait for the cancelled terminal state");
+      repositories.jobs.transition(id, "interrupted", { error: { type: "internal", code: "ADMIN_INTERRUPTED", message: "administrator marked stale running job interrupted", stepId: job.currentStepId, retryable: true, details: null } });
+    }
     else throw new ApiError(409, "ADMIN_JOB_TRANSITION", "requested administrator transition is not valid");
     auditRequest(repositories, request, "job.admin_update", "job", id, { status: body.status }); return success(repositories.jobs.get(id));
+  });
+  app.post("/api/admin/jobs/:id/cleanup", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
+    const id = String((request.params as { id?: string }).id || ""); const job = repositories.jobs.get(id); if (!job) throw new ApiError(404, "NOT_FOUND", "job not found");
+    if (!["succeeded", "failed", "cancelled", "interrupted"].includes(job.status)) throw new ApiError(409, "JOB_NOT_TERMINAL", "only terminal job work/output directories may be cleaned");
+    await storage.cleanupJobWorkingData(id); auditRequest(repositories, request, "job.cleanup", "job", id, { preserved: ["input", "logs", "artifacts", "manifest.json"] }); return success({ cleaned: true, jobId: id });
+  });
+  app.get("/api/admin/jobs/:id/diagnostics.zip", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
+    const id = String((request.params as { id?: string }).id || ""); const job = repositories.jobs.get(id); if (!job) throw new ApiError(404, "NOT_FOUND", "job not found");
+    const output = new PassThrough(); const archive = new ZipArchive({ zlib: { level: 6 } }); archive.once("error", (error: Error) => output.destroy(error)); archive.pipe(output);
+    const details = { job, steps: repositories.jobs.steps(id), events: repositories.jobs.events(id, 0, 2_000), artifacts: repositories.artifacts.listJob(id) };
+    archive.append(`${JSON.stringify(details, null, 2)}\n`, { name: "diagnostics.json" });
+    try { archive.file(await storage.resolveExisting(`${job.workspaceRelativePath}/manifest.json`), { name: "manifest.json" }); } catch { /* An interrupted upload may not have a manifest. */ }
+    try { archive.directory(await storage.resolveExisting(`${job.workspaceRelativePath}/logs`), "logs"); } catch { /* No logs before execution. */ }
+    void archive.finalize(); auditRequest(repositories, request, "job.diagnostics_download", "job", id, { ownerId: job.ownerId });
+    reply.type("application/zip").header("Content-Disposition", `attachment; filename=\"${id}-diagnostics.zip\"`); return reply.send(output);
   });
 
   app.get("/api/admin/results", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
