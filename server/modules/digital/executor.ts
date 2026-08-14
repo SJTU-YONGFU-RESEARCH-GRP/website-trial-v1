@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import type { JsonObject } from "../../../shared/contracts/v1.js";
-import { DigitalAdapterError, runConfiguredProcess, workspacePath, writeUtf8Atomic } from "./helpers.js";
+import type { CoreStepExecutionContextV1 } from "../../app/process/coreContext.js";
+import { DigitalAdapterError, workspacePath, writeUtf8Atomic } from "./helpers.js";
 import { resolveHierarchy } from "./hierarchy.js";
 import { mapDigitalInputs } from "./inputs.js";
 import { parseComputedDigitalResult } from "./parsers/computed.js";
@@ -10,17 +11,15 @@ import { materializeSafeSdc, validateWorkspaceInputs } from "./security.js";
 import { generateOpenStaScript, generateYosysScript } from "./scripts.js";
 import type { DigitalExecutionContext, DigitalToolId } from "./types.js";
 
-function plannedArgv(context: DigitalExecutionContext): string[] {
-  const planned = context.job.plan.steps.find((step) => step.id === context.step.stepKey);
-  if (!planned?.process) throw new DigitalAdapterError("DIGITAL_PLAN_PROCESS_MISSING", `${context.step.stepKey} has no frozen process plan`, "internal");
-  return planned.process.argv;
-}
-
 async function runToolStep(context: DigitalExecutionContext, toolId: DigitalToolId, logName: string): Promise<JsonObject> {
-  const result = await runConfiguredProcess(context, toolId, plannedArgv(context));
-  await writeUtf8Atomic(workspacePath(context.workspacePath, "logs", logName), `${result.stdout}${result.stderr ? `\n[stderr]\n${result.stderr}` : ""}`);
+  const coreContext = context as DigitalExecutionContext & Partial<CoreStepExecutionContextV1>;
+  if (typeof coreContext.runPlannedProcess !== "function") throw new DigitalAdapterError("DIGITAL_CORE_RUNNER_MISSING", "Digital tool execution requires the shared process runner", "internal");
+  const result = await coreContext.runPlannedProcess();
+  const stdout = await fs.readFile(workspacePath(context.workspacePath, "logs", `${context.step.stepKey}.stdout.log`), "utf8").catch(() => "");
+  const stderr = await fs.readFile(workspacePath(context.workspacePath, "logs", `${context.step.stepKey}.stderr.log`), "utf8").catch(() => "");
+  await writeUtf8Atomic(workspacePath(context.workspacePath, "logs", logName), `${stdout}${stderr ? `\n[stderr]\n${stderr}` : ""}`);
   if (result.exitCode !== 0) throw new DigitalAdapterError("DIGITAL_TOOL_EXIT", `${toolId} exited with code ${result.exitCode}`, "tool_exit");
-  return { toolId, exitCode: result.exitCode, log: `logs/${logName}` };
+  return { toolId, exitCode: result.exitCode, log: `logs/${logName}`, processId: result.processId, processGroupId: result.processGroupId };
 }
 
 export async function executeDigitalStep(context: DigitalExecutionContext): Promise<{ exitCode: number; outputs: JsonObject }> {

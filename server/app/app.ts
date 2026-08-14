@@ -28,11 +28,15 @@ import { success } from "./api/http.ts";
 export interface EdaAppOptions { config?: ServerConfig; registry?: ModuleRegistry; database?: EdaDatabase; startWorkers?: boolean; serveFrontend?: boolean; logger?: boolean; }
 
 export async function createEdaApp(options: EdaAppOptions = {}): Promise<FastifyInstance> {
+  const bootLog = (message: string): void => { if (process.env.EDA_DEBUG_BOOT === "1") process.stderr.write(`[eda-boot] ${message}\n`); };
   const config = options.config || loadConfig();
   if (process.env.NODE_ENV === "production" && typeof process.getuid === "function" && process.getuid() === 0) throw new Error("the production EDA backend must not run as root");
   const app = Fastify({ logger: options.logger ?? true, trustProxy: config.trustProxy, requestIdHeader: "x-request-id", genReqId: () => randomUUID(), bodyLimit: 1_048_576 });
+  bootLog("fastify created");
   const database = options.database || new EdaDatabase(config.databasePath); database.migrate();
+  bootLog("database migrated");
   const repositories = makeRepositories(database); const storage = new StorageService(config.storageRoot); await storage.initialize();
+  bootLog("storage initialized");
   const registry = options.registry || new ModuleRegistry(); const runner = new SafeProcessRunner(config.cancelGraceMs);
   const probeRoot = storage.resolve("work-probes"); await fs.promises.mkdir(probeRoot, { recursive: true, mode: 0o750 });
   const health = new ToolHealthService(repositories.tools, runner, probeRoot);
@@ -41,9 +45,13 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   app.decorate("eda", { config, database, repositories, storage, registry, workers });
   app.decorateRequest("edaUser", null); app.decorateRequest("edaSessionId", null); app.decorateRequest("edaCsrfHash", null);
   await app.register(cookie);
+  bootLog("cookie registered");
   await app.register(multipart, { limits: { files: config.upload.maxFiles, fileSize: config.upload.maxFileBytes, fieldNameSize: 2048, fields: 32, parts: config.upload.maxFiles + 32 }, throwFileSizeLimit: true });
+  bootLog("multipart registered");
   await app.register(swagger, { openapi: { info: { title: "EDA Compute Platform API", version: "1.0.0", description: "Persistent Benchmark, Digital and PPA computation API" }, tags: ["auth", "modules", "drafts", "jobs", "artifacts", "results", "admin"].map((name) => ({ name })) } });
+  bootLog("swagger registered");
   await app.register(swaggerUi, { routePrefix: "/api/docs" });
+  bootLog("swagger UI registered");
   app.addHook("onRequest", installAuthResolution(repositories, config.cookieName));
   app.addHook("onRequest", async (request) => {
     if (!["POST", "PUT", "PATCH", "DELETE"].includes(request.method) || !config.publicOrigin) return;
@@ -69,10 +77,16 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
 
   const frontendRoot = path.resolve(process.cwd(), "dist");
   if (options.serveFrontend !== false && fs.existsSync(frontendRoot)) {
-    await app.register(staticFiles, { root: frontendRoot, wildcard: false });
+    bootLog("registering frontend");
+    // Register a wildcard static route instead of eagerly materializing one
+    // Fastify route per retained EDA artifact. The production bundle can be
+    // several gigabytes even with only a few hundred files.
+    await app.register(staticFiles, { root: frontendRoot, wildcard: true });
+    bootLog("frontend registered");
     app.setNotFoundHandler(async (request, reply) => { if (request.method === "GET" && !request.url.startsWith("/api/")) return reply.type("text/html").sendFile("index.html"); return reply.status(404).send({ schemaVersion: API_SCHEMA_VERSION, error: { code: "NOT_FOUND", message: "route not found", details: null, requestId: request.id } }); });
   }
   app.addHook("onClose", async () => { await workers?.stop(); database.close(); }); workers?.start();
+  bootLog("app ready for listen");
   return app;
 }
 

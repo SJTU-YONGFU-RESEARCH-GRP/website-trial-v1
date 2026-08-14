@@ -20,11 +20,12 @@ export interface PpaToolBinding {
   health: ToolHealthStatus;
   environment: Record<string, string>;
   version?: string | null;
+  selfTestPassed?: boolean | null;
 }
 
 export interface PpaRuntimeBindings {
   toolBindings?: Record<string, PpaToolBinding>;
-  toolHealth?: Record<string, { status: ToolHealthStatus; version: string | null } | null>;
+  toolHealth?: Record<string, { status: ToolHealthStatus; version: string | null; selfTestPassed?: boolean | null } | null>;
   technologies?: TechnologyLibraryV1[];
   maxSweepJobs?: number;
   runPlannedProcess?: () => Promise<{ exitCode: number; timedOut?: boolean; outputLimitExceeded?: boolean }>;

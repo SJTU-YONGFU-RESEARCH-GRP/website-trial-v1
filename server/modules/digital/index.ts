@@ -14,7 +14,7 @@ import { normalizeRunParameters, structuredError, workspacePath } from "./helper
 import { validateInputMapping } from "./inputs.js";
 import { validateParsedDigitalResult } from "./parsers/result.js";
 import { buildDigitalPlan } from "./planner.js";
-import type { DigitalExecutionContext, DigitalModuleContext } from "./types.js";
+import type { DigitalExecutionContext, DigitalModuleBindings, DigitalModuleContext } from "./types.js";
 import { DIGITAL_ADAPTER_ID } from "./types.js";
 
 async function existingArtifact(context: StepExecutionContextV1, role: string, relativePath: string, mediaType: string, required: boolean, publish = true): Promise<CollectedArtifactV1 | null> {
@@ -50,8 +50,11 @@ export const digitalModuleAdapter: ModuleAdapterV1 = {
       }
       for (const toolId of ["yosys", "opensta", ...(validation.mapping.testbench.length > 0 ? ["iverilog", "vvp"] : [])]) {
         const configuration = context.job.toolConfigurations.find((item) => item.toolId === toolId);
+        const binding = (context as DraftValidationContextV1 & DigitalModuleBindings).toolBindings?.[toolId];
         if (!configuration?.enabled || !configuration.executablePath) {
           validation.errors.push({ type: "configuration", code: "DIGITAL_TOOL_NOT_CONFIGURED", message: `${toolId} is unavailable; ask an administrator to configure and probe it`, stepId: null, retryable: false, details: null });
+        } else if (binding?.health !== "healthy" || binding.selfTestPassed !== true) {
+          validation.errors.push({ type: "configuration", code: "DIGITAL_TOOL_SELF_TEST_REQUIRED", message: `${toolId} must pass its adapter minimal self-test before it can run`, stepId: null, retryable: false, details: null });
         }
       }
     }

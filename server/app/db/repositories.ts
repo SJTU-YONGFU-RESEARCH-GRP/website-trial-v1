@@ -223,7 +223,11 @@ export class JobRepository {
   start(id: string): JobRecordV1 { return this.transition(id, "queued"); }
   claim(moduleId: ModuleId): JobRecordV1 | null {
     return this.db.transaction(() => {
-      const row = this.db.sqlite.prepare("SELECT id FROM jobs WHERE module_id=? AND status='queued' ORDER BY queued_at,id LIMIT 1").get(moduleId) as { id?: unknown } | undefined;
+      const row = this.db.sqlite.prepare(`SELECT j.id FROM jobs j
+        JOIN users u ON u.id=j.owner_id
+        WHERE j.module_id=? AND j.status='queued' AND u.enabled=1 AND u.deleted_at IS NULL
+          AND (SELECT COUNT(*) FROM jobs active WHERE active.owner_id=j.owner_id AND active.status='running') < u.max_concurrent_jobs
+        ORDER BY j.queued_at,j.id LIMIT 1`).get(moduleId) as { id?: unknown } | undefined;
       if (!row) return null;
       const changed = this.db.sqlite.prepare("UPDATE jobs SET status='running',started_at=?,updated_at=? WHERE id=? AND status='queued'").run(now(), now(), String(row.id));
       return changed.changes === 1 ? this.get(String(row.id)) : null;
@@ -285,12 +289,43 @@ export class JobRepository {
   }
 
   linkRetry(jobId: string, retryOfJobId: string): void { this.db.sqlite.prepare("UPDATE jobs SET retry_of_job_id=?,updated_at=? WHERE id=?").run(retryOfJobId, now(), jobId); }
+  listSweep(parentJobId: string): JobRecordV1[] {
+    const rows = this.db.sqlite.prepare("SELECT * FROM jobs WHERE id=? OR sweep_parent_job_id=? ORDER BY CAST(json_extract(parameters_json,'$.sweepIndex') AS INTEGER),id").all(parentJobId, parentJobId) as Record<string, unknown>[];
+    return rows.map(jobFromRow);
+  }
+  materializeSweep(parentJobId: string, parentParameters: JsonObject, parentPlan: JobPlanV1, children: Array<{ id: string; parameters: JsonObject; plan: JobPlanV1 }>): JobRecordV1[] {
+    const parent = this.get(parentJobId);
+    if (!parent || parent.status !== "ready" || !parent.plan.sweep) throw new Error("job is not a ready sweep parent");
+    const at = now();
+    this.db.transaction(() => {
+      this.db.sqlite.prepare("UPDATE jobs SET parameters_json=?,plan_json=?,status='queued',queued_at=?,updated_at=? WHERE id=? AND status='ready'")
+        .run(json(parentParameters), json(parentPlan), at, at, parentJobId);
+      this.replaceStepsStatements(parentJobId, parentPlan);
+      const insert = this.db.sqlite.prepare(`INSERT INTO jobs(id,owner_id,module_id,operation,workflow,status,input_manifest_json,parameters_json,capability_version,
+        tool_configurations_json,tool_versions_json,plan_json,workspace_relative_path,current_step_id,sweep_parent_job_id,retry_of_job_id,result_id,
+        progress,exit_code,error_json,created_at,queued_at,started_at,finished_at,updated_at)
+        VALUES (?,?,?,?,?,'queued',?,?,?,?,?,?,?,NULL,?,NULL,NULL,0,NULL,NULL,?,?,NULL,NULL,?)`);
+      for (const child of children) {
+        insert.run(child.id, parent.ownerId, parent.moduleId, parent.operation, parent.workflow,
+          json(parent.inputManifest), json(child.parameters), parent.capabilityVersion, json(parent.toolConfigurations), json(parent.toolVersions), json(child.plan),
+          `jobs/${child.id}`, parentJobId, at, at, at);
+        this.replaceStepsStatements(child.id, child.plan);
+      }
+    });
+    return this.listSweep(parentJobId);
+  }
   requestCancel(jobId: string): JobRecordV1 {
     const current = this.get(jobId); if (!current) throw new Error("job not found");
     if (current.status === "queued") return this.transition(jobId, "cancelled", { error: { type: "cancelled", code: "CANCEL_REQUESTED", message: "cancelled before execution", stepId: null, retryable: true, details: null } });
     if (current.status !== "running") throw new Error(`job in ${current.status} state cannot be cancelled`);
     this.db.sqlite.prepare("UPDATE jobs SET cancel_requested_at=?,updated_at=? WHERE id=?").run(now(), now(), jobId);
     return this.get(jobId)!;
+  }
+
+  private replaceStepsStatements(jobId: string, plan: JobPlanV1): void {
+    this.db.sqlite.prepare("DELETE FROM job_steps WHERE job_id=?").run(jobId);
+    const insert = this.db.sqlite.prepare("INSERT INTO job_steps(id,job_id,ordinal,step_key,name,status,progress,process_id,process_group_id,exit_code,started_at,finished_at,error_json) VALUES (?,?,?,?,?,'pending',0,NULL,NULL,NULL,NULL,NULL,NULL)");
+    plan.steps.forEach((step, ordinal) => insert.run(randomUUID(), jobId, ordinal, step.id, step.name));
   }
   isCancelRequested(jobId: string): boolean {
     const row = this.db.sqlite.prepare("SELECT cancel_requested_at FROM jobs WHERE id=?").get(jobId) as { cancel_requested_at?: unknown } | undefined;

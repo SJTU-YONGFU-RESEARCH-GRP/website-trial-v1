@@ -24,13 +24,16 @@ registry.register(createBenchmarkModule());
 registry.register(digitalModuleAdapter);
 registry.register(ppaModuleAdapter);
 const config = loadConfig();
+process.stderr.write(`[e2e-server] storage ${storageRoot}\n`);
 const app = await createEdaApp({ config, registry, startWorkers: true, serveFrontend: true, logger: false });
+process.stderr.write("[e2e-server] app created\n");
 
 const adminPassword = process.env.EDA_E2E_ADMIN_PASSWORD;
 const userPassword = process.env.EDA_E2E_USER_PASSWORD;
 if (!adminPassword || !userPassword) throw new Error("E2E passwords must be provided by the test runner environment");
 app.eda.repositories.users.create({ username: "e2e-admin", password: adminPassword, role: "admin", maxConcurrentJobs: 8 });
 app.eda.repositories.users.create({ username: "e2e-user", password: userPassword, role: "user", maxConcurrentJobs: 8 });
+process.stderr.write("[e2e-server] users created\n");
 
 const login = await app.inject({ method: "POST", url: "/api/auth/login", payload: { username: "e2e-admin", password: adminPassword } });
 if (login.statusCode !== 200) throw new Error(`E2E admin login failed: ${login.body}`);
@@ -38,9 +41,11 @@ const loginBody = login.json().data;
 const cookieHeader = login.headers["set-cookie"];
 const cookie = (Array.isArray(cookieHeader) ? cookieHeader[0] : cookieHeader)?.split(";")[0];
 if (!cookie) throw new Error("E2E admin login did not establish a cookie");
+process.stderr.write("[e2e-server] admin session created\n");
 
 const fixture = path.resolve("test/fixtures/fake-tools/fake-eda-tool.mjs");
 async function configure(toolId: string, moduleId: "digital" | "ppa", fakeKind: string, adapterId: string): Promise<void> {
+  process.stderr.write(`[e2e-server] configuring ${toolId}\n`);
   const created = await app.inject({
     method: "POST",
     url: "/api/admin/tools",
@@ -55,6 +60,8 @@ async function configure(toolId: string, moduleId: "digital" | "ppa", fakeKind: 
   if (created.statusCode !== 201) throw new Error(`E2E tool setup failed: ${created.body}`);
   const probe = await app.inject({ method: "POST", url: `/api/admin/tools/${created.json().data.id}/probe`, headers: { cookie, "x-csrf-token": loginBody.csrfToken } });
   if (probe.statusCode !== 200 || probe.json().data.status !== "healthy") throw new Error(`E2E tool probe failed: ${probe.body}`);
+  const selfTest = await app.inject({ method: "POST", url: `/api/admin/tools/${created.json().data.id}/self-test`, headers: { cookie, "x-csrf-token": loginBody.csrfToken } });
+  if (selfTest.statusCode !== 200 || selfTest.json().data.selfTestPassed !== true) throw new Error(`E2E tool self-test failed: ${selfTest.body}`);
 }
 
 await configure("yosys", "digital", "yosys", "digital-yosys-opensta-v1");
@@ -62,6 +69,7 @@ await configure("opensta", "digital", "opensta", "digital-yosys-opensta-v1");
 await configure("ppa-result-parser", "ppa", "ppa-result-parser", "ppa-result-parser-v1");
 
 await app.listen({ host: config.host, port: config.port });
+process.stderr.write(`[e2e-server] listening on ${config.host}:${config.port}\n`);
 
 async function makeWritable(directory: string): Promise<void> {
   const entries = await fs.readdir(directory, { withFileTypes: true }).catch(() => []);

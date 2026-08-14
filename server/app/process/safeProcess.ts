@@ -86,7 +86,8 @@ export class SafeProcessRunner {
     } finally {
       if (timer) clearTimeout(timer);
       options.abortSignal?.removeEventListener("abort", abort);
-      this.children.delete(key); stdout?.end(); stderr?.end();
+      this.children.delete(key);
+      await Promise.all([closeWriteStream(stdout), closeWriteStream(stderr)]);
     }
   }
 
@@ -103,6 +104,14 @@ export class SafeProcessRunner {
     // leader may have exited while a descendant kept running; ESRCH is safe.
     signalProcessGroup(child.pid, "SIGKILL");
   }
+}
+
+async function closeWriteStream(stream: fs.WriteStream | null): Promise<void> {
+  if (!stream || stream.closed) return;
+  await new Promise<void>((resolvePromise, reject) => {
+    stream.once("error", reject);
+    stream.end(resolvePromise);
+  });
 }
 
 function signalProcessGroup(pid: number, signal: NodeJS.Signals): void {

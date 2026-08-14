@@ -85,7 +85,7 @@ if (mode === "timeout" || mode === "cancel") {
   process.on("SIGINT", stop);
   setInterval(() => process.stdout.write(`${tool}: heartbeat\n`), 250);
 } else {
-  const output = option("--output", "output/fake-result.json");
+  const output = option("--output", option("--output-model", "output/fake-result.json"));
   if (mode === "partial") {
     write(output, "{\"schemaVersion\":\"fake.eda.v1\",\"status\":");
     process.stdout.write(`${tool}: partial output emitted\n`);
@@ -97,6 +97,10 @@ if (mode === "timeout" || mode === "cancel") {
   } else if (tool === "vvp") {
     process.stdout.write("PASS: fake RTL simulation\n");
   } else if (tool === "yosys") {
+    if (argv.includes("-p")) {
+      process.stdout.write("EDA_SELF_TEST_OK\n");
+      process.exit(0);
+    }
     const script = argv.at(-1) || "";
     if (!script.endsWith(".ys")) {
       process.stderr.write("yosys fake expected a .ys script\n");

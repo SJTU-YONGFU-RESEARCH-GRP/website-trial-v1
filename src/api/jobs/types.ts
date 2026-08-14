@@ -11,6 +11,7 @@ export interface JobDetailV1 {
   steps: JobStepRecordV1[];
   artifacts: ArtifactRecordV1[];
   latestEvents: JobEventRecordV1[];
+  sweepJobs: JobRecordV1[];
 }
 
 export type JobResultV1 = ResultRecordV1;

@@ -37,7 +37,7 @@ describe("Benchmark preflight validation", () => {
   it("accepts measured DC IV CSV with a sweep and mapped fixed bias", async () => {
     const context = await fixtureContext("Vgs,id\n0,0\n0.5,0.0001\n1.0,0.001\n");
     const adapter = new BenchmarkModuleAdapter({ health: {
-      fitting: { status: "healthy", version: "1", reason: null },
+      fitting: { status: "healthy", version: "1", reason: null, adapterSelfTestPassed: true },
       ngspice: { status: "healthy", version: "46", reason: null, adapterSelfTestPassed: true },
     } });
     const result = await adapter.validateDraft(context);
@@ -47,7 +47,7 @@ describe("Benchmark preflight validation", () => {
   it("rejects a CSV without an accepted current column", async () => {
     const context = await fixtureContext("Vgs,gm\n0,0\n1,1\n");
     const adapter = new BenchmarkModuleAdapter({ health: {
-      fitting: { status: "healthy", version: "1", reason: null },
+      fitting: { status: "healthy", version: "1", reason: null, adapterSelfTestPassed: true },
       ngspice: { status: "healthy", version: "46", reason: null, adapterSelfTestPassed: true },
     } });
     const result = await adapter.validateDraft(context);
@@ -77,8 +77,8 @@ describe("Benchmark preflight validation", () => {
     });
     const context: DraftValidationContextV1 = { moduleId: "benchmark", storageRoot, now: () => "2026-08-14T00:00:00.000Z", job, files, technology: null };
     const adapter = new BenchmarkModuleAdapter({ health: {
-      expansion: { status: "healthy", version: "0.1.0", reason: null },
-      "spice-benchmark": { status: "healthy", version: "1.0.0", reason: null },
+      expansion: { status: "healthy", version: "0.1.0", reason: null, adapterSelfTestPassed: true },
+      "spice-benchmark": { status: "healthy", version: "1.0.0", reason: null, adapterSelfTestPassed: true },
       ngspice: { status: "healthy", version: "46", reason: null, adapterSelfTestPassed: true },
     } });
     const plan = await adapter.buildPlan(context);

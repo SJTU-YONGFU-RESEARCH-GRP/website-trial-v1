@@ -3,7 +3,7 @@ import type { ResultRecordV1 } from "../../shared/contracts/v1";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { cancelJob, cloneJob, getJobResult, preflightClonedJob, retryJob, startReadyJob } from "../api/jobs";
 import { useAuth } from "../auth/AuthContext";
-import { ArtifactList, EventLog, formatBytes, formatDate, formatJson, JobProgress, shortId, useJobDetail } from "../jobs";
+import { ArtifactList, EventLog, formatBytes, formatDate, formatJson, JobProgress, JobTable, shortId, useJobDetail } from "../jobs";
 import "../jobs.css";
 
 const TERMINAL = new Set(["succeeded", "failed", "cancelled", "interrupted"]);
@@ -59,6 +59,7 @@ export function JobDetailPage(): JSX.Element {
       {actionError ? <div className="jobs-notice jobs-notice--error" role="alert">{actionError}</div> : null}
       {error ? <div className="jobs-notice jobs-notice--warning" role="status">Live refresh failed: {error}</div> : null}
       <JobProgress job={job} steps={steps} />
+      {detail.sweepJobs.length > 0 ? <section className="jobs-card"><div className="jobs-card__heading"><div><h2>Sweep tasks</h2><p>Each Cartesian point has its own persistent workspace, status, logs, and result.</p></div><strong>{detail.sweepJobs.length} runs</strong></div><JobTable jobs={detail.sweepJobs} /></section> : null}
       <section className="jobs-card"><div className="jobs-card__heading"><div><h2>Execution metadata</h2><p>Frozen identity and runtime configuration for reproducibility.</p></div></div><dl className="jobs-definition-grid"><div><dt>Owner</dt><dd><code>{job.ownerId}</code></dd></div><div><dt>Module / workflow</dt><dd>{job.moduleId} · {job.workflow}</dd></div><div><dt>Workspace</dt><dd><code>{job.workspaceRelativePath}</code></dd></div><div><dt>Result ID</dt><dd><code>{job.resultId || "—"}</code></dd></div><div><dt>Current step</dt><dd><code>{job.currentStepId || "—"}</code></dd></div><div><dt>Elapsed</dt><dd>{elapsedSeconds === null ? "Not started" : `${elapsedSeconds}s`}</dd></div><div><dt>Retry of</dt><dd><code>{job.retryOfJobId || "—"}</code></dd></div><div><dt>Sweep parent</dt><dd><code>{job.sweepParentJobId || "—"}</code></dd></div><div><dt>Tool versions</dt><dd><code>{formatJson(job.toolVersions)}</code></dd></div><div><dt>Parameters</dt><dd><code>{formatJson(job.parameters)}</code></dd></div></dl></section>
       {job.error ? <section className="jobs-card jobs-error-card"><h2>Failure</h2><strong>{job.error.code}</strong><p>{job.error.message}</p><dl><div><dt>Type</dt><dd>{job.error.type}</dd></div><div><dt>Retryable</dt><dd>{job.error.retryable ? "Yes" : "No"}</dd></div><div><dt>Exit code</dt><dd>{job.exitCode ?? "—"}</dd></div></dl>{job.error.details ? <pre>{formatJson(job.error.details)}</pre> : null}</section> : null}
       <EventLog events={detail.latestEvents} liveState={liveState} />

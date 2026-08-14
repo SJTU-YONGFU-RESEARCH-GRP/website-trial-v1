@@ -107,6 +107,7 @@ function effectiveHealth(toolId: BenchmarkToolId, options: BenchmarkModuleOption
   if (!configured(toolId, configurations)) return { status: "not_configured", reason: "No enabled administrator tool configuration", version: null };
   const health = options.health?.[toolId];
   if (!health) return { status: "unavailable", reason: "The configured tool has not passed a health probe", version: null };
+  if (health.status === "healthy" && health.adapterSelfTestPassed !== true) return { status: "degraded", reason: "Path/version probe passed, but the adapter minimal self-test has not passed", version: health.version };
   return { status: health.status, reason: health.reason, version: health.version };
 }
 

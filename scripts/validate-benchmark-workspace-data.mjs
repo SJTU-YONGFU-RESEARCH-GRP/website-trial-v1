@@ -37,7 +37,7 @@ const required = [
   "src/compat/spiceWorkflow/fittingAdapter.ts", "src/compat/spiceWorkflow/reductionAdapter.ts",
   "src/compat/spiceWorkflow/expansionAdapter.ts", "src/compat/spiceWorkflow/benchmarkAdapter.ts",
   "src/compat/spiceWorkflow/workflowAnalyzer.ts", "src/compat/spiceWorkflow/configurationFingerprint.ts",
-  "src/compat/spiceWorkflow/mockRuntime.ts", "src/compat/spiceWorkflow/index.ts",
+  "src/compat/spiceWorkflow/index.ts",
   "src/data/benchmarkWorkspace/integratedDemo.ts", "src/data/benchmarkWorkspace/bundledModels.ts",
   "src/data/benchmarkWorkspace/selectors.ts", "src/data/benchmarkWorkspace/index.ts",
   "src/data/benchmarkWorkspace/dataLoader.ts",

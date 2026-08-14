@@ -203,7 +203,7 @@ export async function validateBenchmarkDraft(
     const configuration = context.job.toolConfigurations.find((entry) => entry.toolId === toolId && entry.enabled);
     const health = options.health?.[toolId];
     if (!configuration) errors.push(configurationError("benchmark.tool_not_configured", `${toolId} has no enabled job configuration snapshot`));
-    else if (health?.status !== "healthy") errors.push(configurationError("benchmark.tool_unavailable", `${toolId} is ${health?.status ?? "unprobed"}: ${health?.reason ?? "health probe required"}`));
+    else if (health?.status !== "healthy" || health.adapterSelfTestPassed !== true) errors.push(configurationError("benchmark.tool_unavailable", `${toolId} must pass its adapter minimal self-test before use`));
   }
 
   const processing = tools.filter((tool) => tool !== "spice-benchmark");

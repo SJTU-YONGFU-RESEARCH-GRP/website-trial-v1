@@ -33,6 +33,26 @@ function processExists(pid: number): boolean {
 }
 
 describe("failure containment and publication boundary", () => {
+  it("materializes every sweep point as an independent queued job and preserves successful siblings", async () => {
+    const environment = await makeEnvironment({ modules: ["ppa"] }); environments.push(environment);
+    const { app } = environment;
+    app.eda.repositories.users.create({ username: "sweep-admin", password: TEST_PASSWORD, role: "admin" });
+    app.eda.repositories.users.create({ username: "sweep-user", password: TEST_PASSWORD, maxConcurrentJobs: 2 });
+    const admin = await login(app, "sweep-admin"); const user = await login(app, "sweep-user");
+    await configureFixtureTool(app, admin, "ppa", "success");
+    const draft = await createReadyDraft(app, user, "ppa", { sweepValues: [0.1, 0.2, 0.3] });
+    const started = await startJob(app, user, draft.id);
+    expect(started.status).toBe("queued");
+    const sweep = app.eda.repositories.jobs.listSweep(draft.id);
+    expect(sweep).toHaveLength(3);
+    expect(new Set(sweep.map((job) => job.workspaceRelativePath)).size).toBe(3);
+    expect(sweep.map((job) => job.parameters.sweepPoint)).toEqual([{ sweepValues: 0.1 }, { sweepValues: 0.2 }, { sweepValues: 0.3 }]);
+    expect(sweep.slice(1).every((job) => job.sweepParentJobId === draft.id)).toBe(true);
+    const finished = await Promise.all(sweep.map((job) => waitForJob(app, user, job.id, ["succeeded", "failed"], 10_000)));
+    expect(finished.map((job) => job.status)).toEqual(["succeeded", "succeeded", "succeeded"]);
+    expect(finished.every((job) => Boolean(job.resultId))).toBe(true);
+  }, 20_000);
+
   for (const mode of ["fail", "partial"] as const) {
     it(`${mode} output fails the job and never publishes a result`, async () => {
       const environment = await makeEnvironment({ modules: ["benchmark"] }); environments.push(environment);

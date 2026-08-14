@@ -1,10 +1,11 @@
+import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 import { PassThrough } from "node:stream";
 import { ZipArchive } from "archiver";
 import type { FastifyInstance } from "fastify";
-import type { JobStatus, ModuleId } from "../../../shared/contracts/v1.ts";
+import type { DraftValidationContextV1, JobPlanV1, JobRecordV1, JobStatus, JsonObject, JsonPrimitive, ModuleId, ToolConfigurationV1 } from "../../../shared/contracts/v1.ts";
 import type { Repositories } from "../db/repositories.ts";
 import { StorageService } from "../storage/storage.ts";
 import type { WorkerSupervisor } from "../../worker/index.ts";
@@ -17,8 +18,12 @@ const TERMINAL = new Set<JobStatus>(["succeeded", "failed", "cancelled", "interr
 export function registerJobRoutes(app: FastifyInstance, repositories: Repositories, storage: StorageService, workers: WorkerSupervisor | null): void {
   app.post("/api/jobs/:jobId/start", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["jobs"] } }, async (request) => {
     const job = ownedJob(request, repositories); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
-    const active = repositories.jobs.list({ ownerId: job.ownerId, limit: 200 }).filter((item) => item.status === "queued" || item.status === "running").length;
-    if (active >= request.edaUser!.maxConcurrentJobs) throw new ApiError(429, "USER_CONCURRENCY", "user concurrency limit reached");
+    if (job.plan.sweep) {
+      const sweepJobs = await materializeSweepJobs(job, repositories, storage, app);
+      for (const sweepJob of sweepJobs) repositories.jobs.appendEvent(sweepJob.id, null, "info", "system", `Sweep point queued (${sweepJobs.indexOf(sweepJob) + 1}/${sweepJobs.length})`, { sweepParentJobId: job.id });
+      repositories.audit.write(request.edaUser!.id, "job.sweep_start", "job", job.id, { moduleId: job.moduleId, runCount: sweepJobs.length });
+      return success(repositories.jobs.get(job.id));
+    }
     const queued = repositories.jobs.start(job.id); repositories.jobs.appendEvent(job.id, null, "info", "system", "Job queued");
     repositories.audit.write(request.edaUser!.id, "job.start", "job", job.id, { moduleId: job.moduleId }); return success(queued);
   });
@@ -31,7 +36,9 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.get("/api/jobs/:jobId", { preHandler: [requireUser], schema: { tags: ["jobs"] } }, async (request) => {
-    const job = ownedJob(request, repositories); return success({ job, steps: repositories.jobs.steps(job.id), artifacts: repositories.artifacts.listJob(job.id), latestEvents: repositories.jobs.events(job.id, 0, 100) });
+    const job = ownedJob(request, repositories);
+    const sweepRoot = job.sweepParentJobId ?? (job.parameters.sweepDefinition ? job.id : null);
+    return success({ job, steps: repositories.jobs.steps(job.id), artifacts: repositories.artifacts.listJob(job.id), latestEvents: repositories.jobs.events(job.id, 0, 100), sweepJobs: sweepRoot ? repositories.jobs.listSweep(sweepRoot) : [] });
   });
 
   app.get("/api/jobs/:jobId/events", { preHandler: [requireUser], schema: { tags: ["jobs"] } }, async (request, reply) => {
@@ -112,6 +119,53 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
     }
     const filePath = await storage.resolveExisting(artifact.relativePath); reply.type(artifact.mediaType).header("Content-Disposition", `attachment; filename="${path.basename(filePath).replaceAll('"', "")}"`); return reply.send(fs.createReadStream(filePath));
   });
+}
+
+async function materializeSweepJobs(job: JobRecordV1, repositories: Repositories, storage: StorageService, app: FastifyInstance): Promise<JobRecordV1[]> {
+  const sweep = job.plan.sweep;
+  if (!sweep) return [repositories.jobs.start(job.id)];
+  const points = cartesianPoints(sweep.dimensions);
+  if (points.length !== sweep.runCount || !points.length) throw new ApiError(409, "SWEEP_PLAN_INVALID", "validated sweep dimensions no longer match the planned run count");
+  const adapter = app.eda.registry.require(job.moduleId);
+  const configuredTools = job.toolConfigurations.map((snapshot) => repositories.tools.get(snapshot.id)).filter((tool): tool is ToolConfigurationV1 => Boolean(tool));
+  if (configuredTools.length !== job.toolConfigurations.length) throw new ApiError(409, "TOOL_CONFIGURATION_MISSING", "a frozen sweep tool configuration is no longer available");
+  const technologyId = typeof job.parameters.technologyLibraryId === "string" ? job.parameters.technologyLibraryId : null;
+  const technology = technologyId ? repositories.technologies.list().find((item) => item.id === technologyId) ?? null : null;
+  const toolBindings = Object.fromEntries(configuredTools.map((tool) => {
+    const snapshot = job.toolConfigurations.find((item) => item.id === tool.id)!;
+    return [tool.toolId, { configuration: snapshot, health: "healthy", version: job.toolVersions[tool.toolId] ?? null, selfTestPassed: true, environment: tool.environment }];
+  }));
+  const childItems: Array<{ id: string; parameters: JsonObject; plan: JobPlanV1 }> = [];
+  for (let index = 0; index < points.length; index += 1) {
+    const point = points[index]!;
+    const parameters = { ...job.parameters, ...point, sweep: {}, sweepDefinition: job.parameters.sweep ?? sweep.dimensions, sweepPoint: point, sweepIndex: index + 1, sweepRunCount: points.length } as JsonObject;
+    const childJob = { ...job, parameters, plan: { ...job.plan, sweep: null } };
+    const context = { moduleId: job.moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), job: childJob, files: job.inputManifest.files,
+      technology, toolConfigurations: configuredTools, toolHealth: {}, toolBindings, technologies: technology ? [technology] : [] } as DraftValidationContextV1;
+    const plan = await adapter.buildPlan(context);
+    if (plan.sweep || !plan.steps.length) throw new ApiError(409, "SWEEP_CHILD_PLAN_INVALID", `sweep point ${index + 1} did not produce one executable child plan`);
+    childItems.push({ id: index === 0 ? job.id : randomUUID(), parameters, plan });
+  }
+  const parentInput = await storage.resolveExisting(`${job.workspaceRelativePath}/input`);
+  const prepared: string[] = [];
+  try {
+    for (const child of childItems.slice(1)) {
+      const workspace = await storage.createWorkspace(child.id); prepared.push(workspace);
+      await fsp.rm(path.join(workspace, "input"), { recursive: true, force: true });
+      await fsp.cp(parentInput, path.join(workspace, "input"), { recursive: true, errorOnExist: true, preserveTimestamps: true });
+      await storage.writeManifest(child.id, job.inputManifest);
+    }
+    return repositories.jobs.materializeSweep(job.id, childItems[0]!.parameters, childItems[0]!.plan, childItems.slice(1));
+  } catch (error) {
+    await Promise.all(prepared.map((workspace) => fsp.rm(workspace, { recursive: true, force: true })));
+    throw error;
+  }
+}
+
+function cartesianPoints(dimensions: Record<string, JsonPrimitive[]>): JsonObject[] {
+  let points: JsonObject[] = [{}];
+  for (const [id, values] of Object.entries(dimensions)) points = points.flatMap((point) => values.map((value) => ({ ...point, [id]: value })));
+  return points;
 }
 
 function ownedJob(request: Parameters<typeof assertOwnerOrAdmin>[0], repositories: Repositories) {

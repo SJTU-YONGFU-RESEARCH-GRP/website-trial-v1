@@ -40,16 +40,16 @@ function job(overrides: Partial<JobRecordV1> = {}): JobRecordV1 {
     createdAt: at, queuedAt: null, startedAt: null, finishedAt: null, updatedAt: at, ...overrides };
 }
 
-function context(record = job()): DraftValidationContextV1 & { toolBindings: Record<string, { configuration: ToolConfigurationSnapshotV1; health: "healthy"; environment: Record<string, string> }>; maxSweepJobs: number } {
+function context(record = job()): DraftValidationContextV1 & { toolBindings: Record<string, { configuration: ToolConfigurationSnapshotV1; health: "healthy"; environment: Record<string, string>; selfTestPassed: true }>; maxSweepJobs: number } {
   return { moduleId: "ppa", storageRoot: "/storage", now: () => "2026-08-14T00:00:00.000Z", job: record, files: record.inputManifest.files, technology,
-    toolBindings: Object.fromEntries(record.toolConfigurations.map((configuration) => [configuration.toolId, { configuration, health: "healthy" as const, environment: {} }])), maxSweepJobs: 16 };
+    toolBindings: Object.fromEntries(record.toolConfigurations.map((configuration) => [configuration.toolId, { configuration, health: "healthy" as const, environment: {}, selfTestPassed: true as const }])), maxSweepJobs: 16 };
 }
 
 describe("PPA capabilities and validation", () => {
   it("marks OpenLane and LibreLane unavailable instead of manufacturing demo success", async () => {
     const capabilities = ppaCapabilities({ moduleId: "ppa", storageRoot: "/storage", now: () => "2026-08-14T00:00:00.000Z", toolBindings: {
-      "openroad-orfs": { configuration: tool("openroad-orfs", { root: "/opt/orfs" }), health: "healthy", environment: {} },
-      "ppa-result-parser": { configuration: tool("ppa-result-parser", { parser: true }), health: "healthy", environment: {} },
+      "openroad-orfs": { configuration: tool("openroad-orfs", { root: "/opt/orfs" }), health: "healthy", environment: {}, selfTestPassed: true },
+      "ppa-result-parser": { configuration: tool("ppa-result-parser", { parser: true }), health: "healthy", environment: {}, selfTestPassed: true },
     } });
     expect(capabilities.find((item) => item.toolId === "openroad-orfs")?.health).toBe("healthy");
     expect(capabilities.find((item) => item.toolId === "openlane1")?.health).toBe("not_configured");
@@ -67,7 +67,7 @@ describe("PPA capabilities and validation", () => {
     const parser = tool("ppa-result-parser", { parser: true }); const evidence = file("openroad/metrics.json", "completed_run", "json");
     const record = job({ operation: "import", workflow: "openroad-orfs", inputManifest: { schemaVersion: "eda.input-manifest.v1", files: [evidence], totalBytes: 1, fileCount: 1, rootHint: null, createdAt: "2026-08-14T00:00:00.000Z" },
       parameters: { flow: "openroad-orfs", designName: "uart", topModule: "uart", clockPort: "clk", clockPeriodNs: 10 }, toolConfigurations: [parser] });
-    const value = { ...context(record), technology: null, toolBindings: { "ppa-result-parser": { configuration: parser, health: "healthy" as const, environment: {} } } };
+    const value = { ...context(record), technology: null, toolBindings: { "ppa-result-parser": { configuration: parser, health: "healthy" as const, environment: {}, selfTestPassed: true as const } } };
     const validation = await ppaModuleAdapter.validateDraft(value); expect(validation).toMatchObject({ valid: true, errors: [] });
     const plan = buildPpaPlan(value); expect(plan.steps.map((step) => step.id)).toEqual(["validate-input", "prepare-import", "parse-native", "normalize", "publish"]);
     expect(plan.steps.find((step) => step.id === "parse-native")?.process?.argv).toEqual(["run", "--flow", "openroad", "--include-all", "work/import-run"]);

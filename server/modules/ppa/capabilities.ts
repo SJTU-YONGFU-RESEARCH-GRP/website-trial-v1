@@ -10,6 +10,7 @@ function state(context: PpaModuleContext, toolId: string): { health: ToolHealthS
   if (!binding) return { health: "not_configured", reason: "No administrator-owned configuration and health probe are available.", version: null };
   if (!binding.configuration.enabled) return { health: "unavailable", reason: "The administrator disabled this configuration.", version: binding.version ?? null };
   if (!binding.configuration.executablePath && !binding.configuration.interpreterPath) return { health: "not_configured", reason: "No executable or interpreter path is configured.", version: binding.version ?? null };
+  if (binding.health === "healthy" && binding.selfTestPassed !== true) return { health: "degraded", reason: "Path/version probe passed, but the adapter minimal self-test has not passed.", version: binding.version ?? null };
   const probe = context.toolHealth?.[binding.configuration.id];
   return { health: binding.health, reason: binding.health === "healthy" ? null : `Latest health probe: ${binding.health}.`, version: probe?.version ?? binding.version ?? null };
 }

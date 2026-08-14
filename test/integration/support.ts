@@ -227,6 +227,10 @@ export async function configureTestTool(app: FastifyInstance, admin: SessionHead
   const tool = response.json().data;
   const probe = await app.inject({ method: "POST", url: `/api/admin/tools/${tool.id}/probe`, headers: { cookie: admin.cookie, "x-csrf-token": admin.csrf } });
   if (probe.statusCode !== 200 || probe.json().data.status !== "healthy") throw new Error(`tool probe failed: ${probe.statusCode} ${probe.body}`);
+  if (["yosys", "opensta", "iverilog", "vvp", "ppa-result-parser"].includes(input.toolId)) {
+    const selfTest = await app.inject({ method: "POST", url: `/api/admin/tools/${tool.id}/self-test`, headers: { cookie: admin.cookie, "x-csrf-token": admin.csrf } });
+    if (selfTest.statusCode !== 200 || selfTest.json().data.selfTestPassed !== true) throw new Error(`tool self-test failed: ${selfTest.statusCode} ${selfTest.body}`);
+  }
   return tool;
 }
 

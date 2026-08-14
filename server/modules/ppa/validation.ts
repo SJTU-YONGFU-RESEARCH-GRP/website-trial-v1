@@ -56,10 +56,10 @@ export async function validatePpaDraft(context: DraftValidationContextV1): Promi
         if (!GENERATED_CONFIG_PATH.test(file.relativePath)) throw new PpaAdapterError("PPA_CONFIG_PATH_UNSAFE", `${file.relativePath} cannot be represented safely in a generated flow configuration`);
       }
       const flowBinding = contextBindings(context).toolBindings?.[parameters.flow];
-      if (!flowBinding || flowBinding.health !== "healthy") throw new PpaAdapterError("PPA_FLOW_UNAVAILABLE", `${parameters.flow} is ${flowBinding?.health ?? "not_configured"}`, "configuration");
+      if (!flowBinding || flowBinding.health !== "healthy" || flowBinding.selfTestPassed !== true) throw new PpaAdapterError("PPA_FLOW_UNAVAILABLE", `${parameters.flow} must pass its adapter minimal self-test before RTL-to-GDS can run`, "configuration");
     }
     const parserBinding = contextBindings(context).toolBindings?.["ppa-result-parser"];
-    if (!parserBinding || parserBinding.health !== "healthy") throw new PpaAdapterError("PPA_PARSER_UNAVAILABLE", `ppa-result-parser is ${parserBinding?.health ?? "not_configured"}`, "configuration");
+    if (!parserBinding || parserBinding.health !== "healthy" || parserBinding.selfTestPassed !== true) throw new PpaAdapterError("PPA_PARSER_UNAVAILABLE", "ppa-result-parser must pass its parser self-test before use", "configuration");
     const maximum = contextBindings(context).maxSweepJobs ?? Number(objectValue(ppaFlowAdapters[parameters.flow]).maxSweepJobs ?? 256);
     expandSweep(context.job.parameters, adapter.parameters, maximum);
     for (const file of context.files) {

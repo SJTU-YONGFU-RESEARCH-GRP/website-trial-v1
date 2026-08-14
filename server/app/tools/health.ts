@@ -60,10 +60,16 @@ export class ToolHealthService {
     const started = Date.now(); const directory = await fsp.mkdtemp(path.join(this.probeRoot, `${safeName(tool.toolId)}-`));
     let status: ToolHealthCheckV1["status"] = "healthy"; let message = "adapter self-test succeeded"; let passed = false;
     try {
-      const argv = await selfTestArgv(tool, directory);
-      const result = await this.runner.run(`self-test:${tool.id}:${randomUUID()}`, { tool, argv, cwd: directory, allowedCwdRoot: directory, timeoutSeconds: Math.min(tool.timeoutSeconds, 60) });
+      const specification = await selfTestSpec(tool, directory, this.tools, this.runner);
+      const stdout: string[] = []; const stderr: string[] = [];
+      const result = await this.runner.run(`self-test:${tool.id}:${randomUUID()}`, { tool, argv: specification.argv, cwd: directory, allowedCwdRoot: directory, timeoutSeconds: Math.min(tool.timeoutSeconds, 120), onOutput: (stream, output) => { (stream === "stdout" ? stdout : stderr).push(output); } });
       passed = result.exitCode === 0 && !result.timedOut && !result.outputLimitExceeded;
       if (!passed) throw new Error(`adapter self-test exited ${result.exitCode}${result.timedOut ? " after timeout" : ""}`);
+      for (const required of specification.requiredFiles) {
+        const stat = await fsp.stat(path.join(directory, required)).catch(() => null);
+        if (!stat?.isFile() || stat.size === 0) throw new Error(`adapter self-test did not produce ${required}`);
+      }
+      if (specification.verifyOutput) specification.verifyOutput(stdout.join(""), stderr.join(""));
     } catch (error) { status = "unavailable"; message = error instanceof Error ? error.message : String(error); }
     finally { await fsp.rm(directory, { recursive: true, force: true }); }
     const previous = this.tools.latestHealth(tool.id);
@@ -75,41 +81,87 @@ export class ToolHealthService {
 function isPythonModule(value: string): boolean { return !value.endsWith(".py") && !value.includes("/") && /^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$/.test(value); }
 function safeName(value: string): string { return value.replace(/[^A-Za-z0-9_.-]/g, "_").slice(0, 80) || "tool"; }
 
-async function selfTestArgv(tool: ToolConfigurationV1, directory: string): Promise<string[]> {
+interface SelfTestSpecification { argv: string[]; requiredFiles: string[]; verifyOutput?: (stdout: string, stderr: string) => void; }
+
+async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools: ToolRepository, runner: SafeProcessRunner): Promise<SelfTestSpecification> {
   if (tool.toolId === "yosys") {
     const source = path.join(directory, "selftest.v");
     await fsp.writeFile(source, "module selftest(input a, output y); assign y = a; endmodule\n", { mode: 0o600 });
-    return ["-Q", "-p", `read_verilog ${source}; hierarchy -check -top selftest; proc; check`];
+    return { argv: ["-Q", "-p", `read_verilog ${source}; hierarchy -check -top selftest; proc; check`], requiredFiles: [] };
   }
   if (tool.toolId === "opensta") {
     const script = path.join(directory, "selftest.tcl");
     await fsp.writeFile(script, "puts EDA_SELF_TEST_OK\nexit\n", { mode: 0o600 });
-    return [script];
+    return { argv: [script], requiredFiles: [] };
   }
   if (tool.toolId === "iverilog") {
     const source = path.join(directory, "selftest.v");
     await fsp.writeFile(source, "module selftest; initial begin $display(\"EDA_SELF_TEST_OK\"); $finish; end endmodule\n", { mode: 0o600 });
-    return ["-g2012", "-s", "selftest", "-o", path.join(directory, "selftest.vvp"), source];
+    return { argv: ["-g2012", "-s", "selftest", "-o", path.join(directory, "selftest.vvp"), source], requiredFiles: ["selftest.vvp"] };
+  }
+  if (tool.toolId === "vvp") {
+    const compiler = tools.active("digital").find((candidate) => candidate.toolId === "iverilog");
+    if (!compiler) throw new Error("vvp self-test requires an enabled Icarus Verilog compiler configuration");
+    const source = path.join(directory, "selftest.v"); const image = path.join(directory, "selftest.vvp");
+    await fsp.writeFile(source, "module selftest; initial begin $display(\"EDA_SELF_TEST_OK\"); $finish; end endmodule\n", { mode: 0o600 });
+    const compile = await runner.run(`self-test:${compiler.id}:${randomUUID()}`, { tool: compiler, argv: ["-g2012", "-s", "selftest", "-o", image, source], cwd: directory, allowedCwdRoot: directory, timeoutSeconds: Math.min(compiler.timeoutSeconds, 60) });
+    if (compile.exitCode !== 0) throw new Error(`vvp self-test compiler exited ${compile.exitCode}`);
+    return { argv: [image], requiredFiles: [], verifyOutput(stdout) { if (!stdout.includes("EDA_SELF_TEST_OK")) throw new Error("vvp self-test did not execute the compiled image"); } };
   }
   if (tool.toolId === "ngspice") {
     const source = path.join(directory, "selftest.cir");
     await fsp.writeFile(source, "EDA platform self-test\nV1 in 0 1\nR1 in 0 1k\n.op\n.end\n", { mode: 0o600 });
-    return ["-b", "-o", path.join(directory, "ngspice.log"), source];
+    return { argv: ["-b", "-o", path.join(directory, "ngspice.log"), source], requiredFiles: ["ngspice.log"] };
   }
   if (tool.toolId === "hspice") {
     const source = path.join(directory, "selftest.sp");
     await fsp.writeFile(source, "EDA platform self-test\nV1 in 0 1\nR1 in 0 1k\n.op\n.end\n", { mode: 0o600 });
-    return ["-i", source, "-o", path.join(directory, "hspice-selftest")];
+    return { argv: ["-i", source, "-o", path.join(directory, "hspice-selftest")], requiredFiles: [] };
   }
   if (tool.toolId === "spectre") {
     const source = path.join(directory, "selftest.scs");
     await fsp.writeFile(source, "simulator lang=spectre\nV1 (in 0) vsource dc=1\nR1 (in 0) resistor r=1k\ndcOp dc\n", { mode: 0o600 });
-    return [source, "+log", path.join(directory, "spectre.log")];
+    return { argv: [source, "+log", path.join(directory, "spectre.log")], requiredFiles: ["spectre.log"] };
+  }
+  if (tool.toolId === "translator") {
+    const source = path.join(directory, "selftest.sp"); const output = path.join(directory, "translated.lib");
+    await writeMosModel(source);
+    return { argv: ["translate", source, "--output", output, "--source", "ngspice", "--target", "ngspice"], requiredFiles: ["translated.lib"] };
+  }
+  if (tool.toolId === "fitting") {
+    const simulator = tools.active("benchmark").find((candidate) => candidate.toolId === "ngspice" && candidate.executablePath);
+    if (!simulator?.executablePath) throw new Error("Fitting self-test requires an enabled ngspice configuration");
+    const csv = path.join(directory, "measured.csv");
+    await fsp.writeFile(csv, "Vgs,Vds,Vbs,id\n0,1,0,0\n0.6,1,0,1e-8\n1.2,1,0,1e-4\n", { mode: 0o600 });
+    return { argv: ["--dataset", `${csv}:vgs:0:1.2:0.6:vds=1:vbs=0`, "--sim-type", "dc", "--ngspice", simulator.executablePath, "--max-iters", "1", "--train", "vth0", "--jobs", "1", "--output-model", path.join(directory, "fitted.lib")], requiredFiles: ["fitted.lib"] };
+  }
+  if (tool.toolId === "reduction") {
+    const source = path.join(directory, "selftest.lib"); await writeMosModel(source);
+    return { argv: ["complete", source, path.join(directory, "reduced"), "0.5", "1", "1", "gradient_descent", "sensitivity", "dc_iv", "nmos", "false"], requiredFiles: ["reduced/reduction_results.json", "reduced/reduced_model.lib", "reduced/model_manifest.json"] };
+  }
+  if (tool.toolId === "expansion") {
+    const source = path.join(directory, "selftest.lib"); await writeMosModel(source);
+    return { argv: ["generate-corners", source, "--out-dir", path.join(directory, "expanded"), "--n-sigma", "1"], requiredFiles: ["expanded/models/model_t.sp", "expanded/models/model_s.sp", "expanded/models/model_f.sp"] };
+  }
+  if (tool.toolId === "spice-benchmark") {
+    const simulator = tools.active("benchmark").find((candidate) => ["ngspice", "spectre", "hspice"].includes(candidate.toolId) && tools.latestHealth(candidate.id)?.selfTestPassed === true);
+    if (!simulator) throw new Error("Benchmark self-test requires a simulator that passed its native self-test");
+    const source = path.join(directory, "selftest.lib"); await writeMosModel(source);
+    return { argv: [source, "--simulator", simulator.toolId, "--modes", "dc", "--output-dir", path.join(directory, "benchmark"), "--dpi", "72", "--log-level", "WARNING"], requiredFiles: [], verifyOutput() { /* Exit success proves the CLI parsed its generated native result. */ } };
+  }
+  if (tool.toolId === "ppa-result-parser") {
+    const run = path.join(directory, "openroad-run"); await fsp.mkdir(run);
+    await fsp.writeFile(path.join(run, "metrics.json"), `${JSON.stringify({ design: "selftest", flow: "openroad", area: 1 })}\n`, { mode: 0o600 });
+    return { argv: ["run", "--flow", "openroad", "--include-all", run], requiredFiles: [], verifyOutput(stdout) { const value = JSON.parse(stdout) as { normalized?: unknown }; if (!value.normalized) throw new Error("PPA parser self-test did not emit normalized data"); } };
   }
   if (tool.toolId === "openroad") {
     const script = path.join(directory, "selftest.tcl");
     await fsp.writeFile(script, "puts EDA_SELF_TEST_OK\nexit\n", { mode: 0o600 });
-    return ["-no_init", "-exit", script];
+    return { argv: ["-no_init", "-exit", script], requiredFiles: [] };
   }
-  return tool.versionProbeArgv.length ? [...tool.versionProbeArgv] : ["--help"];
+  throw new Error(`No adapter-owned minimal self-test is implemented for ${tool.toolId}`);
+}
+
+async function writeMosModel(filename: string): Promise<void> {
+  await fsp.writeFile(filename, ".model nmos_bsim45 nmos level=54 version=4.8.2 vth0=0.7 u0=300 tox=1.5e-9 ndep=1e17\n", { mode: 0o600 });
 }

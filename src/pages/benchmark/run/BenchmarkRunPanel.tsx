@@ -46,11 +46,15 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
   const [started, setStarted] = useState<JobRecordV1 | null>(null);
 
   useEffect(() => {
+    if (READ_ONLY_DEMO) return undefined;
     const controller = new AbortController();
     void getBenchmarkCapabilities(controller.signal).then((value) => {
+      setCapabilityError(null);
       setCapabilities(value);
       setToolParameters(Object.fromEntries(value.capabilities.map((capability) => [capability.toolId, defaults(capability)])));
-    }).catch((reason: unknown) => setCapabilityError(reason instanceof Error ? reason.message : String(reason)));
+    }).catch((reason: unknown) => {
+      if (!controller.signal.aborted) setCapabilityError(reason instanceof Error ? reason.message : String(reason));
+    });
     return () => controller.abort();
   }, []);
 
@@ -187,6 +191,7 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
         {uploadProgress !== null ? <div className="benchmark-progress"><span style={{ width: `${Math.min(100, uploadProgress)}%` }} /><strong>{Math.round(uploadProgress)}%</strong></div> : null}
         {draft?.inputManifest.files.length ? (
           <div className="benchmark-recognition">
+            <h4>Backend recognized content</h4>
             {draft.inputManifest.files.map((file) => <div key={file.relativePath}><strong>{file.relativePath}</strong><span>{file.recognizedType} · {file.role ?? "unmapped"}</span>{file.validationErrors.length ? <em>{file.validationErrors.join("; ")}</em> : null}{file.unresolvedIncludes.length ? <em>Missing includes: {file.unresolvedIncludes.join(", ")}</em> : null}</div>)}
           </div>
         ) : null}

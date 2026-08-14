@@ -8,7 +8,7 @@ export function BenchmarkPlanPreview({ plan }: { plan: JobPlanV1 | null }) {
         <span>{plan ? `${plan.steps.length} steps` : "Not generated"}</span>
       </div>
       {!plan ? <div className="benchmark-run-empty">Upload and run preflight to see exact tools, parameters, mappings and argv.</div> : (
-        <ol className="benchmark-plan-list">
+        <><p className="benchmark-run-help">No tool has run yet. This immutable plan enters the queue only after Start.</p><ol className="benchmark-plan-list">
           {plan.steps.map((step) => (
             <li key={step.id}>
               <div className="benchmark-plan-step__top"><strong>{step.name}</strong><span>{step.process ? "External process" : "Backend operation"}</span></div>
@@ -22,7 +22,7 @@ export function BenchmarkPlanPreview({ plan }: { plan: JobPlanV1 | null }) {
               ) : null}
             </li>
           ))}
-        </ol>
+        </ol></>
       )}
     </section>
   );
