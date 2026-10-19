@@ -9,6 +9,18 @@ const roots: string[] = [];
 afterEach(async () => { await Promise.all(roots.splice(0).map((root) => fsp.rm(root, { recursive: true, force: true }))); });
 
 describe("safe process execution", () => {
+  it("preserves an audited symlink invocation path for vendor launch wrappers", async () => {
+    const root = await fsp.mkdtemp(path.join(os.tmpdir(), "eda-process-symlink-")); roots.push(root);
+    const launcher = path.join(root, "vendor-launcher"); await fsp.symlink(process.execPath, launcher);
+    const at = new Date().toISOString(); const output: string[] = [];
+    const tool = { id: "vendor", toolId: "vendor", moduleId: "benchmark", revision: 1, enabled: true, rootPath: null, executablePath: launcher,
+      interpreterPath: null, entryPoint: null, workingDirectory: null, timeoutSeconds: 2, maxConcurrency: 1, environmentNames: [], environment: {}, versionProbeArgv: [], adapterId: "test", adapterVersion: "1",
+      capturedAt: at, createdAt: at, updatedAt: at } as ToolConfigurationV1;
+    const result = await new SafeProcessRunner().run("vendor-symlink", { tool, argv: ["-e", "process.stdout.write(process.argv0)"], cwd: root, allowedCwdRoot: root, onOutput: (_stream, text) => output.push(text) });
+    expect(result.exitCode).toBe(0);
+    expect(output.join("")).toBe(launcher);
+  });
+
   it("uses argv with shell disabled and cancels the entire detached process group", async () => {
     const root = await fsp.mkdtemp(path.join(os.tmpdir(), "eda-process-test-")); roots.push(root);
     const at = new Date().toISOString();

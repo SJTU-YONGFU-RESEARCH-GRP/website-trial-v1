@@ -7,7 +7,7 @@ import multipart from "@fastify/multipart";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import staticFiles from "@fastify/static";
-import { API_SCHEMA_VERSION } from "../../shared/contracts/v1.ts";
+import { API_SCHEMA_VERSION, MODULE_IDS, type ModuleId } from "../../shared/contracts/v1.ts";
 import { loadConfig, type ServerConfig } from "./config.ts";
 import { EdaDatabase } from "./db/database.ts";
 import { makeRepositories } from "./db/repositories.ts";
@@ -24,6 +24,7 @@ import { registerJobRoutes } from "./api/jobRoutes.ts";
 import { registerResultRoutes } from "./api/resultRoutes.ts";
 import { registerAdminRoutes } from "./api/adminRoutes.ts";
 import { success } from "./api/http.ts";
+import { registerBenchmarkExplorerRoutes } from "../modules/benchmark/explorerRoutes.ts";
 
 export interface EdaAppOptions { config?: ServerConfig; registry?: ModuleRegistry; database?: EdaDatabase; startWorkers?: boolean; serveFrontend?: boolean; logger?: boolean; }
 
@@ -38,8 +39,8 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   const repositories = makeRepositories(database); const storage = new StorageService(config.storageRoot); await storage.initialize();
   if (options.startWorkers) {
     const reconciled = await storage.reconcilePublications(Object.fromEntries(
-      (["benchmark", "digital", "ppa"] as const).map((moduleId) => [moduleId, new Set(repositories.results.allIds(moduleId))]),
-    ) as Record<"benchmark" | "digital" | "ppa", Set<string>>);
+      MODULE_IDS.map((moduleId) => [moduleId, new Set(repositories.results.allIds(moduleId))]),
+    ) as Record<ModuleId, Set<string>>);
     bootLog(`publication storage reconciled (${reconciled.stagingRemoved} staging, ${reconciled.orphanResultsRemoved} orphan)`);
   }
   bootLog("storage initialized");
@@ -54,7 +55,7 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   bootLog("cookie registered");
   await app.register(multipart, { limits: { files: config.upload.maxFiles, fileSize: config.upload.maxFileBytes, fieldNameSize: 2048, fields: 32, parts: config.upload.maxFiles + 32 }, throwFileSizeLimit: true });
   bootLog("multipart registered");
-  await app.register(swagger, { openapi: { info: { title: "EDA Compute Platform API", version: "1.0.0", description: "Persistent Benchmark, Digital and PPA computation API" }, tags: ["auth", "modules", "drafts", "jobs", "artifacts", "results", "admin"].map((name) => ({ name })) } });
+  await app.register(swagger, { openapi: { info: { title: "EDA Compute Platform API", version: "1.0.0", description: "Persistent Benchmark, Digital, PPA and ACG computation API" }, tags: ["auth", "modules", "drafts", "jobs", "artifacts", "results", "admin"].map((name) => ({ name })) } });
   bootLog("swagger registered");
   await app.register(swaggerUi, { routePrefix: "/api/docs" });
   bootLog("swagger UI registered");
@@ -78,8 +79,10 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
     reply.status(status).send({ schemaVersion: API_SCHEMA_VERSION, error: { code: apiError?.code || (status === 500 ? "INTERNAL_ERROR" : "REQUEST_INVALID"), message: status === 500 ? "internal server error" : normalized.message, details: apiError?.details || null, requestId: request.id } });
   });
 
-  app.get("/api/health", { schema: { tags: ["modules"] } }, async () => success({ status: "healthy", database: "sqlite", queues: ["benchmark", "digital", "ppa"] }));
-  registerAuthRoutes(app, repositories, config); registerModuleRoutes(app, repositories, registry, storage, config); registerJobRoutes(app, repositories, storage, workers); registerResultRoutes(app, repositories); registerAdminRoutes(app, repositories, health, storage, workers);
+  app.get("/api/health", { schema: { tags: ["modules"] } }, async () => success({ status: "healthy", database: "sqlite", queues: MODULE_IDS }));
+  registerAuthRoutes(app, repositories, config); registerModuleRoutes(app, repositories, registry, storage, config); registerJobRoutes(app, repositories, storage, workers); registerResultRoutes(app, repositories, storage); registerAdminRoutes(app, repositories, health, storage, workers);
+
+  registerBenchmarkExplorerRoutes(app, repositories, storage);
 
   const frontendRoot = path.resolve(process.cwd(), "dist");
   if (options.serveFrontend !== false && fs.existsSync(frontendRoot)) {

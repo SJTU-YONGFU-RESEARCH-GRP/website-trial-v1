@@ -18,15 +18,21 @@
 .digital-health--unavailable, .digital-health--not_configured { color: var(--fail); }
 .digital-health--degraded { color: var(--warn); }
 .digital-input-section, .digital-parameter-section, .digital-submit-section, .digital-recognition, .digital-plan { padding: 1rem 1.25rem; border-top: 1px solid var(--border-light); }
+.ppa-flow-section { padding: 1rem 1.25rem; border-top: 1px solid var(--border-light); }
+.ppa-flow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; align-items: stretch; }
+.ppa-flow-field { display: grid; align-content: start; gap: .42rem; min-width: 0; padding: .85rem; border: 1px solid var(--border-light); border-radius: 12px; background: var(--surface2); color: var(--text-secondary); font-size: .72rem; font-weight: 650; text-transform: none; }
+.ppa-flow-field:only-child { grid-column: 1 / -1; }
+.ppa-flow-field > span { color: var(--text); font-size: .76rem; }
+.ppa-flow-field select { width: 100%; min-width: 0; min-height: 42px; padding: .48rem .58rem; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--text); font: inherit; font-size: .78rem; font-weight: 620; }
+.ppa-flow-field small { display: grid; gap: .25rem; min-height: 2.8rem; color: var(--text-secondary); font-size: .7rem; font-weight: 450; line-height: 1.42; text-transform: none; }
+.ppa-flow-field small strong { font-size: .7rem; font-weight: 700; }
 .digital-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .6rem; }
 .digital-section-heading h4 { margin-top: .1rem; font-size: .95rem; }
 .digital-section-heading > strong { color: var(--text-secondary); font-size: .75rem; }
 .digital-format { margin: 0 0 .65rem; color: var(--text-secondary); font-size: .76rem; line-height: 1.45; }
-.digital-file-actions { display: flex; flex-wrap: wrap; gap: .45rem; }
-.digital-file-actions button, .digital-primary { min-height: 38px; border: 1px solid var(--border); border-radius: 10px; padding: .48rem .7rem; background: var(--surface); color: var(--text); font: inherit; font-size: .76rem; font-weight: 650; cursor: pointer; }
-.digital-file-actions button:hover { border-color: var(--accent); color: var(--accent); }
+.digital-primary { min-height: 38px; border: 1px solid var(--border); border-radius: 10px; padding: .48rem .7rem; background: var(--surface); color: var(--text); font: inherit; font-size: .76rem; font-weight: 650; cursor: pointer; }
 .digital-primary { border-color: var(--accent); background: var(--accent); color: white; }
-.digital-primary:disabled, .digital-file-actions button:disabled { cursor: not-allowed; opacity: .5; }
+.digital-primary:disabled { cursor: not-allowed; opacity: .5; }
 .digital-table-wrap { overflow: auto; max-height: 330px; margin-top: .7rem; border: 1px solid var(--border-light); border-radius: 12px; }
 .digital-table-wrap table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .72rem; }
 .digital-table-wrap th, .digital-table-wrap td { padding: .48rem .55rem; border-bottom: 1px solid var(--border-light); text-align: left; vertical-align: middle; white-space: nowrap; }
@@ -61,7 +67,8 @@
   .digital-mode-badge { width: fit-content; }
   .digital-plan li { grid-template-columns: 1fr; }
   .digital-field-grid { grid-template-columns: 1fr; }
-  .digital-input-section, .digital-parameter-section, .digital-submit-section, .digital-recognition, .digital-plan { padding: .85rem; }
+  .digital-input-section, .digital-parameter-section, .digital-submit-section, .digital-recognition, .digital-plan, .ppa-flow-section { padding: .85rem; }
+  .ppa-flow-grid { grid-template-columns: 1fr; }
   .digital-workflow-card > header { padding: .9rem .85rem .6rem; }
   .digital-intro, .digital-tool-grid { padding-left: .85rem; padding-right: .85rem; }
 }

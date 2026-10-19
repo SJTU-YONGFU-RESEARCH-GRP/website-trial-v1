@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ResultRecordV1 } from "../../shared/contracts/v1";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { cancelJob, cloneJob, getJobResult, preflightClonedJob, retryJob, startReadyJob } from "../api/jobs";
-import { useAuth } from "../auth/AuthContext";
 import { ArtifactList, EventLog, formatBytes, formatDate, formatJson, JobProgress, JobTable, shortId, useJobDetail } from "../jobs";
 import "../jobs.css";
 
@@ -11,7 +10,6 @@ const TERMINAL = new Set(["succeeded", "failed", "cancelled", "interrupted"]);
 export function JobDetailPage(): JSX.Element {
   const { jobId = "" } = useParams();
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
   const { detail, loading, error, liveState, refresh } = useJobDetail(jobId);
   const [result, setResult] = useState<ResultRecordV1 | null>(null);
   const [action, setAction] = useState<string | null>(null);
@@ -33,8 +31,6 @@ export function JobDetailPage(): JSX.Element {
     } finally { setAction(null); }
   }
 
-  if (authLoading) return <div className="jobs-page"><p>Checking session…</p></div>;
-  if (!user) return <Navigate to={`/login?next=${encodeURIComponent(`/jobs/${jobId}`)}`} replace />;
   if (loading && !detail) return <div className="jobs-page"><p>Loading job…</p></div>;
   if (!detail) return <div className="jobs-page"><div className="jobs-notice jobs-notice--error">{error || "Job not found."}</div></div>;
   const { job, steps, artifacts } = detail;
@@ -45,7 +41,7 @@ export function JobDetailPage(): JSX.Element {
   return (
     <div className="jobs-page">
       <header className="jobs-page__header jobs-page__header--detail">
-        <div><Link className="jobs-back-link" to="/jobs">← My Jobs</Link><p className="jobs-eyebrow">{job.moduleId} / {job.operation}</p><h1 title={job.id}>Job {shortId(job.id)}</h1><p>Created {formatDate(job.createdAt)} · capability {job.capabilityVersion}</p></div>
+        <div><Link className="jobs-back-link" to="/jobs">← Jobs</Link><p className="jobs-eyebrow">{job.moduleId} / {job.operation}</p><h1 title={job.id}>Job {shortId(job.id)}</h1><p>Created {formatDate(job.createdAt)} · capability {job.capabilityVersion}</p></div>
         <div className="jobs-action-row">
           <a className="jobs-secondary-button" href={`/api/jobs/${encodeURIComponent(job.id)}/manifest`}>Input manifest</a>
           <a className="jobs-secondary-button" href={`/api/jobs/${encodeURIComponent(job.id)}/artifacts.zip`}>All artifacts</a>

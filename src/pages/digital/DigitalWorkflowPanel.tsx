@@ -7,8 +7,8 @@ import {
   getDigitalCapabilities,
   preflightDigitalDraft,
   startDigitalJob,
-  type DigitalCapabilityResponse,
 } from "../../api/digital/client";
+import { digitalToolDisabledReason, validateDigitalCapabilities, type DigitalCapabilityState } from "./capabilityState";
 import "../../digital-run.css";
 
 type Mode = "run" | "import";
@@ -98,7 +98,7 @@ function FileChooser({ mode, onFiles }: { mode: Mode; onFiles(files: File[]): vo
     event.target.value = "";
   };
   return (
-    <div className="digital-file-actions">
+    <div className="workflow-file-actions digital-file-actions">
       <button type="button" onClick={() => single.current?.click()}>Choose single file</button>
       <button type="button" onClick={() => multiple.current?.click()}>Choose files</button>
       <button type="button" onClick={() => folder.current?.click()}>Choose folder</button>
@@ -155,9 +155,10 @@ function Recognition({ manifest, roles }: { manifest: InputManifestV1; roles: Re
   );
 }
 
-function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: DigitalCapabilityResponse | null }): JSX.Element {
+function DigitalJobForm({ mode, capabilityState }: { mode: Mode; capabilityState: DigitalCapabilityState }): JSX.Element {
+  const capabilityData = capabilityState.status === "ready" ? capabilityState.data : null;
   const navigate = useNavigate();
-  const { user, readOnlyDemo } = useAuth();
+  const { readOnlyDemo } = useAuth();
   const [files, setFiles] = useState<SelectedFile[]>([]);
   const [fields, setFields] = useState<RunFields>(EMPTY_FIELDS);
   const [technologyId, setTechnologyId] = useState("");
@@ -175,9 +176,6 @@ function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: 
     if (files.some((file) => file.role === "testbench")) ids.push("iverilog", "vvp");
     return ids;
   }, [files]);
-  const unavailable = mode === "run"
-    ? requiredToolIds.filter((id) => capabilityData?.capabilities.find((item) => item.toolId === id)?.health !== "healthy")
-    : [];
   const technologies = (capabilityData?.technologies ?? []).filter((technology) => technology.allowedAdapterIds.includes("digital-yosys-opensta-v1"));
 
   const addFiles = async (added: File[]): Promise<void> => {
@@ -196,7 +194,6 @@ function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: 
   const setField = (key: keyof RunFields, value: string): void => setFields((current) => ({ ...current, [key]: value }));
 
   const preflight = async (): Promise<void> => {
-    if (!user) { setError("Sign in before uploading or starting a Digital job."); return; }
     if (!files.length) { setError("Choose at least one file."); return; }
     setBusy(true); setError(null); setPlan(null); setUploadProgress(0);
     try {
@@ -239,9 +236,8 @@ function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: 
   };
 
   const disabledReason = readOnlyDemo
-    ? "Run and Import are disabled in the read-only static demo."
-    : !user ? "Sign in to create Digital jobs."
-      : unavailable.length ? `Unavailable tools: ${unavailable.join(", ")}` : null;
+    ? "Source execution is disabled in the read-only static demo."
+    : mode === "run" ? digitalToolDisabledReason(capabilityState, requiredToolIds) : null;
 
   return (
     <article className="digital-workflow-card">
@@ -253,10 +249,7 @@ function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: 
       <p className="digital-intro">{mode === "run"
         ? "Upload RTL or a synthesized netlist, map one Liberty source and timing constraints, inspect the exact backend plan, then explicitly start the job."
         : "Import completed JSON/CSV into the same normalized Digital Result schema. Imported power keeps its reported scope; unspecified power is never relabeled."}</p>
-      {disabledReason ? <p className="digital-callout digital-callout--warning">{disabledReason}</p> : null}
-      {mode === "run" ? <div className="digital-tool-grid">{(capabilityData?.capabilities ?? []).map((capability) => (
-        <div className="digital-tool" key={capability.toolId}><strong>{capability.label}</strong><span className={`digital-health digital-health--${capability.health}`}>{toolState(capability)}</span><small>{capability.healthReason}</small></div>
-      ))}</div> : null}
+      {disabledReason ? <p className={`digital-callout ${capabilityState.status === "error" ? "digital-callout--error" : "digital-callout--warning"}`} role={capabilityState.status === "error" ? "alert" : "status"}>{disabledReason}</p> : null}
       <section className="digital-input-section">
         <div className="digital-section-heading"><div><span>Step 1</span><h4>Select source</h4></div><strong>{files.length} files</strong></div>
         <p className="digital-format">{mode === "run"
@@ -271,6 +264,9 @@ function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: 
 
       {mode === "run" ? <section className="digital-parameter-section">
         <div className="digital-section-heading"><div><span>Step 2</span><h4>Metadata, technology and timing</h4></div></div>
+        <div className="digital-tool-grid">{(capabilityData?.capabilities ?? []).map((capability) => (
+          <div className="digital-tool" key={capability.toolId}><strong>{capability.label}</strong><span className={`digital-health digital-health--${capability.health}`}>{toolState(capability)}</span><small>{capability.healthReason}</small></div>
+        ))}</div>
         <div className="digital-field-grid">
           {(["design", "category", "architecture", "topModule", "processTechnology", "bitWidth", "library", "corner"] as const).map((key) => <label key={key}>{key.replace(/([A-Z])/g, " $1")}<input value={fields[key]} onChange={(event) => setField(key, event.target.value)} /></label>)}
           <label>Registered technology<select value={technologyId} onChange={(event) => setTechnologyId(event.target.value)}><option value="">Use uploaded Liberty</option>{technologies.map((technology: TechnologyLibraryV1) => <option key={technology.id} value={technology.id}>{technology.technologyId} · {technology.standardCellLibrary} · {technology.corner}</option>)}</select></label>
@@ -291,25 +287,33 @@ function DigitalJobForm({ mode, capabilityData }: { mode: Mode; capabilityData: 
       </section>
       {manifest ? <Recognition manifest={manifest} roles={roles} /> : null}
       {plan ? <PlannedOperations plan={plan} /> : null}
-      {plan ? <div className="digital-start"><div><strong>Preflight passed</strong><p>No tool has run yet. Start explicitly queues this immutable plan.</p></div><button className="digital-primary" type="button" disabled={busy} onClick={() => void start()}>Start</button></div> : null}
+      {plan ? <div className="digital-start"><div><strong>Preflight passed</strong><p>No tool has run yet. Start explicitly queues this immutable plan.</p></div><button className="digital-primary" type="button" disabled={busy || Boolean(disabledReason)} onClick={() => void start()}>Start</button></div> : null}
     </article>
   );
 }
 
 export function DigitalWorkflowPanel(): JSX.Element {
-  const [capabilities, setCapabilities] = useState<DigitalCapabilityResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [capabilityState, setCapabilityState] = useState<DigitalCapabilityState>({ status: "loading" });
+  const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     let active = true;
-    void getDigitalCapabilities().then((value) => { if (active) setCapabilities(value); }).catch((caught) => { if (active) setError(caught instanceof Error ? caught.message : String(caught)); });
+    void getDigitalCapabilities().then(validateDigitalCapabilities).then((data) => {
+      if (active) setCapabilityState({ status: "ready", data });
+    }).catch((caught) => {
+      if (active) setCapabilityState({ status: "error", message: caught instanceof Error ? caught.message : String(caught) });
+    });
     return () => { active = false; };
-  }, []);
+  }, [refresh]);
+  const refreshCapabilities = (): void => {
+    setCapabilityState({ status: "loading" });
+    setRefresh((current) => current + 1);
+  };
   return (
     <section className="digital-workflows">
-      <div className="digital-workflows__heading"><div><span>Digital compute workspace</span><h2>Run or import a reproducible analysis</h2></div><p>Uploading never starts a tool. Review file recognition, mappings, parameters and the exact plan before Start.</p></div>
-      {error ? <p className="digital-callout digital-callout--error">Capabilities unavailable: {error}</p> : null}
-      <DigitalJobForm mode="run" capabilityData={capabilities} />
-      <DigitalJobForm mode="import" capabilityData={capabilities} />
+      <div className="workflow-file-actions digital-file-actions">
+        <button type="button" disabled={capabilityState.status === "loading"} onClick={refreshCapabilities}>Refresh tool availability</button>
+      </div>
+      <DigitalJobForm mode="run" capabilityState={capabilityState} />
     </section>
   );
 }

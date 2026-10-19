@@ -1,3 +1,4 @@
+import { MODULE_IDS, isModuleId } from "../../../shared/contracts/v1.ts";
 import path from "node:path";
 import { PassThrough } from "node:stream";
 import { ZipArchive } from "archiver";
@@ -19,7 +20,7 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
     const userCount = Number((sqlite.prepare("SELECT COUNT(*) count FROM users WHERE deleted_at IS NULL").get() as { count: number }).count);
     const jobStatus = Object.fromEntries((sqlite.prepare("SELECT status,COUNT(*) count FROM jobs GROUP BY status").all() as Array<{ status: string; count: number }>).map((row) => [row.status, Number(row.count)]));
     const moduleQueues = Object.fromEntries((sqlite.prepare("SELECT module_id,SUM(status='queued') queued,SUM(status='running') running FROM jobs GROUP BY module_id").all() as Array<{ module_id: string; queued: number; running: number }>).map((row) => [row.module_id, { queued: Number(row.queued), running: Number(row.running) }]));
-    const resultCounts = Object.fromEntries((["benchmark", "digital", "ppa"] as ModuleId[]).map((moduleId) => [moduleId, Number((sqlite.prepare(`SELECT COUNT(*) count FROM ${moduleId}_results WHERE lifecycle!='deleted'`).get() as { count: number }).count)]));
+    const resultCounts = Object.fromEntries(MODULE_IDS.map((moduleId) => [moduleId, Number((sqlite.prepare(`SELECT COUNT(*) count FROM ${moduleId}_results WHERE lifecycle!='deleted'`).get() as { count: number }).count)]));
     const tools = repositories.tools.list().map((tool) => ({ id: tool.id, toolId: tool.toolId, moduleId: tool.moduleId, enabled: tool.enabled, health: repositories.tools.latestHealth(tool.id) }));
     return success({ userCount, jobStatus, moduleQueues, resultCounts, tools, storage: await storage.usage(), recentFailures: [...repositories.jobs.list({ status: "failed", limit: 10 }), ...repositories.jobs.list({ status: "interrupted", limit: 10 })].sort((left, right) => right.updatedAt.localeCompare(left.updatedAt)).slice(0, 10) });
   });
@@ -66,7 +67,7 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
     const result = await health.selfTest(tool); auditRequest(repositories, request, "tool.self_test", "tool_configuration", tool.id, { status: result.status, passed: result.selfTestPassed }); return success(result);
   });
 
-  app.get("/api/admin/jobs", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
+  app.get("/api/admin/jobs", { preHandler: [requireAdmin], schema: { tags: ["admin"], querystring: { type: "object", properties: { moduleId: { enum: [...MODULE_IDS] } } } } }, async (request, reply) => {
     const query = request.query as { ownerId?: string; moduleId?: ModuleId; status?: JobStatus; limit?: string };
     return sendList(reply, repositories.jobs.list({ ownerId: query.ownerId, moduleId: query.moduleId, status: query.status, limit: Number(query.limit || 100) }));
   });
@@ -97,13 +98,13 @@ export function registerAdminRoutes(app: FastifyInstance, repositories: Reposito
     reply.type("application/zip").header("Content-Disposition", `attachment; filename=\"${id}-diagnostics.zip\"`); return reply.send(output);
   });
 
-  app.get("/api/admin/results", { preHandler: [requireAdmin], schema: { tags: ["admin"] } }, async (request, reply) => {
-    const query = request.query as { moduleId?: ModuleId; lifecycle?: ResultLifecycle; ownerId?: string; limit?: string }; const modules = query.moduleId ? [query.moduleId] : ["benchmark", "digital", "ppa"] as ModuleId[];
+  app.get("/api/admin/results", { preHandler: [requireAdmin], schema: { tags: ["admin"], querystring: { type: "object", properties: { moduleId: { enum: [...MODULE_IDS] } } } } }, async (request, reply) => {
+    const query = request.query as { moduleId?: ModuleId; lifecycle?: ResultLifecycle; ownerId?: string; limit?: string }; const modules = query.moduleId ? [query.moduleId] : MODULE_IDS;
     return sendList(reply, modules.flatMap((moduleId) => repositories.results.list(moduleId, request.edaUser!.id, true, query.lifecycle, Number(query.limit || 100), query.ownerId)));
   });
   app.patch("/api/admin/results/:module/:id", { preHandler: guarded, schema: { tags: ["admin"] } }, async (request) => {
     const params = request.params as { module?: ModuleId; id?: string }; const body = request.body as { lifecycle?: ResultLifecycle };
-    if (!params.module || !["benchmark", "digital", "ppa"].includes(params.module) || !body.lifecycle || !["private", "published", "unpublished", "deleted"].includes(body.lifecycle)) throw new ApiError(400, "RESULT_PATCH_INVALID", "module and lifecycle are required");
+    if (!params.module || !isModuleId(params.module) || !body.lifecycle || !["private", "published", "unpublished", "deleted"].includes(body.lifecycle)) throw new ApiError(400, "RESULT_PATCH_INVALID", "module and lifecycle are required");
     const resultId = String(params.id || ""); if (!repositories.results.get(params.module, resultId, request.edaUser!.id, true)) throw new ApiError(404, "NOT_FOUND", "result not found");
     repositories.results.patchLifecycle(params.module, resultId, body.lifecycle); auditRequest(repositories, request, "result.lifecycle", "result", resultId, { moduleId: params.module, lifecycle: body.lifecycle });
     return success(repositories.results.get(params.module, String(params.id || ""), request.edaUser!.id, true));
@@ -131,7 +132,7 @@ function saveTool(repositories: Repositories, value: unknown) {
   for (const candidate of [body.rootPath, body.executablePath, body.interpreterPath, body.workingDirectory]) if (candidate && !path.isAbsolute(candidate)) throw new ApiError(400, "TOOL_PATH_INVALID", "tool paths must be absolute");
   if (process.env.NODE_ENV !== "test" && [body.rootPath, body.executablePath, body.interpreterPath].some((candidate) => candidate?.includes("test/fixtures/fake-tools"))) throw new ApiError(400, "FAKE_TOOL_FORBIDDEN", "test fake tools cannot be configured outside NODE_ENV=test");
   if (!body.toolId || !body.moduleId || !body.adapterId || !Array.isArray(body.versionProbeArgv) || !Array.isArray(body.environmentNames) || !body.environment || typeof body.environment !== "object") throw new ApiError(400, "TOOL_CONFIG_INVALID", "toolId, moduleId, adapterId, environment allowlist and versionProbeArgv are required");
-  if (!(["benchmark", "digital", "ppa"] as string[]).includes(body.moduleId) || !Number.isSafeInteger(body.timeoutSeconds) || body.timeoutSeconds <= 0 || !Number.isSafeInteger(body.maxConcurrency) || body.maxConcurrency <= 0) throw new ApiError(400, "TOOL_CONFIG_INVALID", "module, timeout and concurrency are invalid");
+  if (!isModuleId(body.moduleId) || !Number.isSafeInteger(body.timeoutSeconds) || body.timeoutSeconds <= 0 || !Number.isSafeInteger(body.maxConcurrency) || body.maxConcurrency <= 0) throw new ApiError(400, "TOOL_CONFIG_INVALID", "module, timeout and concurrency are invalid");
   if (!catalog) return repositories.tools.save(body);
   if (body.moduleId !== catalog.moduleId || body.adapterId !== catalog.adapterId || body.adapterVersion !== catalog.adapterVersion) throw new ApiError(400, "TOOL_ADAPTER_CONTRACT_INVALID", "module and adapter identity are fixed by the server-owned tool catalog");
   if (JSON.stringify(body.versionProbeArgv) !== JSON.stringify(catalog.versionProbeArgv)) throw new ApiError(400, "TOOL_PROBE_CONTRACT_INVALID", "version probe arguments are fixed by the audited adapter");

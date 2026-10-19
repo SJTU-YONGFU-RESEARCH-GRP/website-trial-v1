@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import type { WorkflowScenario } from "../../compat/spiceWorkflow/contracts";
 import { buildScenario } from "../../data/benchmarkWorkspace/dataLoader";
 import { ModelComparisonCard } from "./ModelComparisonCard";
-import { DynamicBenchmarkResults } from "./DynamicBenchmarkResults";
 import "../../benchmark.css";
 import "../../benchmark-workspace.css";
 
@@ -55,7 +54,6 @@ export function BenchmarkWorkspacePage() {
 
   return (
     <div>
-      <DynamicBenchmarkResults />
       {error ? (
         <div className="chart-card" style={{ textAlign: "center", padding: "3rem" }}>
           <h2>Error</h2>

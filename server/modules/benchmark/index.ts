@@ -9,12 +9,14 @@ import type {
   StepExecutionContextV1,
   ToolCapabilityV1,
 } from "../../../shared/contracts/v1.ts";
+import { retainExplorerModels } from "./explorerPublication.ts";
 import { createBenchmarkCapabilities } from "./capabilities.ts";
 import { parseBenchmarkResult, walkArtifacts } from "./parsers.ts";
 import { buildBenchmarkPlan } from "./planner.ts";
 import { validateFrozenBenchmarkInputs, workspacePath } from "./security.ts";
 import type { BenchmarkModuleOptions } from "./types.ts";
 import { validateBenchmarkDraft } from "./validation.ts";
+import { resolveBenchmarkRepositoryVersions } from "./repositoryVersion.ts";
 
 function jsonSafe(value: unknown): value is JsonObject {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -56,7 +58,9 @@ export class BenchmarkModuleAdapter implements ModuleAdapterV1 {
   }
 
   async capabilities(context: ModuleContextV1): Promise<ToolCapabilityV1[]> {
-    return createBenchmarkCapabilities(this.#runtimeOptions(context));
+    const options = this.#runtimeOptions(context);
+    const repositoryVersions = await resolveBenchmarkRepositoryVersions(options.configurations ?? []);
+    return createBenchmarkCapabilities({ ...options, repositoryVersions });
   }
 
   async validateDraft(context: DraftValidationContextV1) {
@@ -94,6 +98,7 @@ export class BenchmarkModuleAdapter implements ModuleAdapterV1 {
     if (!result.title.trim() || !jsonSafe(result.summary) || !jsonSafe(result.data) || !result.parserId || !result.parserVersion) {
       throw new Error("Benchmark result failed normalized publish validation");
     }
+    await retainExplorerModels(context);
     const artifactDirectory = workspacePath(context.workspacePath, "artifacts");
     await mkdir(artifactDirectory, { recursive: true });
     const temporary = workspacePath(context.workspacePath, `artifacts/.normalized-result-${context.job.id}.tmp`);

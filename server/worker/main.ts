@@ -1,3 +1,4 @@
+import { MODULE_IDS, type ModuleId } from "../../shared/contracts/v1.ts";
 import { loadConfig } from "../app/config.ts";
 import { EdaDatabase } from "../app/db/database.ts";
 import { makeRepositories } from "../app/db/repositories.ts";
@@ -10,8 +11,8 @@ if (process.env.NODE_ENV === "production" && typeof process.getuid === "function
 const database = new EdaDatabase(config.databasePath); database.migrate(); const repositories = makeRepositories(database);
 const storage = new StorageService(config.storageRoot); await storage.initialize();
 const reconciled = await storage.reconcilePublications(Object.fromEntries(
-  (["benchmark", "digital", "ppa"] as const).map((moduleId) => [moduleId, new Set(repositories.results.allIds(moduleId))]),
-) as Record<"benchmark" | "digital" | "ppa", Set<string>>);
+  MODULE_IDS.map((moduleId) => [moduleId, new Set(repositories.results.allIds(moduleId))]),
+) as Record<ModuleId, Set<string>>);
 if (reconciled.stagingRemoved || reconciled.orphanResultsRemoved) {
   process.stderr.write(`[eda-worker] recovered publication storage: ${reconciled.stagingRemoved} staging, ${reconciled.orphanResultsRemoved} orphan result(s) removed\n`);
 }

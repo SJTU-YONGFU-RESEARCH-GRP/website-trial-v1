@@ -35,9 +35,13 @@ export class SafeProcessRunner {
     if (!options.tool.enabled) throw new Error("tool configuration is disabled");
     const configuredExecutable = options.tool.interpreterPath || options.tool.executablePath;
     if (!configuredExecutable || !path.isAbsolute(configuredExecutable)) throw new Error("configured executable must be an absolute path");
-    const executable = await fsp.realpath(configuredExecutable);
-    const executableStat = await fsp.stat(executable);
+    const resolvedExecutable = await fsp.realpath(configuredExecutable);
+    const executableStat = await fsp.stat(resolvedExecutable);
     if (!executableStat.isFile() || !(executableStat.mode & 0o111)) throw new Error("configured executable is not an executable regular file");
+    // Preserve the administrator-configured invocation path. Some audited EDA
+    // launchers inspect argv[0] or their symlink location to find product
+    // libraries; spawning the realpath breaks those vendor wrappers.
+    const executable = configuredExecutable;
     const cwd = await fsp.realpath(options.cwd); const root = await fsp.realpath(options.allowedCwdRoot);
     if (!within(root, cwd)) throw new Error("tool cwd escapes the owning job workspace");
     let entryPoint = options.tool.entryPoint;

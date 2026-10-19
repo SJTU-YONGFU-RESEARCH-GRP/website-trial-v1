@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../shared/contracts/v1";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import type { ModuleId, ToolCapabilityV1, ToolConfigurationV1, ToolHealthCheckV1 } from "../../shared/contracts/v1";
 import {
@@ -15,7 +16,7 @@ import { formatDate, StatusBadge } from "../jobs";
 import { AdminNotice } from "./AdminNotice";
 import { ADMIN_TOOL_CATALOG, type AdminToolCatalogEntry } from "./catalog";
 
-const MODULES: ModuleId[] = ["benchmark", "digital", "ppa"];
+const MODULES: ModuleId[] = [...MODULE_IDS];
 
 function blankInput(entry: AdminToolCatalogEntry): ToolConfigurationInput {
   return {

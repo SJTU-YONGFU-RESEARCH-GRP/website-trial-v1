@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { listPpaResults } from "../api/ppa";
 import { dynamicPpaRuns } from "../api/ppa/results";
+import { WorkspaceTabs, type WorkspaceTab } from "../components/WorkspaceTabs";
 import { loadPpaRunIndex } from "../data/ppaDataLoader";
 import type { PpaRunIndex } from "../data/ppaTypes";
 import { PpaCharts } from "./ppa/PpaCharts";
@@ -17,11 +18,11 @@ function number(value: number | null, options?: Intl.NumberFormatOptions): strin
 }
 
 export function PpaPage(): JSX.Element {
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>("input");
   const [index, setIndex] = useState<PpaRunIndex | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedUids, setSelectedUids] = useState<string[]>([]);
   const [activeUid, setActiveUid] = useState<string | null>(null);
-  const [filteredRuns, setFilteredRuns] = useState<readonly PpaRunIndex["runs"][number][]>([]);
   const [dynamicLoadWarning, setDynamicLoadWarning] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export function PpaPage(): JSX.Element {
         const known = new Set(legacyResult.value.runs.map((run) => run.uid));
         const merged = [...legacyResult.value.runs, ...dynamicRuns.filter((run) => !known.has(run.uid))];
         const value = { ...legacyResult.value, runs: merged, runCount: merged.length, flows: [...new Set(merged.map((run) => run.flow))], pdks: [...new Set(merged.map((run) => run.pdk))], designs: [...new Set(merged.map((run) => run.design))] };
-        setIndex(value); setFilteredRuns(value.runs);
+        setIndex(value);
         setDynamicLoadWarning(dynamicResult.status === "rejected" ? "Dynamic PPA results are temporarily unavailable; bundled legacy results remain visible." : null);
         setSelectedUids([]);
       })
@@ -63,29 +64,41 @@ export function PpaPage(): JSX.Element {
     setActiveUid(uid);
     window.setTimeout(() => document.getElementById("ppa-report-detail")?.scrollIntoView({ behavior: "smooth" }), 0);
   }, []);
-  const handleFilteredRuns = useCallback((runs: readonly PpaRunIndex["runs"][number][]) => setFilteredRuns(runs), []);
-  const uploadCard = <PpaWorkflowPanel />;
+  const inputRegion = (
+    <section id="ppa-input-panel" className="workspace-tab-panel workspace-region workspace-region--input" role="tabpanel" aria-labelledby="ppa-input-tab" hidden={activeWorkspaceTab !== "input"}>
+      <div className="workspace-region__content"><PpaWorkflowPanel /></div>
+    </section>
+  );
 
   if (error) {
     return (
-      <div className="ppa-page">
-        {uploadCard}
-        <div className="chart-card ppa-error"><h2>PPA data error</h2><p>{error}</p></div>
+      <div className="ppa-page workspace-page">
+        <WorkspaceTabs idPrefix="ppa" active={activeWorkspaceTab} onChange={setActiveWorkspaceTab} />
+        {inputRegion}
+        <section id="ppa-results-panel" className="workspace-tab-panel workspace-region workspace-region--result" role="tabpanel" aria-labelledby="ppa-results-tab" hidden={activeWorkspaceTab !== "results"}>
+          <div className="workspace-region__content"><div className="chart-card ppa-error"><h2>PPA data error</h2><p>{error}</p></div></div>
+        </section>
       </div>
     );
   }
   if (!index) {
     return (
-      <div className="ppa-page">
-        {uploadCard}
-        <div className="chart-card ppa-loading">Loading three-backend final-run AST index…</div>
+      <div className="ppa-page workspace-page">
+        <WorkspaceTabs idPrefix="ppa" active={activeWorkspaceTab} onChange={setActiveWorkspaceTab} />
+        {inputRegion}
+        <section id="ppa-results-panel" className="workspace-tab-panel workspace-region workspace-region--result" role="tabpanel" aria-labelledby="ppa-results-tab" hidden={activeWorkspaceTab !== "results"}>
+          <div className="workspace-region__content"><div className="chart-card ppa-loading">Loading three-backend final-run index…</div></div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="ppa-page">
-      {uploadCard}
+    <div className="ppa-page workspace-page">
+      <WorkspaceTabs idPrefix="ppa" active={activeWorkspaceTab} onChange={setActiveWorkspaceTab} />
+      {inputRegion}
+      <section id="ppa-results-panel" className="workspace-tab-panel workspace-region workspace-region--result" role="tabpanel" aria-labelledby="ppa-results-tab" hidden={activeWorkspaceTab !== "results"}>
+        <div className="workspace-region__content">
       {dynamicLoadWarning ? <p className="digital-callout digital-callout--warning">{dynamicLoadWarning}</p> : null}
       <section className="chart-card ppa-hero">
         <div>
@@ -99,7 +112,6 @@ export function PpaPage(): JSX.Element {
         <dl className="ppa-dataset-meta">
           <div><dt>Index</dt><dd>{index.runCount} reports</dd></div>
           <div><dt>Generated from source state</dt><dd>{new Date(index.generatedAt).toLocaleString()}</dd></div>
-          <div><dt>Parser</dt><dd><code>{index.parser}</code></dd></div>
         </dl>
       </section>
 
@@ -114,11 +126,10 @@ export function PpaPage(): JSX.Element {
           runs={index.runs}
           selectedUids={selectedUids}
           onChange={setSelectedUids}
-          onFilteredRunsChange={handleFilteredRuns}
         />
       </section>
 
-      <PpaTrendExplorer runs={filteredRuns} onInspectRun={inspectTrendRun} />
+      <PpaTrendExplorer runs={selectedRuns} onInspectRun={inspectTrendRun} />
       <PpaSummary runs={selectedRuns} />
       <PpaNormalizedComparison runs={selectedRuns} />
       <PpaCharts runs={selectedRuns} />
@@ -213,6 +224,8 @@ export function PpaPage(): JSX.Element {
       </section>
 
       {activeRun ? <PpaReportDetail run={activeRun} onClose={() => setActiveUid(null)} /> : null}
+        </div>
+      </section>
     </div>
   );
 }

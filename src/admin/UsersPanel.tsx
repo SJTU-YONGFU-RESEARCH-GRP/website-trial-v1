@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../shared/contracts/v1";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import type { ModuleId, UserRecordV1, UserRole } from "../../shared/contracts/v1";
 import { Link } from "react-router-dom";
@@ -5,7 +6,7 @@ import { createAdminUser, listAdminUsers, updateAdminUser, type CreateUserInput 
 import { formatBytes, formatDate, shortId } from "../jobs";
 import { AdminNotice } from "./AdminNotice";
 
-const MODULES: ModuleId[] = ["benchmark", "digital", "ppa"];
+const MODULES: ModuleId[] = [...MODULE_IDS];
 const DEFAULT_USER: CreateUserInput = { username: "", password: "", role: "user", allowedModules: [...MODULES], maxConcurrentJobs: 2, storageQuotaBytes: 20 * 1024 ** 3 };
 
 export function UsersPanel(): JSX.Element {

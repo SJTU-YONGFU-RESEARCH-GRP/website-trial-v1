@@ -22,6 +22,9 @@ export const benchmarkAdapter: BenchmarkToolAdapter = {
       "--dpi", String(integerValue(parameters, "dpi", 300, 72, 1200)),
       "--log-level", enumValue(parameters, "logLevel", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] as const, "INFO"),
     ];
-    return [resolveInvocation(this.toolId, context.configuration, argv, cwd, [`${output}/REPORT.md`])];
+    return [resolveInvocation(this.toolId, context.configuration, argv, cwd, simulators.flatMap((simulator) => [
+      `${output}/${simulator}/REPORT.md`,
+      `${output}/${simulator}/native-fixture-manifest.json`,
+    ]))];
   },
 };

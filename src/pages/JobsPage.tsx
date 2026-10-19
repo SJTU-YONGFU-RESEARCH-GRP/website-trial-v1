@@ -1,16 +1,14 @@
+import { MODULE_IDS } from "../../shared/contracts/v1";
 import { useCallback, useEffect, useState } from "react";
 import type { JobRecordV1, JobStatus, ModuleId } from "../../shared/contracts/v1";
-import { Navigate } from "react-router-dom";
 import { listJobs } from "../api/jobs";
-import { useAuth } from "../auth/AuthContext";
 import { JobTable } from "../jobs";
 import "../jobs.css";
 
 const STATUSES: Array<JobStatus | ""> = ["", "draft", "validating", "ready", "queued", "running", "succeeded", "failed", "cancelled", "interrupted"];
-const MODULES: Array<ModuleId | ""> = ["", "benchmark", "digital", "ppa"];
+const MODULES: Array<ModuleId | ""> = ["", ...MODULE_IDS];
 
 export function JobsPage(): JSX.Element {
-  const { user, loading: authLoading } = useAuth();
   const [jobs, setJobs] = useState<JobRecordV1[]>([]);
   const [moduleId, setModuleId] = useState<ModuleId | "">("");
   const [status, setStatus] = useState<JobStatus | "">("");
@@ -31,13 +29,11 @@ export function JobsPage(): JSX.Element {
     }
   }, [from, moduleId, status, to]);
 
-  useEffect(() => { if (user) void load(); }, [load, user]);
-  if (authLoading) return <div className="jobs-page"><p>Checking session…</p></div>;
-  if (!user) return <Navigate to="/login?next=/jobs" replace />;
+  useEffect(() => { void load(); }, [load]);
 
   return (
     <div className="jobs-page">
-      <header className="jobs-page__header"><div><p className="jobs-eyebrow">Private workspace</p><h1>My Jobs</h1><p>Persistent runs, imported reports, logs, and generated artifacts.</p></div><button type="button" className="jobs-secondary-button" onClick={() => { void load(); }} disabled={loading}>Refresh</button></header>
+      <header className="jobs-page__header"><div><p className="jobs-eyebrow">Persistent workspace</p><h1>Jobs</h1><p>Runs, logs, and generated artifacts for the current public or signed-in workspace.</p></div><button type="button" className="jobs-secondary-button" onClick={() => { void load(); }} disabled={loading}>Refresh</button></header>
       <section className="jobs-card jobs-filter-bar" aria-label="Job filters">
         <label>Module<select value={moduleId} onChange={(event) => setModuleId(event.target.value as ModuleId | "")}>{MODULES.map((value) => <option value={value} key={value || "all"}>{value || "All modules"}</option>)}</select></label>
         <label>Status<select value={status} onChange={(event) => setStatus(event.target.value as JobStatus | "")}>{STATUSES.map((value) => <option value={value} key={value || "all"}>{value || "All statuses"}</option>)}</select></label>

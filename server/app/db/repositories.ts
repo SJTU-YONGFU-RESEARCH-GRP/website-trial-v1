@@ -1,3 +1,4 @@
+import { MODULE_IDS, isModuleId } from "../../../shared/contracts/v1.ts";
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import type {
   ArtifactRecordV1, AuditLogV1, InputManifestV1, JobEventLevel, JobEventRecordV1,
@@ -36,8 +37,8 @@ export class UserRepository {
   create(input: { username: string; password: string; role?: UserRole; allowedModules?: ModuleId[]; maxConcurrentJobs?: number; storageQuotaBytes?: number }): UserRecordV1 {
     const username = input.username.trim();
     if (!/^[A-Za-z0-9][A-Za-z0-9_.-]{2,63}$/.test(username)) throw new Error("invalid username");
-    const allowedModules = input.allowedModules || ["benchmark", "digital", "ppa"];
-    if (!allowedModules.every((moduleId) => ["benchmark", "digital", "ppa"].includes(moduleId))) throw new Error("invalid allowed module");
+    const allowedModules = input.allowedModules || [...MODULE_IDS];
+    if (!allowedModules.every(isModuleId)) throw new Error("invalid allowed module");
     if (input.role && !["admin", "user"].includes(input.role)) throw new Error("invalid user role");
     if (input.maxConcurrentJobs !== undefined && (!Number.isSafeInteger(input.maxConcurrentJobs) || input.maxConcurrentJobs <= 0)) throw new Error("invalid concurrent job limit");
     if (input.storageQuotaBytes !== undefined && (!Number.isSafeInteger(input.storageQuotaBytes) || input.storageQuotaBytes <= 0)) throw new Error("invalid storage quota");
@@ -77,7 +78,7 @@ export class UserRepository {
     const current = this.get(id);
     if (!current) throw new Error("user not found");
     if (input.role && !["admin", "user"].includes(input.role)) throw new Error("invalid user role");
-    if (input.allowedModules && !input.allowedModules.every((moduleId) => ["benchmark", "digital", "ppa"].includes(moduleId))) throw new Error("invalid allowed module");
+    if (input.allowedModules && !input.allowedModules.every(isModuleId)) throw new Error("invalid allowed module");
     if (input.maxConcurrentJobs !== undefined && (!Number.isSafeInteger(input.maxConcurrentJobs) || input.maxConcurrentJobs <= 0)) throw new Error("invalid concurrent job limit");
     if (input.storageQuotaBytes !== undefined && (!Number.isSafeInteger(input.storageQuotaBytes) || input.storageQuotaBytes <= 0)) throw new Error("invalid storage quota");
     const passwordHash = input.password ? hashPassword(input.password) : null;
@@ -251,12 +252,12 @@ export class JobRepository {
   }
 
   steps(jobId: string): JobStepRecordV1[] { return (this.db.sqlite.prepare("SELECT * FROM job_steps WHERE job_id=? ORDER BY ordinal").all(jobId) as Array<Record<string, unknown>>).map(stepFromRow); }
-  updateStep(id: string, status: StepStatus, progress: number, processId: number | null = null, processGroupId: number | null = null, exitCode: number | null = null, error: unknown = null): void {
+  updateStep(id: string, status: StepStatus, progress: number, processId: number | null | undefined = undefined, processGroupId: number | null | undefined = undefined, exitCode: number | null = null, error: unknown = null): void {
     const terminal = ["succeeded", "failed", "cancelled", "skipped", "interrupted"].includes(status);
-    this.db.sqlite.prepare(`UPDATE job_steps SET status=?,progress=?,process_id=?,process_group_id=?,exit_code=?,
+    this.db.sqlite.prepare(`UPDATE job_steps SET status=?,progress=?,process_id=CASE WHEN ? THEN ? ELSE process_id END,process_group_id=CASE WHEN ? THEN ? ELSE process_group_id END,exit_code=?,
       started_at=CASE WHEN ?='running' AND started_at IS NULL THEN ? ELSE started_at END,
       finished_at=CASE WHEN ? THEN ? ELSE finished_at END,error_json=? WHERE id=?`)
-      .run(status, progress, processId, processGroupId, exitCode, status, now(), Number(terminal), now(), error ? json(error) : null, id);
+      .run(status, progress, Number(processId !== undefined), processId ?? null, Number(processGroupId !== undefined), processGroupId ?? null, exitCode, status, now(), Number(terminal), now(), error ? json(error) : null, id);
     const row = this.db.sqlite.prepare("SELECT job_id FROM job_steps WHERE id=?").get(id) as { job_id?: unknown } | undefined;
     if (row) this.refreshProgress(String(row.job_id), id);
   }
@@ -366,6 +367,7 @@ export class ArtifactRepository {
     return row ? artifactFromRow(row) : null;
   }
   listJob(jobId: string): ArtifactRecordV1[] { return (this.db.sqlite.prepare("SELECT * FROM artifacts WHERE job_id=? ORDER BY created_at").all(jobId) as Record<string, unknown>[]).map(artifactFromRow); }
+  listResult(moduleId: ModuleId, resultId: string): ArtifactRecordV1[] { return (this.db.sqlite.prepare("SELECT * FROM artifacts WHERE module_id=? AND result_id=? ORDER BY created_at,id").all(moduleId, resultId) as Record<string, unknown>[]).map(artifactFromRow); }
   ownerBytes(ownerId: string): number {
     const row = this.db.sqlite.prepare("SELECT COALESCE(SUM(size_bytes),0) size FROM artifacts WHERE owner_id=?").get(ownerId) as { size?: unknown };
     return Number(row.size || 0);
@@ -380,7 +382,10 @@ function artifactFromRow(row: Record<string, unknown>): ArtifactRecordV1 {
 
 export class ResultRepository {
   constructor(private readonly db: EdaDatabase) {}
-  private table(moduleId: ModuleId): string { return `${moduleId}_results`; }
+  private table(moduleId: ModuleId): string {
+    if (!isModuleId(moduleId)) throw new Error("invalid result module");
+    return `${moduleId}_results`;
+  }
   insert(record: ResultRecordV1): void {
     this.db.sqlite.prepare(`INSERT INTO ${this.table(record.moduleId)}(id,owner_id,lifecycle,record_json,created_at,updated_at,published_at) VALUES (?,?,?,?,?,?,?)`)
       .run(record.id, record.ownerId, record.lifecycle, json(record), record.createdAt, record.updatedAt, record.publishedAt);

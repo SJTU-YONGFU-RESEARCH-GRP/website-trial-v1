@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../shared/contracts/v1.ts";
 import { loadConfig } from "../app/config.ts";
 import { EdaDatabase } from "../app/db/database.ts";
 import { makeRepositories } from "../app/db/repositories.ts";
@@ -22,6 +23,6 @@ const username = argument("--username");
 if (!username) throw new Error("usage: admin:create -- --username <name> (password via hidden prompt, stdin, or EDA_ADMIN_PASSWORD)");
 const password = await passwordInput(); const config = loadConfig(); const database = new EdaDatabase(config.databasePath); database.migrate();
 try {
-  const repositories = makeRepositories(database); const admin = repositories.users.create({ username, password, role: "admin", allowedModules: ["benchmark", "digital", "ppa"], maxConcurrentJobs: 8, storageQuotaBytes: 100 * 1024 * 1024 * 1024 });
+  const repositories = makeRepositories(database); const admin = repositories.users.create({ username, password, role: "admin", allowedModules: [...MODULE_IDS], maxConcurrentJobs: 8, storageQuotaBytes: 100 * 1024 * 1024 * 1024 });
   repositories.audit.write(admin.id, "admin.bootstrap", "user", admin.id, { username: admin.username }); process.stdout.write(`Administrator created: ${admin.username} (${admin.id})\n`);
 } finally { database.close(); }

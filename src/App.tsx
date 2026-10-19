@@ -17,6 +17,7 @@ const SpiceBenchmarkPage = lazy(async () => ({
 const PpaPage = lazy(async () => ({
   default: (await import("./pages/PpaPage")).PpaPage,
 }));
+const AcgPage = lazy(async () => ({ default: (await import("./pages/acg/AcgPage")).AcgPage }));
 const LoginPage = lazy(async () => ({ default: (await import("./pages/LoginPage")).LoginPage }));
 const JobsPage = lazy(async () => ({ default: (await import("./pages/JobsPage")).JobsPage }));
 const JobDetailPage = lazy(async () => ({ default: (await import("./pages/JobDetailPage")).JobDetailPage }));
@@ -34,10 +35,16 @@ export default function App(): ReactElement {
         <div className="app-header__actions">
           {!loading && !readOnlyDemo && (user ? (
             <>
-              <span className="app-header__user">{user.username}</span>
-              <button type="button" onClick={() => { void logout(); }}>Log out</button>
+              <NavLink
+                className="app-header__user"
+                to={user.role === "admin" ? "/admin" : "/jobs"}
+                aria-label={`${user.username} account`}
+              >
+                {user.username}
+              </NavLink>
+              <button className="app-header__auth-control" type="button" onClick={() => { void logout(); }}>Log out</button>
             </>
-          ) : <NavLink to="/login">Log in</NavLink>)}
+          ) : <NavLink className="app-header__auth-control" to="/login">Log in</NavLink>)}
           <ThemeToggle />
         </div>
       </header>
@@ -56,7 +63,7 @@ export default function App(): ReactElement {
           Benchmark
         </NavLink>
         <NavLink
-          to="/plotly"
+          to="/digital"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           Digital
@@ -67,14 +74,14 @@ export default function App(): ReactElement {
         >
           PPA
         </NavLink>
+        <NavLink to="/acg" className={({ isActive }) => (isActive ? "active" : "")}>AutoCellGen</NavLink>
         <NavLink
           to="/analog"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
           Analog
         </NavLink>
-        {user ? <NavLink to="/jobs" className={({ isActive }) => (isActive ? "active" : "")}>My Jobs</NavLink> : null}
-        {user?.role === "admin" ? <NavLink to="/admin" className={({ isActive }) => (isActive ? "active" : "")}>Admin</NavLink> : null}
+        <NavLink to="/jobs" className={({ isActive }) => `nav__jobs${isActive ? " active" : ""}`}>Jobs</NavLink>
       </nav>
       {readOnlyDemo ? <div className="read-only-banner">Read-only published-results demo — uploads and computation are disabled.</div> : null}
       <main>
@@ -89,8 +96,10 @@ export default function App(): ReactElement {
             <Route path="/" element={<HomePage />} />
             <Route path="/flow" element={<Navigate to="/" replace />} />
             <Route path="/benchmark" element={<SpiceBenchmarkPage />} />
-            <Route path="/plotly" element={<PlotlyPage />} />
+            <Route path="/digital" element={<PlotlyPage />} />
+            <Route path="/plotly" element={<Navigate to="/digital" replace />} />
             <Route path="/ppa" element={<PpaPage />} />
+            <Route path="/acg" element={<AcgPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/jobs/:jobId" element={<JobDetailPage />} />

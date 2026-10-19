@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../shared/contracts/v1";
 import { useCallback, useEffect, useState } from "react";
 import type { ModuleId, ResultLifecycle, ResultRecordV1, UserRecordV1 } from "../../shared/contracts/v1";
 import { useSearchParams } from "react-router-dom";
@@ -5,7 +6,7 @@ import { listAdminResults, listAdminUsers, updateResultLifecycle } from "../api/
 import { formatDate, formatJson, shortId, StatusBadge } from "../jobs";
 import { AdminNotice } from "./AdminNotice";
 
-const MODULES: Array<ModuleId | ""> = ["", "benchmark", "digital", "ppa"];
+const MODULES: Array<ModuleId | ""> = ["", ...MODULE_IDS];
 const LIFECYCLES: Array<ResultLifecycle | ""> = ["", "private", "published", "unpublished", "deleted"];
 
 export function ResultsPanel(): JSX.Element {

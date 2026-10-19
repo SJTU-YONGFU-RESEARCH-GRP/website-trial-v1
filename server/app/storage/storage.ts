@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../../shared/contracts/v1.ts";
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
@@ -127,7 +128,7 @@ export class StorageService {
       await fsp.rm(path.join(publishingRoot, entry.name), { recursive: true, force: true });
       stagingRemoved += 1;
     }
-    for (const moduleId of ["benchmark", "digital", "ppa"] as const) {
+    for (const moduleId of MODULE_IDS) {
       const moduleRoot = this.resolve(`results/${moduleId}`);
       await fsp.mkdir(moduleRoot, { recursive: true, mode: 0o750 });
       for (const entry of await fsp.readdir(moduleRoot, { withFileTypes: true })) {

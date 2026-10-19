@@ -21,6 +21,9 @@ export interface BenchmarkDraftConfiguration {
   mode: BenchmarkWorkflowMode;
   workflow: string;
   operations: Record<string, boolean>;
+  operationOrder: string[];
+  sourceDialect?: "auto" | "ngspice" | "hspice" | "spectre";
+  sourceSection?: string;
   toolParameters: Record<string, JsonObject>;
 }
 

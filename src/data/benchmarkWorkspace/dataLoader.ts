@@ -18,8 +18,7 @@ import type {
 } from "../../compat/spiceWorkflow/contracts";
 import { parseReportMD } from "./reportParser";
 
-const BASE = import.meta.env.BASE_URL || "/";
-const DATA_ROOT = `${BASE}data/spice-model-benchmark`;
+const DATA_ROOT = "/api/benchmark/explorer";
 const FALLBACK_DOMAINS: AnalysisDomain[] = ["dc", "transient", "ac", "noise"];
 
 /* ─── Dynamically discovered complete runs ─── */
@@ -34,6 +33,8 @@ interface ModelIndexInfo {
 interface AvailableRun extends ModelIndexInfo {
   modelId: string;
   md5: string;
+  runKey?: string;
+  modelMd5?: string;
   simulator: SimulatorId;
   deviceType?: string;
   manifest: unknown;
@@ -323,12 +324,14 @@ function normalizeRunStatus(value: unknown): ModelManifest["status"] {
   return "unavailable";
 }
 
+type LoadedRunManifest = ModelManifest & { analysisDomains?: AnalysisDomain[] };
+
 function normalizeRunManifest(
   rawValue: unknown,
   md5: string,
   sim: SimulatorId,
   fallback: ModelIndexInfo,
-): ModelManifest {
+): LoadedRunManifest {
   const raw = asRecord(rawValue);
   const run = asRecord(raw.run);
   const benchmark = asRecord(raw.benchmark);
@@ -349,6 +352,7 @@ function normalizeRunManifest(
   const finishedAt = firstString(raw.finishedAt, raw.finished_at);
 
   return {
+    analysisDomains: Array.isArray(raw.modes) ? raw.modes.filter((mode): mode is AnalysisDomain => typeof mode === "string" && isDomain(mode)) : undefined,
     modelId: fallbackUid,
     displayName: firstString(raw.displayName, raw.display_name) ?? fallbackUid,
     checksum: firstString(raw.checksum, raw.md5, raw.modelMd5, raw.model_md5) ?? md5,
@@ -405,15 +409,15 @@ export interface LoadedBenchmarkRuns {
 
 const runLoadCache = new Map<string, Promise<{
   report: ReportStructure | null;
-  manifest: ModelManifest;
+  manifest: LoadedRunManifest;
 }>>();
-const manifestLoadCache = new Map<string, Promise<ModelManifest>>();
+const manifestLoadCache = new Map<string, Promise<LoadedRunManifest>>();
 
 async function loadRunManifest(
   md5: string,
   sim: SimulatorId,
   fallback: ModelIndexInfo,
-): Promise<ModelManifest> {
+): Promise<LoadedRunManifest> {
   const key = `${md5}|${sim}`;
   const cached = manifestLoadCache.get(key);
   if (cached) return cached;
@@ -427,8 +431,9 @@ async function loadRunManifest(
       }
       const rawManifest: unknown = await response.json();
       const manifest = normalizeRunManifest(rawManifest, md5, sim, fallback);
-      if (manifest.checksum !== md5) {
-        throw new Error(`${key}: manifest checksum ${manifest.checksum} does not match directory MD5 ${md5}`);
+      const actualModelMd5 = firstString(asRecord(rawManifest).modelMd5) ?? md5;
+      if (manifest.checksum !== actualModelMd5 || (asRecord(rawManifest).runKey !== undefined && asRecord(rawManifest).runKey !== md5)) {
+        throw new Error(`${key}: manifest checksum ${manifest.checksum} does not match model/run identity ${md5}`);
       }
       return manifest;
     });
@@ -441,7 +446,7 @@ async function loadRun(
   md5: string,
   sim: SimulatorId,
   fallback: ModelIndexInfo,
-): Promise<{ report: ReportStructure | null; manifest: ModelManifest }> {
+): Promise<{ report: ReportStructure | null; manifest: LoadedRunManifest }> {
   const key = `${md5}|${sim}`;
   const cached = runLoadCache.get(key);
   if (cached) return cached;
@@ -460,7 +465,7 @@ export async function loadBenchmarkRuns(selectedRunIds: string[]): Promise<Loade
   const index = await fetchAvailableRuns();
   const domains = indexDomains(index);
   const availableByRunId = new Map(
-    index.runs.map((run) => [`${run.md5}|${run.simulator}`, run]),
+    index.runs.map((run) => [`${run.runKey ?? run.md5}|${run.simulator}`, run]),
   );
 
   const requests = selectedRunIds.map((runModelId) => {
@@ -497,7 +502,7 @@ export async function loadBenchmarkRuns(selectedRunIds: string[]): Promise<Loade
       for (const artifact of domainArtifacts) artifacts[artifact.artifactId] = artifact;
     }
 
-    for (const domain of domains) {
+    for (const domain of domains.filter((domain) => !loaded.manifest.analysisDomains || loaded.manifest.analysisDomains.includes(domain))) {
       benchmarkResults.push(
         buildBenchmarkResult(
           runModelId,
@@ -528,18 +533,19 @@ export async function buildScenario(): Promise<WorkflowScenario> {
   // Every entry is already a complete on-disk run. No Cartesian product and
   // no requests for expected-but-not-yet-created manifests are performed.
   for (const run of index.runs) {
-    const simModelId = `${run.md5}|${run.simulator}`;
+    const simModelId = `${run.runKey ?? run.md5}|${run.simulator}`;
     modelIds.push(simModelId);
     models[simModelId] = buildModelArtifact(
       run.modelId,
-      run.md5,
+      run.runKey ?? run.md5,
       run,
       null,
       run.simulator,
     );
+    models[simModelId].checksum = run.modelMd5 ?? run.md5;
     manifests[simModelId] = normalizeRunManifest(
       run.manifest,
-      run.md5,
+      run.runKey ?? run.md5,
       run.simulator,
       run,
     );

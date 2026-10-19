@@ -1,3 +1,4 @@
+import { MODULE_IDS, isModuleId } from "../../../shared/contracts/v1.ts";
 import type { ModuleAdapterV1, ModuleId } from "../../../shared/contracts/v1.ts";
 
 export class ModuleRegistry {
@@ -15,6 +16,6 @@ export class ModuleRegistry {
 }
 
 export function parseModuleId(value: unknown): ModuleId {
-  if (value === "benchmark" || value === "digital" || value === "ppa") return value;
-  throw new Error("module must be benchmark, digital, or ppa");
+  if (isModuleId(value)) return value;
+  throw new Error(`module must be one of: ${MODULE_IDS.join(", ")}`);
 }

@@ -378,6 +378,45 @@
 .login-card form { display: grid; gap: 0.9rem; margin-top: 1.2rem; }
 .login-card__footnote { margin-top: 1rem !important; font-size: 0.74rem; }
 
+.login-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 0.15rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 11px;
+  background: var(--accent);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--accent) 18%, transparent);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.login-submit:not(:disabled):hover {
+  transform: translateY(-1px);
+  background: var(--accent-hover);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.login-submit:not(:disabled):active { transform: translateY(0); }
+.login-submit:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent); outline-offset: 3px; }
+.login-submit__icon {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 150ms ease;
+}
+.login-submit:not(:disabled):hover .login-submit__icon { transform: translateX(2px); }
+
 @media (max-width: 720px) {
   .jobs-page__header,
   .jobs-card__heading { align-items: stretch; flex-direction: column; }

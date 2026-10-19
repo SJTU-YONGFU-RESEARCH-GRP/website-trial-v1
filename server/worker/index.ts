@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../shared/contracts/v1.ts";
 import type { ModuleId } from "../../shared/contracts/v1.ts";
 import type { Repositories } from "../app/db/repositories.ts";
 import { ModuleRegistry } from "../app/modules/registry.ts";
@@ -10,7 +11,7 @@ export class WorkerSupervisor {
   private readonly queues: ModuleQueueWorker[];
   constructor(repositories: Repositories, registry: ModuleRegistry, storage: StorageService, concurrency: Record<ModuleId, number>, cancelGraceMs = 10_000, maxLogBytes = 256 * 1024 * 1024) {
     this.runner = new JobRunner(repositories, registry, storage, new SafeProcessRunner(cancelGraceMs, maxLogBytes));
-    this.queues = (["benchmark", "digital", "ppa"] as ModuleId[]).map((moduleId) => new ModuleQueueWorker(moduleId, concurrency[moduleId], repositories.jobs, this.runner));
+    this.queues = MODULE_IDS.map((moduleId) => new ModuleQueueWorker(moduleId, concurrency[moduleId], repositories.jobs, this.runner));
     repositories.jobs.recoverRunning();
   }
   start(): void { for (const queue of this.queues) queue.start(); }

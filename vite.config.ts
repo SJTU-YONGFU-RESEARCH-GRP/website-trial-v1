@@ -2,9 +2,11 @@ import fs from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
+import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
   defineConfig,
+  type Plugin,
   type ResolvedConfig,
   type ViteDevServer,
 } from "vite";
@@ -25,6 +27,43 @@ const benchmarkModes = ["dc", "transient", "ac", "noise"] as const;
 let invalidateBenchmarkIndex = (): void => {};
 
 type JsonObject = Record<string, unknown>;
+
+function edaBackendSupervisorPlugin(): Plugin {
+  return {
+    name: "eda-backend-supervisor",
+    apply: "serve",
+    configureServer(server: ViteDevServer) {
+      if (process.env.VITE_SUPERVISE_BACKEND === "0") return;
+      const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+      const backend = spawn(npmCommand, ["run", "dev:server"], {
+        cwd: __dirname,
+        env: {
+          ...process.env,
+          EDA_HOST: process.env.EDA_API_HOST ?? "127.0.0.1",
+          EDA_PORT: process.env.EDA_API_PORT ?? "3001",
+          EDA_EMBED_WORKER: "1",
+        },
+        stdio: "inherit",
+        shell: false,
+      });
+      let stopping = false;
+      const stopBackend = () => {
+        if (stopping) return;
+        stopping = true;
+        if (backend.exitCode === null && backend.signalCode === null) backend.kill("SIGTERM");
+      };
+      server.httpServer?.once("close", stopBackend);
+      backend.once("error", (error) => {
+        server.config.logger.error(`[eda-backend] failed to start: ${error.message}`);
+      });
+      backend.once("exit", (code, signal) => {
+        if (stopping) return;
+        server.config.logger.error(`[eda-backend] exited unexpectedly (${signal ?? code ?? "unknown"}); stopping Vite so the service manager can restart the full stack.`);
+        void server.close().finally(() => process.exit(code && code > 0 ? code : 1));
+      });
+    },
+  };
+}
 
 function asObject(value: unknown): JsonObject {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -341,7 +380,7 @@ function benchmarkAvailableRunsPlugin() {
 }
 
 export default defineConfig(() => ({
-  plugins: [benchmarkAvailableRunsPlugin(), react()],
+  plugins: [edaBackendSupervisorPlugin(), benchmarkAvailableRunsPlugin(), react()],
   resolve: {
     alias: {
       "@data": path.resolve(__dirname, "data"),

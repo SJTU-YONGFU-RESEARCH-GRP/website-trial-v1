@@ -134,7 +134,7 @@ export function HomePage(): JSX.Element {
       <p className="note">
         <strong>Navigation:</strong>{" "}
         <Link to="/benchmark">Benchmark</Link> &middot;{" "}
-        <Link to="/plotly">Digital Circuits</Link> &middot;{" "}
+        <Link to="/digital">Digital Circuits</Link> &middot;{" "}
         <Link to="/analog">Analog Circuits</Link>
         <br />
         Refer to each tool's repository for documentation, source code, and usage

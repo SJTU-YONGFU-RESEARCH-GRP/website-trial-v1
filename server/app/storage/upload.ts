@@ -84,7 +84,8 @@ export async function streamMultipartDraft(
     includes.set(relativePath, targetList);
     files.push({ relativePath, sizeBytes, sha256: hash.digest("hex"), mediaType: part.mimetype || "application/octet-stream", recognizedType, role: null, required: false, usedByStepIds: [], unresolvedIncludes: [], validationErrors });
   }
-  if (!files.length) throw new UploadValidationError("at least one file is required");
+  const optionalResearchInputs = moduleId === "acg" && ["algorithm-matrix", "algorithm-report", "known-feasible"].includes(fields.operation?.trim() || "run");
+  if (!files.length && !optionalResearchInputs) throw new UploadValidationError("at least one file is required");
   for (const file of files) {
     const base = path.posix.dirname(file.relativePath);
     file.unresolvedIncludes = (includes.get(file.relativePath) || []).filter((target) => {

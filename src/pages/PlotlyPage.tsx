@@ -10,6 +10,7 @@ import type { Config, Data, Layout } from "plotly.js";
 // Pre-minified browser build — avoids Vite bundling plotly's Node-only trace helpers.
 import Plotly from "plotly.js-dist-min";
 import { TechnologySelector } from "../components/TechnologySelector";
+import { WorkspaceTabs, type WorkspaceTab } from "../components/WorkspaceTabs";
 import { DigitalWorkflowPanel } from "./digital";
 import { digitalChartRows, listDigitalResults } from "../api/digital/client";
 import { READ_ONLY_DEMO } from "../api/client";
@@ -183,6 +184,7 @@ function usePlotlyChart(
 }
 
 export function PlotlyPage(): JSX.Element {
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>("input");
   const narrow = useNarrowScreen(640);
   const { theme } = useTheme();
   const [exploreAxes, setExploreAxes] = useState<ExploreAxesState>(DEFAULT_EXPLORE_AXES);
@@ -198,6 +200,10 @@ export function PlotlyPage(): JSX.Element {
     Partial<Record<DigitalChartId, Partial<ExploreAxesState>>>
   >({});
   const [dynamicRows, setDynamicRows] = useState<DesignRow[]>([]);
+  const changeWorkspaceTab = (tab: WorkspaceTab): void => {
+    setActiveWorkspaceTab(tab);
+    if (tab === "results") window.requestAnimationFrame(() => window.requestAnimationFrame(() => window.dispatchEvent(new Event("resize"))));
+  };
   useEffect(() => {
     if (READ_ONLY_DEMO) return;
     let active = true;
@@ -1755,8 +1761,13 @@ export function PlotlyPage(): JSX.Element {
   ]);
 
   return (
-    <div>
-      <DigitalWorkflowPanel />
+    <div className="workspace-page">
+      <WorkspaceTabs idPrefix="digital" active={activeWorkspaceTab} onChange={changeWorkspaceTab} />
+      <section id="digital-input-panel" className="workspace-tab-panel workspace-region workspace-region--input" role="tabpanel" aria-labelledby="digital-input-tab" hidden={activeWorkspaceTab !== "input"}>
+        <div className="workspace-region__content"><DigitalWorkflowPanel /></div>
+      </section>
+      <section id="digital-results-panel" className="workspace-tab-panel workspace-region workspace-region--result" role="tabpanel" aria-labelledby="digital-results-tab" hidden={activeWorkspaceTab !== "results"}>
+        <div className="workspace-region__content">
       <div className="chart-card">
         <h2>Explore metrics</h2>
         <div className="hint-block">
@@ -2005,6 +2016,8 @@ export function PlotlyPage(): JSX.Element {
           <div ref={barRef} style={{ width: "100%", height: "100%" }} />
         </div>
       </div>
+        </div>
+      </section>
     </div>
   );
 }

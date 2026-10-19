@@ -11,14 +11,16 @@ import {
   type BrowserInputFile,
 } from "../../../api/benchmark";
 import { READ_ONLY_DEMO } from "../../../api/client";
-import { useAuth } from "../../../auth/AuthContext";
 import { BenchmarkFilePicker } from "./BenchmarkFilePicker";
 import { BenchmarkParameterEditor } from "./BenchmarkParameterEditor";
 import { BenchmarkPlanPreview } from "./BenchmarkPlanPreview";
 import { FittingDatasetMappingEditor } from "./FittingDatasetMappingEditor";
+import { benchmarkToolVersionLabel } from "./toolPresentation";
+import "../../../digital-run.css";
 import "../../../benchmark-run.css";
 
-const TOOL_ORDER = ["translator", "fitting", "reduction", "expansion", "spice-benchmark"];
+const PROCESSING_TOOLS = ["translator", "fitting", "reduction", "expansion"] as const;
+const BENCHMARK_TOOL = "spice-benchmark" as const;
 
 function defaults(capability: ToolCapabilityV1): JsonObject {
   return Object.fromEntries(capability.parameters.map((parameter) => [parameter.id, parameter.defaultValue]));
@@ -33,13 +35,15 @@ interface BenchmarkRunPanelProps {
 }
 
 export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<BenchmarkWorkflowMode>("run");
+  const mode = "run" as BenchmarkWorkflowMode;
   const [capabilities, setCapabilities] = useState<BenchmarkCapabilities | null>(null);
   const [capabilityError, setCapabilityError] = useState<string | null>(null);
+  const [sourceDialect, setSourceDialect] = useState<"auto" | "ngspice" | "hspice" | "spectre">("auto");
+  const [sourceSection, setSourceSection] = useState("");
   const [files, setFiles] = useState<BrowserInputFile[]>([]);
   const [selectedTools, setSelectedTools] = useState<Record<string, boolean>>({ "spice-benchmark": true });
+  const [toolOrder, setToolOrder] = useState<string[]>([...PROCESSING_TOOLS]);
   const [toolParameters, setToolParameters] = useState<Record<string, JsonObject>>({});
   const [draft, setDraft] = useState<JobRecordV1 | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -59,8 +63,12 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
     return () => controller.abort();
   }, []);
 
-  const selectedCapabilities = useMemo(() => capabilities?.capabilities
-    .filter((capability) => mode === "run" && selectedTools[capability.toolId]) ?? [], [capabilities, mode, selectedTools]);
+  const orderedToolIds = useMemo(() => [...toolOrder, BENCHMARK_TOOL], [toolOrder]);
+  const selectedCapabilities = useMemo(() => {
+    if (mode !== "run") return [];
+    const byId = new Map(capabilities?.capabilities.map((capability) => [capability.toolId, capability]) ?? []);
+    return orderedToolIds.flatMap((toolId) => selectedTools[toolId] && byId.has(toolId) ? [byId.get(toolId)!] : []);
+  }, [capabilities, mode, orderedToolIds, selectedTools]);
 
   const inputRoles = useMemo(() => {
     if (mode === "import") {
@@ -79,16 +87,23 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
     setError(null);
   };
 
-  const changeMode = (next: BenchmarkWorkflowMode) => {
-    setMode(next);
-    setFiles([]);
+  const placeToolBefore = (toolId: string, targetId: string) => {
+    if (toolId === targetId || !toolOrder.includes(toolId) || !toolOrder.includes(targetId)) return;
+    setToolOrder((current) => {
+      const next = current.filter((candidate) => candidate !== toolId);
+      next.splice(next.indexOf(targetId), 0, toolId);
+      return next;
+    });
     invalidateDraft();
   };
 
   const configuration = () => ({
     mode,
-    workflow: mode === "import" ? "completed-result-import" : TOOL_ORDER.filter((tool) => selectedTools[tool]).join("-then-"),
-    operations: Object.fromEntries(TOOL_ORDER.map((tool) => [operationKey(tool), selectedTools[tool] === true])),
+    workflow: mode === "import" ? "completed-result-import" : orderedToolIds.filter((tool) => selectedTools[tool]).join("-then-"),
+    operations: Object.fromEntries(orderedToolIds.map((tool) => [operationKey(tool), selectedTools[tool] === true])),
+    operationOrder: toolOrder.filter((tool) => selectedTools[tool]),
+    sourceDialect,
+    sourceSection,
     toolParameters,
   });
 
@@ -128,66 +143,92 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
   };
 
   return (
-    <section className="benchmark-run-shell" aria-labelledby="benchmark-new-workflow-heading">
-      <div className="benchmark-run-hero">
-        <div><span className="benchmark-run-eyebrow">New Workflow</span><h2 id="benchmark-new-workflow-heading">Run real Benchmark tools</h2></div>
-        <p>Upload → map → configure → preflight → inspect the exact plan → Start. No tool runs before Start.</p>
-      </div>
-      <div className="benchmark-mode-switch" role="tablist" aria-label="Benchmark workflow mode">
-        <button type="button" className={mode === "run" ? "is-active" : ""} onClick={() => changeMode("run")}>Run from source</button>
-        <button type="button" className={mode === "import" ? "is-active" : ""} onClick={() => changeMode("import")}>Import completed result</button>
-      </div>
+    <section className="benchmark-run-shell" aria-label="Benchmark input and execution">
+      <article className="digital-workflow-card benchmark-workflow-card">
+        <header>
+          <div><span className="digital-eyebrow">{mode === "run" ? "Source → toolchain → benchmark result" : "Completed run → parser → benchmark result"}</span><h3>{mode === "run" ? "Run Benchmark Workflow" : "Import Completed Benchmark"}</h3></div>
+          <span className="digital-mode-badge">{mode === "run" ? "Ordered toolchain" : "Native result"}</span>
+        </header>
+        <p className="digital-intro">{mode === "run" ? "Choose source files, arrange the enabled tools, inspect the backend plan and explicitly Start." : "Import a completed Benchmark result, verify the recognized content and explicitly publish it."}</p>
 
       {READ_ONLY_DEMO ? <div className="benchmark-run-notice is-warning">This deployment is a read-only demo. Upload and Start are disabled.</div> : null}
-      {!READ_ONLY_DEMO && !user ? <div className="benchmark-run-notice is-warning">Sign in to upload inputs, run preflight, and start a Benchmark job.</div> : null}
       {capabilityError ? <div className="benchmark-run-notice is-error">Capabilities unavailable: {capabilityError}</div> : null}
+
+      <BenchmarkFilePicker mode={mode} files={files} roles={inputRoles} disabled={busy || READ_ONLY_DEMO} onChange={(next) => { setFiles(next); invalidateDraft(); }} />
+
+      {mode === "run" ? <label className="benchmark-parameter-field">
+        <span>Source model format</span>
+        <small>Choose the uploaded model's format when SPICE syntax is shared between simulators. This controls source defaults before any tool runs.</small>
+        <fieldset disabled={busy || READ_ONLY_DEMO}>
+          <select value={sourceDialect} onChange={(event) => { setSourceDialect(event.target.value as typeof sourceDialect); invalidateDraft(); }}>
+            <option value="auto">Automatic</option><option value="ngspice">ngspice</option><option value="hspice">HSPICE</option><option value="spectre">Spectre</option>
+          </select>
+        </fieldset>
+      </label> : null}
+
+      {mode === "run" ? <label className="benchmark-parameter-field">
+        <span>Source library section (optional)</span>
+        <small>Select a section such as TT when the root library contains several alternatives. Leave empty when the uploaded wrapper already selects its section.</small>
+        <fieldset disabled={busy || READ_ONLY_DEMO}>
+          <input type="text" value={sourceSection} maxLength={128} placeholder="Automatic / wrapper selection" onChange={(event) => { setSourceSection(event.target.value); invalidateDraft(); }} />
+        </fieldset>
+      </label> : null}
 
       {mode === "run" ? (
         <section className="benchmark-run-section" aria-labelledby="benchmark-tools-heading">
-          <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Toolchain</span><h3 id="benchmark-tools-heading">Choose operations</h3></div></div>
-          <div className="benchmark-tool-grid">
-            {TOOL_ORDER.map((toolId) => {
+          <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Step 2</span><h3 id="benchmark-tools-heading">Choose and arrange tools</h3></div><span>Benchmark always runs last</span></div>
+          <p className="benchmark-run-help">Enable any of the first four tools and drag their rows to set the execution order. Each tool keeps its own parameters inside its row.</p>
+          <div className="benchmark-tool-list">
+            {orderedToolIds.map((toolId) => {
               const capability = capabilities?.capabilities.find((item) => item.toolId === toolId);
               if (!capability) return null;
               const unavailable = capability.health !== "healthy";
+              const fixed = toolId === BENCHMARK_TOOL;
+              const selected = selectedTools[toolId] === true;
               return (
-                <label key={toolId} className={`benchmark-tool-choice ${unavailable ? "is-unavailable" : ""}`}>
-                  <input
-                    type="checkbox"
-                    checked={selectedTools[toolId] === true}
-                    disabled={unavailable || toolId === "spice-benchmark" || busy}
-                    onChange={(event) => { setSelectedTools((current) => ({ ...current, [toolId]: event.target.checked })); invalidateDraft(); }}
-                  />
-                  <span><strong>{capability.label}</strong><small>{capability.description}</small></span>
-                  <em>{unavailable ? `Unavailable · ${capability.healthReason ?? "health check required"}` : capability.toolVersion ?? "Healthy"}</em>
-                </label>
+                <article
+                  key={toolId}
+                  className={`benchmark-tool-choice ${selected ? "is-selected" : ""} ${unavailable ? "is-unavailable" : ""} ${fixed ? "is-fixed" : ""}`}
+                  draggable={!fixed && !busy}
+                  onDragStart={(event) => event.dataTransfer.setData("text/benchmark-tool", toolId)}
+                  onDragOver={(event) => { if (!fixed) event.preventDefault(); }}
+                  onDrop={(event) => { event.preventDefault(); placeToolBefore(event.dataTransfer.getData("text/benchmark-tool"), toolId); }}
+                >
+                  <header className="benchmark-tool-choice__header">
+                    <label className="benchmark-tool-choice__toggle">
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        disabled={unavailable || fixed || busy}
+                        onChange={(event) => { setSelectedTools((current) => ({ ...current, [toolId]: event.target.checked })); invalidateDraft(); }}
+                      />
+                      <span><strong>{capability.label}</strong><small>{capability.description}</small></span>
+                    </label>
+                    <div className="benchmark-tool-choice__actions">
+                      {fixed ? <span>Fixed final step</span> : <>
+                        <span className="benchmark-tool-choice__drag-handle" aria-hidden="true" title="Drag to reorder">⋮⋮</span>
+                      </>}
+                    </div>
+                  </header>
+                  <div className="benchmark-tool-choice__health">{unavailable ? `Unavailable · ${capability.healthReason ?? "health check required"}` : benchmarkToolVersionLabel(capability.toolVersion)}</div>
+                  {selected ? <div className="benchmark-tool-choice__parameters">
+                    <BenchmarkParameterEditor capability={capability} values={toolParameters[capability.toolId] ?? {}} disabled={busy} onChange={(values) => { setToolParameters((current) => ({ ...current, [capability.toolId]: values })); invalidateDraft(); }} />
+                    {toolId === "fitting" ? <FittingDatasetMappingEditor
+                      files={files}
+                      value={(toolParameters.fitting?.datasetMapping && typeof toolParameters.fitting.datasetMapping === "object" && !Array.isArray(toolParameters.fitting.datasetMapping)) ? toolParameters.fitting.datasetMapping as JsonObject : {}}
+                      disabled={busy}
+                      onChange={(datasetMapping) => { setToolParameters((current) => ({ ...current, fitting: { ...(current.fitting ?? {}), datasetMapping } })); invalidateDraft(); }}
+                    /> : null}
+                  </div> : null}
+                </article>
               );
             })}
           </div>
         </section>
       ) : null}
 
-      <BenchmarkFilePicker mode={mode} files={files} roles={inputRoles} disabled={busy || READ_ONLY_DEMO} onChange={(next) => { setFiles(next); invalidateDraft(); }} />
-
-      {mode === "run" && selectedCapabilities.length ? (
-        <section className="benchmark-run-section" aria-labelledby="benchmark-parameters-heading">
-          <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Parameters</span><h3 id="benchmark-parameters-heading">Actual adapter parameters</h3></div></div>
-          {selectedCapabilities.map((capability) => (
-            <BenchmarkParameterEditor key={capability.toolId} capability={capability} values={toolParameters[capability.toolId] ?? {}} disabled={busy} onChange={(values) => { setToolParameters((current) => ({ ...current, [capability.toolId]: values })); invalidateDraft(); }} />
-          ))}
-          {selectedTools.fitting ? (
-            <FittingDatasetMappingEditor
-              files={files}
-              value={(toolParameters.fitting?.datasetMapping && typeof toolParameters.fitting.datasetMapping === "object" && !Array.isArray(toolParameters.fitting.datasetMapping)) ? toolParameters.fitting.datasetMapping as JsonObject : {}}
-              disabled={busy}
-              onChange={(datasetMapping) => { setToolParameters((current) => ({ ...current, fitting: { ...(current.fitting ?? {}), datasetMapping } })); invalidateDraft(); }}
-            />
-          ) : null}
-        </section>
-      ) : null}
-
       <section className="benchmark-run-section">
-        <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Upload and validation</span><h3>Backend preflight</h3></div><span>{draft?.status ?? "Not started"}</span></div>
+        <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Step {mode === "run" ? "3" : "2"}</span><h3>Upload and backend preflight</h3></div><span>{draft?.status ?? "Not started"}</span></div>
         {uploadProgress !== null ? <div className="benchmark-progress"><span style={{ width: `${Math.min(100, uploadProgress)}%` }} /><strong>{Math.round(uploadProgress)}%</strong></div> : null}
         {draft?.inputManifest.files.length ? (
           <div className="benchmark-recognition">
@@ -195,15 +236,16 @@ export function BenchmarkRunPanel({ onJobStarted }: BenchmarkRunPanelProps) {
             {draft.inputManifest.files.map((file) => <div key={file.relativePath}><strong>{file.relativePath}</strong><span>{file.recognizedType} · {file.role ?? "unmapped"}</span>{file.validationErrors.length ? <em>{file.validationErrors.join("; ")}</em> : null}{file.unresolvedIncludes.length ? <em>Missing includes: {file.unresolvedIncludes.join(", ")}</em> : null}</div>)}
           </div>
         ) : null}
-        <button className="benchmark-primary-action" type="button" disabled={busy || READ_ONLY_DEMO || !user || !files.length || !capabilities} onClick={() => void preflight()}>{busy ? "Working…" : draft ? "Run preflight again" : "Upload and preflight"}</button>
+        <button className="benchmark-primary-action" type="button" disabled={busy || READ_ONLY_DEMO || !files.length || !capabilities} onClick={() => void preflight()}>{busy ? "Working…" : draft ? "Run preflight again" : "Upload and preflight"}</button>
       </section>
 
       <BenchmarkPlanPreview plan={draft?.plan ?? null} />
       {error ? <div className="benchmark-run-notice is-error">{error}</div> : null}
       <div className="benchmark-start-bar">
         <div><strong>Start is explicit</strong><span>The validated draft enters the persistent Benchmark queue only after this click.</span></div>
-        <button type="button" disabled={busy || READ_ONLY_DEMO || !user || !draft || draft.status !== "ready"} onClick={() => void start()}>Start</button>
+        <button type="button" disabled={busy || READ_ONLY_DEMO || !draft || draft.status !== "ready"} onClick={() => void start()}>Start</button>
       </div>
+      </article>
     </section>
   );
 }

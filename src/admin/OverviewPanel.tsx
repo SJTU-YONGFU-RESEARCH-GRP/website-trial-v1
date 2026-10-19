@@ -1,10 +1,11 @@
+import { MODULE_IDS } from "../../shared/contracts/v1";
 import { useEffect, useState } from "react";
 import type { ModuleId } from "../../shared/contracts/v1";
 import { getAdminOverview, type AdminOverviewV1 } from "../api/admin";
 import { formatBytes, formatDate, JobTable, StatusBadge } from "../jobs";
 import { AdminNotice } from "./AdminNotice";
 
-const MODULES: ModuleId[] = ["benchmark", "digital", "ppa"];
+const MODULES: ModuleId[] = [...MODULE_IDS];
 
 export function OverviewPanel(): JSX.Element {
   const [overview, setOverview] = useState<AdminOverviewV1 | null>(null);

@@ -7,8 +7,8 @@ describe("persistent database and authentication", () => {
   it("applies every versioned core table migration idempotently", () => {
     const database = new EdaDatabase(":memory:"); database.migrate(); database.migrate();
     const tables = database.sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map((row) => String(row.name));
-    for (const table of ["users", "sessions", "tool_configurations", "tool_health_checks", "technology_libraries", "jobs", "job_steps", "job_events", "artifacts", "benchmark_results", "digital_results", "ppa_results", "audit_logs"]) expect(tables).toContain(table);
-    expect(database.sqlite.prepare("SELECT COUNT(*) count FROM schema_migrations").get()!.count).toBe(2);
+    for (const table of ["users", "sessions", "tool_configurations", "tool_health_checks", "technology_libraries", "jobs", "job_steps", "job_events", "artifacts", "benchmark_results", "digital_results", "ppa_results", "acg_results", "audit_logs"]) expect(tables).toContain(table);
+    expect(database.sqlite.prepare("SELECT COUNT(*) count FROM schema_migrations").get()!.count).toBe(3);
     database.close();
   });
 

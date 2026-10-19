@@ -26,7 +26,7 @@ describe("worker execution and atomic publication", () => {
     const job = repositories.jobs.createDraft(user.id, "digital", "import-completed-result", "completed-result", manifest); await storage.createWorkspace(job.id);
     repositories.jobs.beginValidation(job.id);
     repositories.jobs.setDraft(job.id, manifest, {}, "test-capability", [snapshot as ToolConfigurationSnapshotV1], { "node-test": process.version }, { schemaVersion: "eda.job-plan.v1", capabilityVersion: "test-capability",
-      steps: [{ id: "execute", name: "Execute", description: "test executable", required: true, weight: 1, process: { toolConfigurationId: tool.id, executableDisplay: "node-test", argv: ["-e", "require('node:fs').writeFileSync('../output/result.json',JSON.stringify({value:42}))"], cwdRelative: "work", environmentNames: ["TEST_MARKER"], timeoutSeconds: 5 }, inputRoles: [], outputRoles: ["result"] }], sweep: null, warnings: [] });
+      steps: [{ id: "execute", name: "Execute", description: "test executable", required: true, weight: 1, process: { toolConfigurationId: tool.id, executableDisplay: "node-test", argv: ["-e", "require('node:fs').writeFileSync('../output/result.json',JSON.stringify({value:42,pid:process.pid}))"], cwdRelative: "work", environmentNames: ["TEST_MARKER"], timeoutSeconds: 5 }, inputRoles: [], outputRoles: ["result"] }], sweep: null, warnings: [] });
     repositories.jobs.start(job.id);
     let sawEnvironment = false;
     const adapter: ModuleAdapterV1 = {
@@ -38,6 +38,9 @@ describe("worker execution and atomic publication", () => {
     const registry = new ModuleRegistry(); registry.register(adapter); const claimed = repositories.jobs.claim("digital")!;
     await new JobRunner(repositories, registry, storage, new SafeProcessRunner(100)).run(claimed);
     const finished = repositories.jobs.get(job.id)!; expect(finished.status).toBe("succeeded"); expect(sawEnvironment).toBe(true);
+    const childOutput = JSON.parse(await fsp.readFile(storage.resolve(`jobs/${job.id}/output/result.json`), "utf8")) as { pid: number };
+    expect(repositories.jobs.steps(job.id)[0]).toMatchObject({ status: "succeeded", processId: childOutput.pid, processGroupId: childOutput.pid, exitCode: 0 });
+
     const result = repositories.results.get("digital", finished.resultId!, user.id, false)!; expect(result.provenance.origin).toBe("imported"); expect(result.provenance.toolVersions["node-test"]).toBe(process.version);
     const artifacts = repositories.artifacts.listJob(job.id); expect(artifacts.map((item) => item.role)).toEqual(expect.arrayContaining(["execute.stdout", "execute.stderr", "result"]));
     expect(await fsp.readFile(storage.resolve(`results/digital/${result.id}/output/result.json`), "utf8")).toContain("42"); database.close();

@@ -83,7 +83,7 @@ export function BenchmarkFilePicker({ mode, files, roles, disabled, onChange }: 
     <section className="benchmark-run-section" aria-labelledby="benchmark-input-heading">
       <div className="benchmark-run-section__heading">
         <div>
-          <span className="benchmark-run-eyebrow">Input</span>
+          <span className="benchmark-run-eyebrow">Step 1</span>
           <h3 id="benchmark-input-heading">Choose source files</h3>
         </div>
         <span>{files.length} file{files.length === 1 ? "" : "s"}</span>
@@ -92,7 +92,7 @@ export function BenchmarkFilePicker({ mode, files, roles, disabled, onChange }: 
         Models: .lib, .model, .sp, .cir or .scs. Fitting: measured DC IV CSV. Expansion: optional sigma JSON.
         Folder upload preserves include paths; unresolved includes stop preflight.
       </p>
-      <div className="benchmark-file-actions">
+      <div className="workflow-file-actions benchmark-file-actions">
         <button type="button" disabled={disabled} onClick={() => singleRef.current?.click()}>Choose single file</button>
         <button type="button" disabled={disabled} onClick={() => filesRef.current?.click()}>Choose files</button>
         <button type="button" disabled={disabled} onClick={() => folderRef.current?.click()}>Choose folder</button>

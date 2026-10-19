@@ -30,8 +30,13 @@ describe("Fastify auth and multipart draft API", () => {
     expect(upload.statusCode, upload.body).toBe(201); const job = upload.json().data.job;
     expect(job.inputManifest.files[0].relativePath).toBe(relative); expect(job.inputManifest.files[0].sha256).toMatch(/^[a-f0-9]{64}$/);
     expect(await fsp.readFile(path.join(storageRoot, job.workspaceRelativePath, "input", "rtl/core/top.v"), "utf8")).toBe(source);
-    const anonymous = await app.inject({ method: "GET", url: `/api/jobs/${job.id}` }); expect(anonymous.statusCode).toBe(401);
+    const anonymous = await app.inject({ method: "GET", url: `/api/jobs/${job.id}` }); expect(anonymous.statusCode).toBe(404);
     const owner = await app.inject({ method: "GET", url: `/api/jobs/${job.id}`, headers: { cookie } }); expect(owner.statusCode).toBe(200);
+    const publicRelative = "rtl/public/top.v"; const publicField = `file:${Buffer.from(publicRelative).toString("base64url")}`; const publicBoundary = "eda-public-boundary";
+    const publicUpload = await app.inject({ method: "POST", url: "/api/modules/digital/drafts", headers: { "content-type": `multipart/form-data; boundary=${publicBoundary}` }, payload: multipart(publicBoundary, publicField, "top.v", source) });
+    expect(publicUpload.statusCode, publicUpload.body).toBe(201); const publicJob = publicUpload.json().data.job;
+    expect((await app.inject({ method: "GET", url: `/api/jobs/${publicJob.id}` })).statusCode).toBe(200);
+    expect(app.eda.repositories.users.get(publicJob.ownerId)?.username).toBe("public-runner");
     await app.close();
   });
 

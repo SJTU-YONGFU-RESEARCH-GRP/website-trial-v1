@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const children = [
-  spawn(npmCommand, ["run", "dev"], { stdio: "inherit", env: process.env, shell: false }),
+  spawn(npmCommand, ["run", "dev"], { stdio: "inherit", env: { ...process.env, VITE_SUPERVISE_BACKEND: "0" }, shell: false }),
   spawn(npmCommand, ["run", "dev:server"], {
     stdio: "inherit",
     env: { ...process.env, EDA_PORT: process.env.EDA_PORT || "3001" },

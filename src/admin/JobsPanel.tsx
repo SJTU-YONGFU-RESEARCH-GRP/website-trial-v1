@@ -1,3 +1,4 @@
+import { MODULE_IDS } from "../../shared/contracts/v1";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { JobRecordV1, JobStatus, ModuleId, UserRecordV1 } from "../../shared/contracts/v1";
 import { useSearchParams } from "react-router-dom";
@@ -6,7 +7,7 @@ import { cancelJob, cleanJobWorkspace, diagnosticBundleUrl, retryJob } from "../
 import { formatDate, shortId, StatusBadge } from "../jobs";
 import { AdminNotice } from "./AdminNotice";
 
-const MODULES: Array<ModuleId | ""> = ["", "benchmark", "digital", "ppa"];
+const MODULES: Array<ModuleId | ""> = ["", ...MODULE_IDS];
 const STATUSES: Array<JobStatus | ""> = ["", "draft", "validating", "ready", "queued", "running", "succeeded", "failed", "cancelled", "interrupted"];
 const TERMINAL = new Set(["succeeded", "failed", "cancelled", "interrupted"]);
 

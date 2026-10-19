@@ -75,4 +75,94 @@ describe("Benchmark execution and native result import", () => {
     const context = executionContext(workspace, job); context.step.stepKey = "validate-input";
     await expect(new BenchmarkModuleAdapter().executeStep(context)).rejects.toThrow(/SHA-256 changed/);
   });
+
+  it("accepts computed output only when every planned simulator and mode has a report and native fixture", async () => {
+    const workspace = await mkdtemp(path.join(os.tmpdir(), "benchmark-complete-")); temporaryDirectories.push(workspace);
+    const writeSimulator = async (simulator: string): Promise<void> => {
+      const directory = path.join(workspace, `output/benchmark-1/${simulator}`);
+      await mkdir(directory, { recursive: true });
+      await writeFile(path.join(directory, "REPORT.md"), [
+        "# MOSFET Simulation Verification Report",
+        `Version: ${simulator}-test`,
+        "## 3. DC Analysis",
+        "- [<span style='color: green'>✓</span>] DC complete",
+        "## 4. AC Analysis",
+        "- [<span style='color: green'>✓</span>] AC complete",
+      ].join("\n"));
+      await writeFile(path.join(directory, "native-fixture-manifest.json"), JSON.stringify({
+        simulator,
+        fixtures: { dc: { submitted: "dc" }, ac: { submitted: "ac" } },
+      }));
+    };
+    await writeSimulator("ngspice");
+    await writeSimulator("spectre");
+    const benchmarkConfiguration = toolConfiguration("spice-benchmark", { interpreter: "/usr/bin/python3", entryPoint: "benchmark.cli" });
+    const job = jobRecord({
+      parameters: { mode: "run", operations: { benchmark: true }, translator: {}, fitting: {}, reduction: {}, expansion: {}, benchmark: { simulators: ["ngspice", "spectre"], modes: ["dc", "ac"] } },
+      toolConfigurations: [benchmarkConfiguration],
+      plan: { schemaVersion: "eda.job-plan.v1", capabilityVersion: "benchmark.capability.v1", steps: [{
+        id: "benchmark.1", name: "Benchmark", description: "", required: true, weight: 1,
+        process: { toolConfigurationId: benchmarkConfiguration.id, executableDisplay: "/usr/bin/python3", argv: ["model.lib", "--output-dir", "../../output/benchmark-1"], cwdRelative: "work/benchmark.1", environmentNames: [], timeoutSeconds: 30 },
+        inputRoles: ["model"], outputRoles: ["benchmark-report"],
+      }], sweep: null, warnings: [] },
+    });
+    const result = await new BenchmarkModuleAdapter().parseResult(executionContext(workspace, job));
+    expect(result.summary.reportCount).toBe(2);
+    expect(result.summary.simulators).toEqual(["ngspice", "spectre"]);
+  });
+
+  it("publishes three simulator-specific steps without requiring the root-parameter cross product", async () => {
+    const workspace = await mkdtemp(path.join(os.tmpdir(), "benchmark-split-complete-")); temporaryDirectories.push(workspace);
+    const simulators = ["ngspice", "spectre", "hspice"];
+    const benchmarkConfiguration = toolConfiguration("spice-benchmark", { interpreter: "/usr/bin/python3", entryPoint: "benchmark.cli" });
+    await mkdir(path.join(workspace, "input"), { recursive: true });
+    for (const [index, simulator] of simulators.entries()) {
+      const model = path.join(workspace, `input/model-${index + 1}.lib`);
+      await writeFile(model, `.model actual_nmos NMOS level=${simulator === "hspice" ? 54 : 14} vth0=0.7\n`);
+      const directory = path.join(workspace, `output/benchmark-${index + 1}/${simulator}`);
+      await mkdir(directory, { recursive: true });
+      await writeFile(path.join(directory, "REPORT.md"), "# MOSFET Simulation Verification Report\n## DC Analysis\n- [✓] DC complete\n");
+      await writeFile(path.join(directory, "native-fixture-manifest.json"), JSON.stringify({ simulator, modelFile: model, fixtures: { dc: { submitted: "dc" } } }));
+    }
+    const job = jobRecord({
+      parameters: { mode: "run", operations: { benchmark: true }, benchmark: { simulators, modes: ["dc", "transient", "ac", "noise"] } },
+      toolConfigurations: [benchmarkConfiguration],
+      plan: { schemaVersion: "eda.job-plan.v1", capabilityVersion: "benchmark.capability.v1", steps: simulators.map((simulator, index) => ({
+        id: `benchmark.${index + 1}`, name: "Benchmark", description: "", required: true, weight: 1,
+        process: { toolConfigurationId: benchmarkConfiguration.id, executableDisplay: "/usr/bin/python3",
+          argv: [`../../input/model-${index + 1}.lib`, "--simulator", simulator, "--modes", "dc", "--output-dir", `../../output/benchmark-${index + 1}`, "--dpi", "300"],
+          cwdRelative: `work/benchmark.${index + 1}`, environmentNames: [], timeoutSeconds: 30,
+          expectedOutputs: [`output/benchmark-${index + 1}/${simulator}/REPORT.md`, `output/benchmark-${index + 1}/${simulator}/native-fixture-manifest.json`] },
+        inputRoles: ["model"], outputRoles: ["benchmark-report"],
+      })), sweep: null, warnings: [] },
+    });
+    const adapter = new BenchmarkModuleAdapter(); const context = executionContext(workspace, job);
+    const result = await adapter.parseResult(context);
+    expect(result.summary.reportCount).toBe(3); expect(result.summary.simulators).toEqual(simulators);
+    await adapter.publishResult(context, result);
+    const artifacts = await adapter.collectArtifacts(context);
+    expect(artifacts.filter((artifact) => /^artifacts\/explorer\/benchmark\.\d+\/model\.json$/.test(artifact.relativePath))).toHaveLength(3);
+    expect(artifacts.some((artifact) => artifact.relativePath === "artifacts/normalized-result.json")).toBe(true);
+    await rm(path.join(workspace, "output/benchmark-3/hspice/REPORT.md"));
+    await expect(adapter.parseResult(context)).rejects.toThrow(/benchmark\.3\/hspice: REPORT\.md is missing/);
+  });
+
+  it("rejects computed output when any selected simulator or analysis mode is missing", async () => {
+    const workspace = await mkdtemp(path.join(os.tmpdir(), "benchmark-incomplete-")); temporaryDirectories.push(workspace);
+    const directory = path.join(workspace, "output/benchmark-1/ngspice");
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, "REPORT.md"), "# Report\n## DC Analysis\n- [✓] complete\n");
+    await writeFile(path.join(directory, "native-fixture-manifest.json"), JSON.stringify({ simulator: "ngspice", fixtures: { dc: {} } }));
+    const benchmarkConfiguration = toolConfiguration("spice-benchmark", { interpreter: "/usr/bin/python3", entryPoint: "benchmark.cli" });
+    const job = jobRecord({
+      parameters: { mode: "run", operations: { benchmark: true }, translator: {}, fitting: {}, reduction: {}, expansion: {}, benchmark: { simulators: ["ngspice", "spectre"], modes: ["dc", "ac"] } },
+      toolConfigurations: [benchmarkConfiguration],
+      plan: { schemaVersion: "eda.job-plan.v1", capabilityVersion: "benchmark.capability.v1", steps: [{
+        id: "benchmark.1", name: "Benchmark", description: "", required: true, weight: 1,
+        process: { toolConfigurationId: benchmarkConfiguration.id, executableDisplay: "/usr/bin/python3", argv: ["model.lib", "--output-dir", "../../output/benchmark-1"], cwdRelative: "work/benchmark.1", environmentNames: [], timeoutSeconds: 30 },
+        inputRoles: ["model"], outputRoles: ["benchmark-report"],
+      }], sweep: null, warnings: [] },
+    });
+    await expect(new BenchmarkModuleAdapter().parseResult(executionContext(workspace, job))).rejects.toThrow(/spectre: REPORT\.md is missing|ngspice\/ac/);
+  });
 });

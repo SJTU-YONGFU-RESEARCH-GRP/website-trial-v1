@@ -43,6 +43,9 @@ export async function preflightBenchmarkDraft(
   const parameters: JsonObject = {
     mode: configuration.mode,
     operations: configuration.operations,
+    operationOrder: configuration.operationOrder,
+    ...(configuration.sourceDialect ? { sourceDialect: configuration.sourceDialect } : {}),
+    ...(configuration.sourceSection?.trim() ? { sourceSection: configuration.sourceSection.trim() } : {}),
     translator: configuration.toolParameters.translator ?? {},
     fitting: configuration.toolParameters.fitting ?? {},
     reduction: configuration.toolParameters.reduction ?? {},

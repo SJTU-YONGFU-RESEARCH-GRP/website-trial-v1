@@ -1,4 +1,5 @@
-import { randomUUID } from "node:crypto";
+import { buildAcgSelfTest } from "../../modules/acg/selftest.ts";
+import { createHash, randomUUID } from "node:crypto";
 import fsp from "node:fs/promises";
 import { constants as fsConstants } from "node:fs";
 import path from "node:path";
@@ -58,23 +59,40 @@ export class ToolHealthService {
 
   async selfTest(tool: ToolConfigurationV1): Promise<ToolHealthCheckV1> {
     const started = Date.now(); const directory = await fsp.mkdtemp(path.join(this.probeRoot, `${safeName(tool.toolId)}-`));
-    let status: ToolHealthCheckV1["status"] = "healthy"; let message = "adapter self-test succeeded"; let passed = false;
+    let status: ToolHealthCheckV1["status"] = "healthy"; let message = "adapter self-test succeeded"; let passed = false; let helperVersion: string | null = null;
     try {
       const specification = await selfTestSpec(tool, directory, this.tools, this.runner);
       const stdout: string[] = []; const stderr: string[] = [];
       const result = await this.runner.run(`self-test:${tool.id}:${randomUUID()}`, { tool, argv: specification.argv, cwd: directory, allowedCwdRoot: directory, timeoutSeconds: Math.min(tool.timeoutSeconds, 120), onOutput: (stream, output) => { (stream === "stdout" ? stdout : stderr).push(output); } });
       const processSucceeded = result.exitCode === 0 && !result.timedOut && !result.outputLimitExceeded;
-      if (!processSucceeded) throw new Error(`adapter self-test exited ${result.exitCode}${result.timedOut ? " after timeout" : ""}`);
+      if (!processSucceeded) {
+        const diagnostic = (stderr.join("") || stdout.join("")).trim().slice(-2_000);
+        throw new Error(`adapter self-test exited ${result.exitCode}${result.timedOut ? " after timeout" : ""}${diagnostic ? `: ${diagnostic}` : ""}`);
+      }
       for (const required of specification.requiredFiles) {
         const stat = await fsp.stat(path.join(directory, required)).catch(() => null);
         if (!stat?.isFile() || stat.size === 0) throw new Error(`adapter self-test did not produce ${required}`);
       }
-      if (specification.verifyOutput) specification.verifyOutput(stdout.join(""), stderr.join(""));
+      if (specification.verifyOutput) await specification.verifyOutput(stdout.join(""), stderr.join(""));
+      if (["acg-lvs1","acg-replay","acg-research"].includes(tool.toolId)) {
+        const evidence=stdout.join("").split(/\r?\n/).flatMap(line=>{try{return [JSON.parse(line)];}catch{return [];}}).find(value=>typeof value.wrapperSha256==="string");
+        const entryPoint=tool.entryPoint && (path.isAbsolute(tool.entryPoint) ? tool.entryPoint : path.join(tool.rootPath ?? "",tool.entryPoint));
+        if(!entryPoint || !evidence || evidence.wrapperSha256!==createHash("sha256").update(await fsp.readFile(entryPoint)).digest("hex")) throw new Error("Helper self-test source checksum changed");
+        helperVersion=String(evidence.version)+" sha256:"+evidence.wrapperSha256;
+        if(tool.toolId==="acg-research" && evidence.unifiedHelper){
+          const unified=path.join(path.dirname(entryPoint),"unified_workflow.py");
+          const digest=createHash("sha256").update(await fsp.readFile(unified)).digest("hex");
+          if(evidence.unifiedHelper.status!=="passed"||evidence.unifiedHelper.schemaVersion!=="acg.unified-stage.v1"||evidence.unifiedHelper.wrapperSha256!==digest)throw new Error("Unified helper self-test source checksum changed");
+          helperVersion+=" unifiedSha256:"+digest;
+        }
+      }
+      if (tool.toolId === "acg-lvs1") message = "GF180 research LVS1 assets and KLayout are ready; this self-test does not validate a routed GDS";
+      if (tool.toolId === "acg-pv") message = "Official GF180 PV dependencies are ready; this self-test does not run DRC or LVS";
       passed = true;
     } catch (error) { status = "unavailable"; message = error instanceof Error ? error.message : String(error); }
     finally { await fsp.rm(directory, { recursive: true, force: true }); }
     const previous = this.tools.latestHealth(tool.id);
-    const record: ToolHealthCheckV1 = { id: randomUUID(), toolConfigurationId: tool.id, status, version: previous?.version || null, checkedAt: new Date().toISOString(), durationMs: Date.now() - started, message, missingDependencies: passed ? [] : [message], selfTestPassed: passed };
+    const record: ToolHealthCheckV1 = { id: randomUUID(), toolConfigurationId: tool.id, status, version: helperVersion ?? previous?.version ?? null, checkedAt: new Date().toISOString(), durationMs: Date.now() - started, message, missingDependencies: passed ? [] : [message], selfTestPassed: passed };
     this.tools.addHealth(record); return record;
   }
 }
@@ -82,9 +100,10 @@ export class ToolHealthService {
 function isPythonModule(value: string): boolean { return !value.endsWith(".py") && !value.includes("/") && /^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$/.test(value); }
 function safeName(value: string): string { return value.replace(/[^A-Za-z0-9_.-]/g, "_").slice(0, 80) || "tool"; }
 
-interface SelfTestSpecification { argv: string[]; requiredFiles: string[]; verifyOutput?: (stdout: string, stderr: string) => void; }
+interface SelfTestSpecification { argv: string[]; requiredFiles: string[]; verifyOutput?: (stdout: string, stderr: string) => void | Promise<void>; }
 
 async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools: ToolRepository, runner: SafeProcessRunner): Promise<SelfTestSpecification> {
+  if (tool.moduleId === "acg") return buildAcgSelfTest(tool, directory);
   if (tool.toolId === "yosys") {
     const source = path.join(directory, "selftest.v");
     await fsp.writeFile(source, "module selftest(input a, output y); assign y = a; endmodule\n", { mode: 0o600 });

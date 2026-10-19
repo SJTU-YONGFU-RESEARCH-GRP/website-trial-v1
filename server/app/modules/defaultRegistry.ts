@@ -1,3 +1,4 @@
+import acgModuleAdapter from "../../modules/acg/index.ts";
 import { createBenchmarkModule } from "../../modules/benchmark/index.ts";
 import digitalModuleAdapter from "../../modules/digital/index.ts";
 import ppaModuleAdapter from "../../modules/ppa/index.ts";
@@ -12,5 +13,6 @@ export function createDefaultModuleRegistry(): ModuleRegistry {
   registry.register(createBenchmarkModule());
   registry.register(digitalModuleAdapter);
   registry.register(ppaModuleAdapter);
+  registry.register(acgModuleAdapter);
   return registry;
 }

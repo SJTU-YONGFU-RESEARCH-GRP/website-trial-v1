@@ -9,7 +9,7 @@ async function signIn(page: Page, username: string, password: string): Promise<v
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/jobs$/);
-  await expect(page.getByRole("heading", { name: "My Jobs" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Jobs", exact: true })).toBeVisible();
 }
 
 async function waitForSucceededJob(page: Page): Promise<void> {
@@ -34,39 +34,30 @@ test.describe.serial("EDA computation closed loop", () => {
     await expect(page).toHaveURL(/\/jobs$/);
   });
 
-  test("Benchmark import uploads, preflights, starts explicitly, logs, and appears in live results", async ({ page }) => {
-    await signIn(page, "e2e-user", USER_PASSWORD);
+  test("Benchmark, Digital, and PPA inputs expose source execution only", async ({ page }) => {
     await page.goto("/benchmark");
-    const workflow = page.locator(".benchmark-run-shell").filter({ has: page.getByRole("heading", { name: "Run real Benchmark tools" }) });
-    await workflow.getByRole("button", { name: "Import completed result" }).click();
-    await workflow.locator('input[type="file"]').first().setInputFiles({
-      name: "REPORT.md",
-      mimeType: "text/markdown",
-      buffer: Buffer.from("# E2E MOS Benchmark\n\nVersion: ngspice-46\n\n## DC\n\n✓ completed\n"),
-    });
-    await expect(workflow.getByText("completed Benchmark artifact")).toBeVisible();
-    await workflow.getByRole("button", { name: "Upload and preflight" }).click();
-    await expect(workflow.getByText("Backend recognized content")).toBeVisible();
-    await expect(workflow.getByRole("heading", { name: "Planned Operations" })).toBeVisible();
-    await expect(workflow.getByText("No tool has run yet")).toBeVisible();
-    await workflow.locator(".benchmark-start-bar").getByRole("button", { name: "Start" }).click();
-    await waitForSucceededJob(page);
-    await expect(page.getByText("benchmark-native-result-parser")).toBeVisible();
-
-    await page.goto("/benchmark");
-    const results = page.getByRole("region", { name: "Computed and imported results" });
-    await expect(results.getByText(/Benchmark [0-9a-f-]+/).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Run Benchmark Workflow" })).toBeVisible();
+    await expect(page.getByText("Import completed result", { exact: true })).toHaveCount(0);
+    await page.goto("/digital");
+    await expect(page.getByRole("heading", { name: "Run Digital Analysis" })).toBeVisible();
+    await expect(page.getByText("Import completed result", { exact: true })).toHaveCount(0);
+    await page.goto("/ppa");
+    await expect(page.getByRole("heading", { name: "Run RTL-to-GDS" })).toBeVisible();
+    await expect(page.getByText("Import completed result", { exact: true })).toHaveCount(0);
   });
 
   test("Benchmark source run invokes the configured benchmark executable and publishes computed output", async ({ page }) => {
-    await signIn(page, "e2e-user", USER_PASSWORD);
     await page.goto("/benchmark");
-    const workflow = page.locator(".benchmark-run-shell").filter({ has: page.getByRole("heading", { name: "Run real Benchmark tools" }) });
+    const workflow = page.locator(".benchmark-run-shell");
     await expect(workflow.getByText(/spice-benchmark fake-eda-tool/).first()).toBeVisible();
     await workflow.locator('input[type="file"]').first().setInputFiles({
       name: "nmos.sp",
       mimeType: "text/plain",
-      buffer: Buffer.from(".model nmos_test nmos level=1 vto=0.7 kp=100u\n"),
+      buffer: Buffer.from([
+        ".model nmos_test nmos level=1 vto=0.7 kp=100u",
+        ".model pmos_test pmos level=1 vto=-0.7 kp=50u",
+        "",
+      ].join("\n")),
     });
     await expect(workflow.getByRole("row", { name: /nmos\.sp.*SPICE model/ })).toBeVisible();
     await workflow.getByRole("button", { name: "Upload and preflight" }).click();
@@ -78,36 +69,8 @@ test.describe.serial("EDA computation closed loop", () => {
     await expect(page.getByText("spice-benchmark fake-eda-tool", { exact: false }).first()).toBeVisible();
   });
 
-  test("Digital import reaches the same result API and refreshes the Plotly dataset", async ({ page }) => {
-    await signIn(page, "e2e-user", USER_PASSWORD);
-    await page.goto("/plotly");
-    const workflow = page.locator("article.digital-workflow-card").filter({ has: page.getByRole("heading", { name: "Import Digital Results" }) });
-    const input = JSON.stringify({
-      architecture: "e2e_ripple", bitWidth: 8, processNode: "sky130-e2e", fmaxMhz: 123.4,
-      powerMw: 0.0025, areaUm2: 44.2, powerMetric: "Liberty static leakage",
-    });
-    await workflow.locator('input[type="file"]').first().setInputFiles({ name: "digital-results.json", mimeType: "application/json", buffer: Buffer.from(input) });
-    await expect(workflow.getByText("Local SHA-256 100%")).toBeVisible();
-    await workflow.getByRole("button", { name: "Upload & Preflight" }).click();
-    await expect(workflow.getByRole("heading", { name: "Backend recognized content" })).toBeVisible();
-    await expect(workflow.getByRole("heading", { name: "Planned Operations" })).toBeVisible();
-    await expect(workflow.getByText("Preflight passed")).toBeVisible();
-    await workflow.locator(".digital-start").getByRole("button", { name: "Start" }).click();
-    await waitForSucceededJob(page);
-    await expect(page.getByText("digital-result-normalizer")).toBeVisible();
-
-    const resultResponse = await page.request.get("/api/digital/results");
-    expect(resultResponse.ok()).toBe(true);
-    const resultBody = await resultResponse.json();
-    expect(resultBody.data.some((result: { data?: { rows?: Array<{ design?: { architecture?: string } }> } }) => result.data?.rows?.some((row) => row.design?.architecture === "e2e_ripple"))).toBe(true);
-    await page.goto("/plotly");
-    await expect(page.locator(".js-plotly-plot").first()).toBeVisible({ timeout: 20_000 });
-    await expect(page.locator(".js-plotly-plot")).toHaveCount(6);
-  });
-
   test("Digital source run executes Yosys and OpenSTA and publishes normalized metrics", async ({ page }) => {
-    await signIn(page, "e2e-user", USER_PASSWORD);
-    await page.goto("/plotly");
+    await page.goto("/digital");
     const workflow = page.locator("article.digital-workflow-card").filter({ has: page.getByRole("heading", { name: "Run Digital Analysis" }) });
     await workflow.locator('input[type="file"]').nth(1).setInputFiles([
       {
@@ -146,34 +109,7 @@ test.describe.serial("EDA computation closed loop", () => {
     await expect(page.getByText("static_liberty_leakage", { exact: false }).first()).toBeVisible();
   });
 
-  test("PPA completed-run import invokes the configured parser and joins the PPA explorer", async ({ page }) => {
-    await signIn(page, "e2e-user", USER_PASSWORD);
-    await page.goto("/ppa");
-    const workflow = page.locator("article.ppa-workflow-card").filter({ has: page.getByRole("heading", { name: "Import Completed Run" }) });
-    await workflow.locator('input[type="file"]').first().setInputFiles({
-      name: "metrics.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ flow: "openroad", design: "e2e-uart", area: 123.5 })),
-    });
-    await workflow.getByLabel("Design name").fill("e2e-uart");
-    await workflow.getByLabel("Top module").fill("uart");
-    await workflow.getByRole("button", { name: "Upload & Preflight" }).click();
-    await expect(workflow.getByRole("heading", { name: "Backend recognized content" })).toBeVisible();
-    await expect(workflow.getByText("result_json_ast.py")).toBeVisible();
-    await expect(workflow.getByText("Preflight passed")).toBeVisible();
-    await workflow.locator(".digital-start").getByRole("button", { name: "Start" }).click();
-    await waitForSucceededJob(page);
-    await expect(page.getByText("result-json-ast")).toBeVisible();
-
-    const resultResponse = await page.request.get("/api/ppa/results");
-    expect(resultResponse.ok()).toBe(true);
-    const resultBody = await resultResponse.json();
-    expect(resultBody.data.some((result: { data?: { normalized?: { area_um2?: number } } }) => result.data?.normalized?.area_um2 === 123.5)).toBe(true);
-    await page.goto("/ppa");
-    await expect(page.getByRole("heading", { name: "PPA Trend Explorer" })).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByRole("checkbox", { name: /e2e-uart · imported/ })).toBeVisible();
-  });
-
   test("PPA source sweep creates independent workspaces and preserves every successful result", async ({ page }) => {
-    await signIn(page, "e2e-user", USER_PASSWORD);
     await page.goto("/ppa");
     const workflow = page.locator("article.ppa-workflow-card").filter({ has: page.getByRole("heading", { name: "Run RTL-to-GDS" }) });
     const technologySelect = workflow.getByLabel("Registered technology");
@@ -230,9 +166,9 @@ test.describe.serial("EDA computation closed loop", () => {
     await expect(page.getByText("Yosys").first()).toBeVisible();
     await expect(page.getByText("PPA Result AST Parser", { exact: true }).first()).toBeVisible();
 
-    await page.getByRole("link", { name: "Jobs", exact: true }).click();
+    await page.getByLabel("Administration sections").getByRole("link", { name: "Jobs", exact: true }).click();
     await expect(page.getByText(/\d+ jobs/)).toBeVisible();
-    await expect(page.locator("tbody tr").filter({ hasText: "e2e-user" }).first()).toBeVisible();
+    await expect(page.locator("tbody tr").filter({ hasText: "public-runner" }).first()).toBeVisible();
 
     await page.getByRole("link", { name: "Results", exact: true }).click();
     await expect(page.getByText(/\d+ results/)).toBeVisible();

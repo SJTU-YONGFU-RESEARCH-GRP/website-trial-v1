@@ -23,7 +23,7 @@ const OPTIMIZERS = [
   "nelder_mead_normalized",
 ] as const;
 
-const LOSSES = ["Loss.mape_loss.mape_percent", "Loss.log_mape_loss.log_mape_percent"] as const;
+const LOSSES = ["Loss.robust_iv_loss.robust_iv_percent", "Loss.mape_loss.mape_percent", "Loss.log_mape_loss.log_mape_percent"] as const;
 
 function datasetArgument(path: string, mapping: JsonObject | undefined): string {
   if (!mapping) return path;
@@ -61,7 +61,7 @@ function appendBounds(argv: string[], parameters: JsonObject, key: string, flag:
 export const fittingAdapter: BenchmarkToolAdapter = {
   toolId: "fitting",
   label: "Fitting",
-  description: "Fit a BSIM model against measured DC IV CSV datasets.",
+  description: "Fit an existing MOS model against measured DC IV CSV datasets.",
   buildCommands(context) {
     const parameters = objectAt(context.parameters, "fitting");
     const cwd = `work/${context.stepId}`;
@@ -86,10 +86,12 @@ export const fittingAdapter: BenchmarkToolAdapter = {
     const name = modelName(parameters);
     if (name) argv.push("--model-name", name);
     argv.push(
-      "--device-type", enumValue(parameters, "deviceType", ["nmos", "pmos"] as const, "nmos"),
-      "--optimizer", enumValue(parameters, "optimizer", OPTIMIZERS, "nelder_mead"),
+      "--device-type", enumValue(parameters, "deviceType", ["auto", "nmos", "pmos"] as const, "auto"),
+      "--optimizer", enumValue(parameters, "optimizer", OPTIMIZERS, "least_squares_trust_region"),
       "--loss-func", enumValue(parameters, "lossFunction", LOSSES, LOSSES[0]),
       "--max-iters", String(integerValue(parameters, "maxIterations", 100, 1, 1_000_000)),
+      "--max-evaluations", String(integerValue(parameters, "maxEvaluations", 150, 1, 1_000_000)),
+      "--max-seconds", String(numberValue(parameters, "maxSeconds", 120, 1, 86400)),
       "--step-tol", String(numberValue(parameters, "stepTolerance", 1e-6, Number.MIN_VALUE)),
       "--target-rel-loss", String(numberValue(parameters, "targetRelativeLoss", 0.1, 0)),
       "--jobs", String(integerValue(parameters, "jobs", 1, 0, 256)),
@@ -100,6 +102,6 @@ export const fittingAdapter: BenchmarkToolAdapter = {
     appendBounds(argv, parameters, "minimumBounds", "--limitmin");
     appendBounds(argv, parameters, "maximumBounds", "--limitmax");
     if (booleanValue(parameters, "plot", true)) argv.push("--plot");
-    return [resolveInvocation(this.toolId, context.configuration, argv, cwd, [output])];
+    return [resolveInvocation(this.toolId, context.configuration, argv, cwd, [output, `${context.outputDirectory}/model_manifest.json`])];
   },
 };

@@ -8,7 +8,11 @@ export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
 export type JsonObject = { [key: string]: JsonValue };
 
-export type ModuleId = "benchmark" | "digital" | "ppa";
+export const MODULE_IDS = ["benchmark", "digital", "ppa", "acg"] as const;
+export type ModuleId = typeof MODULE_IDS[number];
+export function isModuleId(value: unknown): value is ModuleId {
+  return typeof value === "string" && (MODULE_IDS as readonly string[]).includes(value);
+}
 export type UserRole = "admin" | "user";
 export type JobStatus =
   | "draft"
@@ -166,6 +170,7 @@ export interface PlannedProcessV1 {
   cwdRelative: string;
   environmentNames: string[];
   timeoutSeconds: number;
+  expectedOutputs?: string[];
 }
 
 export interface PlannedStepV1 {

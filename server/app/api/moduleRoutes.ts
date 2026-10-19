@@ -1,3 +1,5 @@
+import {bindAcgResearchSource,listAcgResearchSources} from "../../modules/acg/workflow.ts";
+import { MODULE_IDS } from "../../../shared/contracts/v1.ts";
 import { randomUUID } from "node:crypto";
 import fsp from "node:fs/promises";
 import type { FastifyInstance } from "fastify";
@@ -7,7 +9,7 @@ import type { Repositories } from "../db/repositories.ts";
 import { ModuleRegistry, parseModuleId } from "../modules/registry.ts";
 import { StorageService } from "../storage/storage.ts";
 import { streamMultipartDraft } from "../storage/upload.ts";
-import { csrfGuard, requireUser } from "../auth/guards.ts";
+import { allowPublicRunner, csrfGuardOrPublicRunner } from "../auth/guards.ts";
 import { ApiError } from "./errors.ts";
 import { success } from "./http.ts";
 
@@ -18,7 +20,7 @@ function snapshot(tool: ReturnType<Repositories["tools"]["get"]>): ToolConfigura
 }
 
 export function registerModuleRoutes(app: FastifyInstance, repositories: Repositories, registry: ModuleRegistry, storage: StorageService, config: ServerConfig): void {
-  app.get("/api/modules/:module/capabilities", { schema: { tags: ["modules"], params: { type: "object", required: ["module"], properties: { module: { enum: ["benchmark", "digital", "ppa"] } } } } }, async (request) => {
+  app.get("/api/modules/:module/capabilities", { schema: { tags: ["modules"], params: { type: "object", required: ["module"], properties: { module: { enum: [...MODULE_IDS] } } } } }, async (request) => {
     const moduleId = parseModuleId((request.params as { module?: string }).module); const adapter = registry.get(moduleId);
     const toolConfigurations = repositories.tools.active(moduleId); const technologies = repositories.technologies.list(true);
     const capabilities = adapter ? await adapter.capabilities({ moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), toolConfigurations, toolHealth: Object.fromEntries(toolConfigurations.map((tool) => [tool.id, repositories.tools.latestHealth(tool.id)])), toolBindings: runtimeBindings(repositories, toolConfigurations), technologies } as never) : [];
@@ -26,7 +28,12 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     return success({ moduleId, capabilities, technologies: publicTechnologies, maxSweepJobs: config.maxSweepJobs, configured: Boolean(adapter), unavailableReason: adapter ? null : `${moduleId} backend module is not registered` });
   });
 
-  app.post("/api/modules/:module/drafts", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["drafts"], consumes: ["multipart/form-data"], params: { type: "object", required: ["module"], properties: { module: { enum: ["benchmark", "digital", "ppa"] } } } } }, async (request, reply) => {
+  app.get("/api/modules/acg/research-sources", {preHandler:[allowPublicRunner(repositories)]}, async request=>{
+    if(!request.edaUser!.allowedModules.includes("acg"))throw new ApiError(403,"MODULE_FORBIDDEN","this user is not allowed to run ACG");
+    return success({ownerId:request.edaUser!.id,results:listAcgResearchSources(repositories,request.edaUser!.id)});
+  });
+
+  app.post("/api/modules/:module/drafts", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["drafts"], consumes: ["multipart/form-data"], params: { type: "object", required: ["module"], properties: { module: { enum: [...MODULE_IDS] } } } } }, async (request, reply) => {
     const moduleId = parseModuleId((request.params as { module?: string }).module);
     if (!request.edaUser!.allowedModules.includes(moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is not allowed to run this module");
     if (!request.isMultipart()) throw new ApiError(415, "MULTIPART_REQUIRED", "draft uploads require multipart/form-data");
@@ -44,7 +51,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     } catch (error) { await fsp.rm(draft.path, { recursive: true, force: true }); throw error; }
   });
 
-  app.patch("/api/jobs/:jobId/draft", { preHandler: [requireUser, csrfGuard(repositories)], schema: { tags: ["drafts"], body: { type: "object", additionalProperties: false, properties: { fileRoles: { type: "object", additionalProperties: { type: "string" } }, parameters: { type: "object" }, technologyLibraryId: { type: ["string", "null"] } } } } }, async (request) => {
+  app.patch("/api/jobs/:jobId/draft", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["drafts"], body: { type: "object", additionalProperties: false, properties: { fileRoles: { type: "object", additionalProperties: { type: "string" } }, parameters: { type: "object" }, technologyLibraryId: { type: ["string", "null"] } } } } }, async (request) => {
     const jobId = String((request.params as { jobId?: string }).jobId || ""); const job = repositories.jobs.get(jobId);
     if (!job || job.ownerId !== request.edaUser!.id && request.edaUser!.role !== "admin") throw new ApiError(404, "NOT_FOUND", "job not found");
     if (request.edaUser!.role !== "admin" && !request.edaUser!.allowedModules.includes(job.moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is no longer allowed to run this module");
@@ -61,7 +68,8 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
       const technology = registeredTechnology ? await resolveTechnologyFiles(registeredTechnology) : null;
       const parameters = { ...(body.parameters || {}), ...(technology ? { technologyLibraryId: technology.id, technologyRevision: technology.revision } : {}) } as JsonObject;
       const toolConfigurations = repositories.tools.active(job.moduleId); const validatingJob = { ...repositories.jobs.get(jobId)!, inputManifest: manifest, parameters, toolConfigurations: toolConfigurations.map(snapshot) };
-      const context = { moduleId: job.moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), job: validatingJob, files: manifest.files, technology, toolConfigurations, toolHealth: Object.fromEntries(toolConfigurations.map((tool) => [tool.id, repositories.tools.latestHealth(tool.id)])), toolBindings: runtimeBindings(repositories, toolConfigurations), technologies: technology ? [technology] : [] } as const;
+      const acgResearchSource=bindAcgResearchSource(repositories,validatingJob,parameters);
+      const context = { acgResearchSource, moduleId: job.moduleId, storageRoot: storage.root, now: () => new Date().toISOString(), job: validatingJob, files: manifest.files, technology, toolConfigurations, toolHealth: Object.fromEntries(toolConfigurations.map((tool) => [tool.id, repositories.tools.latestHealth(tool.id)])), toolBindings: runtimeBindings(repositories, toolConfigurations), technologies: technology ? [technology] : [] } as const;
       const validation = await adapter.validateDraft(context);
       if (!validation.valid || validation.errors.length) throw validation.errors[0] || new Error("draft validation failed");
       const plan = await adapter.buildPlan(context); if (!plan.steps.length) throw new ApiError(409, "EMPTY_PLAN", "module returned an empty execution plan");

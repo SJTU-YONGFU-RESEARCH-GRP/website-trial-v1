@@ -16,7 +16,7 @@ export function DynamicBenchmarkResults(): JSX.Element | null {
   if (READ_ONLY_DEMO) return null;
   return (
     <section className="benchmark-run-shell" aria-labelledby="benchmark-live-results-heading">
-      <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Database-backed results</span><h2 id="benchmark-live-results-heading">Computed and imported results</h2></div><strong>{results.length}</strong></div>
+      <div className="benchmark-run-section__heading"><div><span className="benchmark-run-eyebrow">Database-backed results</span><h2 id="benchmark-live-results-heading">Generated results</h2></div><strong>{results.length}</strong></div>
       {unavailable ? <p className="benchmark-run-notice is-error">The dynamic result API is unavailable; bundled historical comparisons remain below.</p> : null}
       {!unavailable && results.length === 0 ? <p className="benchmark-run-notice">No visible dynamic Benchmark result yet. Private results appear here for their owner; administrators can publish them.</p> : null}
       <div className="benchmark-live-results">

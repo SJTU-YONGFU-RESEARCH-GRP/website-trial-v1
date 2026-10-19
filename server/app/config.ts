@@ -1,3 +1,4 @@
+import type { ModuleId } from "../../shared/contracts/v1.ts";
 import path from "node:path";
 
 export interface ServerConfig {
@@ -15,7 +16,7 @@ export interface ServerConfig {
     maxFileBytes: number;
     maxTotalBytes: number;
   };
-  queueConcurrency: Record<"benchmark" | "digital" | "ppa", number>;
+  queueConcurrency: Record<ModuleId, number>;
   cancelGraceMs: number;
   maxSweepJobs: number;
   maxLogBytes: number;
@@ -61,6 +62,7 @@ export function loadConfig(environment: NodeJS.ProcessEnv = process.env): Server
       benchmark: positiveInteger(environment.EDA_BENCHMARK_CONCURRENCY, 1),
       digital: positiveInteger(environment.EDA_DIGITAL_CONCURRENCY, 1),
       ppa: positiveInteger(environment.EDA_PPA_CONCURRENCY, 1),
+      acg: positiveInteger(environment.EDA_ACG_CONCURRENCY, 1),
     },
     cancelGraceMs: positiveInteger(environment.EDA_CANCEL_GRACE_MS, 10_000),
     maxSweepJobs: positiveInteger(environment.EDA_MAX_SWEEP_JOBS, 256),

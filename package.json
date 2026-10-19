@@ -11,6 +11,7 @@
     "db:migrate": "tsx server/cli/db-migrate.ts",
     "db:import-legacy": "tsx server/cli/import-legacy-results.ts",
     "admin:create": "tsx server/cli/admin-create.ts",
+    "tools:acg:init": "tsx server/cli/acg-configure.ts",
     "generate:data": "node scripts/generate-design-data.mjs",
     "generate:ppa": "node scripts/generate-ppa-data.mjs",
     "generate:digital-ppa": "python3 scripts/run-digital-technology-ppa.py --technologies all && npm run generate:data",

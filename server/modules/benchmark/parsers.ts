@@ -79,9 +79,108 @@ function reportSummary(text: string, relativePath: string): JsonObject {
     const failure = /(?:color:\s*red|✗|\bfailed?\b)/i.test(section);
     return { domain, status: !hasSection ? "not-run" : failure ? "failed" : "succeeded" } as JsonObject;
   });
-  const checksSucceeded = (text.match(/(?:color:\s*green[^>]*>✓|✓)/gi) ?? []).length;
-  const checksFailed = (text.match(/(?:color:\s*red[^>]*>✗|✗)/gi) ?? []).length;
+  const checkLines = text.split(/\r?\n/).filter((line) => !/Items are marked with/i.test(line));
+  const checksSucceeded = checkLines.filter((line) => /(?:color:\s*green[^>]*>✓|✓)/i.test(line)).length;
+  const checksFailed = checkLines.filter((line) => /color:\s*red[^>]*>✗/i.test(line)).length;
   return { simulator, version, relativePath, domains, checksSucceeded, checksFailed };
+}
+
+function stringList(value: JsonValue | undefined): string[] {
+  return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
+}
+
+function benchmarkOutputRoot(argv: string[]): string | null {
+  const flag = argv.indexOf("--output-dir");
+  const value = flag >= 0 ? argv[flag + 1] : null;
+  if (!value) return null;
+  const normalized = path.posix.normalize(value.replaceAll("\\", "/"));
+  const outputIndex = normalized.split("/").lastIndexOf("output");
+  if (outputIndex < 0) return null;
+  return normalized.split("/").slice(outputIndex).join("/");
+}
+
+function plannedOptionValues(argv: string[], flag: string, fallback: string[]): string[] {
+  const index = argv.indexOf(flag);
+  if (index < 0) return fallback; // Earlier persisted plans did not retain these CLI flags.
+  const values = argv.slice(index + 1);
+  const nextFlag = values.findIndex((value) => value.startsWith("--"));
+  return values.slice(0, nextFlag < 0 ? undefined : nextFlag);
+}
+
+async function validateComputedBenchmarkCompleteness(
+  context: StepExecutionContextV1,
+  artifacts: NativeArtifact[],
+  benchmarkRuns: JsonValue[],
+  parameters: ReturnType<typeof benchmarkParameters>,
+): Promise<void> {
+  if (!operationEnabled(parameters, "spice-benchmark")) return;
+  const simulators = stringList(parameters.benchmark.simulators);
+  const modes = stringList(parameters.benchmark.modes);
+  const benchmarkSteps = context.job.plan.steps.filter((step) => /^benchmark\.\d+$/.test(step.id));
+  if (!benchmarkSteps.length) throw new Error("Parser rejected the result because the plan contains no Benchmark execution step");
+
+  const reportByPath = new Map<string, JsonObject>();
+  for (const run of benchmarkRuns) {
+    if (!run || typeof run !== "object" || Array.isArray(run)) continue;
+    const relativePath = (run as JsonObject).relativePath;
+    if (typeof relativePath === "string") reportByPath.set(relativePath, run as JsonObject);
+  }
+  const artifactPaths = new Set(artifacts.map((artifact) => artifact.relativePath));
+  const failures: string[] = [];
+  let expectedReports = 0;
+
+  for (const step of benchmarkSteps) {
+    const argv = step.process?.argv ?? [];
+    const stepSimulators = plannedOptionValues(argv, "--simulator", simulators);
+    const stepModes = plannedOptionValues(argv, "--modes", modes);
+    expectedReports += stepSimulators.length;
+    if (!stepSimulators.length) failures.push(`${step.id}: planned simulator selection is empty`);
+    if (!stepModes.length) failures.push(`${step.id}: planned analysis mode selection is empty`);
+    const outputRoot = step.process ? benchmarkOutputRoot(argv) : null;
+    if (!outputRoot) {
+      failures.push(`${step.id}: planned --output-dir is missing or outside output/`);
+      continue;
+    }
+    for (const simulator of stepSimulators) {
+      const prefix = `${outputRoot}/${simulator}`;
+      const reportPath = `${prefix}/REPORT.md`;
+      const manifestPath = `${prefix}/native-fixture-manifest.json`;
+      const run = reportByPath.get(reportPath);
+      if (!run) {
+        failures.push(`${step.id}/${simulator}: REPORT.md is missing`);
+        continue;
+      }
+      if (!artifactPaths.has(manifestPath)) {
+        failures.push(`${step.id}/${simulator}: native-fixture-manifest.json is missing`);
+        continue;
+      }
+      const domains = Array.isArray(run.domains) ? run.domains : [];
+      for (const mode of stepModes) {
+        const domain = domains.find((entry) => entry && typeof entry === "object" && !Array.isArray(entry) && entry.domain === mode) as JsonObject | undefined;
+        if (!domain || domain.status !== "succeeded") failures.push(`${step.id}/${simulator}/${mode}: report domain is not successful`);
+      }
+
+      const manifest = await parseJson(workspacePath(context.workspacePath, manifestPath));
+      if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
+        failures.push(`${step.id}/${simulator}: native fixture manifest is not an object`);
+        continue;
+      }
+      const manifestObject = manifest as JsonObject;
+      if (manifestObject.simulator !== simulator) failures.push(`${step.id}/${simulator}: manifest simulator identity does not match`);
+      const fixtures = manifestObject.fixtures;
+      if (!fixtures || typeof fixtures !== "object" || Array.isArray(fixtures)) {
+        failures.push(`${step.id}/${simulator}: manifest fixtures are missing`);
+        continue;
+      }
+      for (const mode of stepModes) {
+        const fixture = (fixtures as JsonObject)[mode];
+        if (!fixture || typeof fixture !== "object" || Array.isArray(fixture)) failures.push(`${step.id}/${simulator}/${mode}: native fixture is missing`);
+      }
+    }
+  }
+
+  if (reportByPath.size !== expectedReports) failures.push(`expected exactly ${expectedReports} planned REPORT.md files, found ${reportByPath.size}`);
+  if (failures.length) throw new Error(`Parser rejected incomplete Benchmark output:\n${failures.join("\n")}`);
 }
 
 export async function parseBenchmarkResult(context: StepExecutionContextV1): Promise<ParsedModuleResultV1> {
@@ -105,6 +204,7 @@ export async function parseBenchmarkResult(context: StepExecutionContextV1): Pro
     if (metadata.size > MAX_REPORT_BYTES) throw new Error(`Benchmark report is too large: ${report.relativePath}`);
     benchmarkRuns.push(reportSummary(await readFile(absolute, "utf8"), report.relativePath));
   }
+  if (!importMode) await validateComputedBenchmarkCompleteness(context, artifacts, benchmarkRuns, parameters);
 
   const operations: JsonValue[] = [];
   const models: JsonValue[] = [];
@@ -145,7 +245,8 @@ export async function parseBenchmarkResult(context: StepExecutionContextV1): Pro
     summary: {
       origin: importMode ? "imported" : "computed",
       reportCount: reports.length,
-      modelManifestCount: models.length,
+      modelManifestCount: artifacts.filter((artifact) => /(?:^|\/)model[_-]manifest\.json$/i.test(artifact.relativePath)).length,
+      modelFileCount: artifacts.filter((artifact) => artifact.role === "model").length,
       simulators: [...new Set(simulatorNames)],
       artifactCount: artifacts.length,
     },

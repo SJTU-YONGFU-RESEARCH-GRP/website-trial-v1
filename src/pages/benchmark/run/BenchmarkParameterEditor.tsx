@@ -1,4 +1,5 @@
 import type { JsonObject, JsonPrimitive, ParameterDefinitionV1, ToolCapabilityV1 } from "../../../../shared/contracts/v1";
+import { benchmarkToolVersionLabel } from "./toolPresentation";
 
 interface ParameterControlProps {
   definition: ParameterDefinitionV1;
@@ -55,10 +56,9 @@ interface BenchmarkParameterEditorProps {
 }
 
 export function BenchmarkParameterEditor({ capability, values, disabled, onChange }: BenchmarkParameterEditorProps) {
-  return (
-    <details className="benchmark-tool-parameters" open>
-      <summary><span>{capability.label} parameters</span><small>{capability.toolVersion ?? "version unavailable"}</small></summary>
-      <div className="benchmark-parameter-grid">
+  const content = (
+    <>
+      <div className={`benchmark-parameter-grid${capability.toolId === "spice-benchmark" ? "" : " benchmark-parameter-grid--single"}`}>
         {capability.parameters.map((definition) => (
           <label key={definition.id} className="benchmark-parameter-field">
             <span>{definition.label}{definition.unit ? ` (${definition.unit})` : ""}</span>
@@ -69,6 +69,16 @@ export function BenchmarkParameterEditor({ capability, values, disabled, onChang
           </label>
         ))}
       </div>
-    </details>
+    </>
   );
+  if (capability.toolId === "spice-benchmark") {
+    return <section className="benchmark-tool-parameters benchmark-tool-parameters--fixed">
+      <div className="benchmark-tool-parameters__heading"><span>{capability.label} parameters</span><small>{benchmarkToolVersionLabel(capability.toolVersion)}</small></div>
+      {content}
+    </section>;
+  }
+  return <details className="benchmark-tool-parameters" open>
+    <summary><span>{capability.label} parameters</span><small>{benchmarkToolVersionLabel(capability.toolVersion)}</small></summary>
+    {content}
+  </details>;
 }

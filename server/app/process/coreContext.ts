@@ -50,6 +50,16 @@ export function attachCoreExecution(
           stepId: context.step.id, role: `${context.step.stepKey}.${stream}`, relativePath, mediaType: "text/plain; charset=utf-8", sizeBytes: digest.sizeBytes, sha256: digest.sha256, visibility: "private", createdAt: context.now() };
         repositories.artifacts.insert(artifact);
       }
+      if (result.exitCode === 0) {
+        for (const expected of plannedStep.process.expectedOutputs ?? []) {
+          const relative = normalizeRelativePath(expected); const outputPath = path.resolve(context.workspacePath, ...relative.split("/"));
+          if (!inside(context.workspacePath, outputPath)) throw new Error(`planned output escapes workspace: ${expected}`);
+          let metadata;
+          try { metadata = await fsp.lstat(outputPath); }
+          catch { throw { type: "tool_exit", code: "TOOL_OUTPUT_MISSING", message: `${context.step.stepKey} did not produce required output ${expected}`, stepId: context.step.id, retryable: false, details: { expectedOutput: expected } }; }
+          if (!metadata.isFile() || metadata.isSymbolicLink()) throw { type: "tool_exit", code: "TOOL_OUTPUT_INVALID", message: `${context.step.stepKey} produced an invalid required output ${expected}`, stepId: context.step.id, retryable: false, details: { expectedOutput: expected } };
+        }
+      }
       return result;
     },
   });

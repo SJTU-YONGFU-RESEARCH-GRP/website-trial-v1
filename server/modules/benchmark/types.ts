@@ -29,11 +29,13 @@ export interface ToolRuntimeHealth {
 export interface BenchmarkModuleOptions {
   configurations?: ToolConfigurationSnapshotV1[];
   health?: Partial<Record<BenchmarkToolId | SimulatorId, ToolRuntimeHealth>>;
+  repositoryVersions?: Partial<Record<BenchmarkToolId, string>>;
 }
 
 export interface BenchmarkRunParameters extends JsonObject {
   mode: "run" | "import";
   operations: JsonObject;
+  operationOrder: BenchmarkToolId[];
   translator: JsonObject;
   fitting: JsonObject;
   reduction: JsonObject;
@@ -96,5 +98,6 @@ export function plannedProcess(
     cwdRelative: command.cwdRelative,
     environmentNames: [...command.environmentNames],
     timeoutSeconds: command.timeoutSeconds,
+    expectedOutputs: [...command.expectedOutputs],
   };
 }

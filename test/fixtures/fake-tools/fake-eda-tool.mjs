@@ -44,6 +44,16 @@ function option(name, fallback) {
   return index >= 0 && argv[index + 1] ? argv[index + 1] : fallback;
 }
 
+function optionValues(name, fallback) {
+  const index = argv.indexOf(name);
+  if (index < 0) return fallback;
+  const values = [];
+  for (let position = index + 1; position < argv.length && !argv[position].startsWith("--"); position += 1) {
+    values.push(argv[position]);
+  }
+  return values.length ? values : fallback;
+}
+
 function versionProbe() {
   return argv.some((value) => value === "--version" || value === "-version" || value === "version" || value === "-V" || value === "--help" || value === "-W");
 }
@@ -127,8 +137,22 @@ if (mode === "timeout" || mode === "cancel") {
     write(option("-o", "ngspice.log"), "ngspice fake operating point completed\n");
   } else if (tool === "spice-benchmark") {
     const directory = option("--output-dir", "output/benchmark");
-    write(path.join(directory, "REPORT.md"), "# Fake executable Benchmark report\n\nVersion: ngspice fake-eda-tool 1.0.0-test\n\n## DC\n\n✓ completed\n");
-    write(path.join(directory, "data", "dc.json"), JSON.stringify({ domain: "dc", status: "succeeded", fixture: true }, null, 2));
+    const simulators = optionValues("--simulator", ["ngspice"]);
+    const modes = optionValues("--modes", ["dc"]);
+    for (const simulator of simulators) {
+      const simulatorDirectory = path.join(directory, simulator);
+      const sections = modes.map((domain) => `## ${domain.toUpperCase()} Analysis\n\n✓ completed`).join("\n\n");
+      write(path.join(simulatorDirectory, "REPORT.md"), `# Fake executable Benchmark report\n\nVersion: ${simulator} fake-eda-tool 1.0.0-test\n\n${sections}\n`);
+      for (const domain of modes) {
+        write(path.join(simulatorDirectory, "data", `${domain}.json`), JSON.stringify({ domain, status: "succeeded", simulator, fixture: true }, null, 2));
+      }
+      write(path.join(simulatorDirectory, "native-fixture-manifest.json"), JSON.stringify({
+        schemaVersion: 1,
+        simulator,
+        fixtureMode: "fixed-simulator-native",
+        fixtures: Object.fromEntries(modes.map((domain) => [domain, { fixture: true }])),
+      }, null, 2));
+    }
   } else if (tool === "openroad-orfs" && argv.includes("metadata-generate")) {
     write("work/orfs-run/orfs/reports/metadata.json", JSON.stringify({
       finish__design__die__area: 200,
