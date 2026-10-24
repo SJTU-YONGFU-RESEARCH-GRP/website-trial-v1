@@ -1,0 +1,310 @@
+{
+  "modelId": "sky130__fd__pr__pfet__01v8__lvt__model__fitting_reduction_translation",
+  "sourceId": "sky130__fd__pr__pfet__01v8__lvt__model",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/2de066a70e21f758ce6a9af663ce69da/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/2de066a70e21f758ce6a9af663ce69da/spectre.lib",
+  "astParsedInput": true,
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "benchmark netlists",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "parameterCount": 23,
+    "parameters": [
+      {
+        "name": "l",
+        "value": "1u",
+        "source": "benchmark netlist DUT geometry"
+      },
+      {
+        "name": "mult",
+        "value": "1",
+        "source": "benchmark netlist DUT geometry"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__ku0_diff",
+        "value": "5.9e-8",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__kvsat_diff",
+        "value": ".0e-6",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__kvth0_diff",
+        "value": "1.76e-8",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__lku0_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__lkvth0_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__nfactor_slope",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__nfactor_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__toxe_slope",
+        "value": "3.689e-03",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__toxe_slope2",
+        "value": "1.689e-02",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__toxe_slope3",
+        "value": "2.389e-02",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__toxe_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__voff_slope",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__voff_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__vth0_slope",
+        "value": "1.389e-02",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__vth0_slope1",
+        "value": "9.789e-03",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__vth0_slope2",
+        "value": "1.089e-02",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__vth0_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/pfet_01v8_lvt/sky130_fd_pr__pfet_01v8_lvt.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__wku0_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__wkvth0_diff",
+        "value": ".73e-6",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "sky130_fd_pr__pfet_01v8_lvt__wlod_diff",
+        "value": ".0e-6",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/parameters/lod.spice"
+      },
+      {
+        "name": "w",
+        "value": "10u",
+        "source": "benchmark netlist DUT geometry"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_pr__pfet_01v8_lvt__model.0": "sky130_fd_pr__pfet_01v8_lvt__model.0",
+      "sky130_fd_pr__pfet_01v8_lvt__model.1": "sky130_fd_pr__pfet_01v8_lvt__model.1",
+      "sky130_fd_pr__pfet_01v8_lvt__model.2": "sky130_fd_pr__pfet_01v8_lvt__model.2",
+      "sky130_fd_pr__pfet_01v8_lvt__model.3": "sky130_fd_pr__pfet_01v8_lvt__model.3",
+      "sky130_fd_pr__pfet_01v8_lvt__model.4": "sky130_fd_pr__pfet_01v8_lvt__model.4",
+      "sky130_fd_pr__pfet_01v8_lvt__model.5": "sky130_fd_pr__pfet_01v8_lvt__model.5",
+      "sky130_fd_pr__pfet_01v8_lvt__model.6": "__benchmark_selected_pmos",
+      "sky130_fd_pr__pfet_01v8_lvt__model.7": "sky130_fd_pr__pfet_01v8_lvt__model.7",
+      "sky130_fd_pr__pfet_01v8_lvt__model.8": "sky130_fd_pr__pfet_01v8_lvt__model.8",
+      "sky130_fd_pr__pfet_01v8_lvt__model.9": "sky130_fd_pr__pfet_01v8_lvt__model.9",
+      "sky130_fd_pr__pfet_01v8_lvt__model.10": "sky130_fd_pr__pfet_01v8_lvt__model.10",
+      "sky130_fd_pr__pfet_01v8_lvt__model.11": "sky130_fd_pr__pfet_01v8_lvt__model.11",
+      "sky130_fd_pr__pfet_01v8_lvt__model.12": "sky130_fd_pr__pfet_01v8_lvt__model.12",
+      "sky130_fd_pr__pfet_01v8_lvt__model.13": "sky130_fd_pr__pfet_01v8_lvt__model.13",
+      "sky130_fd_pr__pfet_01v8_lvt__model.14": "sky130_fd_pr__pfet_01v8_lvt__model.14",
+      "sky130_fd_pr__pfet_01v8_lvt__model.15": "sky130_fd_pr__pfet_01v8_lvt__model.15",
+      "sky130_fd_pr__pfet_01v8_lvt__model.16": "sky130_fd_pr__pfet_01v8_lvt__model.16",
+      "sky130_fd_pr__pfet_01v8_lvt__model.17": "sky130_fd_pr__pfet_01v8_lvt__model.17",
+      "sky130_fd_pr__pfet_01v8_lvt__model.18": "sky130_fd_pr__pfet_01v8_lvt__model.18",
+      "sky130_fd_pr__pfet_01v8_lvt__model.19": "sky130_fd_pr__pfet_01v8_lvt__model.19",
+      "sky130_fd_pr__pfet_01v8_lvt__model.20": "sky130_fd_pr__pfet_01v8_lvt__model.20",
+      "sky130_fd_pr__pfet_01v8_lvt__model.21": "sky130_fd_pr__pfet_01v8_lvt__model.21",
+      "sky130_fd_pr__pfet_01v8_lvt__model.22": "sky130_fd_pr__pfet_01v8_lvt__model.22",
+      "sky130_fd_pr__pfet_01v8_lvt__model.23": "sky130_fd_pr__pfet_01v8_lvt__model.23",
+      "sky130_fd_pr__pfet_01v8_lvt__model.24": "sky130_fd_pr__pfet_01v8_lvt__model.24",
+      "sky130_fd_pr__pfet_01v8_lvt__model.25": "sky130_fd_pr__pfet_01v8_lvt__model.25",
+      "sky130_fd_pr__pfet_01v8_lvt__model.26": "sky130_fd_pr__pfet_01v8_lvt__model.26",
+      "sky130_fd_pr__pfet_01v8_lvt__model.27": "sky130_fd_pr__pfet_01v8_lvt__model.27",
+      "sky130_fd_pr__pfet_01v8_lvt__model.28": "sky130_fd_pr__pfet_01v8_lvt__model.28",
+      "sky130_fd_pr__pfet_01v8_lvt__model.29": "sky130_fd_pr__pfet_01v8_lvt__model.29",
+      "sky130_fd_pr__pfet_01v8_lvt__model.30": "sky130_fd_pr__pfet_01v8_lvt__model.30",
+      "sky130_fd_pr__pfet_01v8_lvt__model.31": "sky130_fd_pr__pfet_01v8_lvt__model.31",
+      "sky130_fd_pr__pfet_01v8_lvt__model.32": "sky130_fd_pr__pfet_01v8_lvt__model.32",
+      "sky130_fd_pr__pfet_01v8_lvt__model.33": "sky130_fd_pr__pfet_01v8_lvt__model.33",
+      "sky130_fd_pr__pfet_01v8_lvt__model.34": "sky130_fd_pr__pfet_01v8_lvt__model.34",
+      "sky130_fd_pr__pfet_01v8_lvt__model.35": "sky130_fd_pr__pfet_01v8_lvt__model.35",
+      "sky130_fd_pr__pfet_01v8_lvt__model.36": "sky130_fd_pr__pfet_01v8_lvt__model.36",
+      "sky130_fd_pr__pfet_01v8_lvt__model.37": "sky130_fd_pr__pfet_01v8_lvt__model.37",
+      "sky130_fd_pr__pfet_01v8_lvt__model.38": "sky130_fd_pr__pfet_01v8_lvt__model.38",
+      "sky130_fd_pr__pfet_01v8_lvt__model.39": "sky130_fd_pr__pfet_01v8_lvt__model.39",
+      "sky130_fd_pr__pfet_01v8_lvt__model.40": "sky130_fd_pr__pfet_01v8_lvt__model.40",
+      "sky130_fd_pr__pfet_01v8_lvt__model.41": "sky130_fd_pr__pfet_01v8_lvt__model.41",
+      "sky130_fd_pr__pfet_01v8_lvt__model.42": "sky130_fd_pr__pfet_01v8_lvt__model.42",
+      "sky130_fd_pr__pfet_01v8_lvt__model.43": "sky130_fd_pr__pfet_01v8_lvt__model.43",
+      "sky130_fd_pr__pfet_01v8_lvt__model.44": "sky130_fd_pr__pfet_01v8_lvt__model.44",
+      "sky130_fd_pr__pfet_01v8_lvt__model.45": "sky130_fd_pr__pfet_01v8_lvt__model.45",
+      "sky130_fd_pr__pfet_01v8_lvt__model.46": "sky130_fd_pr__pfet_01v8_lvt__model.46",
+      "sky130_fd_pr__pfet_01v8_lvt__model.47": "sky130_fd_pr__pfet_01v8_lvt__model.47"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_pmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_pr__pfet_01v8_lvt__model.6",
+      "modelFamily": "sky130_fd_pr__pfet_01v8_lvt__model",
+      "deviceType": "pmos",
+      "selectionMode": "matched-real-bin",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": null,
+      "selectedBinBounds": {
+        "lmin": 5e-07,
+        "lmax": 1e-06,
+        "wmin": 7e-06,
+        "wmax": 0.0001
+      },
+      "benchmarkModelName": "__benchmark_selected_pmos"
+    },
+    "sha256": "be27dc3e19f40f46a86c756ceee61e5e3d776ae7ac687fc75edfcfb101c71f70"
+  },
+  "benchmarkFixtureAdjustments": [
+    "added NMOS complementary-circuit fixture"
+  ],
+  "md5": "2de066a70e21f758ce6a9af663ce69da",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-28T13:26:41.733420+00:00",
+  "finishedAt": "2026-07-28T13:28:33.853179+00:00",
+  "elapsedSeconds": 112.119775,
+  "peakRssKiB": 225032,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.scs",
+      "bytes": 3398,
+      "sha256": "1d60dc2aa694d6c79d83500a2d0eccfd56eec44b0f6faf12c62bb908cb01f0d5"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.scs",
+      "bytes": 4167,
+      "sha256": "2f93012967fce6a7fce3c41ac1f2edfd6029cbb3ac17b867fbe028574f7f6d95"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.scs",
+      "bytes": 91827,
+      "sha256": "f10b7785f1ab5c607b1b2fe38b3b4460ab7e82f4d13747adf374aaaf2c92cee0"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.scs",
+      "bytes": 5949,
+      "sha256": "2f131996612efe33e28024525e132bdda1b349c92e1abb8278adeeb00e276ac2"
+    }
+  ]
+}

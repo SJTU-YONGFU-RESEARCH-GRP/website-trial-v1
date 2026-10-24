@@ -1,0 +1,53 @@
+{
+  "id": "sky130__fd__pr__special__nfet__pass__model__reduction",
+  "sourceId": "sky130__fd__pr__special__nfet__pass__model",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass/sky130_fd_pr__special_nfet_pass.pm3.spice",
+  "sourceMd5": "cb1f12174045e0f4d733b5a77b432f68",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/ea0e59ade36727b6c49afa458cd6d3ba/model.lib",
+  "md5": "ea0e59ade36727b6c49afa458cd6d3ba",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__special_nfet_pass__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 85
+    }
+  ],
+  "completedAt": "2026-07-28T11:43:41.827890+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:43:36.551205+00:00",
+      "elapsedSeconds": 2.992718,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/original/model.lib",
+      "inputMd5": "664f48b4baecfe6c0236f013f54c0161",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "ce20a5a76014c8a7c9132959084f00f5",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/reduction/01-reduction/normalized.lib",
+      "outputMd5": "ff642986722ba4b0191e900825390666",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/reduction/01-reduction/reduced.lib",
+        "inputMd5": "ce20a5a76014c8a7c9132959084f00f5",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__model/reduction/01-reduction/normalized.lib",
+        "outputMd5": "ff642986722ba4b0191e900825390666",
+        "physicalModelSignature": "5ab16bee3bff5263d0b12226b19ef47cd1b690a4c53c40718c851c379eb63cfd",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 85
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

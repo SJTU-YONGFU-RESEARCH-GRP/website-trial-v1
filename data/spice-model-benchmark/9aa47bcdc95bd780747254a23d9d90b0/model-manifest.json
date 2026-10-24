@@ -1,0 +1,186 @@
+{
+  "id": "sky130__fd__pr__esd__pfet__g5v0d10v5__model__expansion_translation",
+  "sourceId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/esd_pfet_g5v0d10v5/sky130_fd_pr__esd_pfet_g5v0d10v5.pm3.spice",
+  "sourceMd5": "761c03a56dc0fc50f5d40b56e42887e4",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/9aa47bcdc95bd780747254a23d9d90b0/model.lib",
+  "md5": "9aa47bcdc95bd780747254a23d9d90b0",
+  "cardCount": 8,
+  "models": [
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.0",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.1",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.2",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.3",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.4",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.5",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.6",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    },
+    {
+      "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.7",
+      "deviceType": "pmos",
+      "parameterCount": 233
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:22.702703+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-28T11:42:15.902782+00:00",
+      "elapsedSeconds": 2.800062,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/original/model.lib",
+      "inputMd5": "c0623e16854dd28ced33a8cf95e60c12",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "2e29ec8483fbf76ebdb49b7f5daf48a6",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "3ac713375dcbb7fff15811af37163d08",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "2e29ec8483fbf76ebdb49b7f5daf48a6",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "3ac713375dcbb7fff15811af37163d08",
+        "physicalModelSignature": "c0a4f48762c2902fd7ebea4cd97886d6d4ec71a7d54e6682ba0cafdc0c96d0f8",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.0",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.1",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.2",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.3",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.4",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.5",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.6",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.7",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:42:18.932989+00:00",
+      "elapsedSeconds": 2.013864,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "3ac713375dcbb7fff15811af37163d08",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "2642a56218a36907c31e985d17d2db06",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "bfb43ef3b415bebb8603e88900d32a2d",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "2642a56218a36907c31e985d17d2db06",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__esd__pfet__g5v0d10v5__model/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "bfb43ef3b415bebb8603e88900d32a2d",
+        "physicalModelSignature": "c0a4f48762c2902fd7ebea4cd97886d6d4ec71a7d54e6682ba0cafdc0c96d0f8",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.0",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.1",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.2",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.3",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.4",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.5",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.6",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          },
+          {
+            "name": "sky130_fd_pr__esd_pfet_g5v0d10v5__model.7",
+            "deviceType": "pmos",
+            "parameterCount": 233
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

@@ -1,0 +1,67 @@
+$ /usr/bin/time -v -o /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/resource.txt /usr/bin/python -m spice_model_benchmark.cli /home/duhaochen/pipeline_sky130_mos/benchmark-inputs/884d4527aa9a7b801ecb54f761ec440d/ngspice.lib --simulator ngspice --modes dc transient ac noise --output-dir /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d --translated-netlist-dir /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/_translated_input --dpi 120 --log-level WARNING
+SPICE Model Benchmark: /home/duhaochen/pipeline_sky130_mos/benchmark-inputs/884d4527aa9a7b801ecb54f761ec440d/ngspice.lib
+Simulators: ngspice
+Modes: dc, transient, ac, noise
+------------------------------------------------------------
+
+============================================================
+  Running: NGSPICE
+  Output:  /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice
+============================================================
+[WARNING]: Simulation warnings: doAnalyses: TRAN:  Timestep too small; time = 1e-09, timestep = 1.25e-23: trouble with node "vsq#branch"
+
+
+tran simulation(s) aborted
+
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1643: RuntimeWarning: divide by zero encountered in divide
+  tc = np.mean((d_ids / d_temp) / np.abs(i_ds[:-1]))
+Vgs range: 0.000V to 1.200V
+Ids range: -1.372e-03A to 0.000e+00A
+Selected Vgs values: [0.  0.2 0.4 0.6 0.8 1.  1.2]
+Vgs=0.000V: Ids range -2.100e-05A to -1.086e-06A
+Vgs=0.200V: Ids range -8.087e-05A to 0.000e+00A
+Vgs=0.400V: Ids range -2.296e-04A to 0.000e+00A
+Vgs=0.600V: Ids range -4.422e-04A to 0.000e+00A
+Vgs=0.800V: Ids range -7.116e-04A to 0.000e+00A
+Vgs=1.000V: Ids range -1.029e-03A to 0.000e+00A
+Vgs=1.200V: Ids range -1.372e-03A to 0.000e+00A
+ids_variation: 4.755377398361455
+ids_variation <= max_variation: False
+tc: inf
+abs(tc) <= max_tc: False
+[WARNING]: Temperature effects verification failed - effects outside expected range
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1903: RuntimeWarning: divide by zero encountered in log
+  log_ids = np.log(np.abs(i_ds))
+/home/duhaochen/.local/lib/python3.9/site-packages/numpy/lib/function_base.py:2742: RuntimeWarning: invalid value encountered in subtract
+  X -= avg[:, None]
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:1948: RuntimeWarning: divide by zero encountered in divide
+  efficiency = np.abs(gm / i_ds)  # Transconductance efficiency
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2792: RuntimeWarning: divide by zero encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+/home/duhaochen/spice_model_benchmark/src/spice_model_benchmark/verification_manager.py:2792: RuntimeWarning: invalid value encountered in divide
+  norm_dvg = np.abs(dvg_dt / gate_voltage[:-1])
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/plots/ac_cv_sparameter_analysis.png
+[INFO]: NQS effects plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/plots/ac_cv_nqs_effects.png
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/plots/ac_cv_sparameter_analysis.png
+norm_dvg: [1.0e+12 5.0e+11 2.5e+11 ... 0.0e+00 0.0e+00 0.0e+00]
+norm_dvd: [0. 0. 0. ... 0. 0. 0.]
+norm_did: [7.94783240e+09 6.72681840e+09 4.64139496e+09 ... 0.00000000e+00
+ 0.00000000e+00 0.00000000e+00]
+[WARNING]: Quasi-static verification failed
+[WARNING]: Max normalized derivatives: dVg/dt=nan, dVd/dt=0.00e+00, dId/dt=2.14e+12
+Vgs range: 0.000V to 1.200V
+Ids range: -1.372e-03A to 0.000e+00A
+Selected Vgs values: [0.  0.2 0.4 0.6 0.8 1.  1.2]
+Vgs=0.000V: Ids range -2.100e-05A to -1.086e-06A
+Vgs=0.200V: Ids range -8.087e-05A to 0.000e+00A
+Vgs=0.400V: Ids range -2.296e-04A to 0.000e+00A
+Vgs=0.600V: Ids range -4.422e-04A to 0.000e+00A
+Vgs=0.800V: Ids range -7.116e-04A to 0.000e+00A
+Vgs=1.000V: Ids range -1.029e-03A to 0.000e+00A
+Vgs=1.200V: Ids range -1.372e-03A to 0.000e+00A
+[INFO]: S-parameter analysis plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/plots/ac_cv_sparameter_analysis.png
+[INFO]: NQS effects plot saved to /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice/plots/ac_cv_nqs_effects.png
+
+  ngspice: ✓ PASS  (2754.5s)
+
+✓ Benchmark completed: /home/duhaochen/website-trial-v1/data/spice-model-benchmark/884d4527aa9a7b801ecb54f761ec440d/ngspice

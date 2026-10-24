@@ -1,0 +1,1353 @@
+{
+  "version": "2.0.0",
+  "generatedAt": "2026-07-28T11:43:51.015966+00:00",
+  "collectionCommit": "f62031a1be9aefe902d6d54cddd6f59b57627436",
+  "sourceCount": 36,
+  "processedCount": 108,
+  "modelCount": 144,
+  "simulators": [
+    "ngspice",
+    "spectre",
+    "hspice"
+  ],
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "models": {
+    "sky130__fd__bs__flash__special__sonosfet__original__model__expansion_translation": {
+      "md5": "35c51eb2c9233d013d733a2942a7daa4",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__original__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__original__model__fitting_reduction_translation": {
+      "md5": "9efe4349604a9fa83fa92f20a9169973",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__original__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__original__model__original": {
+      "md5": "2c13b999f86014e455713e9da868cd31",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__original__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__original__model__reduction": {
+      "md5": "79ba9b7a30e7ed6d9bd5e3e9191297a2",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__original__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__star__model__expansion_translation": {
+      "md5": "0fada072ec35587a51d7bae0b506b1a8",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__star__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__star__model__fitting_reduction_translation": {
+      "md5": "f1e2cfd6e5626a9349961aff4ca56020",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__star__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__star__model__original": {
+      "md5": "de3782d51b229d96bc076cc533d33394",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__star__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 3
+    },
+    "sky130__fd__bs__flash__special__sonosfet__star__model__reduction": {
+      "md5": "40f135c35280ae267bd028a6f0ff3fc0",
+      "sourceId": "sky130__fd__bs__flash__special__sonosfet__star__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model__expansion_translation": {
+      "md5": "83bed9f92d152817a1a07e0459acbc9f",
+      "sourceId": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model__fitting_reduction_translation": {
+      "md5": "7483a5e4e35a5000c653edc3c2085f5c",
+      "sourceId": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model__original": {
+      "md5": "7fd2e30c376f628bed7f393c6eb130c6",
+      "sourceId": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model__reduction": {
+      "md5": "b6374e153d0be7bb635f2620487c1fba",
+      "sourceId": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__esd__nfet__01v8__model__expansion_translation": {
+      "md5": "ce6024c39bed6edef7ff5d7af48672bd",
+      "sourceId": "sky130__fd__pr__esd__nfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__01v8__model__fitting_reduction_translation": {
+      "md5": "26592526ee097ebbdbaebbf96c56d99c",
+      "sourceId": "sky130__fd__pr__esd__nfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__01v8__model__original": {
+      "md5": "6dd66b3022e8a8c0e2958bf05c594cd6",
+      "sourceId": "sky130__fd__pr__esd__nfet__01v8__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__01v8__model__reduction": {
+      "md5": "cc44083863c5231a6a4a98565b35aa2c",
+      "sourceId": "sky130__fd__pr__esd__nfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__05v0__nvt__model__expansion_translation": {
+      "md5": "1940a6245a4f3a22ee9878b227bc2246",
+      "sourceId": "sky130__fd__pr__esd__nfet__05v0__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__05v0__nvt__model__fitting_reduction_translation": {
+      "md5": "2cd5ab939b77ce7ca28bff611d718454",
+      "sourceId": "sky130__fd__pr__esd__nfet__05v0__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__05v0__nvt__model__original": {
+      "md5": "390ef20701be9774ec302deabd9615d5",
+      "sourceId": "sky130__fd__pr__esd__nfet__05v0__nvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__05v0__nvt__model__reduction": {
+      "md5": "ef830c74a40dfae656b8ccd756f6f3e6",
+      "sourceId": "sky130__fd__pr__esd__nfet__05v0__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__esd__nfet__g5v0d10v5__model__expansion_translation": {
+      "md5": "3f18e6bf0822ea9ec1d9069e014adbca",
+      "sourceId": "sky130__fd__pr__esd__nfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__esd__nfet__g5v0d10v5__model__fitting_reduction_translation": {
+      "md5": "160725db7a7103200f29b7f905b69a20",
+      "sourceId": "sky130__fd__pr__esd__nfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__esd__nfet__g5v0d10v5__model__original": {
+      "md5": "d7184283a6af5bb889b3b9242ca911eb",
+      "sourceId": "sky130__fd__pr__esd__nfet__g5v0d10v5__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__esd__nfet__g5v0d10v5__model__reduction": {
+      "md5": "8b6ea190cee8176920077c1d2f5d0b29",
+      "sourceId": "sky130__fd__pr__esd__nfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__esd__pfet__g5v0d10v5__model__expansion_translation": {
+      "md5": "9aa47bcdc95bd780747254a23d9d90b0",
+      "sourceId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 8
+    },
+    "sky130__fd__pr__esd__pfet__g5v0d10v5__model__fitting_reduction_translation": {
+      "md5": "a4e115dd4454ca8b1397030546a7fbbb",
+      "sourceId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 8
+    },
+    "sky130__fd__pr__esd__pfet__g5v0d10v5__model__original": {
+      "md5": "c0623e16854dd28ced33a8cf95e60c12",
+      "sourceId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 8
+    },
+    "sky130__fd__pr__esd__pfet__g5v0d10v5__model__reduction": {
+      "md5": "fc167f47cf5f28b983afea7ba517e134",
+      "sourceId": "sky130__fd__pr__esd__pfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 8
+    },
+    "sky130__fd__pr__nfet__01v8__lvt__model__expansion_translation": {
+      "md5": "0f010e68c7631423e91c7dc5d934d662",
+      "sourceId": "sky130__fd__pr__nfet__01v8__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__01v8__lvt__model__fitting_reduction_translation": {
+      "md5": "974a4e38d1540a653c8bb1d8260c305f",
+      "sourceId": "sky130__fd__pr__nfet__01v8__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__01v8__lvt__model__original": {
+      "md5": "16e79f12c6e628462d00331b6551ad0a",
+      "sourceId": "sky130__fd__pr__nfet__01v8__lvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__01v8__lvt__model__reduction": {
+      "md5": "49610f4e249ac90474035380791d2b4c",
+      "sourceId": "sky130__fd__pr__nfet__01v8__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__01v8__model__expansion_translation": {
+      "md5": "a027fb5803148e83aab109b4c0b22e97",
+      "sourceId": "sky130__fd__pr__nfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 180
+    },
+    "sky130__fd__pr__nfet__01v8__model__fitting_reduction_translation": {
+      "md5": "65a41f964d637f67322f73b2b9816e64",
+      "sourceId": "sky130__fd__pr__nfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 180
+    },
+    "sky130__fd__pr__nfet__01v8__model__original": {
+      "md5": "09d52d65e2ca8b44ef9981e8e3a48f9a",
+      "sourceId": "sky130__fd__pr__nfet__01v8__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 180
+    },
+    "sky130__fd__pr__nfet__01v8__model__reduction": {
+      "md5": "807aff9f43f8a4018247e02a6dea0f24",
+      "sourceId": "sky130__fd__pr__nfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 180
+    },
+    "sky130__fd__pr__nfet__03v3__nvt__model__expansion_translation": {
+      "md5": "e851741564fcb423b758e9ce1d61184a",
+      "sourceId": "sky130__fd__pr__nfet__03v3__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__nfet__03v3__nvt__model__fitting_reduction_translation": {
+      "md5": "0ef9027c8157d4738d9fd108e20e1c2d",
+      "sourceId": "sky130__fd__pr__nfet__03v3__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__nfet__03v3__nvt__model__original": {
+      "md5": "b9dafa8013b1ecf75abaf8c499cdf2a2",
+      "sourceId": "sky130__fd__pr__nfet__03v3__nvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__nfet__03v3__nvt__model__reduction": {
+      "md5": "d2d51421445745ee7ecadd52f93f967e",
+      "sourceId": "sky130__fd__pr__nfet__03v3__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__nfet__05v0__nvt__model__expansion_translation": {
+      "md5": "d79f1a326a524cf375601606768733d5",
+      "sourceId": "sky130__fd__pr__nfet__05v0__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__nfet__05v0__nvt__model__fitting_reduction_translation": {
+      "md5": "f2024f651483f51ada1ae739f69bff89",
+      "sourceId": "sky130__fd__pr__nfet__05v0__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__nfet__05v0__nvt__model__original": {
+      "md5": "6fe3e0e4c6b7d4ba743fb9a89cb18dbe",
+      "sourceId": "sky130__fd__pr__nfet__05v0__nvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__nfet__05v0__nvt__model__reduction": {
+      "md5": "8a87b476243f6c55e4b4a193a16f8296",
+      "sourceId": "sky130__fd__pr__nfet__05v0__nvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 11
+    },
+    "sky130__fd__pr__nfet__20v0__base__expansion_translation": {
+      "md5": "a618fe9fb868a1f186dce64767ca8d61",
+      "sourceId": "sky130__fd__pr__nfet__20v0__base",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__base__fitting_reduction_translation": {
+      "md5": "9125811ffe611ebab9c19ec5e3ad4e3a",
+      "sourceId": "sky130__fd__pr__nfet__20v0__base",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__base__original": {
+      "md5": "473951a3df6f943fdc865db307061d7c",
+      "sourceId": "sky130__fd__pr__nfet__20v0__base",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__base__reduction": {
+      "md5": "5f52a8f785ace3bb044872f72eb80c93",
+      "sourceId": "sky130__fd__pr__nfet__20v0__base",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__zvt__base__expansion_translation": {
+      "md5": "22e375496bbf85efad8f6683108a2ccb",
+      "sourceId": "sky130__fd__pr__nfet__20v0__zvt__base",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__zvt__base__fitting_reduction_translation": {
+      "md5": "3d6238f92babe26000f6e20791eb7081",
+      "sourceId": "sky130__fd__pr__nfet__20v0__zvt__base",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__zvt__base__original": {
+      "md5": "ab4f13adb13632e29bc430511ee15ee9",
+      "sourceId": "sky130__fd__pr__nfet__20v0__zvt__base",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__20v0__zvt__base__reduction": {
+      "md5": "884d4527aa9a7b801ecb54f761ec440d",
+      "sourceId": "sky130__fd__pr__nfet__20v0__zvt__base",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__nfet__g5v0d10v5__model__expansion_translation": {
+      "md5": "122dfe37ad02b5a99cb35a780d78e725",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__g5v0d10v5__model__fitting_reduction_translation": {
+      "md5": "19d6d581c8ce74087bbe8d5bd842da15",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__g5v0d10v5__model__original": {
+      "md5": "84b7a2781f45693a3bcc4df013e8b5e0",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d10v5__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__g5v0d10v5__model__reduction": {
+      "md5": "89c4d95a8fd8262ea074d9e551f5847f",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__nfet__g5v0d16v0__model__base__expansion_translation": {
+      "md5": "19aa78ba980e1446c42ca2dedf5621d3",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d16v0__model__base",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 5
+    },
+    "sky130__fd__pr__nfet__g5v0d16v0__model__base__fitting_reduction_translation": {
+      "md5": "cdc1bedecbb4375c3a6cbf3974f6ce80",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d16v0__model__base",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 5
+    },
+    "sky130__fd__pr__nfet__g5v0d16v0__model__base__original": {
+      "md5": "a399738173e9e09e89685efb74930f6e",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d16v0__model__base",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 5
+    },
+    "sky130__fd__pr__nfet__g5v0d16v0__model__base__reduction": {
+      "md5": "c8d49e2334c1a66bf51f0ca8ec77ef32",
+      "sourceId": "sky130__fd__pr__nfet__g5v0d16v0__model__base",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 5
+    },
+    "sky130__fd__pr__pfet__01v8__hvt__model__expansion_translation": {
+      "md5": "58c54b9c7cf70876bd9e1ac20a7c20e3",
+      "sourceId": "sky130__fd__pr__pfet__01v8__hvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 198
+    },
+    "sky130__fd__pr__pfet__01v8__hvt__model__fitting_reduction_translation": {
+      "md5": "9ae2217c796e883a129436fdbf000e89",
+      "sourceId": "sky130__fd__pr__pfet__01v8__hvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 198
+    },
+    "sky130__fd__pr__pfet__01v8__hvt__model__original": {
+      "md5": "0afd85d0ac38c07499ad834236d508c7",
+      "sourceId": "sky130__fd__pr__pfet__01v8__hvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 198
+    },
+    "sky130__fd__pr__pfet__01v8__hvt__model__reduction": {
+      "md5": "b420a3e43e0f873e46868f6d69ed36e1",
+      "sourceId": "sky130__fd__pr__pfet__01v8__hvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 198
+    },
+    "sky130__fd__pr__pfet__01v8__lvt__model__expansion_translation": {
+      "md5": "8e8d924cedcdc8484a7ecc76cbfc97a1",
+      "sourceId": "sky130__fd__pr__pfet__01v8__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 48
+    },
+    "sky130__fd__pr__pfet__01v8__lvt__model__fitting_reduction_translation": {
+      "md5": "2de066a70e21f758ce6a9af663ce69da",
+      "sourceId": "sky130__fd__pr__pfet__01v8__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 48
+    },
+    "sky130__fd__pr__pfet__01v8__lvt__model__original": {
+      "md5": "df07c8f070a8edcfb0f582e0a2959a50",
+      "sourceId": "sky130__fd__pr__pfet__01v8__lvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 48
+    },
+    "sky130__fd__pr__pfet__01v8__lvt__model__reduction": {
+      "md5": "7682b5535e5e0773dd1041f656207ba9",
+      "sourceId": "sky130__fd__pr__pfet__01v8__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 48
+    },
+    "sky130__fd__pr__pfet__01v8__model__expansion_translation": {
+      "md5": "7fa875658d62878e6dcce751fcef0a13",
+      "sourceId": "sky130__fd__pr__pfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 108
+    },
+    "sky130__fd__pr__pfet__01v8__model__fitting_reduction_translation": {
+      "md5": "ba2e57c2c42d2fda62fa06aa17f422d8",
+      "sourceId": "sky130__fd__pr__pfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 108
+    },
+    "sky130__fd__pr__pfet__01v8__model__original": {
+      "md5": "7e27448bbc1843790a9c43dabc20f8c8",
+      "sourceId": "sky130__fd__pr__pfet__01v8__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 108
+    },
+    "sky130__fd__pr__pfet__01v8__model__reduction": {
+      "md5": "63752805c2da7f659d05ee64b2b6d032",
+      "sourceId": "sky130__fd__pr__pfet__01v8__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 108
+    },
+    "sky130__fd__pr__pfet__01v8__mvt__model__expansion_translation": {
+      "md5": "6ffee89bc1d3a8a0be536eb93020e266",
+      "sourceId": "sky130__fd__pr__pfet__01v8__mvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__01v8__mvt__model__fitting_reduction_translation": {
+      "md5": "daab22d851f57fbc99dba5f57e4c0a53",
+      "sourceId": "sky130__fd__pr__pfet__01v8__mvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__01v8__mvt__model__original": {
+      "md5": "f869082eb6883685c545bfef744a4feb",
+      "sourceId": "sky130__fd__pr__pfet__01v8__mvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__01v8__mvt__model__reduction": {
+      "md5": "7820cec0fb08f41b4a7161d6e7603600",
+      "sourceId": "sky130__fd__pr__pfet__01v8__mvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__20v0__base__expansion_translation": {
+      "md5": "4289bd8abbb6f5555224f3740548f643",
+      "sourceId": "sky130__fd__pr__pfet__20v0__base",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__pfet__20v0__base__fitting_reduction_translation": {
+      "md5": "d09e3f14150b60d0a4e34151bda29ca2",
+      "sourceId": "sky130__fd__pr__pfet__20v0__base",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__pfet__20v0__base__original": {
+      "md5": "0a145283b3cd85c83eb0451ca56f259d",
+      "sourceId": "sky130__fd__pr__pfet__20v0__base",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__pfet__20v0__base__reduction": {
+      "md5": "214bfa325b377fb23714b5d4c2258ad1",
+      "sourceId": "sky130__fd__pr__pfet__20v0__base",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__pfet__g5v0d10v5__model__expansion_translation": {
+      "md5": "f197876edfde82726700875cfd9c0b1a",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__pfet__g5v0d10v5__model__fitting_reduction_translation": {
+      "md5": "323f3e8a8c6213a9fb7395c7361c0d1e",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__pfet__g5v0d10v5__model__original": {
+      "md5": "2edc99a1bc86de0958320cc5a0323aba",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d10v5__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__pfet__g5v0d10v5__model__reduction": {
+      "md5": "bae5c6759546caf35e3bfd8ad6572ea1",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d10v5__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 88
+    },
+    "sky130__fd__pr__pfet__g5v0d16v0__model__base__expansion_translation": {
+      "md5": "9d666c88bcf8356edd705c5a6a93d7a4",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d16v0__model__base",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__g5v0d16v0__model__base__fitting_reduction_translation": {
+      "md5": "83df0ba134367edd77e8f64fffd12de4",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d16v0__model__base",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__g5v0d16v0__model__base__original": {
+      "md5": "09c00e958c66254b90f70c7a731313f9",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d16v0__model__base",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__pfet__g5v0d16v0__model__base__reduction": {
+      "md5": "34e01f0409337ddfafc188b9bed5c84f",
+      "sourceId": "sky130__fd__pr__pfet__g5v0d16v0__model__base",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm02__model__expansion_translation": {
+      "md5": "b0b9840004a133769e27b3b012fcbcda",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm02__model__fitting_reduction_translation": {
+      "md5": "9dfefd1c726e7205bfb71beddf677612",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm02__model__original": {
+      "md5": "b59b9291753ad92175630cd40169085b",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm02__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm02__model__reduction": {
+      "md5": "845f3289616f593d346f2cd960ac0c72",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm04__model__expansion_translation": {
+      "md5": "43d26de426df889c5b97aa8f6508823d",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm04__model__fitting_reduction_translation": {
+      "md5": "666ea3c661185d78d5f3d3998c5b4f1e",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm04__model__original": {
+      "md5": "b960c55faf1aab04ddb69cd49beccaf8",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm04__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__bm04__model__reduction": {
+      "md5": "8aa05da935ada851597c94c385199419",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model__expansion_translation": {
+      "md5": "ea67184715039a877bc12b7084c1b293",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model__fitting_reduction_translation": {
+      "md5": "4ae35efc94c3b9110ae93069788f27e2",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model__original": {
+      "md5": "b9734681529cd9617a77183bfc5c579e",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model__reduction": {
+      "md5": "f49426a20da1b83487e1f54de67579a3",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model__expansion_translation": {
+      "md5": "7785eaabd82f3b27ac4647454e22e046",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model__fitting_reduction_translation": {
+      "md5": "8eacba41cf3ceaf1c018cdeaaa470e98",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model__original": {
+      "md5": "3077de6fda2e7ef4aa53ae770b78576f",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model__reduction": {
+      "md5": "1645f49074fb6a819da1e5d3437fe9a4",
+      "sourceId": "sky130__fd__pr__rf__nfet__01v8__lvt__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model__expansion_translation": {
+      "md5": "9bd0bd33f125ef085f8fc348838755b4",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model__fitting_reduction_translation": {
+      "md5": "2ffcc9788c724737d15301d9303adb44",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model__original": {
+      "md5": "7c08de47a8f902c72302c4a44f6f26b2",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model__reduction": {
+      "md5": "aa78b64bc7b9071e4f4d2db4181d2844",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model__expansion_translation": {
+      "md5": "fd57d5203b2af3b11ab276689e6c6c94",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model__fitting_reduction_translation": {
+      "md5": "69e664c064c23b2ffce787dbf8d35bde",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model__original": {
+      "md5": "a7eae3c72739de1d909fda2d99ee0dbc",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model__reduction": {
+      "md5": "5e11a591414b749a3e81819d25889131",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model__expansion_translation": {
+      "md5": "3c9cb81cdfd968f095621cbf8586d831",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model__fitting_reduction_translation": {
+      "md5": "0e27361f863449bedeaea617d21e107c",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model__original": {
+      "md5": "7873d2af2ad53438b23f0d4422f714cf",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model__reduction": {
+      "md5": "4e35514077edfc79cf537cdd34ba2a65",
+      "sourceId": "sky130__fd__pr__rf__nfet__g5v0d10v5__bm10__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 3
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm02__model__expansion_translation": {
+      "md5": "39ecf2e4bbbbdb80eb4936a07629029b",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm02__model__fitting_reduction_translation": {
+      "md5": "5997d8a82d81d9814b0b8eb64f376731",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm02__model__original": {
+      "md5": "419a316ba697bba346e5cb60114ee1ce",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm02__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm02__model__reduction": {
+      "md5": "cd538320fe04bfbf101fc675c7daa00c",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm02__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm04__model__expansion_translation": {
+      "md5": "2c9ed8d077bf83bed597c7fcb0d35e93",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm04__model__fitting_reduction_translation": {
+      "md5": "ec789ddbe798229ea2520a1d2651cc7d",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm04__model__original": {
+      "md5": "3ba1fb1d3aa4366d4bba9c2952e4b3ed",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm04__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__rf__pfet__01v8__bm04__model__reduction": {
+      "md5": "58ab2a0d842ab01c26d6531de5dc95b7",
+      "sourceId": "sky130__fd__pr__rf__pfet__01v8__bm04__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 9
+    },
+    "sky130__fd__pr__special__nfet__latch__model__expansion_translation": {
+      "md5": "4c08ac59809b18ea4bca8b9b3c7951d5",
+      "sourceId": "sky130__fd__pr__special__nfet__latch__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__latch__model__fitting_reduction_translation": {
+      "md5": "3a82a34c9c8f796edfd4a5a7d5867d89",
+      "sourceId": "sky130__fd__pr__special__nfet__latch__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__latch__model__original": {
+      "md5": "5b5d3d20cc7612a977df184c77b0f5b7",
+      "sourceId": "sky130__fd__pr__special__nfet__latch__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__latch__model__reduction": {
+      "md5": "1808eac6eb6ba60d59938b28e6a2766e",
+      "sourceId": "sky130__fd__pr__special__nfet__latch__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__flash__model__expansion_translation": {
+      "md5": "a0247f805e37850d97bdbe906b6389cb",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__flash__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__nfet__pass__flash__model__fitting_reduction_translation": {
+      "md5": "babecf4040ddc34f3adf1dfabad1d656",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__flash__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__nfet__pass__flash__model__original": {
+      "md5": "a32f0059f2132a7b07403a2dc9037c0d",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__flash__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__nfet__pass__flash__model__reduction": {
+      "md5": "3482764706bf7a5406238c504537c83f",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__flash__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__nfet__pass__lvt__model__expansion_translation": {
+      "md5": "bb095809145539b0a1ea3e2df4ac1f5b",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__lvt__model__fitting_reduction_translation": {
+      "md5": "9bc1c74a2e8f39e164a42af240115c53",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__lvt__model__original": {
+      "md5": "a3e55488b907296eff9aaac12a373e65",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__lvt__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__lvt__model__reduction": {
+      "md5": "510dc350aef3220ce91093ed4a3c41e8",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__lvt__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__model__expansion_translation": {
+      "md5": "3cc45a2fd52da59901687f1eb289511a",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__model__fitting_reduction_translation": {
+      "md5": "9bd5519c8941a5980b8f079c037fc41e",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__model__original": {
+      "md5": "664f48b4baecfe6c0236f013f54c0161",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__nfet__pass__model__reduction": {
+      "md5": "ea0e59ade36727b6c49afa458cd6d3ba",
+      "sourceId": "sky130__fd__pr__special__nfet__pass__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 1
+    },
+    "sky130__fd__pr__special__pfet__pass__model__expansion_translation": {
+      "md5": "2360436688c8164f5f7fd60318bc4c08",
+      "sourceId": "sky130__fd__pr__special__pfet__pass__model",
+      "kind": "processed",
+      "chain": [
+        "expansion",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__pfet__pass__model__fitting_reduction_translation": {
+      "md5": "b32717b6edcf635c491eec3cce7c9463",
+      "sourceId": "sky130__fd__pr__special__pfet__pass__model",
+      "kind": "processed",
+      "chain": [
+        "fitting",
+        "reduction",
+        "translation"
+      ],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__pfet__pass__model__original": {
+      "md5": "b44cb1bbedc188beb035727153c715fb",
+      "sourceId": "sky130__fd__pr__special__pfet__pass__model",
+      "kind": "original",
+      "chain": [],
+      "cardCount": 2
+    },
+    "sky130__fd__pr__special__pfet__pass__model__reduction": {
+      "md5": "1bfcaa51cb5eb8da4ab39d44541e0a8c",
+      "sourceId": "sky130__fd__pr__special__pfet__pass__model",
+      "kind": "processed",
+      "chain": [
+        "reduction"
+      ],
+      "cardCount": 2
+    }
+  }
+}

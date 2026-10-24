@@ -1,88 +1,95 @@
-# Plotly.js chart gallery
+# Design Analytics Platform
 
-Small **Vite + React** app (**website-trial-v1**) showcasing **Plotly.js** with a synthetic design-metrics dataset: Pareto scatter, bar, heatmap, donut, 3D scatter, and treemap.
+**Vite + React + Plotly.js** static dashboard for EDA design-flow visualization, hosted on GitHub Pages.
+
+## Routes
+
+| Path | Page |
+|------|------|
+| `/#/` | Home — tool entry cards |
+| `/#/flow` | Flow dashboard — CFET Standard-Cell Library P&R Algorithm Comparison Platform |
+| `/#/benchmark` | **SPICE Model Workflow & Benchmark Workspace** — unified Convert / Calibrate / Reduce / Expand / Benchmark workspace |
+| `/#/plotly` | Digital circuit charts (Pareto, bar, heatmap, 3D, …) |
+| `/#/ppa` | OpenROAD / OpenLane / LibreLane normalized PPA evidence |
+| `/#/analog` | Analog circuit charts |
+
+**Legacy redirects:**
+- `/#/translator` → `/#/benchmark?operation=translator`
+- `/#/reduction` → `/#/benchmark?operation=reduction`
+- `/#/expansion` → `/#/benchmark?operation=expansion`
 
 ## Run locally
 
 ```bash
-cd website-trial-v1   # or your clone path
+cd website-trial-v1
 npm install
 npm run dev
 ```
 
-### If `npm install` fails with `ERESOLVE` (Vite vs `@vitejs/plugin-react`)
-
-**Vite 8** needs **`@vitejs/plugin-react@^5.2.0`** (this repo uses that pair). If you still see conflicts:
-
-```bash
-rm -f package-lock.json
-npm install
-```
-
-**Optional (fewer Vite 8 / Rolldown warnings):** use **Vite 5** + **`@vitejs/plugin-react@^4.3.4`** instead; change `package.json` and regenerate the lockfile as above.
-
-### How to view in the browser
-
-1. After `npm run dev`, Vite prints a local URL (usually **`http://127.0.0.1:5173`**).
-2. Open that URL in Chrome, Firefox, or Safari. The dev server uses **`--host 0.0.0.0`**, so Vite also prints a **Network** URL (e.g. `http://192.168.x.x:5173`) — use that on your phone on the same Wi‑Fi.
-3. This app uses **hash routes** (works on GitHub Pages without server rewrites). Append:
-   - **`/#/`** — Home  
-   - **`/#/plotly`** — Plotly charts  
-
-Examples:
-
-- `http://127.0.0.1:5173/#/`
-- `http://127.0.0.1:5173/#/plotly`
+Benchmark, Digital, and PPA expose one persistent server-side upload workflow
+when the Vite service is running. See [docs/data-upload.md](docs/data-upload.md)
+for accepted bundles, validation rules, limits, and deployment requirements.
 
 ### npm scripts
 
-| Command | What it runs |
-|---------|----------------|
-| `npm run dev` | Vite dev server (`--host 0.0.0.0`) |
-| `npm run build` | Production build → `dist/` |
-| `npm run preview` | Serves `dist/` after a build |
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run typecheck` | Run TypeScript compiler check |
+| `npm run validate:flow-data` | Validate flow benchmark data |
+| `npm run validate:spice-benchmark-data` | Validate SPICE benchmark manifest |
+| `npm run validate:benchmark-workspace` | Validate benchmark workspace fixtures |
+| `npm run build` | validate → typecheck → Vite production build (**hermetic**) |
+| `npm run preview` | Preview the production build |
+| `npm run refresh:external-data` | Explicitly refresh all external data (requires sibling repos) |
 
-### Deploy helper (local build + git push)
+## Benchmark — SPICE Model Workflow & Benchmark Workspace
 
-From the repo root:
+The `/benchmark` page is a unified single-page workspace integrating four SPICE tools through a compatibility layer.
 
-```bash
-./scripts/build-and-push.sh --help
-```
+### Page Sections (top-to-bottom, no secondary navigation)
 
-## Host on GitHub Pages (`website-trial-v1`)
+1. **Setup** — scenario selector, model input (bundled/upload/paste)
+2. **Select Operations** — 4-column grid (Convert/Calibrate/Reduce/Expand), each with inline settings
+3. **Workflow Plan** — fixed-order pipeline with invocation previews
+4. **Benchmark Setup** — simulators, domains, models, baseline/candidate
+5. **Executive Summary** — 8 KPI cards
+6. **Cross-Simulator Comparison** — 3-simulator cards, time/memory Plotly charts, status matrix, numerical agreement
+7. **Cross-Model Comparison** — dual checkbox filters (simulators + categories), original benchmark plot pairs (baseline left, candidate right)
+8. **Processed Model Output** — model code preview, copy, download, parameter diff
+9. **Tool Results** — accordion panels for each enabled operation
+10. **Artifacts** — filterable unified artifact table
 
-Target repo: **[github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1](https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1)**
+### Static Demo Limitation
 
-After deployment, the site URL will be:
+This is a **static frontend only**. No external tool execution occurs in the browser. Results are deterministic static demonstrations labeled by origin. Custom uploaded models stay in browser memory.
 
-**`https://sjtu-yongfu-research-grp.github.io/website-trial-v1/#/`**  
-(Charts: `…/website-trial-v1/#/plotly`)
+### Data Origins
 
-### One-time setup
+All data labeled at field/card level:
+- **Existing output** — previously generated tool results
+- **Synthetic demo** — deterministic demo fixture
+- **Local only** — user-provided, browser-memory only
+- **Not available** — data missing
 
-Full checklist: **`docs/GITHUB_PAGES_SETUP.md`**.
+### Compatibility Layer
 
-Summary:
+Typed adapters in `src/compat/spiceWorkflow/`:
+- `contracts.ts` — Unified data model
+- Tool adapters — build argv, validate params, normalize fixtures
+- Legacy normalizers — map existing manifests to unified contracts
 
-1. GitHub only reads **`.github/workflows/` at the repository root**. This repo keeps **`deploy-pages.yml`** there and builds from the **same root** (`package.json`, `src/`, …).
-2. On GitHub: **Settings → Pages → Source: GitHub Actions**.
-3. Push **`main`** or **`master`**. CI runs **`npm ci`** + **`npm run build`** at the repo root and deploys **`dist/`**.
+## Dependencies
 
-`vite.config.ts` sets **`base: "/website-trial-v1/"`** in production (and **`/`** in dev) so JS/CSS and lazy-loaded chunks resolve on project Pages.
+- `plotly.js-dist-min`
+- `react-router-dom` v6 with HashRouter
+- `vite` v8 + `@vitejs/plugin-react` v5
+- TypeScript strict mode
 
-### Local build check
+## Tool repositories (private)
 
-```bash
-npm run build
-```
-
-Output: `dist/` (same artifact CI uploads).
-
-## Mobile
-
-Plotly supports touch (pinch zoom, drag). The Plotly route is **lazy-loaded** so the home page stays small; the **`plotly.js-dist-min`** chunk is still a large download when you open the charts.
-
-## Dependencies note
-
-- **`plotly.js-dist-min`** — official **pre-minified browser bundle** (3D WebGL, treemap, and many other trace types). We import this instead of `plotly.js` so Vite does not bundle Node-only trace code that breaks at runtime under Rolldown. Types come from **`@types/plotly.js`**.
+- [new-spice-translator](https://github.com/SJTU-YONGFU-RESEARCH-GRP/new-spice-translator)
+- [spice_model_fitting](https://github.com/duhaochen-china/spice_model_fitting)
+- [spice_model_reduction](https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_reduction)
+- [spice_model_expansion](https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_expansion)
+- [spice_model_benchmark](https://github.com/SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark)

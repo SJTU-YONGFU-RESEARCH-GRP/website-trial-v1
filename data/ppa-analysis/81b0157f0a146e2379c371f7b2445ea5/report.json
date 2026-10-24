@@ -1,0 +1,5512 @@
+{
+  "schemaVersion": "1.3.0",
+  "manifest": {
+    "schemaVersion": "1.3.0",
+    "uid": "81b0157f0a146e2379c371f7b2445ea5",
+    "flow": "openlane",
+    "pdk": "sky130A",
+    "scl": "sky130_fd_sc_hd",
+    "design": "uart",
+    "runName": "RUN_2026-08-08_TECH_techfile2",
+    "variant": "techfile2",
+    "techfileRcScale": 0.05,
+    "sourceKind": "final-metrics-csv",
+    "relativePath": "openlane/sky130A/uart/RUN_2026-08-08_TECH_techfile2/reports/metrics.csv",
+    "filterFacets": [
+      {
+        "category": "design",
+        "categoryLabel": "Design & constraints",
+        "categoryOrder": 10,
+        "dimension": "design",
+        "dimensionLabel": "Design",
+        "value": "uart",
+        "valueLabel": "uart",
+        "dimensionOrder": 10,
+        "valueOrder": 100
+      },
+      {
+        "category": "design",
+        "categoryLabel": "Design & constraints",
+        "categoryOrder": 10,
+        "dimension": "clock_period",
+        "dimensionLabel": "Clock period",
+        "value": "10",
+        "valueLabel": "10 ns",
+        "dimensionOrder": 30,
+        "valueOrder": 10
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "pdk",
+        "dimensionLabel": "PDK",
+        "value": "sky130A",
+        "valueLabel": "sky130A",
+        "dimensionOrder": 10,
+        "valueOrder": 100
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "scl",
+        "dimensionLabel": "Standard-cell library",
+        "value": "sky130_fd_sc_hd",
+        "valueLabel": "sky130_fd_sc_hd",
+        "dimensionOrder": 20,
+        "valueOrder": 100
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "techfile_rc",
+        "dimensionLabel": "Techfile RC",
+        "value": "techfile2|0.05",
+        "valueLabel": "techfile2 · RC ×0.05",
+        "dimensionOrder": 30,
+        "valueOrder": 0.05
+      },
+      {
+        "category": "implementation",
+        "categoryLabel": "Implementation",
+        "categoryOrder": 30,
+        "dimension": "tool",
+        "dimensionLabel": "Tools",
+        "value": "openlane",
+        "valueLabel": "OpenLane",
+        "dimensionOrder": 10,
+        "valueOrder": 20
+      }
+    ],
+    "sourceSha256": "5f7bed52ed2bf501e0b9f9a78ee411e75c52f716d6563a56c6b1b009d6073f9b",
+    "bundleSha256": "0235bc782ddfcce3da4edb7c3870525b16c6d5f1fc90428467373e8a2672d7f6",
+    "reportSchema": "openlane.final_metrics",
+    "tool": "OpenLane 1 / OpenROAD",
+    "scope": "completed-run metrics CSV corroborated by final DEF and native signoff reports",
+    "authoritativeOverallStatus": false,
+    "ast": {
+      "format": "csv",
+      "bytesUtf8": 1925,
+      "rootKind": "csv-document",
+      "nodeCount": 191,
+      "leafCount": 188,
+      "maxDepth": 2,
+      "standardJson": null,
+      "nonFiniteNumberNodes": 0,
+      "duplicateKeyGroups": 0,
+      "nodeKinds": {
+        "csv-document": 1,
+        "csv-field": 188,
+        "csv-row": 2
+      }
+    },
+    "summary": {
+      "hasPpa": true,
+      "areaUm2": 18074.9729,
+      "coreAreaUm2": 13773.209600000002,
+      "instanceAreaUm2": null,
+      "utilization": null,
+      "instances": 582,
+      "physicalInstances": 2112,
+      "macros": 0,
+      "ioCount": 46,
+      "totalPowerMw": 1.88800431,
+      "powerComparisonValid": true,
+      "powerComparisonReason": null,
+      "internalPowerMw": 1.13,
+      "switchingPowerMw": 0.758,
+      "leakagePowerMw": 0.00000431,
+      "referenceCorner": "typical",
+      "setupSlackNs": 4.9,
+      "holdSlackNs": 0.33,
+      "worstSetupSlackNs": 0.71,
+      "worstHoldSlackNs": 0.12,
+      "setupTnsNs": 0,
+      "holdTnsNs": 0,
+      "clockPeriodNs": 10,
+      "criticalPathNs": 5.1,
+      "fmaxHz": 196078431.37254903,
+      "fmaxMethod": "derived as 1e9 / (clock period - reference setup slack)",
+      "setupViolations": 0,
+      "holdViolations": 0,
+      "maxSlewViolations": 0,
+      "maxCapViolations": 0,
+      "maxFanoutViolations": 2,
+      "wirelengthUm": 13550,
+      "vias": 3765,
+      "nets": null,
+      "routeDrcErrors": 0,
+      "antennaViolations": 1,
+      "flowErrors": 0,
+      "flowWarnings": null,
+      "magicDrcErrors": 0,
+      "averageIrDropV": null,
+      "worstIrDropV": null,
+      "cellUsageAvailable": true,
+      "finalDefComponents": 2112,
+      "uniqueCellMasters": 61,
+      "metricCount": 93,
+      "cornerSetupSlackNs": {
+        "typical": 4.9,
+        "rc_min_worst_library": 0.82,
+        "rc_max_worst_library": 0.71,
+        "rc_nom_worst_library": 0.76
+      },
+      "timingEndpointSlacks": {
+        "availability": "available",
+        "referenceCorner": "typical",
+        "reason": null,
+        "setupEndpointCount": 94,
+        "holdEndpointCount": 94,
+        "setupViolationCount": 0,
+        "holdViolationCount": 0,
+        "setupSlackNs": [
+          4.9,
+          5.04,
+          5.05,
+          5.13,
+          5.13,
+          5.13,
+          5.16,
+          5.3,
+          5.35,
+          5.37,
+          5.38,
+          5.42,
+          5.45,
+          5.56,
+          5.6,
+          5.61,
+          5.72,
+          5.73,
+          5.74,
+          5.74,
+          5.75,
+          5.75,
+          5.75,
+          5.77,
+          5.77,
+          5.77,
+          5.77,
+          5.77,
+          5.77,
+          5.78,
+          5.78,
+          5.78,
+          5.8,
+          5.86,
+          5.88,
+          5.88,
+          5.91,
+          5.95,
+          5.97,
+          5.97,
+          5.97,
+          5.98,
+          5.98,
+          5.98,
+          5.98,
+          5.98,
+          5.98,
+          5.98,
+          5.99,
+          5.99,
+          5.99,
+          5.99,
+          5.99,
+          5.99,
+          6,
+          6.06,
+          6.08,
+          6.12,
+          6.12,
+          6.16,
+          6.17,
+          6.2,
+          6.22,
+          6.22,
+          6.32,
+          6.51,
+          6.51,
+          6.52,
+          6.52,
+          6.55,
+          6.57,
+          6.58,
+          6.62,
+          6.62,
+          6.62,
+          6.63,
+          6.63,
+          6.64,
+          6.66,
+          6.69,
+          6.7,
+          6.7,
+          6.71,
+          6.71,
+          6.71,
+          6.71,
+          6.73,
+          6.76,
+          6.77,
+          6.78,
+          6.79,
+          6.85,
+          6.95,
+          7.5
+        ],
+        "holdSlackNs": [
+          0.33,
+          0.34,
+          0.35,
+          0.35,
+          0.35,
+          0.35,
+          0.35,
+          0.37,
+          0.37,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.38,
+          0.39,
+          0.39,
+          0.39,
+          0.39,
+          0.39,
+          0.39,
+          0.39,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.4,
+          0.41,
+          0.41,
+          0.42,
+          0.42,
+          0.42,
+          0.42,
+          0.42,
+          0.43,
+          0.44,
+          0.44,
+          0.44,
+          0.45,
+          0.45,
+          0.45,
+          0.47,
+          0.47,
+          0.47,
+          0.49,
+          0.49,
+          0.5,
+          0.51,
+          0.51,
+          0.53,
+          0.54,
+          0.57,
+          0.59,
+          0.64,
+          0.64,
+          0.64,
+          0.69,
+          0.73,
+          0.75,
+          0.78,
+          0.79,
+          0.8,
+          0.81,
+          0.82,
+          0.83,
+          0.83,
+          0.84,
+          0.84,
+          0.87,
+          0.9,
+          0.93,
+          1.56,
+          2.6,
+          2.62,
+          2.63,
+          2.63,
+          2.64,
+          2.64,
+          2.64,
+          2.65,
+          2.65,
+          2.65,
+          2.68,
+          2.68,
+          2.68,
+          2.68,
+          2.72
+        ]
+      },
+      "powerBreakdownMw": {
+        "internal": 1.13,
+        "switching": 0.758,
+        "leakage": 0.00000431
+      },
+      "metricsByCategory": {
+        "run": 26,
+        "design": 20,
+        "route": 15,
+        "signoff": 9,
+        "timing": 14,
+        "power": 9
+      },
+      "completionStatus": "flow completed"
+    },
+    "sourceBundle": {
+      "flow": "openlane",
+      "run_directory": "RUN_2026-08-08_TECH_techfile2",
+      "primary_source": "reports/metrics.csv",
+      "supporting_sources": [
+        {
+          "source": "results/final/def/uart.def",
+          "format": "def",
+          "bytes": 602435,
+          "sha256": "74d1c1c466ad181cd4fbaf4317fae375ad58a0d3f65ff942dfd09ab59a50f41c"
+        },
+        {
+          "source": "reports/signoff/31-rcx_sta.summary.rpt",
+          "format": "rpt",
+          "bytes": 753,
+          "sha256": "2fbbd71e01278e4effae3db516f6724b7076186256d94c7be938ace8b3e785ad"
+        },
+        {
+          "source": "reports/signoff/31-rcx_sta.power.rpt",
+          "format": "rpt",
+          "bytes": 999,
+          "sha256": "35b2b436e5e73fab2f7799db26b7029cc8361607134e5e3449963b744ea2ee86"
+        },
+        {
+          "source": "reports/signoff/31-rcx_sta.checks.rpt",
+          "format": "rpt",
+          "bytes": 5806,
+          "sha256": "9bc22bf64359367c3662eb7ea7332522911e2b787e23ab21953949e941343d94"
+        },
+        {
+          "source": "reports/signoff/26-mca/rcx_min_sta.summary.rpt",
+          "format": "rpt",
+          "bytes": 753,
+          "sha256": "5b2b255e331d36f48564dec5cadeb74ae8d3b0e546f7cba6d082290c52e44438"
+        },
+        {
+          "source": "reports/signoff/28-mca/rcx_max_sta.summary.rpt",
+          "format": "rpt",
+          "bytes": 753,
+          "sha256": "e0eaef15b70bf6e4eb92327aab764ddbf6089a9dc672485b96d4433e6a2e4de2"
+        },
+        {
+          "source": "reports/signoff/30-mca/rcx_nom_sta.summary.rpt",
+          "format": "rpt",
+          "bytes": 753,
+          "sha256": "931166ec0dd4aec98b0f18b6b4d884e7e9c122e48c8c07762a28fba1b75442c1"
+        },
+        {
+          "source": "reports/manufacturability.rpt",
+          "format": "rpt",
+          "bytes": 794,
+          "sha256": "f544d6830ddd179926a8886f637484d1fccea896c1b9dab6e506fc6d3cb6b86b"
+        },
+        {
+          "source": "experiment-run.json",
+          "format": "json",
+          "bytes": 17192,
+          "sha256": "ec9b216b841cbacae01b0b26daf8660623b18227fd36e3788c8e99ed9f13bdef"
+        },
+        {
+          "source": "reports/signoff/31-rcx_sta.max.rpt",
+          "format": "rpt",
+          "bytes": 370640,
+          "sha256": "cd73c435c5bf63931b12d40bd379fd63d97f80e485d1f4fe0ba9c3ca028e9f53"
+        },
+        {
+          "source": "reports/signoff/31-rcx_sta.min.rpt",
+          "format": "rpt",
+          "bytes": 297708,
+          "sha256": "0c75b8cea96d469fee527971e46ea4ca1852e4b1fe46a57f806c4232918e3bfd"
+        }
+      ]
+    },
+    "reportPath": "81b0157f0a146e2379c371f7b2445ea5/report.json"
+  },
+  "ast": {
+    "source": "openlane/sky130A/uart/RUN_2026-08-08_TECH_techfile2/reports/metrics.csv",
+    "format": "csv",
+    "bytes_utf8": 1925,
+    "sha256": "5f7bed52ed2bf501e0b9f9a78ee411e75c52f716d6563a56c6b1b009d6073f9b",
+    "root_kind": "csv-document",
+    "node_count_including_keys": 191,
+    "leaf_count_including_keys": 188,
+    "max_depth": 2,
+    "node_kinds": {
+      "csv-document": 1,
+      "csv-field": 188,
+      "csv-row": 2
+    },
+    "duplicate_key_groups": 0,
+    "duplicate_keys": [],
+    "non_finite_number_nodes": 0,
+    "standard_json": null
+  },
+  "source_bundle": {
+    "flow": "openlane",
+    "run_directory": "RUN_2026-08-08_TECH_techfile2",
+    "primary_source": "reports/metrics.csv",
+    "supporting_sources": [
+      {
+        "source": "results/final/def/uart.def",
+        "format": "def",
+        "bytes": 602435,
+        "sha256": "74d1c1c466ad181cd4fbaf4317fae375ad58a0d3f65ff942dfd09ab59a50f41c"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.summary.rpt",
+        "format": "rpt",
+        "bytes": 753,
+        "sha256": "2fbbd71e01278e4effae3db516f6724b7076186256d94c7be938ace8b3e785ad"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.power.rpt",
+        "format": "rpt",
+        "bytes": 999,
+        "sha256": "35b2b436e5e73fab2f7799db26b7029cc8361607134e5e3449963b744ea2ee86"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.checks.rpt",
+        "format": "rpt",
+        "bytes": 5806,
+        "sha256": "9bc22bf64359367c3662eb7ea7332522911e2b787e23ab21953949e941343d94"
+      },
+      {
+        "source": "reports/signoff/26-mca/rcx_min_sta.summary.rpt",
+        "format": "rpt",
+        "bytes": 753,
+        "sha256": "5b2b255e331d36f48564dec5cadeb74ae8d3b0e546f7cba6d082290c52e44438"
+      },
+      {
+        "source": "reports/signoff/28-mca/rcx_max_sta.summary.rpt",
+        "format": "rpt",
+        "bytes": 753,
+        "sha256": "e0eaef15b70bf6e4eb92327aab764ddbf6089a9dc672485b96d4433e6a2e4de2"
+      },
+      {
+        "source": "reports/signoff/30-mca/rcx_nom_sta.summary.rpt",
+        "format": "rpt",
+        "bytes": 753,
+        "sha256": "931166ec0dd4aec98b0f18b6b4d884e7e9c122e48c8c07762a28fba1b75442c1"
+      },
+      {
+        "source": "reports/manufacturability.rpt",
+        "format": "rpt",
+        "bytes": 794,
+        "sha256": "f544d6830ddd179926a8886f637484d1fccea896c1b9dab6e506fc6d3cb6b86b"
+      },
+      {
+        "source": "experiment-run.json",
+        "format": "json",
+        "bytes": 17192,
+        "sha256": "ec9b216b841cbacae01b0b26daf8660623b18227fd36e3788c8e99ed9f13bdef"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.max.rpt",
+        "format": "rpt",
+        "bytes": 370640,
+        "sha256": "cd73c435c5bf63931b12d40bd379fd63d97f80e485d1f4fe0ba9c3ca028e9f53"
+      },
+      {
+        "source": "reports/signoff/31-rcx_sta.min.rpt",
+        "format": "rpt",
+        "bytes": 297708,
+        "sha256": "0c75b8cea96d469fee527971e46ea4ca1852e4b1fe46a57f806c4232918e3bfd"
+      }
+    ]
+  },
+  "interpretation": {
+    "schema": "openlane.final_metrics",
+    "tool": "OpenLane 1 / OpenROAD",
+    "scope": "completed-run metrics CSV corroborated by final DEF and native signoff reports",
+    "authoritative_overall_status": false,
+    "metric_count": 93,
+    "metrics_by_category": {
+      "run": 26,
+      "design": 20,
+      "route": 15,
+      "signoff": 9,
+      "timing": 14,
+      "power": 9
+    },
+    "configuration": {
+      "standard_cell_library": "sky130_fd_sc_hd",
+      "clock_period_ns": 10,
+      "target_core_utilization_percent": 35,
+      "placement_density": 0.55
+    },
+    "design": {
+      "instances": 582,
+      "standard_cells": 582,
+      "physical_instances": 2112,
+      "macros": 0,
+      "instance_area_um2": null,
+      "die_area_um2": 18074.9729,
+      "core_area_um2": 13773.209600000002,
+      "utilization": null,
+      "io_count": 46,
+      "reported_die_area_um2_from_csv": 18074.9729
+    },
+    "timing_aggregate": {
+      "reference_corner": "typical",
+      "reference_setup_slack_ns": 4.9,
+      "reference_hold_slack_ns": 0.33,
+      "setup_worst_slack_ns": 0.71,
+      "hold_worst_slack_ns": 0.12,
+      "setup_tns_ns": 0,
+      "hold_tns_ns": 0,
+      "setup_violation_count": 0,
+      "hold_violation_count": 0,
+      "max_slew_violation_count": 0,
+      "max_cap_violation_count": 0,
+      "max_fanout_violation_count": 2,
+      "clock_period_ns": 10,
+      "critical_path_ns": 5.1,
+      "fmax_hz": 196078431.37254903,
+      "fmax_method": "derived as 1e9 / (clock period - reference setup slack)",
+      "corners": {
+        "typical": {
+          "setup_slack_ns": 4.9,
+          "hold_slack_ns": 0.33
+        },
+        "rc_min_worst_library": {
+          "setup_slack_ns": 0.82,
+          "hold_slack_ns": 0.12
+        },
+        "rc_max_worst_library": {
+          "setup_slack_ns": 0.71,
+          "hold_slack_ns": 0.12
+        },
+        "rc_nom_worst_library": {
+          "setup_slack_ns": 0.76,
+          "hold_slack_ns": 0.12
+        }
+      }
+    },
+    "routing": {
+      "nets": null,
+      "wirelength_um": 13550,
+      "vias": 3765,
+      "detailed_route_drc_errors": 0,
+      "antenna_violation_count": 1
+    },
+    "signoff_indicators": {
+      "flow_errors": 0,
+      "flow_warnings": null,
+      "magic_drc_errors": 0,
+      "antenna_violating_nets": 1,
+      "antenna_violating_pins": 1
+    },
+    "power_mw": {
+      "internal": 1.13,
+      "switching": 0.758,
+      "leakage": 0.00000431,
+      "total": 1.88800431
+    },
+    "ir_drop": {
+      "average_v": null,
+      "worst_v": null,
+      "status": "not-normalized"
+    },
+    "completion": {
+      "status": "flow completed",
+      "implementation_complete": true
+    },
+    "boundaries": [
+      "GF180 DIEAREA_mm^2 in OpenLane metrics.csv is affected by a DBU scaling bug; normalized die area is recomputed from final DEF coordinates and UNITS.",
+      "OpenLane 1 power_*_uW CSV headers are mislabeled: report.py stores OpenSTA watts. Native power reports are authoritative here and are converted W * 1000 to mW.",
+      "Reference setup/hold slack comes from the typical post-route report; rc_min/max/nom entries are worst-library summaries and are retained separately.",
+      "Magic DRC counts violation boxes, not unique rule names; route DRC and Magic DRC are separate checker domains.",
+      "OpenLane's IR report is not normalized because GF180 logs can use an implicit 0 V supply; an absent value is never interpreted as zero drop."
+    ],
+    "normalized_metric_provenance": [
+      {
+        "metric_id": "area.die_um2",
+        "value": 18074.9729,
+        "unit": "um^2",
+        "source": "results/final/def/uart.def",
+        "source_field": "DIEAREA + UNITS DISTANCE MICRONS",
+        "raw_value": "DIEAREA ( 0 0 ) ( 129190 139910 ) ;",
+        "span": {
+          "start": {
+            "offset": 95,
+            "line": 6,
+            "column": 1
+          },
+          "end": {
+            "offset": 130,
+            "line": 6,
+            "column": 36
+          }
+        },
+        "transformation": "abs(dx * dy) / 1000^2"
+      },
+      {
+        "metric_id": "area.core_um2",
+        "value": 13773.209600000002,
+        "unit": "um^2",
+        "source_field": "CoreArea_um^2",
+        "transformation": "direct",
+        "raw_value": "13773.209600000002",
+        "span": {
+          "start": {
+            "offset": 1784,
+            "line": 2,
+            "column": 388
+          },
+          "end": {
+            "offset": 1802,
+            "line": 2,
+            "column": 406
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "design.logical_instances",
+        "value": 582,
+        "unit": "count",
+        "source_field": "NonPhysCells",
+        "transformation": "direct",
+        "raw_value": "582",
+        "span": {
+          "start": {
+            "offset": 1775,
+            "line": 2,
+            "column": 379
+          },
+          "end": {
+            "offset": 1778,
+            "line": 2,
+            "column": 382
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "design.physical_instances",
+        "value": 2112,
+        "unit": "count",
+        "source_field": "TotalCells",
+        "transformation": "direct",
+        "raw_value": "2112",
+        "span": {
+          "start": {
+            "offset": 1779,
+            "line": 2,
+            "column": 383
+          },
+          "end": {
+            "offset": 1783,
+            "line": 2,
+            "column": 387
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "design.utilization",
+        "value": null,
+        "unit": "ratio",
+        "source_field": "OpenDP_Util",
+        "transformation": "% / 100",
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1591,
+            "line": 2,
+            "column": 195
+          },
+          "end": {
+            "offset": 1593,
+            "line": 2,
+            "column": 197
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "timing.clock_period_ns",
+        "value": 10,
+        "unit": "ns",
+        "source_field": "CLOCK_PERIOD",
+        "transformation": "direct",
+        "raw_value": "10",
+        "span": {
+          "start": {
+            "offset": 1863,
+            "line": 2,
+            "column": 467
+          },
+          "end": {
+            "offset": 1865,
+            "line": 2,
+            "column": 469
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "routing.wirelength_um",
+        "value": 13550,
+        "unit": "um",
+        "source_field": "wire_length",
+        "transformation": "direct",
+        "raw_value": "13550",
+        "span": {
+          "start": {
+            "offset": 1632,
+            "line": 2,
+            "column": 236
+          },
+          "end": {
+            "offset": 1637,
+            "line": 2,
+            "column": 241
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "routing.vias",
+        "value": 3765,
+        "unit": "count",
+        "source_field": "vias",
+        "transformation": "direct",
+        "raw_value": "3765",
+        "span": {
+          "start": {
+            "offset": 1638,
+            "line": 2,
+            "column": 242
+          },
+          "end": {
+            "offset": 1642,
+            "line": 2,
+            "column": 246
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "routing.drc_errors",
+        "value": 0,
+        "unit": "count",
+        "source_field": "tritonRoute_violations",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1606,
+            "line": 2,
+            "column": 210
+          },
+          "end": {
+            "offset": 1607,
+            "line": 2,
+            "column": 211
+          }
+        },
+        "source": "reports/metrics.csv"
+      },
+      {
+        "metric_id": "timing.critical_path_ns",
+        "value": 5.1,
+        "unit": "ns",
+        "source": "reports/metrics.csv + native reference STA summary",
+        "source_field": "CLOCK_PERIOD - reference_setup_slack_ns",
+        "transformation": "clock period - reference setup slack"
+      },
+      {
+        "metric_id": "timing.fmax_hz",
+        "value": 196078431.37254903,
+        "unit": "Hz",
+        "source": "reports/metrics.csv + native reference STA summary",
+        "source_field": "CLOCK_PERIOD, reference_setup_slack_ns",
+        "transformation": "1e9 / (clock period - reference setup slack)"
+      },
+      {
+        "metric_id": "timing.reference_setup_slack_ns",
+        "value": 4.9,
+        "unit": "ns",
+        "source": "reports/signoff/31-rcx_sta.summary.rpt",
+        "raw_value": "4.90",
+        "span": {
+          "start": {
+            "offset": 546,
+            "line": 15,
+            "column": 13
+          },
+          "end": {
+            "offset": 550,
+            "line": 15,
+            "column": 17
+          }
+        }
+      },
+      {
+        "metric_id": "timing.reference_hold_slack_ns",
+        "value": 0.33,
+        "unit": "ns",
+        "source": "reports/signoff/31-rcx_sta.summary.rpt",
+        "raw_value": "0.33",
+        "span": {
+          "start": {
+            "offset": 748,
+            "line": 20,
+            "column": 13
+          },
+          "end": {
+            "offset": 752,
+            "line": 20,
+            "column": 17
+          }
+        }
+      },
+      {
+        "metric_id": "timing.worst_setup_slack_ns",
+        "value": 0.71,
+        "unit": "ns",
+        "transformation": "minimum setup slack across retained reference/RC summaries"
+      },
+      {
+        "metric_id": "timing.worst_hold_slack_ns",
+        "value": 0.12,
+        "unit": "ns",
+        "transformation": "minimum hold slack across retained reference/RC summaries"
+      },
+      {
+        "metric_id": "timing.setup_violations",
+        "value": 0,
+        "unit": "count",
+        "transformation": "0 when native reference slack is non-negative"
+      },
+      {
+        "metric_id": "timing.hold_violations",
+        "value": 0,
+        "unit": "count",
+        "transformation": "0 when native reference slack is non-negative"
+      },
+      {
+        "metric_id": "power.internal_mw",
+        "value": 1.13,
+        "unit": "mW",
+        "source": "reports/signoff/31-rcx_sta.power.rpt",
+        "source_field": "Total.internal",
+        "raw_value": "1.13e-03",
+        "span": {
+          "start": {
+            "offset": 895,
+            "line": 16,
+            "column": 24
+          },
+          "end": {
+            "offset": 903,
+            "line": 16,
+            "column": 32
+          }
+        },
+        "transformation": "W * 1000"
+      },
+      {
+        "metric_id": "power.switching_mw",
+        "value": 0.758,
+        "unit": "mW",
+        "source": "reports/signoff/31-rcx_sta.power.rpt",
+        "source_field": "Total.switching",
+        "raw_value": "7.58e-04",
+        "span": {
+          "start": {
+            "offset": 906,
+            "line": 16,
+            "column": 35
+          },
+          "end": {
+            "offset": 914,
+            "line": 16,
+            "column": 43
+          }
+        },
+        "transformation": "W * 1000"
+      },
+      {
+        "metric_id": "power.leakage_mw",
+        "value": 0.00000431,
+        "unit": "mW",
+        "source": "reports/signoff/31-rcx_sta.power.rpt",
+        "source_field": "Total.leakage",
+        "raw_value": "4.31e-09",
+        "span": {
+          "start": {
+            "offset": 917,
+            "line": 16,
+            "column": 46
+          },
+          "end": {
+            "offset": 925,
+            "line": 16,
+            "column": 54
+          }
+        },
+        "transformation": "W * 1000"
+      },
+      {
+        "metric_id": "power.total_mw",
+        "value": 1.88800431,
+        "unit": "mW",
+        "source": "reports/signoff/31-rcx_sta.power.rpt",
+        "source_field": "Total.total",
+        "raw_value": "1.89e-03",
+        "span": {
+          "start": {
+            "offset": 928,
+            "line": 16,
+            "column": 57
+          },
+          "end": {
+            "offset": 936,
+            "line": 16,
+            "column": 65
+          }
+        },
+        "transformation": "sum unrounded internal + switching + leakage values"
+      },
+      {
+        "metric_id": "timing.max_slew_violations",
+        "value": 0,
+        "unit": "count",
+        "source": "reports/signoff/31-rcx_sta.checks.rpt",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5406,
+            "line": 102,
+            "column": 26
+          },
+          "end": {
+            "offset": 5407,
+            "line": 102,
+            "column": 27
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_cap_violations",
+        "value": 0,
+        "unit": "count",
+        "source": "reports/signoff/31-rcx_sta.checks.rpt",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5461,
+            "line": 104,
+            "column": 25
+          },
+          "end": {
+            "offset": 5462,
+            "line": 104,
+            "column": 26
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_fanout_violations",
+        "value": 2,
+        "unit": "count",
+        "source": "reports/signoff/31-rcx_sta.checks.rpt",
+        "raw_value": "2",
+        "span": {
+          "start": {
+            "offset": 5435,
+            "line": 103,
+            "column": 28
+          },
+          "end": {
+            "offset": 5436,
+            "line": 103,
+            "column": 29
+          }
+        }
+      }
+    ],
+    "all_metrics": [
+      {
+        "index": 0,
+        "name": "design",
+        "category": "run",
+        "components": [
+          "design"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "<home>/results/sky130-techfile-uart/configs/openlane/techfile2",
+        "raw_value": "<home>/results/sky130-techfile-uart/configs/openlane/techfile2",
+        "span": {
+          "start": {
+            "offset": 1397,
+            "line": 2,
+            "column": 1
+          },
+          "end": {
+            "offset": 1468,
+            "line": 2,
+            "column": 72
+          }
+        }
+      },
+      {
+        "index": 1,
+        "name": "design_name",
+        "category": "run",
+        "components": [
+          "design_name"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "uart",
+        "raw_value": "uart",
+        "span": {
+          "start": {
+            "offset": 1469,
+            "line": 2,
+            "column": 73
+          },
+          "end": {
+            "offset": 1473,
+            "line": 2,
+            "column": 77
+          }
+        }
+      },
+      {
+        "index": 2,
+        "name": "config",
+        "category": "run",
+        "components": [
+          "config"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "RUN_2026-08-08_TECH_techfile2",
+        "raw_value": "RUN_2026-08-08_TECH_techfile2",
+        "span": {
+          "start": {
+            "offset": 1474,
+            "line": 2,
+            "column": 78
+          },
+          "end": {
+            "offset": 1503,
+            "line": 2,
+            "column": 107
+          }
+        }
+      },
+      {
+        "index": 3,
+        "name": "flow_status",
+        "category": "run",
+        "components": [
+          "flow_status"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "flow completed",
+        "raw_value": "flow completed",
+        "span": {
+          "start": {
+            "offset": 1504,
+            "line": 2,
+            "column": 108
+          },
+          "end": {
+            "offset": 1518,
+            "line": 2,
+            "column": 122
+          }
+        }
+      },
+      {
+        "index": 4,
+        "name": "total_runtime",
+        "category": "run",
+        "components": [
+          "total_runtime"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "0h1m41s0ms",
+        "raw_value": "0h1m41s0ms",
+        "span": {
+          "start": {
+            "offset": 1519,
+            "line": 2,
+            "column": 123
+          },
+          "end": {
+            "offset": 1529,
+            "line": 2,
+            "column": 133
+          }
+        }
+      },
+      {
+        "index": 5,
+        "name": "routed_runtime",
+        "category": "run",
+        "components": [
+          "routed_runtime"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "0h1m15s0ms",
+        "raw_value": "0h1m15s0ms",
+        "span": {
+          "start": {
+            "offset": 1530,
+            "line": 2,
+            "column": 134
+          },
+          "end": {
+            "offset": 1540,
+            "line": 2,
+            "column": 144
+          }
+        }
+      },
+      {
+        "index": 6,
+        "name": "(Cell/mm^2)/Core_Util",
+        "category": "design",
+        "components": [
+          "(Cell/mm^2)/Core_Util"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 91997.76686011755,
+        "raw_value": "91997.76686011755",
+        "span": {
+          "start": {
+            "offset": 1541,
+            "line": 2,
+            "column": 145
+          },
+          "end": {
+            "offset": 1558,
+            "line": 2,
+            "column": 162
+          }
+        }
+      },
+      {
+        "index": 7,
+        "name": "DIEAREA_mm^2",
+        "category": "design",
+        "components": [
+          "DIEAREA_mm^2"
+        ],
+        "qualifiers": [],
+        "unit": "mm^2 (reported; verify against DEF)",
+        "kind": "csv-field",
+        "value": 0.0180749729,
+        "raw_value": "0.0180749729",
+        "span": {
+          "start": {
+            "offset": 1559,
+            "line": 2,
+            "column": 163
+          },
+          "end": {
+            "offset": 1571,
+            "line": 2,
+            "column": 175
+          }
+        }
+      },
+      {
+        "index": 8,
+        "name": "CellPer_mm^2",
+        "category": "design",
+        "components": [
+          "CellPer_mm^2"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 32199.218401041144,
+        "raw_value": "32199.218401041144",
+        "span": {
+          "start": {
+            "offset": 1572,
+            "line": 2,
+            "column": 176
+          },
+          "end": {
+            "offset": 1590,
+            "line": 2,
+            "column": 194
+          }
+        }
+      },
+      {
+        "index": 9,
+        "name": "OpenDP_Util",
+        "category": "design",
+        "components": [
+          "OpenDP_Util"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1591,
+            "line": 2,
+            "column": 195
+          },
+          "end": {
+            "offset": 1593,
+            "line": 2,
+            "column": 197
+          }
+        }
+      },
+      {
+        "index": 10,
+        "name": "Final_Util",
+        "category": "design",
+        "components": [
+          "Final_Util"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1594,
+            "line": 2,
+            "column": 198
+          },
+          "end": {
+            "offset": 1596,
+            "line": 2,
+            "column": 200
+          }
+        }
+      },
+      {
+        "index": 11,
+        "name": "Peak_Memory_Usage_MB",
+        "category": "design",
+        "components": [
+          "Peak_Memory_Usage_MB"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 595.3,
+        "raw_value": "595.3",
+        "span": {
+          "start": {
+            "offset": 1597,
+            "line": 2,
+            "column": 201
+          },
+          "end": {
+            "offset": 1602,
+            "line": 2,
+            "column": 206
+          }
+        }
+      },
+      {
+        "index": 12,
+        "name": "synth_cell_count",
+        "category": "design",
+        "components": [
+          "synth_cell_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1603,
+            "line": 2,
+            "column": 207
+          },
+          "end": {
+            "offset": 1605,
+            "line": 2,
+            "column": 209
+          }
+        }
+      },
+      {
+        "index": 13,
+        "name": "tritonRoute_violations",
+        "category": "route",
+        "components": [
+          "tritonRoute_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1606,
+            "line": 2,
+            "column": 210
+          },
+          "end": {
+            "offset": 1607,
+            "line": 2,
+            "column": 211
+          }
+        }
+      },
+      {
+        "index": 14,
+        "name": "Short_violations",
+        "category": "route",
+        "components": [
+          "Short_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1608,
+            "line": 2,
+            "column": 212
+          },
+          "end": {
+            "offset": 1609,
+            "line": 2,
+            "column": 213
+          }
+        }
+      },
+      {
+        "index": 15,
+        "name": "MetSpc_violations",
+        "category": "route",
+        "components": [
+          "MetSpc_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1610,
+            "line": 2,
+            "column": 214
+          },
+          "end": {
+            "offset": 1611,
+            "line": 2,
+            "column": 215
+          }
+        }
+      },
+      {
+        "index": 16,
+        "name": "OffGrid_violations",
+        "category": "signoff",
+        "components": [
+          "OffGrid_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1612,
+            "line": 2,
+            "column": 216
+          },
+          "end": {
+            "offset": 1613,
+            "line": 2,
+            "column": 217
+          }
+        }
+      },
+      {
+        "index": 17,
+        "name": "MinHole_violations",
+        "category": "signoff",
+        "components": [
+          "MinHole_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1614,
+            "line": 2,
+            "column": 218
+          },
+          "end": {
+            "offset": 1615,
+            "line": 2,
+            "column": 219
+          }
+        }
+      },
+      {
+        "index": 18,
+        "name": "Other_violations",
+        "category": "signoff",
+        "components": [
+          "Other_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1616,
+            "line": 2,
+            "column": 220
+          },
+          "end": {
+            "offset": 1617,
+            "line": 2,
+            "column": 221
+          }
+        }
+      },
+      {
+        "index": 19,
+        "name": "Magic_violations",
+        "category": "signoff",
+        "components": [
+          "Magic_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1618,
+            "line": 2,
+            "column": 222
+          },
+          "end": {
+            "offset": 1619,
+            "line": 2,
+            "column": 223
+          }
+        }
+      },
+      {
+        "index": 20,
+        "name": "pin_antenna_violations",
+        "category": "signoff",
+        "components": [
+          "pin_antenna_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 1620,
+            "line": 2,
+            "column": 224
+          },
+          "end": {
+            "offset": 1621,
+            "line": 2,
+            "column": 225
+          }
+        }
+      },
+      {
+        "index": 21,
+        "name": "net_antenna_violations",
+        "category": "signoff",
+        "components": [
+          "net_antenna_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 1622,
+            "line": 2,
+            "column": 226
+          },
+          "end": {
+            "offset": 1623,
+            "line": 2,
+            "column": 227
+          }
+        }
+      },
+      {
+        "index": 23,
+        "name": "cvc_total_errors",
+        "category": "signoff",
+        "components": [
+          "cvc_total_errors"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1626,
+            "line": 2,
+            "column": 230
+          },
+          "end": {
+            "offset": 1628,
+            "line": 2,
+            "column": 232
+          }
+        }
+      },
+      {
+        "index": 24,
+        "name": "klayout_violations",
+        "category": "signoff",
+        "components": [
+          "klayout_violations"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1629,
+            "line": 2,
+            "column": 233
+          },
+          "end": {
+            "offset": 1631,
+            "line": 2,
+            "column": 235
+          }
+        }
+      },
+      {
+        "index": 25,
+        "name": "wire_length",
+        "category": "route",
+        "components": [
+          "wire_length"
+        ],
+        "qualifiers": [],
+        "unit": "um",
+        "kind": "csv-field",
+        "value": 13550,
+        "raw_value": "13550",
+        "span": {
+          "start": {
+            "offset": 1632,
+            "line": 2,
+            "column": 236
+          },
+          "end": {
+            "offset": 1637,
+            "line": 2,
+            "column": 241
+          }
+        }
+      },
+      {
+        "index": 26,
+        "name": "vias",
+        "category": "route",
+        "components": [
+          "vias"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 3765,
+        "raw_value": "3765",
+        "span": {
+          "start": {
+            "offset": 1638,
+            "line": 2,
+            "column": 242
+          },
+          "end": {
+            "offset": 1642,
+            "line": 2,
+            "column": 246
+          }
+        }
+      },
+      {
+        "index": 27,
+        "name": "wns",
+        "category": "timing",
+        "components": [
+          "wns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0.0",
+        "span": {
+          "start": {
+            "offset": 1643,
+            "line": 2,
+            "column": 247
+          },
+          "end": {
+            "offset": 1646,
+            "line": 2,
+            "column": 250
+          }
+        }
+      },
+      {
+        "index": 28,
+        "name": "pl_wns",
+        "category": "timing",
+        "components": [
+          "pl_wns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1647,
+            "line": 2,
+            "column": 251
+          },
+          "end": {
+            "offset": 1649,
+            "line": 2,
+            "column": 253
+          }
+        }
+      },
+      {
+        "index": 29,
+        "name": "optimized_wns",
+        "category": "timing",
+        "components": [
+          "optimized_wns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1650,
+            "line": 2,
+            "column": 254
+          },
+          "end": {
+            "offset": 1652,
+            "line": 2,
+            "column": 256
+          }
+        }
+      },
+      {
+        "index": 30,
+        "name": "fastroute_wns",
+        "category": "timing",
+        "components": [
+          "fastroute_wns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1653,
+            "line": 2,
+            "column": 257
+          },
+          "end": {
+            "offset": 1655,
+            "line": 2,
+            "column": 259
+          }
+        }
+      },
+      {
+        "index": 31,
+        "name": "spef_wns",
+        "category": "timing",
+        "components": [
+          "spef_wns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0.0",
+        "span": {
+          "start": {
+            "offset": 1656,
+            "line": 2,
+            "column": 260
+          },
+          "end": {
+            "offset": 1659,
+            "line": 2,
+            "column": 263
+          }
+        }
+      },
+      {
+        "index": 32,
+        "name": "tns",
+        "category": "timing",
+        "components": [
+          "tns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0.0",
+        "span": {
+          "start": {
+            "offset": 1660,
+            "line": 2,
+            "column": 264
+          },
+          "end": {
+            "offset": 1663,
+            "line": 2,
+            "column": 267
+          }
+        }
+      },
+      {
+        "index": 33,
+        "name": "pl_tns",
+        "category": "timing",
+        "components": [
+          "pl_tns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1664,
+            "line": 2,
+            "column": 268
+          },
+          "end": {
+            "offset": 1666,
+            "line": 2,
+            "column": 270
+          }
+        }
+      },
+      {
+        "index": 34,
+        "name": "optimized_tns",
+        "category": "timing",
+        "components": [
+          "optimized_tns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1667,
+            "line": 2,
+            "column": 271
+          },
+          "end": {
+            "offset": 1669,
+            "line": 2,
+            "column": 273
+          }
+        }
+      },
+      {
+        "index": 35,
+        "name": "fastroute_tns",
+        "category": "timing",
+        "components": [
+          "fastroute_tns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1670,
+            "line": 2,
+            "column": 274
+          },
+          "end": {
+            "offset": 1672,
+            "line": 2,
+            "column": 276
+          }
+        }
+      },
+      {
+        "index": 36,
+        "name": "spef_tns",
+        "category": "timing",
+        "components": [
+          "spef_tns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0.0",
+        "span": {
+          "start": {
+            "offset": 1673,
+            "line": 2,
+            "column": 277
+          },
+          "end": {
+            "offset": 1676,
+            "line": 2,
+            "column": 280
+          }
+        }
+      },
+      {
+        "index": 37,
+        "name": "HPWL",
+        "category": "run",
+        "components": [
+          "HPWL"
+        ],
+        "qualifiers": [],
+        "unit": "um",
+        "kind": "csv-field",
+        "value": 9715688,
+        "raw_value": "9715688.0",
+        "span": {
+          "start": {
+            "offset": 1677,
+            "line": 2,
+            "column": 281
+          },
+          "end": {
+            "offset": 1686,
+            "line": 2,
+            "column": 290
+          }
+        }
+      },
+      {
+        "index": 38,
+        "name": "routing_layer1_pct",
+        "category": "route",
+        "components": [
+          "routing_layer1_pct"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0.0",
+        "span": {
+          "start": {
+            "offset": 1687,
+            "line": 2,
+            "column": 291
+          },
+          "end": {
+            "offset": 1690,
+            "line": 2,
+            "column": 294
+          }
+        }
+      },
+      {
+        "index": 39,
+        "name": "routing_layer2_pct",
+        "category": "route",
+        "components": [
+          "routing_layer2_pct"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 27.63,
+        "raw_value": "27.63",
+        "span": {
+          "start": {
+            "offset": 1691,
+            "line": 2,
+            "column": 295
+          },
+          "end": {
+            "offset": 1696,
+            "line": 2,
+            "column": 300
+          }
+        }
+      },
+      {
+        "index": 40,
+        "name": "routing_layer3_pct",
+        "category": "route",
+        "components": [
+          "routing_layer3_pct"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 25.53,
+        "raw_value": "25.53",
+        "span": {
+          "start": {
+            "offset": 1697,
+            "line": 2,
+            "column": 301
+          },
+          "end": {
+            "offset": 1702,
+            "line": 2,
+            "column": 306
+          }
+        }
+      },
+      {
+        "index": 41,
+        "name": "routing_layer4_pct",
+        "category": "route",
+        "components": [
+          "routing_layer4_pct"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 0.77,
+        "raw_value": "0.77",
+        "span": {
+          "start": {
+            "offset": 1703,
+            "line": 2,
+            "column": 307
+          },
+          "end": {
+            "offset": 1707,
+            "line": 2,
+            "column": 311
+          }
+        }
+      },
+      {
+        "index": 42,
+        "name": "routing_layer5_pct",
+        "category": "route",
+        "components": [
+          "routing_layer5_pct"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 2.1,
+        "raw_value": "2.1",
+        "span": {
+          "start": {
+            "offset": 1708,
+            "line": 2,
+            "column": 312
+          },
+          "end": {
+            "offset": 1711,
+            "line": 2,
+            "column": 315
+          }
+        }
+      },
+      {
+        "index": 43,
+        "name": "routing_layer6_pct",
+        "category": "route",
+        "components": [
+          "routing_layer6_pct"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0.0",
+        "span": {
+          "start": {
+            "offset": 1712,
+            "line": 2,
+            "column": 316
+          },
+          "end": {
+            "offset": 1715,
+            "line": 2,
+            "column": 319
+          }
+        }
+      },
+      {
+        "index": 44,
+        "name": "wires_count",
+        "category": "route",
+        "components": [
+          "wires_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1716,
+            "line": 2,
+            "column": 320
+          },
+          "end": {
+            "offset": 1717,
+            "line": 2,
+            "column": 321
+          }
+        }
+      },
+      {
+        "index": 45,
+        "name": "wire_bits",
+        "category": "route",
+        "components": [
+          "wire_bits"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1718,
+            "line": 2,
+            "column": 322
+          },
+          "end": {
+            "offset": 1719,
+            "line": 2,
+            "column": 323
+          }
+        }
+      },
+      {
+        "index": 46,
+        "name": "public_wires_count",
+        "category": "route",
+        "components": [
+          "public_wires_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1720,
+            "line": 2,
+            "column": 324
+          },
+          "end": {
+            "offset": 1721,
+            "line": 2,
+            "column": 325
+          }
+        }
+      },
+      {
+        "index": 47,
+        "name": "public_wire_bits",
+        "category": "route",
+        "components": [
+          "public_wire_bits"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1722,
+            "line": 2,
+            "column": 326
+          },
+          "end": {
+            "offset": 1723,
+            "line": 2,
+            "column": 327
+          }
+        }
+      },
+      {
+        "index": 48,
+        "name": "memories_count",
+        "category": "run",
+        "components": [
+          "memories_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1724,
+            "line": 2,
+            "column": 328
+          },
+          "end": {
+            "offset": 1725,
+            "line": 2,
+            "column": 329
+          }
+        }
+      },
+      {
+        "index": 49,
+        "name": "memory_bits",
+        "category": "design",
+        "components": [
+          "memory_bits"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1726,
+            "line": 2,
+            "column": 330
+          },
+          "end": {
+            "offset": 1727,
+            "line": 2,
+            "column": 331
+          }
+        }
+      },
+      {
+        "index": 50,
+        "name": "processes_count",
+        "category": "run",
+        "components": [
+          "processes_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1728,
+            "line": 2,
+            "column": 332
+          },
+          "end": {
+            "offset": 1729,
+            "line": 2,
+            "column": 333
+          }
+        }
+      },
+      {
+        "index": 51,
+        "name": "cells_pre_abc",
+        "category": "design",
+        "components": [
+          "cells_pre_abc"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1730,
+            "line": 2,
+            "column": 334
+          },
+          "end": {
+            "offset": 1731,
+            "line": 2,
+            "column": 335
+          }
+        }
+      },
+      {
+        "index": 52,
+        "name": "AND",
+        "category": "run",
+        "components": [
+          "AND"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 9,
+        "raw_value": "9",
+        "span": {
+          "start": {
+            "offset": 1732,
+            "line": 2,
+            "column": 336
+          },
+          "end": {
+            "offset": 1733,
+            "line": 2,
+            "column": 337
+          }
+        }
+      },
+      {
+        "index": 53,
+        "name": "DFF",
+        "category": "run",
+        "components": [
+          "DFF"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1734,
+            "line": 2,
+            "column": 338
+          },
+          "end": {
+            "offset": 1735,
+            "line": 2,
+            "column": 339
+          }
+        }
+      },
+      {
+        "index": 54,
+        "name": "NAND",
+        "category": "run",
+        "components": [
+          "NAND"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 51,
+        "raw_value": "51",
+        "span": {
+          "start": {
+            "offset": 1736,
+            "line": 2,
+            "column": 340
+          },
+          "end": {
+            "offset": 1738,
+            "line": 2,
+            "column": 342
+          }
+        }
+      },
+      {
+        "index": 55,
+        "name": "NOR",
+        "category": "run",
+        "components": [
+          "NOR"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 18,
+        "raw_value": "18",
+        "span": {
+          "start": {
+            "offset": 1739,
+            "line": 2,
+            "column": 343
+          },
+          "end": {
+            "offset": 1741,
+            "line": 2,
+            "column": 345
+          }
+        }
+      },
+      {
+        "index": 56,
+        "name": "OR",
+        "category": "run",
+        "components": [
+          "OR"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 8,
+        "raw_value": "8",
+        "span": {
+          "start": {
+            "offset": 1742,
+            "line": 2,
+            "column": 346
+          },
+          "end": {
+            "offset": 1743,
+            "line": 2,
+            "column": 347
+          }
+        }
+      },
+      {
+        "index": 57,
+        "name": "XOR",
+        "category": "run",
+        "components": [
+          "XOR"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 2,
+        "raw_value": "2",
+        "span": {
+          "start": {
+            "offset": 1744,
+            "line": 2,
+            "column": 348
+          },
+          "end": {
+            "offset": 1745,
+            "line": 2,
+            "column": 349
+          }
+        }
+      },
+      {
+        "index": 58,
+        "name": "XNOR",
+        "category": "run",
+        "components": [
+          "XNOR"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 45,
+        "raw_value": "45",
+        "span": {
+          "start": {
+            "offset": 1746,
+            "line": 2,
+            "column": 350
+          },
+          "end": {
+            "offset": 1748,
+            "line": 2,
+            "column": 352
+          }
+        }
+      },
+      {
+        "index": 59,
+        "name": "MUX",
+        "category": "run",
+        "components": [
+          "MUX"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 8,
+        "raw_value": "8",
+        "span": {
+          "start": {
+            "offset": 1749,
+            "line": 2,
+            "column": 353
+          },
+          "end": {
+            "offset": 1750,
+            "line": 2,
+            "column": 354
+          }
+        }
+      },
+      {
+        "index": 60,
+        "name": "inputs",
+        "category": "design",
+        "components": [
+          "inputs"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 105,
+        "raw_value": "105",
+        "span": {
+          "start": {
+            "offset": 1751,
+            "line": 2,
+            "column": 355
+          },
+          "end": {
+            "offset": 1754,
+            "line": 2,
+            "column": 358
+          }
+        }
+      },
+      {
+        "index": 61,
+        "name": "outputs",
+        "category": "design",
+        "components": [
+          "outputs"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 79,
+        "raw_value": "79",
+        "span": {
+          "start": {
+            "offset": 1755,
+            "line": 2,
+            "column": 359
+          },
+          "end": {
+            "offset": 1757,
+            "line": 2,
+            "column": 361
+          }
+        }
+      },
+      {
+        "index": 62,
+        "name": "level",
+        "category": "run",
+        "components": [
+          "level"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 10,
+        "raw_value": "10",
+        "span": {
+          "start": {
+            "offset": 1758,
+            "line": 2,
+            "column": 362
+          },
+          "end": {
+            "offset": 1760,
+            "line": 2,
+            "column": 364
+          }
+        }
+      },
+      {
+        "index": 63,
+        "name": "DecapCells",
+        "category": "design",
+        "components": [
+          "DecapCells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 775,
+        "raw_value": "775",
+        "span": {
+          "start": {
+            "offset": 1761,
+            "line": 2,
+            "column": 365
+          },
+          "end": {
+            "offset": 1764,
+            "line": 2,
+            "column": 368
+          }
+        }
+      },
+      {
+        "index": 64,
+        "name": "WelltapCells",
+        "category": "design",
+        "components": [
+          "WelltapCells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 202,
+        "raw_value": "202",
+        "span": {
+          "start": {
+            "offset": 1765,
+            "line": 2,
+            "column": 369
+          },
+          "end": {
+            "offset": 1768,
+            "line": 2,
+            "column": 372
+          }
+        }
+      },
+      {
+        "index": 65,
+        "name": "DiodeCells",
+        "category": "design",
+        "components": [
+          "DiodeCells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1769,
+            "line": 2,
+            "column": 373
+          },
+          "end": {
+            "offset": 1770,
+            "line": 2,
+            "column": 374
+          }
+        }
+      },
+      {
+        "index": 66,
+        "name": "FillCells",
+        "category": "design",
+        "components": [
+          "FillCells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 553,
+        "raw_value": "553",
+        "span": {
+          "start": {
+            "offset": 1771,
+            "line": 2,
+            "column": 375
+          },
+          "end": {
+            "offset": 1774,
+            "line": 2,
+            "column": 378
+          }
+        }
+      },
+      {
+        "index": 67,
+        "name": "NonPhysCells",
+        "category": "design",
+        "components": [
+          "NonPhysCells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 582,
+        "raw_value": "582",
+        "span": {
+          "start": {
+            "offset": 1775,
+            "line": 2,
+            "column": 379
+          },
+          "end": {
+            "offset": 1778,
+            "line": 2,
+            "column": 382
+          }
+        }
+      },
+      {
+        "index": 68,
+        "name": "TotalCells",
+        "category": "design",
+        "components": [
+          "TotalCells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 2112,
+        "raw_value": "2112",
+        "span": {
+          "start": {
+            "offset": 1779,
+            "line": 2,
+            "column": 383
+          },
+          "end": {
+            "offset": 1783,
+            "line": 2,
+            "column": 387
+          }
+        }
+      },
+      {
+        "index": 69,
+        "name": "CoreArea_um^2",
+        "category": "design",
+        "components": [
+          "CoreArea_um^2"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "csv-field",
+        "value": 13773.209600000002,
+        "raw_value": "13773.209600000002",
+        "span": {
+          "start": {
+            "offset": 1784,
+            "line": 2,
+            "column": 388
+          },
+          "end": {
+            "offset": 1802,
+            "line": 2,
+            "column": 406
+          }
+        }
+      },
+      {
+        "index": 70,
+        "name": "power_slowest_internal_uW",
+        "category": "power",
+        "components": [
+          "power_slowest_internal_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1803,
+            "line": 2,
+            "column": 407
+          },
+          "end": {
+            "offset": 1805,
+            "line": 2,
+            "column": 409
+          }
+        }
+      },
+      {
+        "index": 71,
+        "name": "power_slowest_switching_uW",
+        "category": "power",
+        "components": [
+          "power_slowest_switching_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1806,
+            "line": 2,
+            "column": 410
+          },
+          "end": {
+            "offset": 1808,
+            "line": 2,
+            "column": 412
+          }
+        }
+      },
+      {
+        "index": 72,
+        "name": "power_slowest_leakage_uW",
+        "category": "power",
+        "components": [
+          "power_slowest_leakage_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1809,
+            "line": 2,
+            "column": 413
+          },
+          "end": {
+            "offset": 1811,
+            "line": 2,
+            "column": 415
+          }
+        }
+      },
+      {
+        "index": 73,
+        "name": "power_typical_internal_uW",
+        "category": "power",
+        "components": [
+          "power_typical_internal_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": 0.00113,
+        "raw_value": "0.00113",
+        "span": {
+          "start": {
+            "offset": 1812,
+            "line": 2,
+            "column": 416
+          },
+          "end": {
+            "offset": 1819,
+            "line": 2,
+            "column": 423
+          }
+        }
+      },
+      {
+        "index": 74,
+        "name": "power_typical_switching_uW",
+        "category": "power",
+        "components": [
+          "power_typical_switching_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": 0.000758,
+        "raw_value": "0.000758",
+        "span": {
+          "start": {
+            "offset": 1820,
+            "line": 2,
+            "column": 424
+          },
+          "end": {
+            "offset": 1828,
+            "line": 2,
+            "column": 432
+          }
+        }
+      },
+      {
+        "index": 75,
+        "name": "power_typical_leakage_uW",
+        "category": "power",
+        "components": [
+          "power_typical_leakage_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": 4.31e-9,
+        "raw_value": "4.31e-09",
+        "span": {
+          "start": {
+            "offset": 1829,
+            "line": 2,
+            "column": 433
+          },
+          "end": {
+            "offset": 1837,
+            "line": 2,
+            "column": 441
+          }
+        }
+      },
+      {
+        "index": 76,
+        "name": "power_fastest_internal_uW",
+        "category": "power",
+        "components": [
+          "power_fastest_internal_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1838,
+            "line": 2,
+            "column": 442
+          },
+          "end": {
+            "offset": 1840,
+            "line": 2,
+            "column": 444
+          }
+        }
+      },
+      {
+        "index": 77,
+        "name": "power_fastest_switching_uW",
+        "category": "power",
+        "components": [
+          "power_fastest_switching_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1841,
+            "line": 2,
+            "column": 445
+          },
+          "end": {
+            "offset": 1843,
+            "line": 2,
+            "column": 447
+          }
+        }
+      },
+      {
+        "index": 78,
+        "name": "power_fastest_leakage_uW",
+        "category": "power",
+        "components": [
+          "power_fastest_leakage_uW"
+        ],
+        "qualifiers": [
+          {
+            "name": "header_unit",
+            "value": "uW (known OpenLane 1 report.py label bug)"
+          }
+        ],
+        "unit": "W (header mislabeled uW)",
+        "kind": "csv-field",
+        "value": -1,
+        "raw_value": "-1",
+        "span": {
+          "start": {
+            "offset": 1844,
+            "line": 2,
+            "column": 448
+          },
+          "end": {
+            "offset": 1846,
+            "line": 2,
+            "column": 450
+          }
+        }
+      },
+      {
+        "index": 79,
+        "name": "critical_path_ns",
+        "category": "timing",
+        "components": [
+          "critical_path_ns"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 3.17,
+        "raw_value": "3.17",
+        "span": {
+          "start": {
+            "offset": 1847,
+            "line": 2,
+            "column": 451
+          },
+          "end": {
+            "offset": 1851,
+            "line": 2,
+            "column": 455
+          }
+        }
+      },
+      {
+        "index": 80,
+        "name": "suggested_clock_period",
+        "category": "timing",
+        "components": [
+          "suggested_clock_period"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 10,
+        "raw_value": "10.0",
+        "span": {
+          "start": {
+            "offset": 1852,
+            "line": 2,
+            "column": 456
+          },
+          "end": {
+            "offset": 1856,
+            "line": 2,
+            "column": 460
+          }
+        }
+      },
+      {
+        "index": 81,
+        "name": "suggested_clock_frequency",
+        "category": "timing",
+        "components": [
+          "suggested_clock_frequency"
+        ],
+        "qualifiers": [],
+        "unit": "MHz",
+        "kind": "csv-field",
+        "value": 100,
+        "raw_value": "100.0",
+        "span": {
+          "start": {
+            "offset": 1857,
+            "line": 2,
+            "column": 461
+          },
+          "end": {
+            "offset": 1862,
+            "line": 2,
+            "column": 466
+          }
+        }
+      },
+      {
+        "index": 82,
+        "name": "CLOCK_PERIOD",
+        "category": "timing",
+        "components": [
+          "CLOCK_PERIOD"
+        ],
+        "qualifiers": [],
+        "unit": "ns",
+        "kind": "csv-field",
+        "value": 10,
+        "raw_value": "10",
+        "span": {
+          "start": {
+            "offset": 1863,
+            "line": 2,
+            "column": 467
+          },
+          "end": {
+            "offset": 1865,
+            "line": 2,
+            "column": 469
+          }
+        }
+      },
+      {
+        "index": 83,
+        "name": "FP_ASPECT_RATIO",
+        "category": "run",
+        "components": [
+          "FP_ASPECT_RATIO"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 1866,
+            "line": 2,
+            "column": 470
+          },
+          "end": {
+            "offset": 1867,
+            "line": 2,
+            "column": 471
+          }
+        }
+      },
+      {
+        "index": 84,
+        "name": "FP_CORE_UTIL",
+        "category": "design",
+        "components": [
+          "FP_CORE_UTIL"
+        ],
+        "qualifiers": [],
+        "unit": "%",
+        "kind": "csv-field",
+        "value": 35,
+        "raw_value": "35",
+        "span": {
+          "start": {
+            "offset": 1868,
+            "line": 2,
+            "column": 472
+          },
+          "end": {
+            "offset": 1870,
+            "line": 2,
+            "column": 474
+          }
+        }
+      },
+      {
+        "index": 85,
+        "name": "FP_PDN_HPITCH",
+        "category": "run",
+        "components": [
+          "FP_PDN_HPITCH"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 29.24,
+        "raw_value": "29.240",
+        "span": {
+          "start": {
+            "offset": 1871,
+            "line": 2,
+            "column": 475
+          },
+          "end": {
+            "offset": 1877,
+            "line": 2,
+            "column": 481
+          }
+        }
+      },
+      {
+        "index": 86,
+        "name": "FP_PDN_VPITCH",
+        "category": "run",
+        "components": [
+          "FP_PDN_VPITCH"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 29.44,
+        "raw_value": "29.440",
+        "span": {
+          "start": {
+            "offset": 1878,
+            "line": 2,
+            "column": 482
+          },
+          "end": {
+            "offset": 1884,
+            "line": 2,
+            "column": 488
+          }
+        }
+      },
+      {
+        "index": 87,
+        "name": "GRT_ADJUSTMENT",
+        "category": "run",
+        "components": [
+          "GRT_ADJUSTMENT"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0.3,
+        "raw_value": "0.3",
+        "span": {
+          "start": {
+            "offset": 1885,
+            "line": 2,
+            "column": 489
+          },
+          "end": {
+            "offset": 1888,
+            "line": 2,
+            "column": 492
+          }
+        }
+      },
+      {
+        "index": 88,
+        "name": "GRT_REPAIR_ANTENNAS",
+        "category": "signoff",
+        "components": [
+          "GRT_REPAIR_ANTENNAS"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 1889,
+            "line": 2,
+            "column": 493
+          },
+          "end": {
+            "offset": 1890,
+            "line": 2,
+            "column": 494
+          }
+        }
+      },
+      {
+        "index": 89,
+        "name": "MAX_FANOUT_CONSTRAINT",
+        "category": "run",
+        "components": [
+          "MAX_FANOUT_CONSTRAINT"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 10,
+        "raw_value": "10",
+        "span": {
+          "start": {
+            "offset": 1891,
+            "line": 2,
+            "column": 495
+          },
+          "end": {
+            "offset": 1893,
+            "line": 2,
+            "column": 497
+          }
+        }
+      },
+      {
+        "index": 90,
+        "name": "PL_TARGET_DENSITY",
+        "category": "run",
+        "components": [
+          "PL_TARGET_DENSITY"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0.55,
+        "raw_value": "0.55",
+        "span": {
+          "start": {
+            "offset": 1894,
+            "line": 2,
+            "column": 498
+          },
+          "end": {
+            "offset": 1898,
+            "line": 2,
+            "column": 502
+          }
+        }
+      },
+      {
+        "index": 91,
+        "name": "RUN_HEURISTIC_DIODE_INSERTION",
+        "category": "run",
+        "components": [
+          "RUN_HEURISTIC_DIODE_INSERTION"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 1899,
+            "line": 2,
+            "column": 503
+          },
+          "end": {
+            "offset": 1900,
+            "line": 2,
+            "column": 504
+          }
+        }
+      },
+      {
+        "index": 92,
+        "name": "STD_CELL_LIBRARY",
+        "category": "design",
+        "components": [
+          "STD_CELL_LIBRARY"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "sky130_fd_sc_hd",
+        "raw_value": "sky130_fd_sc_hd",
+        "span": {
+          "start": {
+            "offset": 1901,
+            "line": 2,
+            "column": 505
+          },
+          "end": {
+            "offset": 1916,
+            "line": 2,
+            "column": 520
+          }
+        }
+      },
+      {
+        "index": 93,
+        "name": "SYNTH_STRATEGY",
+        "category": "run",
+        "components": [
+          "SYNTH_STRATEGY"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "csv-field",
+        "value": "AREA 0",
+        "raw_value": "AREA 0",
+        "span": {
+          "start": {
+            "offset": 1917,
+            "line": 2,
+            "column": 521
+          },
+          "end": {
+            "offset": 1923,
+            "line": 2,
+            "column": 527
+          }
+        }
+      }
+    ],
+    "experiment": {
+      "clock_period_ns": 10,
+      "corner_analysis": {
+        "corners": {
+          "ff": {
+            "evidence": [
+              {
+                "bytes": 1974760,
+                "path": "logs/signoff/26-rcx_mcsta.min.log",
+                "sha256": "1383f1612c045b61fffe854ec95c1934667c7e4a8e5f195f183cf2cd85f50c42"
+              },
+              {
+                "bytes": 1975823,
+                "path": "logs/signoff/28-rcx_mcsta.max.log",
+                "sha256": "ad47238ba13d2fce7b95c3d3f71c2d57dac90064a0c4d81b2f6dd33e284a5364"
+              },
+              {
+                "bytes": 1974760,
+                "path": "logs/signoff/30-rcx_mcsta.nom.log",
+                "sha256": "279719c510a7b05594640ffea95420e3d22c54174038be87b981beeaf716afd7"
+              }
+            ],
+            "library": "sky130_fd_sc_hd__ff_n40C_1v95.lib"
+          },
+          "ss": {
+            "evidence": [
+              {
+                "bytes": 1974760,
+                "path": "logs/signoff/26-rcx_mcsta.min.log",
+                "sha256": "1383f1612c045b61fffe854ec95c1934667c7e4a8e5f195f183cf2cd85f50c42"
+              },
+              {
+                "bytes": 1975823,
+                "path": "logs/signoff/28-rcx_mcsta.max.log",
+                "sha256": "ad47238ba13d2fce7b95c3d3f71c2d57dac90064a0c4d81b2f6dd33e284a5364"
+              },
+              {
+                "bytes": 1974760,
+                "path": "logs/signoff/30-rcx_mcsta.nom.log",
+                "sha256": "279719c510a7b05594640ffea95420e3d22c54174038be87b981beeaf716afd7"
+              }
+            ],
+            "library": "sky130_fd_sc_hd__ss_100C_1v60.lib"
+          },
+          "tt": {
+            "evidence": [
+              {
+                "bytes": 1974760,
+                "path": "logs/signoff/26-rcx_mcsta.min.log",
+                "sha256": "1383f1612c045b61fffe854ec95c1934667c7e4a8e5f195f183cf2cd85f50c42"
+              },
+              {
+                "bytes": 1975823,
+                "path": "logs/signoff/28-rcx_mcsta.max.log",
+                "sha256": "ad47238ba13d2fce7b95c3d3f71c2d57dac90064a0c4d81b2f6dd33e284a5364"
+              },
+              {
+                "bytes": 1974760,
+                "path": "logs/signoff/30-rcx_mcsta.nom.log",
+                "sha256": "279719c510a7b05594640ffea95420e3d22c54174038be87b981beeaf716afd7"
+              }
+            ],
+            "library": "sky130_fd_sc_hd__tt_025C_1v80.lib"
+          }
+        },
+        "mode": "three extracted-RC signoff analyses; every analysis defines Slowest/Typical/Fastest with SS/TT/FF"
+      },
+      "design": "uart",
+      "flow": "openlane",
+      "pdk": "sky130A",
+      "required_artifacts": {
+        "def": {
+          "bytes": 602435,
+          "path": "results/final/def/uart.def",
+          "sha256": "74d1c1c466ad181cd4fbaf4317fae375ad58a0d3f65ff942dfd09ab59a50f41c"
+        },
+        "gds": {
+          "bytes": 1796086,
+          "path": "results/final/gds/uart.gds",
+          "sha256": "cf0fceb7d3eb979ca7828e7168cd9bbc47651ac36e005ca672a954b13b3d3b56"
+        },
+        "primary_metrics": {
+          "bytes": 1925,
+          "path": "reports/metrics.csv",
+          "sha256": "5f7bed52ed2bf501e0b9f9a78ee411e75c52f716d6563a56c6b1b009d6073f9b"
+        },
+        "spef": {
+          "bytes": 478432,
+          "path": "results/final/spef/uart.spef",
+          "sha256": "a09e0243e7e176a703577c8c2477a40657cd1e709d1e0bb198d30eb2556acf60"
+        }
+      },
+      "schema": "sky130-uart-techfile-run.v1",
+      "standard_cell_library": "sky130_fd_sc_hd",
+      "status": "complete",
+      "techfile_rc_scale": 0.05,
+      "technology_lefs": {
+        "max": {
+          "changes": [
+            {
+              "layer": "li1",
+              "line": 78,
+              "modified": "2.03485e-06",
+              "original": "40.697E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "li1",
+              "line": 79,
+              "modified": "1.84933e-06",
+              "original": "36.9866E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "li1",
+              "line": 80,
+              "modified": "0.85",
+              "original": "17.0",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "mcon",
+              "line": 93,
+              "modified": "1.15",
+              "original": "23.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 121,
+              "modified": "2.02835e-06",
+              "original": "40.567E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 122,
+              "modified": "1.28892e-06",
+              "original": "25.7784E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met1",
+              "line": 129,
+              "modified": "0.00725",
+              "original": "0.145",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via",
+              "line": 138,
+              "modified": "0.75",
+              "original": "15.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 162,
+              "modified": "1.88795e-06",
+              "original": "37.759E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 163,
+              "modified": "8.47115e-07",
+              "original": "16.9423E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met2",
+              "line": 164,
+              "modified": "0.00725",
+              "original": "0.145",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via2",
+              "line": 183,
+              "modified": "0.4",
+              "original": "8.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 204,
+              "modified": "2.04945e-06",
+              "original": "40.989E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 205,
+              "modified": "6.18645e-07",
+              "original": "12.3729E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met3",
+              "line": 206,
+              "modified": "0.0028",
+              "original": "0.056",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via3",
+              "line": 224,
+              "modified": "0.4",
+              "original": "8.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 246,
+              "modified": "1.8338e-06",
+              "original": "36.676E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 247,
+              "modified": "4.207685e-07",
+              "original": "8.41537E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met4",
+              "line": 248,
+              "modified": "0.0028",
+              "original": "0.056",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via4",
+              "line": 267,
+              "modified": "0.04455",
+              "original": "0.891",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 288,
+              "modified": "1.94255e-06",
+              "original": "38.851E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 289,
+              "modified": "3.160315e-07",
+              "original": "6.32063E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met5",
+              "line": 290,
+              "modified": "0.00179",
+              "original": "0.0358",
+              "property": "RESISTANCE RPERSQ"
+            }
+          ],
+          "path": "techfiles/techfile2/sky130_fd_sc_hd__max.tlef",
+          "scaled_property_count": 23,
+          "sha256": "85562e29ce868126eb157563b9c3856999b09e6a58286ae1fd4588bbd98dde09",
+          "source": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__max.tlef",
+          "source_sha256": "14f7e9f499076bd9b4c0f307bff8c9361ef0bfbb95a432464787b2d66a3e5c94"
+        },
+        "min": {
+          "changes": [
+            {
+              "layer": "li1",
+              "line": 78,
+              "modified": "2.03485e-06",
+              "original": "40.697E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "li1",
+              "line": 79,
+              "modified": "1.84933e-06",
+              "original": "36.9866E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "li1",
+              "line": 80,
+              "modified": "0.46",
+              "original": "9.2",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "mcon",
+              "line": 93,
+              "modified": "0.08",
+              "original": "1.6",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 121,
+              "modified": "2.02835e-06",
+              "original": "40.567E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 122,
+              "modified": "1.28892e-06",
+              "original": "25.7784E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met1",
+              "line": 129,
+              "modified": "0.00525",
+              "original": "0.105",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via",
+              "line": 138,
+              "modified": "0.1",
+              "original": "2.0",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 162,
+              "modified": "1.88795e-06",
+              "original": "37.759E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 163,
+              "modified": "8.47115e-07",
+              "original": "16.9423E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met2",
+              "line": 164,
+              "modified": "0.00525",
+              "original": "0.105",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via2",
+              "line": 183,
+              "modified": "0.025",
+              "original": "0.5",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 204,
+              "modified": "2.04945e-06",
+              "original": "40.989E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 205,
+              "modified": "6.18645e-07",
+              "original": "12.3729E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met3",
+              "line": 206,
+              "modified": "0.0019",
+              "original": "0.038",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via3",
+              "line": 224,
+              "modified": "0.025",
+              "original": "0.5",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 246,
+              "modified": "1.8338e-06",
+              "original": "36.676E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 247,
+              "modified": "4.207685e-07",
+              "original": "8.41537E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met4",
+              "line": 248,
+              "modified": "0.0019",
+              "original": "0.038",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via4",
+              "line": 267,
+              "modified": "0.0006",
+              "original": "0.012",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 288,
+              "modified": "1.94255e-06",
+              "original": "38.851E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 289,
+              "modified": "3.160315e-07",
+              "original": "6.32063E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met5",
+              "line": 290,
+              "modified": "0.00106",
+              "original": "0.0212",
+              "property": "RESISTANCE RPERSQ"
+            }
+          ],
+          "path": "techfiles/techfile2/sky130_fd_sc_hd__min.tlef",
+          "scaled_property_count": 23,
+          "sha256": "e26f7b8e34733421ed0b133fcd075bfd028b74ffe79bca2fdcc74389667af1e6",
+          "source": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__min.tlef",
+          "source_sha256": "19aaf83af18d588cca915eff29cc656e75cc0614b67fd3730d097a47362f5363"
+        },
+        "nom": {
+          "changes": [
+            {
+              "layer": "li1",
+              "line": 78,
+              "modified": "2.03485e-06",
+              "original": "40.697E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "li1",
+              "line": 79,
+              "modified": "1.84933e-06",
+              "original": "36.9866E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "li1",
+              "line": 80,
+              "modified": "0.64",
+              "original": "12.8",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "mcon",
+              "line": 93,
+              "modified": "0.465",
+              "original": "9.30",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 121,
+              "modified": "2.02835e-06",
+              "original": "40.567E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met1",
+              "line": 122,
+              "modified": "1.28892e-06",
+              "original": "25.7784E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met1",
+              "line": 129,
+              "modified": "0.00625",
+              "original": "0.125",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via",
+              "line": 138,
+              "modified": "0.225",
+              "original": "4.50",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 162,
+              "modified": "1.88795e-06",
+              "original": "37.759E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met2",
+              "line": 163,
+              "modified": "8.47115e-07",
+              "original": "16.9423E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met2",
+              "line": 164,
+              "modified": "0.00625",
+              "original": "0.125",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via2",
+              "line": 183,
+              "modified": "0.1705",
+              "original": "3.41",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 204,
+              "modified": "2.04945e-06",
+              "original": "40.989E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met3",
+              "line": 205,
+              "modified": "6.18645e-07",
+              "original": "12.3729E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met3",
+              "line": 206,
+              "modified": "0.00235",
+              "original": "0.047",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via3",
+              "line": 224,
+              "modified": "0.1705",
+              "original": "3.41",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 246,
+              "modified": "1.8338e-06",
+              "original": "36.676E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met4",
+              "line": 247,
+              "modified": "4.207685e-07",
+              "original": "8.41537E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met4",
+              "line": 248,
+              "modified": "0.00235",
+              "original": "0.047",
+              "property": "RESISTANCE RPERSQ"
+            },
+            {
+              "layer": "via4",
+              "line": 267,
+              "modified": "0.019",
+              "original": "0.38",
+              "property": "RESISTANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 288,
+              "modified": "1.94255e-06",
+              "original": "38.851E-6",
+              "property": "EDGECAPACITANCE"
+            },
+            {
+              "layer": "met5",
+              "line": 289,
+              "modified": "3.160315e-07",
+              "original": "6.32063E-6",
+              "property": "CAPACITANCE CPERSQDIST"
+            },
+            {
+              "layer": "met5",
+              "line": 290,
+              "modified": "0.001425",
+              "original": "0.0285",
+              "property": "RESISTANCE RPERSQ"
+            }
+          ],
+          "path": "techfiles/techfile2/sky130_fd_sc_hd__nom.tlef",
+          "scaled_property_count": 23,
+          "sha256": "5ccf67f98ca8c20e203fc0c0fb9dd5a86f0dbf5de1c6dd66677edf3e3c632f6a",
+          "source": "<home>/benchmarks/uart/pdk_store/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__nom.tlef",
+          "source_sha256": "5de46c6f7c2cf82599b93d30a6459465f770f63c85b36182c672782219938519"
+        }
+      },
+      "technology_selection_proof": {
+        "bytes": 28117,
+        "path": "cmds.log",
+        "sha256": "ac2bf1edb4ae64ff4a901a9875dceda6b8155e79c5681bfbb6aa7186f7fffb8e"
+      },
+      "variant": "techfile2"
+    },
+    "standard_cell_usage": {
+      "schema": "def.components.v1",
+      "availability": "available",
+      "source": "results/final/def/uart.def",
+      "sha256": "74d1c1c466ad181cd4fbaf4317fae375ad58a0d3f65ff942dfd09ab59a50f41c",
+      "scope": "all final-DEF COMPONENT master instances, including functional and physical-only standard cells",
+      "declared_component_count": 2112,
+      "parsed_component_count": 2112,
+      "unique_master_count": 61,
+      "cells": [
+        {
+          "master": "sky130_fd_sc_hd__fill_1",
+          "count": 298,
+          "first_source_line": 72
+        },
+        {
+          "master": "sky130_ef_sc_hd__decap_12",
+          "count": 269,
+          "first_source_line": 75
+        },
+        {
+          "master": "sky130_fd_sc_hd__fill_2",
+          "count": 255,
+          "first_source_line": 74
+        },
+        {
+          "master": "sky130_fd_sc_hd__tapvpwrvgnd_1",
+          "count": 202,
+          "first_source_line": 1399
+        },
+        {
+          "master": "sky130_fd_sc_hd__decap_3",
+          "count": 170,
+          "first_source_line": 95
+        },
+        {
+          "master": "sky130_fd_sc_hd__decap_8",
+          "count": 122,
+          "first_source_line": 81
+        },
+        {
+          "master": "sky130_fd_sc_hd__decap_4",
+          "count": 121,
+          "first_source_line": 70
+        },
+        {
+          "master": "sky130_fd_sc_hd__decap_6",
+          "count": 93,
+          "first_source_line": 88
+        },
+        {
+          "master": "sky130_fd_sc_hd__dfxtp_1",
+          "count": 78,
+          "first_source_line": 1990
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_1",
+          "count": 63,
+          "first_source_line": 1607
+        },
+        {
+          "master": "sky130_fd_sc_hd__dlygate4sd3_1",
+          "count": 60,
+          "first_source_line": 2078
+        },
+        {
+          "master": "sky130_fd_sc_hd__mux2_1",
+          "count": 36,
+          "first_source_line": 1621
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2_1",
+          "count": 34,
+          "first_source_line": 1608
+        },
+        {
+          "master": "sky130_fd_sc_hd__o211a_1",
+          "count": 26,
+          "first_source_line": 1635
+        },
+        {
+          "master": "sky130_fd_sc_hd__or2_1",
+          "count": 22,
+          "first_source_line": 1603
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_2",
+          "count": 21,
+          "first_source_line": 1620
+        },
+        {
+          "master": "sky130_fd_sc_hd__and3_1",
+          "count": 18,
+          "first_source_line": 1667
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21ai_1",
+          "count": 18,
+          "first_source_line": 1626
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor2_1",
+          "count": 16,
+          "first_source_line": 1616
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_2",
+          "count": 15,
+          "first_source_line": 1605
+        },
+        {
+          "master": "sky130_fd_sc_hd__and2_1",
+          "count": 13,
+          "first_source_line": 1649
+        },
+        {
+          "master": "sky130_fd_sc_hd__or3_1",
+          "count": 13,
+          "first_source_line": 1609
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21oi_1",
+          "count": 12,
+          "first_source_line": 1627
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21a_1",
+          "count": 12,
+          "first_source_line": 1643
+        },
+        {
+          "master": "sky130_fd_sc_hd__or4_1",
+          "count": 12,
+          "first_source_line": 1601
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21o_1",
+          "count": 11,
+          "first_source_line": 1803
+        },
+        {
+          "master": "sky130_fd_sc_hd__a221o_1",
+          "count": 10,
+          "first_source_line": 1692
+        },
+        {
+          "master": "sky130_fd_sc_hd__clkbuf_16",
+          "count": 9,
+          "first_source_line": 2069
+        },
+        {
+          "master": "sky130_fd_sc_hd__xnor2_1",
+          "count": 9,
+          "first_source_line": 1644
+        },
+        {
+          "master": "sky130_fd_sc_hd__xor2_1",
+          "count": 8,
+          "first_source_line": 1617
+        },
+        {
+          "master": "sky130_fd_sc_hd__inv_2",
+          "count": 6,
+          "first_source_line": 1665
+        },
+        {
+          "master": "sky130_fd_sc_hd__a2bb2o_1",
+          "count": 5,
+          "first_source_line": 1716
+        },
+        {
+          "master": "sky130_fd_sc_hd__or4_2",
+          "count": 5,
+          "first_source_line": 1615
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21bo_1",
+          "count": 4,
+          "first_source_line": 1758
+        },
+        {
+          "master": "sky130_fd_sc_hd__dlymetal6s2s_1",
+          "count": 3,
+          "first_source_line": 1602
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3_1",
+          "count": 3,
+          "first_source_line": 1618
+        },
+        {
+          "master": "sky130_fd_sc_hd__o31a_1",
+          "count": 3,
+          "first_source_line": 1699
+        },
+        {
+          "master": "sky130_fd_sc_hd__o31ai_1",
+          "count": 3,
+          "first_source_line": 1632
+        },
+        {
+          "master": "sky130_fd_sc_hd__or2b_1",
+          "count": 3,
+          "first_source_line": 1630
+        },
+        {
+          "master": "sky130_fd_sc_hd__or3_2",
+          "count": 3,
+          "first_source_line": 1611
+        },
+        {
+          "master": "sky130_fd_sc_hd__a211o_1",
+          "count": 2,
+          "first_source_line": 1785
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21boi_1",
+          "count": 2,
+          "first_source_line": 1805
+        },
+        {
+          "master": "sky130_fd_sc_hd__and4_1",
+          "count": 2,
+          "first_source_line": 1670
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor4_1",
+          "count": 2,
+          "first_source_line": 1664
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21bai_1",
+          "count": 2,
+          "first_source_line": 1851
+        },
+        {
+          "master": "sky130_fd_sc_hd__o221a_1",
+          "count": 2,
+          "first_source_line": 1653
+        },
+        {
+          "master": "sky130_fd_sc_hd__or3b_1",
+          "count": 2,
+          "first_source_line": 1828
+        },
+        {
+          "master": "sky130_fd_sc_hd__a211oi_1",
+          "count": 1,
+          "first_source_line": 1813
+        },
+        {
+          "master": "sky130_fd_sc_hd__a21oi_2",
+          "count": 1,
+          "first_source_line": 1625
+        },
+        {
+          "master": "sky130_fd_sc_hd__a311oi_4",
+          "count": 1,
+          "first_source_line": 1671
+        },
+        {
+          "master": "sky130_fd_sc_hd__a32o_1",
+          "count": 1,
+          "first_source_line": 1823
+        },
+        {
+          "master": "sky130_fd_sc_hd__and2b_1",
+          "count": 1,
+          "first_source_line": 1790
+        },
+        {
+          "master": "sky130_fd_sc_hd__and3b_1",
+          "count": 1,
+          "first_source_line": 1878
+        },
+        {
+          "master": "sky130_fd_sc_hd__buf_1",
+          "count": 1,
+          "first_source_line": 2149
+        },
+        {
+          "master": "sky130_fd_sc_hd__dfxtp_2",
+          "count": 1,
+          "first_source_line": 2065
+        },
+        {
+          "master": "sky130_fd_sc_hd__nand2_2",
+          "count": 1,
+          "first_source_line": 1832
+        },
+        {
+          "master": "sky130_fd_sc_hd__nor3_4",
+          "count": 1,
+          "first_source_line": 1622
+        },
+        {
+          "master": "sky130_fd_sc_hd__o21ba_1",
+          "count": 1,
+          "first_source_line": 1986
+        },
+        {
+          "master": "sky130_fd_sc_hd__o22a_1",
+          "count": 1,
+          "first_source_line": 1807
+        },
+        {
+          "master": "sky130_fd_sc_hd__o311a_1",
+          "count": 1,
+          "first_source_line": 1801
+        },
+        {
+          "master": "sky130_fd_sc_hd__or4b_1",
+          "count": 1,
+          "first_source_line": 1875
+        }
+      ]
+    },
+    "timing_endpoint_slacks": {
+      "schema": "opensta.endpoint-slacks.v1",
+      "availability": "available",
+      "reference_corner": "typical",
+      "units": "ns",
+      "scope": "one worst setup and hold check per constrained timed endpoint at the final post-route reference corner",
+      "setup": {
+        "analysis": "setup",
+        "source": "reports/signoff/31-rcx_sta.max.rpt",
+        "sha256": "cd73c435c5bf63931b12d40bd379fd63d97f80e485d1f4fe0ba9c3ca028e9f53",
+        "endpoint_count": 94,
+        "violation_count": 0,
+        "endpoints": [
+          {
+            "endpoint": "_851_",
+            "slack_ns": 4.9,
+            "status": "met",
+            "source_line": 8
+          },
+          {
+            "endpoint": "_852_",
+            "slack_ns": 5.04,
+            "status": "met",
+            "source_line": 72
+          },
+          {
+            "endpoint": "_848_",
+            "slack_ns": 5.05,
+            "status": "met",
+            "source_line": 136
+          },
+          {
+            "endpoint": "_805_",
+            "slack_ns": 5.13,
+            "status": "met",
+            "source_line": 264
+          },
+          {
+            "endpoint": "_809_",
+            "slack_ns": 5.13,
+            "status": "met",
+            "source_line": 325
+          },
+          {
+            "endpoint": "_850_",
+            "slack_ns": 5.13,
+            "status": "met",
+            "source_line": 200
+          },
+          {
+            "endpoint": "_847_",
+            "slack_ns": 5.16,
+            "status": "met",
+            "source_line": 386
+          },
+          {
+            "endpoint": "_808_",
+            "slack_ns": 5.3,
+            "status": "met",
+            "source_line": 447
+          },
+          {
+            "endpoint": "_849_",
+            "slack_ns": 5.35,
+            "status": "met",
+            "source_line": 511
+          },
+          {
+            "endpoint": "_807_",
+            "slack_ns": 5.37,
+            "status": "met",
+            "source_line": 572
+          },
+          {
+            "endpoint": "_846_",
+            "slack_ns": 5.38,
+            "status": "met",
+            "source_line": 633
+          },
+          {
+            "endpoint": "_803_",
+            "slack_ns": 5.42,
+            "status": "met",
+            "source_line": 694
+          },
+          {
+            "endpoint": "_845_",
+            "slack_ns": 5.45,
+            "status": "met",
+            "source_line": 755
+          },
+          {
+            "endpoint": "_804_",
+            "slack_ns": 5.56,
+            "status": "met",
+            "source_line": 816
+          },
+          {
+            "endpoint": "_844_",
+            "slack_ns": 5.6,
+            "status": "met",
+            "source_line": 880
+          },
+          {
+            "endpoint": "_806_",
+            "slack_ns": 5.61,
+            "status": "met",
+            "source_line": 938
+          },
+          {
+            "endpoint": "_838_",
+            "slack_ns": 5.72,
+            "status": "met",
+            "source_line": 999
+          },
+          {
+            "endpoint": "_840_",
+            "slack_ns": 5.73,
+            "status": "met",
+            "source_line": 1071
+          },
+          {
+            "endpoint": "_780_",
+            "slack_ns": 5.74,
+            "status": "met",
+            "source_line": 1215
+          },
+          {
+            "endpoint": "_839_",
+            "slack_ns": 5.74,
+            "status": "met",
+            "source_line": 1143
+          },
+          {
+            "endpoint": "_779_",
+            "slack_ns": 5.75,
+            "status": "met",
+            "source_line": 1359
+          },
+          {
+            "endpoint": "_837_",
+            "slack_ns": 5.75,
+            "status": "met",
+            "source_line": 1287
+          },
+          {
+            "endpoint": "_842_",
+            "slack_ns": 5.75,
+            "status": "met",
+            "source_line": 1431
+          },
+          {
+            "endpoint": "_778_",
+            "slack_ns": 5.77,
+            "status": "met",
+            "source_line": 1791
+          },
+          {
+            "endpoint": "_781_",
+            "slack_ns": 5.77,
+            "status": "met",
+            "source_line": 1719
+          },
+          {
+            "endpoint": "_782_",
+            "slack_ns": 5.77,
+            "status": "met",
+            "source_line": 1503
+          },
+          {
+            "endpoint": "_835_",
+            "slack_ns": 5.77,
+            "status": "met",
+            "source_line": 1863
+          },
+          {
+            "endpoint": "_836_",
+            "slack_ns": 5.77,
+            "status": "met",
+            "source_line": 1647
+          },
+          {
+            "endpoint": "_841_",
+            "slack_ns": 5.77,
+            "status": "met",
+            "source_line": 1575
+          },
+          {
+            "endpoint": "_783_",
+            "slack_ns": 5.78,
+            "status": "met",
+            "source_line": 2007
+          },
+          {
+            "endpoint": "_784_",
+            "slack_ns": 5.78,
+            "status": "met",
+            "source_line": 2079
+          },
+          {
+            "endpoint": "_785_",
+            "slack_ns": 5.78,
+            "status": "met",
+            "source_line": 1935
+          },
+          {
+            "endpoint": "_802_",
+            "slack_ns": 5.8,
+            "status": "met",
+            "source_line": 2151
+          },
+          {
+            "endpoint": "_788_",
+            "slack_ns": 5.86,
+            "status": "met",
+            "source_line": 2209
+          },
+          {
+            "endpoint": "_833_",
+            "slack_ns": 5.88,
+            "status": "met",
+            "source_line": 2281
+          },
+          {
+            "endpoint": "_843_",
+            "slack_ns": 5.88,
+            "status": "met",
+            "source_line": 2350
+          },
+          {
+            "endpoint": "_853_",
+            "slack_ns": 5.91,
+            "status": "met",
+            "source_line": 2419
+          },
+          {
+            "endpoint": "_801_",
+            "slack_ns": 5.95,
+            "status": "met",
+            "source_line": 2488
+          },
+          {
+            "endpoint": "_811_",
+            "slack_ns": 5.97,
+            "status": "met",
+            "source_line": 2546
+          },
+          {
+            "endpoint": "_829_",
+            "slack_ns": 5.97,
+            "status": "met",
+            "source_line": 2693
+          },
+          {
+            "endpoint": "_830_",
+            "slack_ns": 5.97,
+            "status": "met",
+            "source_line": 2621
+          },
+          {
+            "endpoint": "_790_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 2840
+          },
+          {
+            "endpoint": "_812_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 2765
+          },
+          {
+            "endpoint": "_813_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 2987
+          },
+          {
+            "endpoint": "_816_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 2912
+          },
+          {
+            "endpoint": "_823_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 3206
+          },
+          {
+            "endpoint": "_825_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 3062
+          },
+          {
+            "endpoint": "_826_",
+            "slack_ns": 5.98,
+            "status": "met",
+            "source_line": 3134
+          },
+          {
+            "endpoint": "_814_",
+            "slack_ns": 5.99,
+            "status": "met",
+            "source_line": 3350
+          },
+          {
+            "endpoint": "_817_",
+            "slack_ns": 5.99,
+            "status": "met",
+            "source_line": 3572
+          },
+          {
+            "endpoint": "_818_",
+            "slack_ns": 5.99,
+            "status": "met",
+            "source_line": 3497
+          },
+          {
+            "endpoint": "_824_",
+            "slack_ns": 5.99,
+            "status": "met",
+            "source_line": 3647
+          },
+          {
+            "endpoint": "_827_",
+            "slack_ns": 5.99,
+            "status": "met",
+            "source_line": 3278
+          },
+          {
+            "endpoint": "_828_",
+            "slack_ns": 5.99,
+            "status": "met",
+            "source_line": 3425
+          },
+          {
+            "endpoint": "_815_",
+            "slack_ns": 6,
+            "status": "met",
+            "source_line": 3719
+          },
+          {
+            "endpoint": "_834_",
+            "slack_ns": 6.06,
+            "status": "met",
+            "source_line": 3794
+          },
+          {
+            "endpoint": "_821_",
+            "slack_ns": 6.08,
+            "status": "met",
+            "source_line": 3860
+          },
+          {
+            "endpoint": "_798_",
+            "slack_ns": 6.12,
+            "status": "met",
+            "source_line": 3998
+          },
+          {
+            "endpoint": "_856_",
+            "slack_ns": 6.12,
+            "status": "met",
+            "source_line": 3929
+          },
+          {
+            "endpoint": "_799_",
+            "slack_ns": 6.16,
+            "status": "met",
+            "source_line": 4053
+          },
+          {
+            "endpoint": "_789_",
+            "slack_ns": 6.17,
+            "status": "met",
+            "source_line": 4111
+          },
+          {
+            "endpoint": "_819_",
+            "slack_ns": 6.2,
+            "status": "met",
+            "source_line": 4180
+          },
+          {
+            "endpoint": "_800_",
+            "slack_ns": 6.22,
+            "status": "met",
+            "source_line": 4252
+          },
+          {
+            "endpoint": "_854_",
+            "slack_ns": 6.22,
+            "status": "met",
+            "source_line": 4307
+          },
+          {
+            "endpoint": "_831_",
+            "slack_ns": 6.32,
+            "status": "met",
+            "source_line": 4373
+          },
+          {
+            "endpoint": "_796_",
+            "slack_ns": 6.51,
+            "status": "met",
+            "source_line": 4511
+          },
+          {
+            "endpoint": "_797_",
+            "slack_ns": 6.51,
+            "status": "met",
+            "source_line": 4442
+          },
+          {
+            "endpoint": "_786_",
+            "slack_ns": 6.52,
+            "status": "met",
+            "source_line": 4649
+          },
+          {
+            "endpoint": "_822_",
+            "slack_ns": 6.52,
+            "status": "met",
+            "source_line": 4580
+          },
+          {
+            "endpoint": "_810_",
+            "slack_ns": 6.55,
+            "status": "met",
+            "source_line": 4715
+          },
+          {
+            "endpoint": "m_axis_tdata[4]",
+            "slack_ns": 6.57,
+            "status": "met",
+            "source_line": 4781
+          },
+          {
+            "endpoint": "_855_",
+            "slack_ns": 6.58,
+            "status": "met",
+            "source_line": 4820
+          },
+          {
+            "endpoint": "_787_",
+            "slack_ns": 6.62,
+            "status": "met",
+            "source_line": 4964
+          },
+          {
+            "endpoint": "m_axis_tdata[1]",
+            "slack_ns": 6.62,
+            "status": "met",
+            "source_line": 4886
+          },
+          {
+            "endpoint": "s_axis_tready",
+            "slack_ns": 6.62,
+            "status": "met",
+            "source_line": 4925
+          },
+          {
+            "endpoint": "m_axis_tdata[7]",
+            "slack_ns": 6.63,
+            "status": "met",
+            "source_line": 5072
+          },
+          {
+            "endpoint": "txd",
+            "slack_ns": 6.63,
+            "status": "met",
+            "source_line": 5033
+          },
+          {
+            "endpoint": "_794_",
+            "slack_ns": 6.64,
+            "status": "met",
+            "source_line": 5111
+          },
+          {
+            "endpoint": "_792_",
+            "slack_ns": 6.66,
+            "status": "met",
+            "source_line": 5177
+          },
+          {
+            "endpoint": "m_axis_tdata[6]",
+            "slack_ns": 6.69,
+            "status": "met",
+            "source_line": 5246
+          },
+          {
+            "endpoint": "m_axis_tdata[0]",
+            "slack_ns": 6.7,
+            "status": "met",
+            "source_line": 5285
+          },
+          {
+            "endpoint": "rx_busy",
+            "slack_ns": 6.7,
+            "status": "met",
+            "source_line": 5324
+          },
+          {
+            "endpoint": "m_axis_tdata[2]",
+            "slack_ns": 6.71,
+            "status": "met",
+            "source_line": 5441
+          },
+          {
+            "endpoint": "m_axis_tdata[5]",
+            "slack_ns": 6.71,
+            "status": "met",
+            "source_line": 5402
+          },
+          {
+            "endpoint": "m_axis_tvalid",
+            "slack_ns": 6.71,
+            "status": "met",
+            "source_line": 5363
+          },
+          {
+            "endpoint": "tx_busy",
+            "slack_ns": 6.71,
+            "status": "met",
+            "source_line": 5480
+          },
+          {
+            "endpoint": "m_axis_tdata[3]",
+            "slack_ns": 6.73,
+            "status": "met",
+            "source_line": 5519
+          },
+          {
+            "endpoint": "rx_overrun_error",
+            "slack_ns": 6.76,
+            "status": "met",
+            "source_line": 5558
+          },
+          {
+            "endpoint": "rx_frame_error",
+            "slack_ns": 6.77,
+            "status": "met",
+            "source_line": 5597
+          },
+          {
+            "endpoint": "_793_",
+            "slack_ns": 6.78,
+            "status": "met",
+            "source_line": 5636
+          },
+          {
+            "endpoint": "_795_",
+            "slack_ns": 6.79,
+            "status": "met",
+            "source_line": 5702
+          },
+          {
+            "endpoint": "_791_",
+            "slack_ns": 6.85,
+            "status": "met",
+            "source_line": 5768
+          },
+          {
+            "endpoint": "_820_",
+            "slack_ns": 6.95,
+            "status": "met",
+            "source_line": 5834
+          },
+          {
+            "endpoint": "_832_",
+            "slack_ns": 7.5,
+            "status": "met",
+            "source_line": 5900
+          }
+        ]
+      },
+      "hold": {
+        "analysis": "hold",
+        "source": "reports/signoff/31-rcx_sta.min.rpt",
+        "sha256": "0c75b8cea96d469fee527971e46ea4ca1852e4b1fe46a57f806c4232918e3bfd",
+        "endpoint_count": 94,
+        "violation_count": 0,
+        "endpoints": [
+          {
+            "endpoint": "_854_",
+            "slack_ns": 0.33,
+            "status": "met",
+            "source_line": 8
+          },
+          {
+            "endpoint": "_789_",
+            "slack_ns": 0.34,
+            "status": "met",
+            "source_line": 59
+          },
+          {
+            "endpoint": "_787_",
+            "slack_ns": 0.35,
+            "status": "met",
+            "source_line": 317
+          },
+          {
+            "endpoint": "_795_",
+            "slack_ns": 0.35,
+            "status": "met",
+            "source_line": 161
+          },
+          {
+            "endpoint": "_806_",
+            "slack_ns": 0.35,
+            "status": "met",
+            "source_line": 263
+          },
+          {
+            "endpoint": "_844_",
+            "slack_ns": 0.35,
+            "status": "met",
+            "source_line": 110
+          },
+          {
+            "endpoint": "_849_",
+            "slack_ns": 0.35,
+            "status": "met",
+            "source_line": 212
+          },
+          {
+            "endpoint": "_815_",
+            "slack_ns": 0.37,
+            "status": "met",
+            "source_line": 422
+          },
+          {
+            "endpoint": "_818_",
+            "slack_ns": 0.37,
+            "status": "met",
+            "source_line": 368
+          },
+          {
+            "endpoint": "_791_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 527
+          },
+          {
+            "endpoint": "_793_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 629
+          },
+          {
+            "endpoint": "_805_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 1115
+          },
+          {
+            "endpoint": "_807_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 791
+          },
+          {
+            "endpoint": "_809_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 476
+          },
+          {
+            "endpoint": "_812_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 683
+          },
+          {
+            "endpoint": "_813_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 899
+          },
+          {
+            "endpoint": "_814_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 737
+          },
+          {
+            "endpoint": "_824_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 1007
+          },
+          {
+            "endpoint": "_826_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 953
+          },
+          {
+            "endpoint": "_829_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 1061
+          },
+          {
+            "endpoint": "_841_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 845
+          },
+          {
+            "endpoint": "_853_",
+            "slack_ns": 0.38,
+            "status": "met",
+            "source_line": 578
+          },
+          {
+            "endpoint": "_811_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1391
+          },
+          {
+            "endpoint": "_817_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1280
+          },
+          {
+            "endpoint": "_823_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1226
+          },
+          {
+            "endpoint": "_825_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1445
+          },
+          {
+            "endpoint": "_828_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1499
+          },
+          {
+            "endpoint": "_837_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1169
+          },
+          {
+            "endpoint": "_842_",
+            "slack_ns": 0.39,
+            "status": "met",
+            "source_line": 1334
+          },
+          {
+            "endpoint": "_801_",
+            "slack_ns": 0.4,
+            "status": "met",
+            "source_line": 1610
+          },
+          {
+            "endpoint": "_816_",
+            "slack_ns": 0.4,
+            "status": "met",
+            "source_line": 1769
+          },
+          {
+            "endpoint": "_839_",
+            "slack_ns": 0.4,
+            "status": "met",
+            "source_line": 1553
+          },
+          {
+            "endpoint": "_843_",
+            "slack_ns": 0.4,
+            "status": "met",
+            "source_line": 1718
+          },
+          {
+            "endpoint": "_852_",
+            "slack_ns": 0.4,
+            "status": "met",
+            "source_line": 1664
+          },
+          {
+            "endpoint": "_827_",
+            "slack_ns": 0.41,
+            "status": "met",
+            "source_line": 1823
+          },
+          {
+            "endpoint": "_851_",
+            "slack_ns": 0.41,
+            "status": "met",
+            "source_line": 1877
+          },
+          {
+            "endpoint": "_792_",
+            "slack_ns": 0.42,
+            "status": "met",
+            "source_line": 2099
+          },
+          {
+            "endpoint": "_836_",
+            "slack_ns": 0.42,
+            "status": "met",
+            "source_line": 1985
+          },
+          {
+            "endpoint": "_838_",
+            "slack_ns": 0.42,
+            "status": "met",
+            "source_line": 2150
+          },
+          {
+            "endpoint": "_840_",
+            "slack_ns": 0.42,
+            "status": "met",
+            "source_line": 2042
+          },
+          {
+            "endpoint": "_845_",
+            "slack_ns": 0.42,
+            "status": "met",
+            "source_line": 1934
+          },
+          {
+            "endpoint": "_804_",
+            "slack_ns": 0.43,
+            "status": "met",
+            "source_line": 2204
+          },
+          {
+            "endpoint": "_808_",
+            "slack_ns": 0.44,
+            "status": "met",
+            "source_line": 2369
+          },
+          {
+            "endpoint": "_848_",
+            "slack_ns": 0.44,
+            "status": "met",
+            "source_line": 2315
+          },
+          {
+            "endpoint": "_856_",
+            "slack_ns": 0.44,
+            "status": "met",
+            "source_line": 2258
+          },
+          {
+            "endpoint": "_803_",
+            "slack_ns": 0.45,
+            "status": "met",
+            "source_line": 2423
+          },
+          {
+            "endpoint": "_847_",
+            "slack_ns": 0.45,
+            "status": "met",
+            "source_line": 2477
+          },
+          {
+            "endpoint": "_855_",
+            "slack_ns": 0.45,
+            "status": "met",
+            "source_line": 2531
+          },
+          {
+            "endpoint": "_790_",
+            "slack_ns": 0.47,
+            "status": "met",
+            "source_line": 2588
+          },
+          {
+            "endpoint": "_802_",
+            "slack_ns": 0.47,
+            "status": "met",
+            "source_line": 2642
+          },
+          {
+            "endpoint": "_850_",
+            "slack_ns": 0.47,
+            "status": "met",
+            "source_line": 2696
+          },
+          {
+            "endpoint": "_794_",
+            "slack_ns": 0.49,
+            "status": "met",
+            "source_line": 2750
+          },
+          {
+            "endpoint": "_810_",
+            "slack_ns": 0.49,
+            "status": "met",
+            "source_line": 2807
+          },
+          {
+            "endpoint": "_820_",
+            "slack_ns": 0.5,
+            "status": "met",
+            "source_line": 2858
+          },
+          {
+            "endpoint": "_798_",
+            "slack_ns": 0.51,
+            "status": "met",
+            "source_line": 2915
+          },
+          {
+            "endpoint": "_831_",
+            "slack_ns": 0.51,
+            "status": "met",
+            "source_line": 2972
+          },
+          {
+            "endpoint": "_796_",
+            "slack_ns": 0.53,
+            "status": "met",
+            "source_line": 3029
+          },
+          {
+            "endpoint": "_799_",
+            "slack_ns": 0.54,
+            "status": "met",
+            "source_line": 3083
+          },
+          {
+            "endpoint": "_797_",
+            "slack_ns": 0.57,
+            "status": "met",
+            "source_line": 3137
+          },
+          {
+            "endpoint": "_835_",
+            "slack_ns": 0.59,
+            "status": "met",
+            "source_line": 3194
+          },
+          {
+            "endpoint": "_786_",
+            "slack_ns": 0.64,
+            "status": "met",
+            "source_line": 3308
+          },
+          {
+            "endpoint": "_800_",
+            "slack_ns": 0.64,
+            "status": "met",
+            "source_line": 3251
+          },
+          {
+            "endpoint": "_846_",
+            "slack_ns": 0.64,
+            "status": "met",
+            "source_line": 3362
+          },
+          {
+            "endpoint": "_819_",
+            "slack_ns": 0.69,
+            "status": "met",
+            "source_line": 3419
+          },
+          {
+            "endpoint": "_822_",
+            "slack_ns": 0.73,
+            "status": "met",
+            "source_line": 3470
+          },
+          {
+            "endpoint": "_834_",
+            "slack_ns": 0.75,
+            "status": "met",
+            "source_line": 3521
+          },
+          {
+            "endpoint": "_830_",
+            "slack_ns": 0.78,
+            "status": "met",
+            "source_line": 3575
+          },
+          {
+            "endpoint": "_788_",
+            "slack_ns": 0.79,
+            "status": "met",
+            "source_line": 3635
+          },
+          {
+            "endpoint": "_781_",
+            "slack_ns": 0.8,
+            "status": "met",
+            "source_line": 3689
+          },
+          {
+            "endpoint": "_783_",
+            "slack_ns": 0.81,
+            "status": "met",
+            "source_line": 3743
+          },
+          {
+            "endpoint": "_784_",
+            "slack_ns": 0.82,
+            "status": "met",
+            "source_line": 3797
+          },
+          {
+            "endpoint": "_778_",
+            "slack_ns": 0.83,
+            "status": "met",
+            "source_line": 3851
+          },
+          {
+            "endpoint": "_821_",
+            "slack_ns": 0.83,
+            "status": "met",
+            "source_line": 3905
+          },
+          {
+            "endpoint": "_780_",
+            "slack_ns": 0.84,
+            "status": "met",
+            "source_line": 4013
+          },
+          {
+            "endpoint": "_833_",
+            "slack_ns": 0.84,
+            "status": "met",
+            "source_line": 3959
+          },
+          {
+            "endpoint": "_785_",
+            "slack_ns": 0.87,
+            "status": "met",
+            "source_line": 4067
+          },
+          {
+            "endpoint": "_779_",
+            "slack_ns": 0.9,
+            "status": "met",
+            "source_line": 4121
+          },
+          {
+            "endpoint": "_782_",
+            "slack_ns": 0.93,
+            "status": "met",
+            "source_line": 4175
+          },
+          {
+            "endpoint": "_832_",
+            "slack_ns": 1.56,
+            "status": "met",
+            "source_line": 4229
+          },
+          {
+            "endpoint": "rx_frame_error",
+            "slack_ns": 2.6,
+            "status": "met",
+            "source_line": 4275
+          },
+          {
+            "endpoint": "rx_overrun_error",
+            "slack_ns": 2.62,
+            "status": "met",
+            "source_line": 4314
+          },
+          {
+            "endpoint": "m_axis_tdata[2]",
+            "slack_ns": 2.63,
+            "status": "met",
+            "source_line": 4392
+          },
+          {
+            "endpoint": "m_axis_tdata[3]",
+            "slack_ns": 2.63,
+            "status": "met",
+            "source_line": 4353
+          },
+          {
+            "endpoint": "m_axis_tdata[5]",
+            "slack_ns": 2.64,
+            "status": "met",
+            "source_line": 4509
+          },
+          {
+            "endpoint": "m_axis_tvalid",
+            "slack_ns": 2.64,
+            "status": "met",
+            "source_line": 4470
+          },
+          {
+            "endpoint": "tx_busy",
+            "slack_ns": 2.64,
+            "status": "met",
+            "source_line": 4431
+          },
+          {
+            "endpoint": "m_axis_tdata[0]",
+            "slack_ns": 2.65,
+            "status": "met",
+            "source_line": 4587
+          },
+          {
+            "endpoint": "m_axis_tdata[6]",
+            "slack_ns": 2.65,
+            "status": "met",
+            "source_line": 4626
+          },
+          {
+            "endpoint": "rx_busy",
+            "slack_ns": 2.65,
+            "status": "met",
+            "source_line": 4548
+          },
+          {
+            "endpoint": "m_axis_tdata[1]",
+            "slack_ns": 2.68,
+            "status": "met",
+            "source_line": 4782
+          },
+          {
+            "endpoint": "m_axis_tdata[7]",
+            "slack_ns": 2.68,
+            "status": "met",
+            "source_line": 4665
+          },
+          {
+            "endpoint": "s_axis_tready",
+            "slack_ns": 2.68,
+            "status": "met",
+            "source_line": 4704
+          },
+          {
+            "endpoint": "txd",
+            "slack_ns": 2.68,
+            "status": "met",
+            "source_line": 4743
+          },
+          {
+            "endpoint": "m_axis_tdata[4]",
+            "slack_ns": 2.72,
+            "status": "met",
+            "source_line": 4821
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+// Fixed native Spectre noise benchmark fixture.
+// Benchmark contract: mosfet-fixed-native-v1
+// Every case uses the same unclamped common-source output topology.
+simulator lang=spectre
+global 0
+simulatorOptions options temp=27 tnom=27 gmin=1e-15 reltol=1e-6 \
+    iabstol=1e-12 method=gear2only
+simulator lang=spice
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/63752805c2da7f659d05ee64b2b6d032/spectre.lib'
+simulator lang=spectre
+
+vdd (noise_vdd 0) vsource dc=0.3
+vin (noise_gate 0) vsource dc=0.3 mag=1
+// Ideal noiseless 1 kohm transimpedance load; excludes load thermal noise.
+gload (noise_vdd noise_drain noise_vdd noise_drain) vccs gm=1m
+m_noise (noise_drain noise_gate 0 0) __benchmark_selected_pmos l=1u w=10u
+
+a0g sweep param=dc dev=vin values=[0.3] {
+  a0d sweep param=dc dev=vdd values=[0.3] {
+    x0 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+a1g sweep param=dc dev=vin values=[0.3] {
+  a1d sweep param=dc dev=vdd values=[0.6] {
+    x1 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+a2g sweep param=dc dev=vin values=[0.3] {
+  a2d sweep param=dc dev=vdd values=[0.9] {
+    x2 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+a3g sweep param=dc dev=vin values=[0.3] {
+  a3d sweep param=dc dev=vdd values=[1.2] {
+    x3 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+a4g sweep param=dc dev=vin values=[0.6] {
+  a4d sweep param=dc dev=vdd values=[0.3] {
+    x4 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+a5g sweep param=dc dev=vin values=[0.6] {
+  a5d sweep param=dc dev=vdd values=[0.6] {
+    x5 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+
+// Low-frequency total output noise; includes 1/f only when the model has it.
+a6g sweep param=dc dev=vin values=[0.6] {
+  a6d sweep param=dc dev=vdd values=[0.6] {
+    x6 (noise_drain 0) noise start=0.1 stop=1e6 iprobe=vin dec=20
+  }
+}
+// High-frequency total output noise.
+a7g sweep param=dc dev=vin values=[0.9] {
+  a7d sweep param=dc dev=vdd values=[1.2] {
+    x7 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+  }
+}
+
+t8 sweep param=temp values=[-40] {
+  a8g sweep param=dc dev=vin values=[0.6] {
+    a8d sweep param=dc dev=vdd values=[0.6] {
+      x8 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+    }
+  }
+}
+t9 sweep param=temp values=[0] {
+  a9g sweep param=dc dev=vin values=[0.6] {
+    a9d sweep param=dc dev=vdd values=[0.6] {
+      x9 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+    }
+  }
+}
+t10 sweep param=temp values=[27] {
+  a10g sweep param=dc dev=vin values=[0.6] {
+    a10d sweep param=dc dev=vdd values=[0.6] {
+      x10 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+    }
+  }
+}
+t11 sweep param=temp values=[50] {
+  a11g sweep param=dc dev=vin values=[0.6] {
+    a11d sweep param=dc dev=vdd values=[0.6] {
+      x11 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+    }
+  }
+}
+t12 sweep param=temp values=[100] {
+  a12g sweep param=dc dev=vin values=[0.6] {
+    a12d sweep param=dc dev=vdd values=[0.6] {
+      x12 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+    }
+  }
+}
+t13 sweep param=temp values=[150] {
+  a13g sweep param=dc dev=vin values=[0.6] {
+    a13d sweep param=dc dev=vdd values=[0.6] {
+      x13 (noise_drain 0) noise start=1 stop=1e9 iprobe=vin dec=20
+    }
+  }
+}

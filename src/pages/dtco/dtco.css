@@ -1,0 +1,27 @@
+.dtco-page { max-width: 1600px; margin: 0 auto; }
+.dtco-page .dtco-steps { display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; padding: .5rem 0; margin-bottom: 1rem; }
+.dtco-page .dtco-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(205px,1fr)); gap: 1rem; margin: 1rem 0; }
+.dtco-page label { display: flex; flex-direction: column; gap: .4rem; font-weight: 600; }
+.dtco-page input:not([type=checkbox]), .dtco-page select { width: 100%; box-sizing: border-box; padding: .65rem .7rem; border: 1px solid var(--border-color, #62728a); border-radius: .4rem; background: var(--bg-panel, transparent); color: inherit; font: inherit; min-width: 0; }
+.dtco-page input[type=checkbox] { width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+.dtco-page select option { color: #182336; background: #fff; }
+.dtco-page small { display: block; font-weight: 400; font-size: .8rem; line-height: 1.45; }
+.dtco-page .dtco-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.dtco-page .dtco-layouts { border: 1px solid var(--border-color, #62728a); border-radius: .4rem; padding: .75rem 1rem; display: flex; flex-wrap: wrap; gap: 1rem; }
+.dtco-page .dtco-layouts label { flex-direction: row; align-items: center; }
+.dtco-page .dtco-count { padding: .75rem 0; }
+.dtco-page .dtco-badge { border: 1px solid currentColor; padding: .25rem .5rem; border-radius: 1rem; white-space: nowrap; font-size: .8rem; }
+.dtco-page .dtco-best { font-weight: 700; }
+.dtco-page .dtco-best small { color: var(--accent, #258879); }
+.dtco-page .dtco-plots { display: grid; grid-template-columns: repeat(auto-fit,minmax(290px,1fr)); gap: 1rem; margin-top: 1rem; }
+.dtco-page .dtco-plot { margin: 0; min-width: 0; border: 1px solid var(--border-color, #62728a); padding: .8rem; border-radius: .5rem; }
+.dtco-page .dtco-plot figcaption { font-weight: 600; }
+.dtco-page .dtco-plot svg { width: 100%; height: auto; }
+.dtco-page .dtco-plot text { fill: currentColor; font-size: 10px; }
+.dtco-page .dtco-revision { padding: 1rem 0; border-top: 1px solid var(--border-color, #62728a); }
+.dtco-page pre, .dtco-page code { overflow-wrap: anywhere; white-space: pre-wrap; }
+.dtco-page .dtco-job-detail { margin-top: 1rem; }
+.dtco-page details { margin-top: 1rem; }
+.dtco-page summary { cursor: pointer; }
+.dtco-page progress { max-width: 140px; }
+.dtco-page section[id] { scroll-margin-top: 1rem; }

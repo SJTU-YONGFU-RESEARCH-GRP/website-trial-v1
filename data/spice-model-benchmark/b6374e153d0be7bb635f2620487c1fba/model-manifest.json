@@ -1,0 +1,53 @@
+{
+  "id": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model__reduction",
+  "sourceId": "sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5/sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base.model.spice",
+  "sourceMd5": "28839d500d0724fa6d0c7f51e097fa01",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/b6374e153d0be7bb635f2620487c1fba/model.lib",
+  "md5": "b6374e153d0be7bb635f2620487c1fba",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 127
+    }
+  ],
+  "completedAt": "2026-07-28T11:42:20.319313+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:42:15.459188+00:00",
+      "elapsedSeconds": 3.300921,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/original/model.lib",
+      "inputMd5": "7fd2e30c376f628bed7f393c6eb130c6",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "a39ddd38d53187baa2ff4130d47994ce",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/reduction/01-reduction/normalized.lib",
+      "outputMd5": "a046a2619c79d738faceda62a04a53bc",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/reduction/01-reduction/reduced.lib",
+        "inputMd5": "a39ddd38d53187baa2ff4130d47994ce",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__cap__vpp__11p3x11p8__l1m1m2m3m4__shieldm5__nhv__base__model/reduction/01-reduction/normalized.lib",
+        "outputMd5": "a046a2619c79d738faceda62a04a53bc",
+        "physicalModelSignature": "aba66accf39d6ded34b6c9ba982b45e2e572a15bfa745f3834f073256f926752",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv__base__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 127
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}
