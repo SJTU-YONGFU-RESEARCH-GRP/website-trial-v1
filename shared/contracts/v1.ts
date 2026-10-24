@@ -8,7 +8,7 @@ export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
 export type JsonObject = { [key: string]: JsonValue };
 
-export const MODULE_IDS = ["benchmark", "digital", "ppa", "acg"] as const;
+export const MODULE_IDS = ["benchmark", "digital", "ppa", "acg", "dtco"] as const;
 export type ModuleId = typeof MODULE_IDS[number];
 export function isModuleId(value: unknown): value is ModuleId {
   return typeof value === "string" && (MODULE_IDS as readonly string[]).includes(value);

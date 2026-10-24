@@ -43,6 +43,8 @@ export const TOOL_CATALOG = [
   { toolId: "acg-lvs1", label: "ACG GF180 research LVS1", moduleId: "acg", adapterId: "acg-lvs1-v1", adapterVersion: "1.0.0", versionProbeArgv: ["--help"], allowedEnvironmentNames: ["PATH"], executableLabel: "Python interpreter" },
   { toolId: "acg-research", label: "ACG README research workflows", moduleId: "acg", adapterId: "acg-research-v1", adapterVersion: "1.0.0", versionProbeArgv: ["--help"], allowedEnvironmentNames: ["PATH", "LD_LIBRARY_PATH"], executableLabel: "Python interpreter" },
   { toolId: "acg-pv", label: "ACG GF180 physical verification", moduleId: "acg", adapterId: "acg-pv-v1", adapterVersion: "1.0.0", versionProbeArgv: ["--help"], allowedEnvironmentNames: ["PATH", "AUTOCELLGEN_PV_GF180_ROOT"], executableLabel: "Python interpreter" },
+  { toolId: "dtco-ngspice", label: "DTCO ngspice and GF180 model library", moduleId: "dtco", adapterId: "dtco-ngspice-v1", adapterVersion: "1.0.0", versionProbeArgv: ["--version"], allowedEnvironmentNames: ["PATH", "DTCO_MODEL_FILE"], executableLabel: "ngspice executable" },
+  { toolId: "dtco-analysis", label: "DTCO waveform and GDS analysis", moduleId: "dtco", adapterId: "dtco-analysis-v1", adapterVersion: "1.0.0", versionProbeArgv: ["--version"], allowedEnvironmentNames: ["PATH"], executableLabel: "Python interpreter with gdstk" },
 ] as const satisfies readonly ToolCatalogEntryV1[];
 
 export const TOOL_CATALOG_BY_ID: Readonly<Record<string, ToolCatalogEntryV1>> = Object.freeze(

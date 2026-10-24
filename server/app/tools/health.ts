@@ -24,7 +24,9 @@ export class ToolHealthService {
       const stdout: string[] = []; const stderr: string[] = [];
       const result = await this.runner.run(`probe:${tool.id}:${randomUUID()}`, { tool, argv: tool.versionProbeArgv, cwd: this.probeRoot, allowedCwdRoot: this.probeRoot, timeoutSeconds: Math.min(tool.timeoutSeconds, 30), onOutput: (stream, text) => { (stream === "stdout" ? stdout : stderr).push(text); } });
       if (result.exitCode !== 0) throw new Error(`version probe exited ${result.exitCode}: ${stderr.join("").trim().slice(0, 500)}`);
-      version = (stdout.join("") || stderr.join("")).trim().split(/\r?\n/)[0]?.slice(0, 500) || null;
+      const versionLines = (stdout.join("") || stderr.join("")).trim().split(/\r?\n/);
+      const versionLine = tool.toolId === "dtco-ngspice" ? versionLines.find(line => /ngspice-\d/i.test(line)) : versionLines[0];
+      version = versionLine?.slice(0, 500) || null;
     } catch (error) { status = tool.rootPath || tool.executablePath || tool.interpreterPath ? "unavailable" : "not_configured"; message = error instanceof Error ? error.message : String(error); missing.push(message); }
     const record: ToolHealthCheckV1 = { id: randomUUID(), toolConfigurationId: tool.id, status, version, checkedAt: new Date().toISOString(), durationMs: Date.now() - started, message, missingDependencies: missing, selfTestPassed: status === "healthy" ? previous?.selfTestPassed ?? null : false };
     this.tools.addHealth(record); return record;
@@ -128,10 +130,16 @@ async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools:
     if (compile.exitCode !== 0) throw new Error(`vvp self-test compiler exited ${compile.exitCode}`);
     return { argv: [image], requiredFiles: [], verifyOutput(stdout) { if (!stdout.includes("EDA_SELF_TEST_OK")) throw new Error("vvp self-test did not execute the compiled image"); } };
   }
-  if (tool.toolId === "ngspice") {
+  if (tool.toolId === "ngspice" || tool.toolId === "dtco-ngspice") {
     const source = path.join(directory, "selftest.cir");
     await fsp.writeFile(source, "EDA platform self-test\nV1 in 0 1\nR1 in 0 1k\n.op\n.end\n", { mode: 0o600 });
     return { argv: ["-b", "-o", path.join(directory, "ngspice.log"), source], requiredFiles: ["ngspice.log"] };
+  }
+  if (tool.toolId === "dtco-analysis") {
+    return { argv: ["--self-test"], requiredFiles: [], verifyOutput(stdout) {
+      const evidence = JSON.parse(stdout) as { schemaVersion?: string; passed?: boolean };
+      if (evidence.schemaVersion !== "dtco.analysis-self-test.v1" || evidence.passed !== true) throw new Error("DTCO analysis self-test did not validate waveform and geometry analysis");
+    } };
   }
   if (tool.toolId === "hspice") {
     const source = path.join(directory, "selftest.sp");

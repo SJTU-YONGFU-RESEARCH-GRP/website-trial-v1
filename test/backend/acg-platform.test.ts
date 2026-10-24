@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { MODULE_IDS, type InputManifestV1, type ResultRecordV1 } from "../../shared/contracts/v1.ts";
+import { migrations } from "../../server/migrations/index.ts";
 import { EdaDatabase } from "../../server/app/db/database.ts";
 import { makeRepositories } from "../../server/app/db/repositories.ts";
 import { migration001 } from "../../server/migrations/001_initial.ts";
@@ -45,7 +46,7 @@ describe("ACG shared platform integration", () => {
     expect(JSON.stringify(repositories.users.get(restricted.id))).toBe(restrictedBefore);
     expect(repositories.users.get(publicUser.id)?.allowedModules).toEqual(MODULE_IDS);
     expect(repositories.users.get(publicUser.id)?.enabled).toBe(false);
-    expect(database.sqlite.prepare("SELECT COUNT(*) count FROM schema_migrations").get()?.count).toBe(3);
+    expect(database.sqlite.prepare("SELECT COUNT(*) count FROM schema_migrations").get()?.count).toBe(migrations.length);
     for (const old of oldSchemas) expect(database.sqlite.prepare("SELECT sql FROM sqlite_master WHERE name=?").get(String(old.name))?.sql).toBe(old.sql);
     expect(() => database.sqlite.prepare("INSERT INTO acg_results VALUES (?,?,?,?,?,?,?)").run("invalid", publicUser.id, "bogus", "{}", at, at, null)).toThrow(/CHECK/);
     const fresh = repositories.users.create({ username: "fresh-user", password: "strong existing password" });

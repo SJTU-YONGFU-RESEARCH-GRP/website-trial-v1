@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { migrations } from "../../server/migrations/index.ts";
 import { EdaDatabase } from "../../server/app/db/database.ts";
 import { makeRepositories } from "../../server/app/db/repositories.ts";
 import { hashPassword, verifyPassword } from "../../server/app/auth/password.ts";
@@ -7,8 +8,8 @@ describe("persistent database and authentication", () => {
   it("applies every versioned core table migration idempotently", () => {
     const database = new EdaDatabase(":memory:"); database.migrate(); database.migrate();
     const tables = database.sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map((row) => String(row.name));
-    for (const table of ["users", "sessions", "tool_configurations", "tool_health_checks", "technology_libraries", "jobs", "job_steps", "job_events", "artifacts", "benchmark_results", "digital_results", "ppa_results", "acg_results", "audit_logs"]) expect(tables).toContain(table);
-    expect(database.sqlite.prepare("SELECT COUNT(*) count FROM schema_migrations").get()!.count).toBe(3);
+    for (const table of ["users", "sessions", "tool_configurations", "tool_health_checks", "technology_libraries", "jobs", "job_steps", "job_events", "artifacts", "benchmark_results", "digital_results", "ppa_results", "acg_results", "dtco_results", "dtco_experiments", "dtco_revisions", "dtco_points", "dtco_attempts", "audit_logs"]) expect(tables).toContain(table);
+    expect(database.sqlite.prepare("SELECT COUNT(*) count FROM schema_migrations").get()!.count).toBe(migrations.length);
     database.close();
   });
 

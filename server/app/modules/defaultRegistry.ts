@@ -1,3 +1,4 @@
+import dtcoModuleAdapter from "../../modules/dtco/index.ts";
 import acgModuleAdapter from "../../modules/acg/index.ts";
 import { createBenchmarkModule } from "../../modules/benchmark/index.ts";
 import digitalModuleAdapter from "../../modules/digital/index.ts";
@@ -14,5 +15,6 @@ export function createDefaultModuleRegistry(): ModuleRegistry {
   registry.register(digitalModuleAdapter);
   registry.register(ppaModuleAdapter);
   registry.register(acgModuleAdapter);
+  registry.register(dtcoModuleAdapter);
   return registry;
 }

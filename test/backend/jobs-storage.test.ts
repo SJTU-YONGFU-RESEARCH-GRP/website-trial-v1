@@ -51,7 +51,7 @@ describe("job state and storage", () => {
     const retained = await storage.beginPublication("digital", "retained-result");
     await fsp.writeFile(path.join(retained, "result.txt"), "committed");
     await storage.commitPublication(retained, "digital", "retained-result");
-    const outcome = await storage.reconcilePublications({ benchmark: new Set(), digital: new Set(["retained-result"]), ppa: new Set(), acg: new Set() });
+    const outcome = await storage.reconcilePublications({ benchmark: new Set(), digital: new Set(["retained-result"]), ppa: new Set(), acg: new Set(), dtco: new Set() });
     expect(outcome).toEqual({ stagingRemoved: 1, orphanResultsRemoved: 1 });
     await expect(fsp.access(staging)).rejects.toThrow();
     await expect(fsp.access(storage.resolve("results/digital/orphan-result"))).rejects.toThrow();

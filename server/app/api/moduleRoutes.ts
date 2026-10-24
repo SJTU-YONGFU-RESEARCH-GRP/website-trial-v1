@@ -37,6 +37,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     const moduleId = parseModuleId((request.params as { module?: string }).module);
     if (!request.edaUser!.allowedModules.includes(moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is not allowed to run this module");
     if (!request.isMultipart()) throw new ApiError(415, "MULTIPART_REQUIRED", "draft uploads require multipart/form-data");
+    if (moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "create DTCO jobs through the experiment API");
     const draft = await storage.createDraftArea();
     try {
       const uploaded = await streamMultipartDraft(request.parts(), draft.path, moduleId, config.upload);
@@ -55,6 +56,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     const jobId = String((request.params as { jobId?: string }).jobId || ""); const job = repositories.jobs.get(jobId);
     if (!job || job.ownerId !== request.edaUser!.id && request.edaUser!.role !== "admin") throw new ApiError(404, "NOT_FOUND", "job not found");
     if (request.edaUser!.role !== "admin" && !request.edaUser!.allowedModules.includes(job.moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is no longer allowed to run this module");
+    if (job.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "prepare DTCO jobs through the experiment API");
     if (job.status !== "draft") throw new ApiError(409, "DRAFT_IMMUTABLE", "only draft jobs may be validated");
     const body = (request.body || {}) as { fileRoles?: Record<string, string>; parameters?: JsonObject; technologyLibraryId?: string | null };
     const manifest = structuredClone(job.inputManifest);

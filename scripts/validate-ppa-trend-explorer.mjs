@@ -141,7 +141,7 @@ assert(componentSource.includes('symbol: entries.map((point) => point.invalid ? 
 assert(componentSource.includes('scrollZoom: true'), "Plotly zoom is not enabled");
 assert(componentSource.includes("No selected run contains"), "metric-pair empty states are missing");
 assert(componentSource.includes("buildTrendChart(runs"), "charts are not built from the selected run array");
-assert(pageSource.includes("<PpaTrendExplorer runs={filteredRuns}"), "Trend Explorer is not wired to the full filtered result set");
+assert(pageSource.includes("<PpaTrendExplorer runs={selectedRuns}"), "Trend Explorer is not wired to the selected result set");
 assert((pageSource.match(/runs=\{selectedRuns\}/g) ?? []).length >= 3, "existing selected-run detail components were not preserved");
 assert(pageSource.indexOf("<PpaTrendExplorer") < pageSource.indexOf("<PpaSummary"), "Trend Explorer must precede detailed selected-run comparison");
 assert.equal((componentSource.match(/\{runs\.length > 0 \? \(/g) ?? []).length, 3, "all three trend sections must render simultaneously");

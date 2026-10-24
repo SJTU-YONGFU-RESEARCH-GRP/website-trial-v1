@@ -17,7 +17,7 @@ const TERMINAL = new Set<JobStatus>(["succeeded", "failed", "cancelled", "interr
 
 export function registerJobRoutes(app: FastifyInstance, repositories: Repositories, storage: StorageService, workers: WorkerSupervisor | null): void {
   app.post("/api/jobs/:jobId/start", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request) => {
-    const job = ownedJob(request, repositories); assertModuleAllowed(request, job); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
+    const job = ownedJob(request, repositories); assertModuleAllowed(request, job); if (job.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "start DTCO points through the experiment API"); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
     if (job.plan.sweep) {
       const sweepJobs = await materializeSweepJobs(job, repositories, storage, app);
       for (const sweepJob of sweepJobs) repositories.jobs.appendEvent(sweepJob.id, null, "info", "system", `Sweep point queued (${sweepJobs.indexOf(sweepJob) + 1}/${sweepJobs.length})`, { sweepParentJobId: job.id });
@@ -68,7 +68,7 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.post("/api/jobs/:jobId/retry", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); if (!TERMINAL.has(old.status)) throw new ApiError(409, "JOB_NOT_RETRYABLE", "only terminal jobs can be retried");
+    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); if (old.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "use the DTCO experiment point retry route to preserve attempt history"); if (!TERMINAL.has(old.status)) throw new ApiError(409, "JOB_NOT_RETRYABLE", "only terminal jobs can be retried");
     const retry = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
     const workspace = await storage.createWorkspace(retry.id); await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });
     await fsp.rm(path.join(workspace, "input"), { recursive: true }); await fsp.rename(path.join(workspace, "input-copy"), path.join(workspace, "input"));
@@ -79,7 +79,7 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.post("/api/jobs/:jobId/clone", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const old = ownedJob(request, repositories); assertModuleAllowed(request, old);
+    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); if (old.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "use the DTCO experiment point retry route to preserve attempt history");
     const clone = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
     const workspace = await storage.createWorkspace(clone.id);
     await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });

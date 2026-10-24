@@ -1,3 +1,4 @@
+import { DtcoRepository } from "../../modules/dtco/repository.ts";
 import { MODULE_IDS, isModuleId } from "../../../shared/contracts/v1.ts";
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import type {
@@ -511,6 +512,8 @@ export class TechnologyRepository {
 
 export function makeRepositories(db: EdaDatabase) {
   const users = new UserRepository(db);
-  return { users, sessions: new SessionRepository(db, users), jobs: new JobRepository(db), audit: new AuditRepository(db), artifacts: new ArtifactRepository(db), results: new ResultRepository(db), tools: new ToolRepository(db), technologies: new TechnologyRepository(db) };
+  const jobs = new JobRepository(db); const results = new ResultRepository(db);
+  const dtco = new DtcoRepository(db, { jobs, results });
+  return { dtco, users, sessions: new SessionRepository(db, users), jobs, audit: new AuditRepository(db), artifacts: new ArtifactRepository(db), results, tools: new ToolRepository(db), technologies: new TechnologyRepository(db) };
 }
 export type Repositories = ReturnType<typeof makeRepositories>;

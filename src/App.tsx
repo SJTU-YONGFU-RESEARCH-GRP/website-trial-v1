@@ -18,6 +18,7 @@ const PpaPage = lazy(async () => ({
   default: (await import("./pages/PpaPage")).PpaPage,
 }));
 const AcgPage = lazy(async () => ({ default: (await import("./pages/acg/AcgPage")).AcgPage }));
+const DtcoPage = lazy(async () => ({ default: (await import("./pages/dtco/DtcoPage")).DtcoPage }));
 const LoginPage = lazy(async () => ({ default: (await import("./pages/LoginPage")).LoginPage }));
 const JobsPage = lazy(async () => ({ default: (await import("./pages/JobsPage")).JobsPage }));
 const JobDetailPage = lazy(async () => ({ default: (await import("./pages/JobDetailPage")).JobDetailPage }));
@@ -75,6 +76,7 @@ export default function App(): ReactElement {
           PPA
         </NavLink>
         <NavLink to="/acg" className={({ isActive }) => (isActive ? "active" : "")}>AutoCellGen</NavLink>
+        <NavLink to="/dtco" className={({ isActive }) => (isActive ? "active" : "")}>DTCO</NavLink>
         <NavLink
           to="/analog"
           className={({ isActive }) => (isActive ? "active" : "")}
@@ -100,6 +102,7 @@ export default function App(): ReactElement {
             <Route path="/plotly" element={<Navigate to="/digital" replace />} />
             <Route path="/ppa" element={<PpaPage />} />
             <Route path="/acg" element={<AcgPage />} />
+            <Route path="/dtco" element={<DtcoPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/jobs/:jobId" element={<JobDetailPage />} />
