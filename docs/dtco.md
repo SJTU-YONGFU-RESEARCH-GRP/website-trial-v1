@@ -1,8 +1,36 @@
 # DTCO experiments
 
-DTCO is available at `/dtco`. An experiment expands temperature × supply voltage × layout plan into independent composite jobs. Each point uses the existing JobRunner, queue, process supervision and result publication. There is no separate DTCO scheduler.
+DTCO is available at `/dtco`. The existing experiment sweep expands temperature × supply voltage × layout plan into independent composite jobs. Each point uses the existing JobRunner, queue, process supervision and result publication. There is no separate DTCO scheduler. Adaptive optimization is a separate development path with the availability gate described below.
 
-The metric scope is **schematic transient delay and supply power, plus independently generated layout boundary area**. Layout choices affect measured area. Electrical simulation uses the independent source schematic, without extracted layout RC. An external output load is a testbench condition, not extracted capacitance. These results do not establish post-layout closure, maximum frequency, LVS or foundry signoff.
+The accepted **schematic sweep** measures transient delay and supply power, plus independently generated layout boundary area. Layout choices affect measured area. Electrical simulation uses the source schematic, without extracted layout RC. An external output load is a testbench condition, not extracted capacitance. The sweep does not establish post-layout closure, maximum frequency, LVS or foundry signoff.
+
+## Development checkpoint — 2026-10-25
+
+The code now includes persistent adaptive optimization API/UI, bounded transistor-width candidates, DC inverter analysis, per-iteration job/result history, objective scoring and best-candidate retention. Physical completion and final-GDS capacitance extraction/validation are implemented as additional JobRunner steps. These are development implementations: **`PHYSICAL_PIPELINE_READY=false`** in [environment.ts](../server/modules/dtco/environment.ts). Extracted mode, `mr-sa-12t-pex` and optimization execution remain unavailable. A real run of at least three complete adaptive layout/extraction/PPA iterations has **not** passed acceptance; no optimization improvement, production readiness or signoff is claimed.
+
+Standalone physical evidence includes an official LVS match and Magic `drc(full)=0`, but the official KLayout deck still reports two `NP.1` nplus minimum-width violations. These checks cover different rules; neither the LVS match nor Magic's zero count establishes complete physical acceptance. Extraction implements capacitance without wire resistance. The 2026-10-24 sweep results below remain historical schematic evidence, not acceptance of this new path.
+
+Migration [005](../server/migrations/005_dtco_optimization.ts) adds `dtco_optimizations` and `dtco_optimization_iterations`. The new API exposes `GET/POST /api/dtco/optimizations`, `GET /api/dtco/optimizations/:id` and `POST .../:id/start`, `/stop`, `/resume`. Creation uses `{clientRequestId,definition}`; resume requires `{iterationId,attemptId}`. Availability remains authoritative in `GET /api/dtco/options`; enabling tools alone does not override the source gate.
+
+Configure the additional audited tools in Admin → Tools, then probe and self-test them:
+
+| Tool | Configuration |
+| --- | --- |
+| `dtco-physical` | Adapter `dtco-physical-v1` version `1.0.0`; repository `rootPath`, Python `interpreterPath` with gdstk and Pillow, `entryPoint=scripts/dtco/physical.py` |
+| `dtco-magic` | Adapter `dtco-magic-v1` version `1.0.0`; Magic `executablePath`, GF180 `libs.tech/magic` as `rootPath`, environment `DTCO_MAGIC_TECH_FILE=gf180mcuA.tech` |
+
+Deployment/check commands from the repository root follow. Migrations must use the same persistent database/storage as the API and worker. Self-tests check dependencies; they do not replace real physical or optimization acceptance.
+
+```sh
+npm run db:migrate
+/home/duhaochen/.local/share/autocellgen/venv/bin/python scripts/dtco/physical.py --version
+/home/duhaochen/.local/share/autocellgen/venv/bin/python scripts/dtco/physical.py --self-test
+/usr/local/bin/magic --version
+npm run typecheck
+npm test
+```
+
+The remaining guide describes the existing schematic sweep and its retained evidence.
 
 ## Configure and save
 
@@ -74,7 +102,7 @@ The transient run covers four periods; analysis uses the settled interval from t
 
 DTCO reuses the generic PPA comparison/Pareto helper. The existing native PPA importer expects OpenROAD/OpenLane/LibreLane physical-flow result provenance; it does not characterize this inverter or convert these schematic measurements into a physical-flow result. DTCO preserves its own result schema and scope.
 
-Bounded Magic extraction research found nonfinite full-capacitance values, missing A/Y ports and floating well/substrate connectivity. Device extraction alone did not validate the circuit. The investigated DP 9-track output also extracted P width 2.035 µm against the source 2 µm, while SA 12-track width matched. Geometry preservation and LVS are therefore unproved. The product deliberately reports source-schematic electrical metrics alongside layout area, with `extraction.status="unavailable"`, and does not run extracted simulation.
+The initial 2026-10-24 Magic extraction research found nonfinite full-capacitance values, missing A/Y ports and floating well/substrate connectivity in the investigated outputs. Device extraction alone did not validate those circuits. The investigated DP 9-track output also extracted P width 2.035 µm against the source 2 µm, while SA 12-track width matched. Those historical outputs did not prove geometry preservation or LVS. The accepted schematic sweep reports source-schematic electrical metrics alongside layout area, with `extraction.status="unavailable"`; the newer physical implementation has the separate, incomplete acceptance status described in the checkpoint above.
 
 ## API
 
@@ -186,7 +214,7 @@ These are recorded development bytes, not immutable claims about future revision
 
 ## Verification evidence — 2026-10-24
 
-Evidence is retained under `/home/duhaochen/dtco-validation-20261024`; the acceptance checklist is `acceptance-plan.md`. The source accompanies the commit containing this guide. Native research evidence remains separate from live website checks.
+The following is historical acceptance of the 2026-10-24 schematic sweep, not the 2026-10-25 optimization implementation. Evidence is retained under `/home/duhaochen/dtco-validation-20261024`; the acceptance checklist is `acceptance-plan.md`. Native research evidence remains separate from live website checks.
 
 | Check | Observed result |
 | --- | --- |
@@ -210,4 +238,4 @@ A retained final-run example is job `96fbc4a6-2bd2-4071-a131-f8842edcacc6`, resu
 | Selected GDS | `22da450e494d0b3dd8a4a23596756c26a412c5f506ed95ebbb83506e2413a01c` |
 | Downloaded `output/dtco/provenance.json` (8570 bytes) | `d5f12cacd0c0c9be29a549e0a5783ab9aed145b41995a3c53041df18567279ae` |
 
-The successful matrix demonstrates schematic SPICE plus native generated-layout area and retained pipeline evidence. The extraction, geometry/LVS and signoff limitations above remain unchanged.
+This historical matrix demonstrates schematic SPICE plus native generated-layout area and retained pipeline evidence. It provides no extracted-layout, geometry/LVS, optimization-loop or signoff acceptance.

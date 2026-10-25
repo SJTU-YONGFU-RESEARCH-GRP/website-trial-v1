@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { DtcoOption } from "../../../shared/contracts/dtco";
 import { useAuth } from "../../auth/AuthContext";
-import { DTCO_SCOPE, canRetryPoint, definitionToForm, pointLabel, type DtcoForm } from "./helpers";
+import { dtcoScope, canRetryPoint, definitionToForm, pointLabel, type DtcoForm } from "./helpers";
 import { DtcoComparison } from "./DtcoComparison";
+import { DtcoOptimizer } from "./DtcoOptimizer";
 import { DtcoJobDetails } from "./DtcoJobDetails";
 import { useDtcoWorkspace } from "./useDtcoWorkspace";
 import "../../jobs.css";
@@ -23,9 +24,10 @@ export function DtcoPage(): JSX.Element {
   const viewKey = experiment ? `${experiment.id}-${viewed?.revision}` : "new";
   const pending = Boolean(experiment?.points.some(point => point.status === "unsubmitted"));
   return <div className="dtco-page jobs-page workspace-page">
-    <header className="jobs-page__header"><div><p className="jobs-eyebrow">Design–technology co-optimization · stages 1–3</p><h1>DTCO experiments</h1><p>Configure one experiment, execute its parameter combinations, and compare measured results.</p></div><button className="jobs-secondary-button" type="button" disabled={disabled || !options} onClick={() => { setRevision(null); setJobId(null); void perform("new"); }}>New experiment</button></header>
+    <header className="jobs-page__header"><div><p className="jobs-eyebrow">Design–technology co-optimization · stages 1–4</p><h1>DTCO experiments</h1><p>Configure one experiment, execute its parameter combinations, and compare measured results.</p></div><button className="jobs-secondary-button" type="button" disabled={disabled || !options} onClick={() => { setRevision(null); setJobId(null); void perform("new"); }}>New experiment</button></header>
+    {options ? <DtcoOptimizer options={options} readOnly={readOnlyDemo} /> : null}
     <div className="dtco-steps" aria-label="Experiment workflow"><a href="#dtco-configuration">1 · Experiment configuration</a><a href="#dtco-progress">2 · Execution progress</a><a href="#dtco-comparison">3 · Result comparison</a><a href="#dtco-history">History</a></div>
-    <p className="jobs-notice jobs-notice--warning dtco-scope"><strong>Measurement scope:</strong> {DTCO_SCOPE}</p>
+    <p className="jobs-notice jobs-notice--warning dtco-scope"><strong>Measurement scope:</strong> {dtcoScope(form ?? undefined)}</p>
     {options?.publicRunner ? <p className="hint">Public runner: experiment history and artifacts are shared across visitors.</p> : null}
     {error ? <p className="jobs-notice jobs-notice--error" role="alert">{error}</p> : null}
     {notice ? <p className="jobs-notice" role="status">{notice}</p> : null}
@@ -41,7 +43,7 @@ export function DtcoPage(): JSX.Element {
             {select("Technology", "technologyId", options.technologies)}
             {select("Model version", "modelVersion", options.models.filter(model => model.technologyId === form.technologyId))}
           </div>
-          <p className="hint">GF180 CMOS inverter · NMOS W=1 µm, PMOS W=2 µm, L=0.28 µm. Electrical runs use the same schematic topology.</p>
+          <p className="hint">GF180 CMOS inverter · NMOS W={form.design?.nmosWidthUm ?? 1} µm, PMOS W={form.design?.pmosWidthUm ?? 2} µm, L=0.28 µm. {form.electricalMode === "extracted" ? "Saved extracted-layout configuration." : "Electrical runs use the same schematic topology."}</p>
           <div className="dtco-grid">
             <label>Temperatures (°C)<input aria-label="Temperatures (°C)" value={form.temperatures} placeholder="25, 85" onChange={event => update("temperatures", event.target.value)} /><small>Comma-separated, −40 to 125 °C</small></label>
             <label>Supply voltages (V)<input aria-label="Supply voltages (V)" value={form.voltages} placeholder="2.7, 3.3" onChange={event => update("voltages", event.target.value)} /><small>Comma-separated, 2.7 to 3.6 V</small></label>
@@ -49,7 +51,7 @@ export function DtcoPage(): JSX.Element {
             <label>Input slew (ps)<input type="number" min="1" max="10000" step="any" value={form.inputSlewPs} onChange={event => update("inputSlewPs", event.target.value)} /></label>
             <label>Period (ns)<input type="number" min="1" max="1000" step="any" value={form.periodNs} onChange={event => update("periodNs", event.target.value)} /></label>
           </div>
-          <fieldset className="dtco-layouts"><legend>Generated layouts</legend>{options.layouts.map(layout => <label key={layout.id}><input type="checkbox" checked={form.layoutIds.includes(layout.id)} disabled={!layout.available} onChange={event => update("layoutIds", event.target.checked ? [...form.layoutIds, layout.id] : form.layoutIds.filter(id => id !== layout.id))} />{layout.label}{layout.reason ? <small>{layout.reason}</small> : null}</label>)}</fieldset>
+          <fieldset className="dtco-layouts"><legend>Generated layouts</legend>{options.layouts.filter(layout => form.electricalMode === "extracted" || !layout.id.endsWith("-pex")).map(layout => <label key={layout.id}><input type="checkbox" checked={form.layoutIds.includes(layout.id)} disabled={!layout.available} onChange={event => update("layoutIds", event.target.checked ? [...form.layoutIds, layout.id] : form.layoutIds.filter(id => id !== layout.id))} />{layout.label}{layout.reason ? <small>{layout.reason}</small> : null}</label>)}</fieldset>
         </fieldset>
         <p className="dtco-count" role="status"><strong>{validation?.count ?? 0} combinations</strong> · temperature × voltage × layout · maximum {options.maxPoints}</p>
         {validation?.error ? <p className="jobs-warning">{validation.error}</p> : null}
@@ -71,7 +73,7 @@ export function DtcoPage(): JSX.Element {
     </section>
     <section id="dtco-comparison" className="jobs-card" aria-labelledby="dtco-comparison-title">
       <div className="jobs-card__heading"><div><h2 id="dtco-comparison-title">3 · Result comparison</h2><p>{viewed ? `Saved revision ${viewed.revision} · ${viewed.definition.name}` : "Measured results from this experiment"}</p></div>{experiment ? <label>Compare revision<select aria-label="Compare revision" value={viewed?.revision ?? experiment.revision} onChange={event => setRevision(Number(event.target.value))}>{experiment.revisions.map(item => <option key={item.revision} value={item.revision}>Revision {item.revision}</option>)}</select></label> : null}</div>
-      <p className="hint">{DTCO_SCOPE} Results from different revisions are compared separately.</p>
+      <p className="hint">{dtcoScope(viewed?.definition)} Results from different revisions are compared separately.</p>
       <DtcoComparison key={viewKey} points={viewed?.points ?? []} />
     </section>
     <section id="dtco-history" className="jobs-card" aria-labelledby="dtco-history-title">

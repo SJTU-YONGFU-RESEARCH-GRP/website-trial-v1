@@ -25,6 +25,7 @@ import { registerResultRoutes } from "./api/resultRoutes.ts";
 import { registerAdminRoutes } from "./api/adminRoutes.ts";
 import { success } from "./api/http.ts";
 import { registerDtcoRoutes } from "../modules/dtco/routes.ts";
+import { registerDtcoOptimizationRoutes } from "../modules/dtco/optimizationRoutes.ts";
 import { registerBenchmarkExplorerRoutes } from "../modules/benchmark/explorerRoutes.ts";
 
 export interface EdaAppOptions { config?: ServerConfig; registry?: ModuleRegistry; database?: EdaDatabase; startWorkers?: boolean; serveFrontend?: boolean; logger?: boolean; }
@@ -37,7 +38,7 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   bootLog("fastify created");
   const database = options.database || new EdaDatabase(config.databasePath); database.migrate();
   bootLog("database migrated");
-  const repositories = makeRepositories(database); repositories.dtco.recoverPreparations(); const storage = new StorageService(config.storageRoot); await storage.initialize();
+  const repositories = makeRepositories(database); const storage = new StorageService(config.storageRoot); await storage.initialize();
   if (options.startWorkers) {
     const reconciled = await storage.reconcilePublications(Object.fromEntries(
       MODULE_IDS.map((moduleId) => [moduleId, new Set(repositories.results.allIds(moduleId))]),
@@ -85,6 +86,7 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
 
   registerBenchmarkExplorerRoutes(app, repositories, storage);
   registerDtcoRoutes(app, repositories, storage);
+  registerDtcoOptimizationRoutes(app, repositories, storage);
 
   const frontendRoot = path.resolve(process.cwd(), "dist");
   if (options.serveFrontend !== false && fs.existsSync(frontendRoot)) {

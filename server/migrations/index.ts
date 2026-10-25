@@ -4,4 +4,6 @@ import { migration003 } from "./003_acg.ts";
 
 import { migration004 } from "./004_dtco.ts";
 
-export const migrations = [migration001, migration002, migration003, migration004] as const;
+import { migration005 } from "./005_dtco_optimization.ts";
+
+export const migrations = [migration001, migration002, migration003, migration004, migration005] as const;

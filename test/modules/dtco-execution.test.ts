@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { buildDeck, getDtcoOptions, hash, modelClosure, pointCoordinates, validatePoint, type DtcoSnapshot } from "../../server/modules/dtco/environment.ts";
+import { buildDcDeck, buildNetlist, resolveDesign } from "../../server/modules/dtco/circuit.ts";
 import { acgFacade, frozenSnapshot } from "../../server/modules/dtco/planner.ts";
 import { verifyFrozenResources } from "../../server/modules/dtco/executor.ts";
 import { readDtcoMetrics } from "../../server/modules/dtco/metrics.ts";
@@ -79,8 +80,20 @@ describe("DTCO immutable native execution",()=>{
  it("retains parameterized schematic model, temperature, load and actual source current waveform",()=>{
   const deck=buildDeck(definition,point,"sm141064.ngspice");
   expect(deck).toContain('.lib "model/sm141064.ngspice" typical');
-  expect(deck).toContain(".temp 25");expect(deck).toContain("CLOAD out 0 10f");
-  expect(deck).toContain("pfet_03v3 w=2u l=280n");expect(deck).toContain("i(VDD)");
+  expect(deck).toContain(".temp 25");expect(deck).toContain("CLOAD Y 0 10f");
+  expect(deck).toContain('.include "netlist.sp"');expect(deck).toContain("XINV A Y VDD VSS dtco_inv");expect(deck).toContain("i(VDD)");
+ });
+ it("uses one sized source for native and schematic simulation and retains real DC analysis",()=>{
+  const sized={...definition,design:{nmosWidthUm:1.15,pmosWidthUm:2.1}};
+  expect(buildNetlist(sized)).toContain("nfet_03v3 w=1.15u l=280n");
+  expect(buildNetlist(sized)).toContain("pfet_03v3 w=2.1u l=280n");
+  expect(buildDeck(sized,point,"model.sp")).toContain('.include "netlist.sp"');
+  expect(buildDcDeck(sized,point,"model.sp")).toContain("dc VIN 0 3.3");
+  expect(resolveDesign(definition)).toEqual({nmosWidthUm:1,pmosWidthUm:2,lengthUm:0.28});
+  for(const nmosWidthUm of [NaN,0.7,1.01,1.35])expect(()=>resolveDesign({...definition,design:{nmosWidthUm,pmosWidthUm:2}})).toThrow();
+  const extracted={...sized,electricalMode:"extracted" as const};
+  expect(buildDeck(extracted,{...point,layoutId:"mr-sa-12t-pex"},"model.sp")).toContain('.include "physical/extracted.spice"');
+  expect(()=>validatePoint(extracted,point)).toThrow(/extracted/i);
  });
  it("rejects empty, nonfinite or nonpositive measurement data",async()=>{
   const root=await temp();await fs.mkdir(path.join(root,"output/dtco"),{recursive:true});

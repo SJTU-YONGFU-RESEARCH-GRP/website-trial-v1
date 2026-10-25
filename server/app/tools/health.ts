@@ -141,6 +141,25 @@ async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools:
       if (evidence.schemaVersion !== "dtco.analysis-self-test.v1" || evidence.passed !== true) throw new Error("DTCO analysis self-test did not validate waveform and geometry analysis");
     } };
   }
+  if (tool.toolId === "dtco-physical") {
+    return { argv: ["--self-test"], requiredFiles: [], verifyOutput(stdout) {
+      const evidence = JSON.parse(stdout) as { schemaVersion?: string; passed?: boolean };
+      if (evidence.schemaVersion !== "dtco.physical-self-test.v1" || evidence.passed !== true) throw new Error("DTCO physical helper self-test failed");
+    } };
+  }
+  if (tool.toolId === "dtco-magic") {
+    const entry = tool.environment.DTCO_MAGIC_TECH_FILE;
+    if (!tool.rootPath || !entry || path.isAbsolute(entry)) throw new Error("Magic requires a technology root and relative DTCO_MAGIC_TECH_FILE");
+    const root = await fsp.realpath(tool.rootPath);
+    const technology = await fsp.realpath(path.resolve(root, entry));
+    const relative = path.relative(root, technology);
+    if (relative === ".." || relative.startsWith("../") || path.isAbsolute(relative)) throw new Error("Magic technology escapes its configured root");
+    const script = path.join(directory, "selftest.tcl");
+    await fsp.writeFile(script, ["drc off", "load dtco_health -force", "box 0um 0um 1um 1um", "paint metal1", "save dtco_health", "extract all", "puts DTCO_MAGIC_SELF_TEST_OK", "quit -noprompt", ""].join("\n"), { mode: 0o600 });
+    return { argv: ["-dnull", "-noconsole", "-T", technology, script], requiredFiles: ["dtco_health.mag", "dtco_health.ext"], verifyOutput(stdout, stderr) {
+      if (!stdout.includes("DTCO_MAGIC_SELF_TEST_OK") || /unknown (?:paint|layer)|cannot load technology|technology.*not found/i.test(stdout + stderr)) throw new Error("Magic could not load GF180 technology and extract geometry");
+    } };
+  }
   if (tool.toolId === "hspice") {
     const source = path.join(directory, "selftest.sp");
     await fsp.writeFile(source, "EDA platform self-test\nV1 in 0 1\nR1 in 0 1k\n.op\n.end\n", { mode: 0o600 });

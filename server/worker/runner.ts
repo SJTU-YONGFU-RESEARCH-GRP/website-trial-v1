@@ -185,15 +185,20 @@ function within(root: string, candidate: string): boolean {
 }
 
 export class ModuleQueueWorker {
-  private timer: NodeJS.Timeout | null = null; private stopped = true; private active = 0;
-  constructor(readonly moduleId: ModuleId, private readonly concurrency: number, private readonly jobs: Repositories["jobs"], private readonly runner: JobRunner) {}
+  private timer: NodeJS.Timeout | null = null; private stopped = true; private active = 0; private ticking = false;
+  constructor(readonly moduleId: ModuleId, private readonly concurrency: number, private readonly jobs: Repositories["jobs"], private readonly runner: JobRunner, private readonly beforeClaim?: () => Promise<void>) {}
   start(): void { if (!this.stopped) return; this.stopped = false; this.timer = setInterval(() => void this.tick(), 250); void this.tick(); }
   requestStop(): void { this.stopped = true; if (this.timer) clearInterval(this.timer); this.timer = null; }
-  async stop(): Promise<void> { this.requestStop(); while (this.active) await new Promise((resolvePromise) => setTimeout(resolvePromise, 20)); }
+  async stop(): Promise<void> { this.requestStop(); while (this.active || this.ticking) await new Promise((resolvePromise) => setTimeout(resolvePromise, 20)); }
   private async tick(): Promise<void> {
-    while (!this.stopped && this.active < this.concurrency) {
-      const job = this.jobs.claim(this.moduleId); if (!job) return;
-      this.active += 1; void this.runner.run(job).finally(() => { this.active -= 1; void this.tick(); });
-    }
+    if (this.stopped || this.ticking) return;
+    this.ticking = true;
+    try {
+      await this.beforeClaim?.();
+      while (!this.stopped && this.active < this.concurrency) {
+        const job = this.jobs.claim(this.moduleId); if (!job) return;
+        this.active += 1; void this.runner.run(job).finally(() => { this.active -= 1; void this.tick(); });
+      }
+    } finally { this.ticking = false; }
   }
 }

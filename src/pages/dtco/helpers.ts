@@ -1,10 +1,12 @@
 import type { DtcoExperimentDefinition, DtcoOptions, DtcoPoint } from "../../../shared/contracts/dtco";
 
 export const DTCO_SCOPE = "Schematic SPICE delay/power + generated layout area; no extracted parasitics or foundry signoff. Layout differences affect area only in this mode.";
+export const dtcoScope = (definition?: Pick<DtcoExperimentDefinition, "electricalMode">) => definition?.electricalMode === "extracted" ? "Post-layout transient with extracted device geometry and capacitance estimates. Check measured result provenance for extraction checks and limitations; no extracted wire resistance or foundry signoff." : DTCO_SCOPE;
 export interface DtcoForm {
   name: string; circuitId: string; technologyId: string; modelVersion: string;
   temperatures: string; voltages: string; layoutIds: string[];
   loadFf: string; inputSlewPs: string; periodNs: string;
+  design?: DtcoExperimentDefinition["design"]; electricalMode?: DtcoExperimentDefinition["electricalMode"];
 }
 export function definitionToForm(definition: DtcoExperimentDefinition): DtcoForm {
   return { ...definition, temperatures: definition.temperaturesC.join(", "), voltages: definition.voltagesV.join(", "),
@@ -43,7 +45,7 @@ export function parseDtcoForm(form: DtcoForm, options: DtcoOptions): { definitio
     const transientSteps = 4 * periodNs / Math.min(inputSlewPs / 20000, periodNs / 10000);
     if (transientSteps > 1_000_000) return { definition: null, count, error: "This period and slew require more than 1,000,000 transient steps. Increase input slew or shorten the period." };
     return { count, error: null, definition: { name: form.name.trim(), circuitId: form.circuitId, technologyId: form.technologyId, modelVersion: form.modelVersion,
-      temperaturesC, voltagesV, layoutIds, loadFf, inputSlewPs, periodNs } };
+      temperaturesC, voltagesV, layoutIds, loadFf, inputSlewPs, periodNs, ...(form.design ? { design: form.design } : {}), ...(form.electricalMode ? { electricalMode: form.electricalMode } : {}) } };
   } catch (error) { return { definition: null, count: 0, error: error instanceof Error ? error.message : String(error) }; }
 }
 export const isActivePoint = (point: Pick<DtcoPoint, "status">): boolean => ["preparing", "draft", "validating", "ready", "queued", "running"].includes(point.status);

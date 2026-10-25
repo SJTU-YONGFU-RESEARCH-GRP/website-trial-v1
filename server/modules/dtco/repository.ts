@@ -24,22 +24,24 @@ export class DtcoRepository {
     return row ? this.get(String(row.experiment_id)) : null;
   }
   save(ownerId: string, definition: DtcoExperimentDefinition, environmentHash: string, id?: string): DtcoExperiment {
+    return this.db.transaction(() => this.saveWithinTransaction(ownerId, definition, environmentHash, id));
+  }
+  /** Caller must hold the database write transaction; optimizer links revisions atomically. */
+  saveWithinTransaction(ownerId: string, definition: DtcoExperimentDefinition, environmentHash: string, id?: string): DtcoExperiment {
     const experimentId = id || randomUUID();
-    this.db.transaction(() => {
-      const current = id ? this.get(id) : null;
-      if (id && !current) throw new Error("experiment not found");
-      if (current && JSON.stringify(current.definition) === JSON.stringify(definition) && current.revisions[0]!.environmentHash === environmentHash) return;
-      const revision = (current?.revision || 0) + 1; const at = now();
-      if (!current) this.db.sqlite.prepare("INSERT INTO dtco_experiments(id,owner_id,revision,created_at,updated_at) VALUES (?,?,?,?,?)").run(experimentId, ownerId, revision, at, at);
-      else this.db.sqlite.prepare("UPDATE dtco_experiments SET revision=?,updated_at=? WHERE id=?").run(revision, at, experimentId);
-      this.db.sqlite.prepare("INSERT INTO dtco_revisions(experiment_id,revision,definition_json,environment_hash,created_at) VALUES (?,?,?,?,?)").run(experimentId, revision, JSON.stringify(definition), environmentHash, at);
-      for (const temperatureC of definition.temperaturesC) for (const voltageV of definition.voltagesV) for (const layoutId of definition.layoutIds) {
-        const coordinates = { temperatureC, voltageV, layoutId };
-        const identity = { ...definition, name: undefined, temperaturesC: undefined, voltagesV: undefined, layoutIds: undefined, ...coordinates, environmentHash, version: "dtco.point.v1" };
-        const key = createHash("sha256").update(JSON.stringify(identity)).digest("hex");
-        this.db.sqlite.prepare("INSERT INTO dtco_points(id,experiment_id,revision,point_key,coordinates_json) VALUES (?,?,?,?,?)").run(randomUUID(), experimentId, revision, key, JSON.stringify(coordinates));
-      }
-    });
+    const current = id ? this.get(id) : null;
+    if (id && !current) throw new Error("experiment not found");
+    if (current && JSON.stringify(current.definition) === JSON.stringify(definition) && current.revisions[0]!.environmentHash === environmentHash) return current;
+    const revision = (current?.revision || 0) + 1; const at = now();
+    if (!current) this.db.sqlite.prepare("INSERT INTO dtco_experiments(id,owner_id,revision,created_at,updated_at) VALUES (?,?,?,?,?)").run(experimentId, ownerId, revision, at, at);
+    else this.db.sqlite.prepare("UPDATE dtco_experiments SET revision=?,updated_at=? WHERE id=?").run(revision, at, experimentId);
+    this.db.sqlite.prepare("INSERT INTO dtco_revisions(experiment_id,revision,definition_json,environment_hash,created_at) VALUES (?,?,?,?,?)").run(experimentId, revision, JSON.stringify(definition), environmentHash, at);
+    for (const temperatureC of definition.temperaturesC) for (const voltageV of definition.voltagesV) for (const layoutId of definition.layoutIds) {
+      const coordinates = { temperatureC, voltageV, layoutId };
+      const identity = { ...definition, name: undefined, temperaturesC: undefined, voltagesV: undefined, layoutIds: undefined, ...coordinates, environmentHash, version: "dtco.point.v1" };
+      const key = createHash("sha256").update(JSON.stringify(identity)).digest("hex");
+      this.db.sqlite.prepare("INSERT INTO dtco_points(id,experiment_id,revision,point_key,coordinates_json) VALUES (?,?,?,?,?)").run(randomUUID(), experimentId, revision, key, JSON.stringify(coordinates));
+    }
     return this.get(experimentId)!;
   }
   reserve(pointId: string, retry: boolean, expectedAttemptId?: string): { attempt: DtcoAttempt; point: DtcoPoint; experiment: DtcoExperiment } | null {

@@ -38,6 +38,21 @@ export function normalizeDefinition(value: unknown, options: DtcoOptions): DtcoE
   if (result.temperaturesC.length * result.voltagesV.length * result.layoutIds.length > Math.min(options.maxPoints,64)) throw new ApiError(400,"DTCO_POINT_LIMIT","an experiment may contain at most 64 unique parameter combinations");
   if (result.inputSlewPs / 1000 >= result.periodNs / 4) throw new ApiError(400,"DTCO_WAVEFORM_INVALID","input slew must be shorter than one quarter the waveform period");
   assertWaveformBudget(result);
+  if (body.design !== undefined) {
+    if (!body.design || typeof body.design !== "object" || Array.isArray(body.design)) throw new ApiError(400,"DTCO_DESIGN_INVALID","design must contain NMOS and PMOS widths");
+    const design = body.design as Record<string, unknown>;
+    const width = (key: string, min: number, max: number): number => {
+      const value = design[key];
+      if (typeof value !== "number" || !Number.isFinite(value) || value < min || value > max || Math.abs(value / 0.05 - Math.round(value / 0.05)) > 1e-8) throw new ApiError(400,"DTCO_DESIGN_INVALID",key + " must lie on the 0.05 um grid within " + min + " to " + max);
+      return Number(value.toFixed(8));
+    };
+    result.design = { nmosWidthUm: width("nmosWidthUm",0.7,1.3), pmosWidthUm: width("pmosWidthUm",1.4,2.6) };
+  }
+  if (body.electricalMode !== undefined) {
+    if (body.electricalMode !== "schematic" && body.electricalMode !== "extracted") throw new ApiError(400,"DTCO_MODE_INVALID","electricalMode must be schematic or extracted");
+    result.electricalMode = body.electricalMode;
+    if (body.electricalMode === "extracted" && result.layoutIds.some(id => id !== "mr-sa-12t-pex")) throw new ApiError(400,"DTCO_EXTRACTION_LAYOUT","extracted characterization requires the physical-completion layout");
+  }
   return result;
 }
 

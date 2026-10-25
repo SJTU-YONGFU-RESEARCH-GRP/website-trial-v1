@@ -7,11 +7,13 @@ import type { Repositories } from "../../app/db/repositories.ts";
 import type { StorageService } from "../../app/storage/storage.ts";
 import { projectRoot, AcgError } from "../acg/types.ts";
 import { buildDtcoPlan } from "./planner.ts";
-export const DTCO_VERSION = "dtco.adapter.v1";
+import { buildNetlist, buildDcDeck, circuitHeader, resolveDesign, DESIGN_BOUNDS, EXTRACTED_SCOPE } from "./circuit.ts";
+export const DTCO_VERSION = "dtco.adapter.v2";
+export const PHYSICAL_PIPELINE_READY=false;
 export const METRIC_SCOPE = "Schematic transient delay/power + generated-layout boundary area; no extracted RC or foundry signoff; layouts do not electrically alter the model.";
 export const ASSETS = path.resolve(import.meta.dirname, "../../../scripts/dtco");
 export const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
-export const LAYOUTS = ["mr-dp-9t", "mr-sa-12t"];
+export const LAYOUTS = ["mr-dp-9t", "mr-sa-12t", "mr-sa-12t-pex"];
 type TrustedFile = { source: string; relativePath: string; sha256: string };
 export interface DtcoSnapshot { environmentHash: string; modelHash: string; modelVersion: string; coordinates: DtcoPointCoordinates; definition: DtcoExperimentDefinition; trusted: TrustedFile[]; inputHashes: Record<string,string>; metricScope: string; snapshotHash?: string; }
 export function dtcoError(code:string,message:string): never { throw new AcgError(code,message,"configuration"); }
@@ -52,19 +54,23 @@ async function environment(repositories:Repositories) {
  const entry=analysis!.entryPoint && path.resolve(analysis!.rootPath??"",analysis!.entryPoint);
  if(!analysis!.interpreterPath||!entry||path.resolve(entry)!==path.join(ASSETS,"analyze.py"))dtcoError("DTCO_ANALYZER","Configure trusted repository scripts/dtco/analyze.py with a Python interpreter");
  const renderer=configurations.find(t=>t.toolId==="acg-renderer"&&repositories.tools.latestHealth(t.id)?.status==="healthy"&&repositories.tools.latestHealth(t.id)?.selfTestPassed===true);
- const selected=[native!,spice!,analysis!,...(renderer?[renderer]:[])];
+ const physical=configurations.find(t=>t.toolId==="dtco-physical"&&repositories.tools.latestHealth(t.id)?.status==="healthy"&&repositories.tools.latestHealth(t.id)?.selfTestPassed===true);
+ const magic=configurations.find(t=>t.toolId==="dtco-magic"&&repositories.tools.latestHealth(t.id)?.status==="healthy"&&repositories.tools.latestHealth(t.id)?.selfTestPassed===true);
+ const selected=[native!,spice!,analysis!,...(renderer?[renderer]:[]),...(physical?[physical]:[]),...(magic?[magic]:[])];
  const trusted:TrustedFile[]=[...model];
  for(const tool of selected) {
   const source=tool.interpreterPath??tool.executablePath;
   if(!source||!path.isAbsolute(source))dtcoError("DTCO_TOOL_PATH","Absolute administrator executable required");
   trusted.push({source,relativePath:"tools/"+tool.toolId,sha256:hash(await bytes(source))});
-  if(tool.toolId==="acg-renderer"&&tool.entryPoint){const source=path.resolve(tool.rootPath??"",tool.entryPoint);trusted.push({source,relativePath:"helpers/renderer"+path.extname(source),sha256:hash(await bytes(source))});}
+  if(["acg-renderer","dtco-physical"].includes(tool.toolId)&&tool.entryPoint){const source=path.resolve(tool.rootPath??"",tool.entryPoint);trusted.push({source,relativePath:"helpers/"+tool.toolId+path.extname(source),sha256:hash(await bytes(source))});}
  }
  trusted.push({source:entry,relativePath:"helpers/analyze.py",sha256:hash(await bytes(entry))});
+ if(physical&&path.resolve(physical.rootPath??"",physical.entryPoint??"")!==path.join(ASSETS,"physical.py"))dtcoError("DTCO_PHYSICAL_HELPER","Configure trusted repository physical.py");
+ if(magic){const file=magic.environment.DTCO_MAGIC_TECH_FILE;if(!magic.rootPath||file!=="gf180mcuA.tech")dtcoError("DTCO_MAGIC_TECH","Configure GF180MCUA Magic technology");const source=path.resolve(magic.rootPath,file);trusted.push({source,relativePath:"magic/gf180mcuA.tech",sha256:hash(await bytes(source))});}
  const project=await projectRoot(native!,"mr");
  const rules=path.join(project,"config/gf180/rules_gf180.json");
  trusted.push({source:rules,relativePath:"rules.json",sha256:hash(await bytes(rules))});
- for(const name of ["mr-dp-9t.json","mr-sa-12t.json","inverter.sp"])trusted.push({source:path.join(ASSETS,name),relativePath:"catalog/"+name,sha256:hash(await bytes(path.join(ASSETS,name)))});
+ for(const name of ["mr-dp-9t.json","mr-sa-12t.json","mr-sa-12t-pex.json","inverter.sp","physical.py"])trusted.push({source:path.join(ASSETS,name),relativePath:"catalog/"+name,sha256:hash(await bytes(path.join(ASSETS,name)))});
  for(const name of ["ascii_to_gds_gdstk.py","gds_merge_all_layers_klayout.rb"]) {
   const source=path.join(project,"scripts",name);
   trusted.push({source,relativePath:"resources/scripts/"+name,sha256:hash(await bytes(source))});
@@ -73,7 +79,7 @@ async function environment(repositories:Repositories) {
  trusted.push({source:jar,relativePath:"resources/bin/ascii2gdsii.jar",sha256:hash(await bytes(jar))});
  const versions=Object.fromEntries(selected.map(t=>[t.toolId,repositories.tools.latestHealth(t.id)?.version??null]));
  const environmentHash=hash(JSON.stringify({trusted,configurations:selected,versions}));
- return {native:native!,spice:spice!,analysis:analysis!,configurations:selected,trusted,modelHash,modelVersion:"gf180-typical-"+modelHash.slice(0,12),environmentHash,versions,modelEntry};
+ return {native:native!,spice:spice!,analysis:analysis!,configurations:selected,trusted,modelHash,modelVersion:"gf180-typical-"+modelHash.slice(0,12),environmentHash,versions,modelEntry,physicalReady:PHYSICAL_PIPELINE_READY&&Boolean(physical&&magic)};
 }
 export async function getDtcoOptions(repositories:Repositories,_storage:StorageService):Promise<DtcoOptions> {
  let env:Awaited<ReturnType<typeof environment>>|null=null, reason:string|null=null;
@@ -84,9 +90,12 @@ export async function getDtcoOptions(repositories:Repositories,_storage:StorageS
  let modelHash=env?.modelHash??"",modelVersion=env?.modelVersion??"gf180-typical-unconfigured";
  if(!env){const spice=active.find(t=>t.toolId==="dtco-ngspice");if(spice?.rootPath&&spice.environment.DTCO_MODEL_FILE){try{const closure=await modelClosure(spice.rootPath,spice.environment.DTCO_MODEL_FILE);modelHash=hash(JSON.stringify(closure.map(({relativePath,sha256})=>({relativePath,sha256}))));modelVersion="gf180-typical-"+modelHash.slice(0,12);}catch{ /* Unreadable administrator model remains explicitly unconfigured. */ }}}
  const option=(id:string,label:string)=>({id,label,available,reason});
- return {circuits:[option("gf180-inverter","CMOS inverter · N1 µm / P2 µm · L280 nm")],technologies:[option("gf180mcuA","GF180MCU A · 3.3 V MOS")],models:[{...option(modelVersion,"GF180 typical SPICE model"),technologyId:"gf180mcuA",sourceHash:modelHash}],layouts:LAYOUTS.map((id,i)=>option(id,i?"MR SA · 12 tracks":"MR DP · 9 tracks")),available,unavailableReason:reason,tools:toolOptions,defaults:{name:"GF180 inverter study",circuitId:"gf180-inverter",technologyId:"gf180mcuA",modelVersion,temperaturesC:[25,85],voltagesV:[3,3.3],layoutIds:[...LAYOUTS],loadFf:10,inputSlewPs:100,periodNs:10},maxPoints:64,environmentHash:env?.environmentHash??hash(JSON.stringify({unavailableReason:reason,modelHash,tools:toolOptions})),metricScope:METRIC_SCOPE};
+ return {circuits:[option("gf180-inverter","CMOS inverter · N1 µm / P2 µm · L280 nm")],technologies:[option("gf180mcuA","GF180MCU A · 3.3 V MOS")],models:[{...option(modelVersion,"GF180 typical SPICE model"),technologyId:"gf180mcuA",sourceHash:modelHash}],layouts:LAYOUTS.map((id,i)=>id==="mr-sa-12t-pex"?{id,label:"Completed MR SA · 12 tracks · extracted capacitance",available:env?.physicalReady??false,reason:env?.physicalReady?null:"Final physical feasibility proof unavailable"}:option(id,i?"MR SA · 12 tracks":"MR DP · 9 tracks")),available,unavailableReason:reason,tools:toolOptions,defaults:{name:"GF180 inverter study",circuitId:"gf180-inverter",technologyId:"gf180mcuA",modelVersion,temperaturesC:[25,85],voltagesV:[3,3.3],layoutIds:LAYOUTS.slice(0,2),loadFf:10,inputSlewPs:100,periodNs:10},designBounds:DESIGN_BOUNDS,electricalModes:[option("schematic","Source schematic"),{id:"extracted",label:"Completed layout with extracted capacitance",available:env?.physicalReady??false,reason:env?.physicalReady?null:"Final physical feasibility proof unavailable"}],maxPoints:64,environmentHash:env?.environmentHash??hash(JSON.stringify({unavailableReason:reason,modelHash,tools:toolOptions})),metricScope:METRIC_SCOPE};
 }
 export function validatePoint(definition:DtcoExperimentDefinition,point:DtcoPointCoordinates) {
+ resolveDesign(definition);
+ if(definition.electricalMode!==undefined&&!["schematic","extracted"].includes(definition.electricalMode))dtcoError("DTCO_MODE","Unsupported electrical mode");
+ if(definition.electricalMode==="extracted"&&point.layoutId!=="mr-sa-12t-pex")dtcoError("DTCO_MODE_LAYOUT","Extracted mode requires the completed 12-track PEX layout");
  if(definition.circuitId!=="gf180-inverter"||definition.technologyId!=="gf180mcuA"||!LAYOUTS.includes(point.layoutId))dtcoError("DTCO_SELECTION","Unsupported circuit, technology or layout");
  for(const[key,value,min,max]of [["temperatureC",point.temperatureC,-40,125],["voltageV",point.voltageV,2.7,3.6],["loadFf",definition.loadFf,0.1,1000],["inputSlewPs",definition.inputSlewPs,1,10000],["periodNs",definition.periodNs,1,1000]] as const)if(typeof value!=="number"||!Number.isFinite(value)||value<min||value>max)dtcoError("DTCO_RANGE",key+" is outside "+min+".."+max);
  if(definition.inputSlewPs*1e-3>=definition.periodNs/4)dtcoError("DTCO_SLEW","Input slew must be less than one quarter period");
@@ -95,8 +104,7 @@ export function validatePoint(definition:DtcoExperimentDefinition,point:DtcoPoin
 }
 export function buildDeck(definition:DtcoExperimentDefinition,point:DtcoPointCoordinates,modelEntry:string):string {
  const period=definition.periodNs*1e-9,slew=definition.inputSlewPs*1e-12;
- // Pulse high duration excludes transitions, making each input half-period symmetric.
- return ["* GF180 inverter schematic; identical topology and dimensions to native layout input",".param fnoicor=0 sw_stat_mismatch=0",'.lib "model/'+modelEntry+'" typical',".temp "+point.temperatureC,"VDD vdd 0 "+point.voltageV,"VIN in 0 PULSE(0 "+point.voltageV+" 0 "+slew+" "+slew+" "+(period/2-slew)+" "+period+")","XMP0 out in vdd vdd pfet_03v3 w=2u l=280n","XMN0 out in 0 0 nfet_03v3 w=1u l=280n","CLOAD out 0 "+definition.loadFf+"f",".option method=gear reltol=1e-4 abstol=1e-15 vntol=1e-6",".tran "+Math.min(slew/20,period/10000)+" "+period*4+" 0 "+Math.min(slew/20,period/10000),".control","set wr_singlescale","set wr_vecnames","run","wrdata waveforms.txt v(in) v(out) i(VDD)",".endc",".end",""].join("\n");
+ return [...circuitHeader(definition,point,modelEntry,definition.electricalMode==="extracted"),"VIN A 0 PULSE(0 "+point.voltageV+" 0 "+slew+" "+slew+" "+(period/2-slew)+" "+period+")","CLOAD Y 0 "+definition.loadFf+"f",".option method=gear reltol=1e-4 abstol=1e-15 vntol=1e-6",".tran "+Math.min(slew/20,period/10000)+" "+period*4+" 0 "+Math.min(slew/20,period/10000),".control","set wr_singlescale","set wr_vecnames","run","wrdata waveforms.txt v(A) v(Y) i(VDD)",".endc",".end",""].join("\n");
 }
 export function pointCoordinates(point:DtcoPointCoordinates):DtcoPointCoordinates {
  return {temperatureC:point.temperatureC,voltageV:point.voltageV,layoutId:point.layoutId};
@@ -104,6 +112,7 @@ export function pointCoordinates(point:DtcoPointCoordinates):DtcoPointCoordinate
 export async function prepareDtcoJob(repositories:Repositories,storage:StorageService,job:JobRecordV1,definition:DtcoExperimentDefinition,point:DtcoPointCoordinates) {
  const coordinates=pointCoordinates(point);
  validatePoint(definition,coordinates); const env=await environment(repositories);
+ if((definition.electricalMode==="extracted"||coordinates.layoutId==="mr-sa-12t-pex")&&!env.physicalReady)dtcoError("DTCO_PHYSICAL_UNAVAILABLE","Validated physical extraction tools and final feasibility proof required");
  if(definition.modelVersion!==env.modelVersion)dtcoError("DTCO_MODEL_CHANGED","Selected model differs from current model closure; save a new experiment revision");
  const root=storage.resolve(job.workspaceRelativePath);
  await fs.mkdir(root,{recursive:true}); for(const dir of ["input","work","output","logs","artifacts"])await fs.mkdir(path.join(root,dir),{recursive:true});
@@ -120,13 +129,17 @@ export async function prepareDtcoJob(repositories:Repositories,storage:StorageSe
   const data=Buffer.isBuffer(content)?content:Buffer.from(content);
   files.push({relativePath,sizeBytes:data.length,sha256:hash(data),mediaType:relativePath.endsWith(".json")?"application/json":"text/plain",recognizedType:relativePath.endsWith(".json")?"json":"text",role,required:true,usedByStepIds:["dtco-prepare"],unresolvedIncludes:[],validationErrors:[]});
  };
- for(const file of env.trusted)if(!file.relativePath.startsWith("tools/"))await add(file.relativePath,await bytes(file.source),"dtco-resource");
- await add("netlist.sp",await bytes(path.join(ASSETS,"inverter.sp")),"netlist");
+ for(const file of env.trusted)if(!file.relativePath.startsWith("tools/")&&!(coordinates.layoutId==="mr-sa-12t-pex"&&file.relativePath==="rules.json"))await add(file.relativePath,await bytes(file.source),"dtco-resource");
+ if(coordinates.layoutId==="mr-sa-12t-pex"){const original=env.trusted.find(f=>f.relativePath==="rules.json")!;const rules=JSON.parse((await bytes(original.source)).toString("utf8"));rules.gate_pitch=1000;await add("rules.json",JSON.stringify(rules,null,2)+"\n","rules");}
+ await add("magic/empty.magicrc","# No ambient Magic startup configuration\n","dtco-resource");
+ await add("netlist.sp",buildNetlist(definition),"netlist");
  await add("config.json",await bytes(path.join(ASSETS,coordinates.layoutId+".json")),"config");
  const rule=files.find(f=>f.relativePath==="rules.json")!;rule.role="rules";
  await add("characterize.cir",buildDeck(definition,coordinates,env.modelEntry),"dtco-testbench");
- await add("measurement.json",JSON.stringify({temperatureC:coordinates.temperatureC,voltageV:coordinates.voltageV,periodNs:definition.periodNs,settledStartPeriods:2,settledStopPeriods:4,metricScope:METRIC_SCOPE})+"\n","dtco-measurement");
- const snapshot:DtcoSnapshot={environmentHash:env.environmentHash,modelHash:env.modelHash,modelVersion:env.modelVersion,coordinates,definition,trusted:env.trusted,inputHashes:Object.fromEntries(files.map(f=>[f.relativePath,f.sha256])),metricScope:METRIC_SCOPE};
+ await add("model-dc.cir",buildDcDeck(definition,coordinates,env.modelEntry),"dtco-testbench");
+ await add("measurement.json",JSON.stringify({temperatureC:coordinates.temperatureC,voltageV:coordinates.voltageV,periodNs:definition.periodNs,settledStartPeriods:2,settledStopPeriods:4,electricalMode:definition.electricalMode??"schematic",design:resolveDesign(definition),metricScope:definition.electricalMode==="extracted"?EXTRACTED_SCOPE:METRIC_SCOPE})+"\n","dtco-measurement");
+ const metricScope=definition.electricalMode==="extracted"?EXTRACTED_SCOPE:METRIC_SCOPE;
+ const snapshot:DtcoSnapshot={environmentHash:env.environmentHash,modelHash:env.modelHash,modelVersion:env.modelVersion,coordinates,definition,trusted:env.trusted,inputHashes:Object.fromEntries(files.map(f=>[f.relativePath,f.sha256])),metricScope};
  snapshot.snapshotHash=hash(JSON.stringify(snapshot));
  const inputManifest:InputManifestV1={schemaVersion:"eda.input-manifest.v1",files,totalBytes:files.reduce((a,f)=>a+f.sizeBytes,0),fileCount:files.length,rootHint:null,createdAt:new Date().toISOString()};
  const parameters={...coordinates,modelVersion:env.modelVersion,loadFf:definition.loadFf,inputSlewPs:definition.inputSlewPs,periodNs:definition.periodNs,dtcoSnapshot:snapshot} as unknown as JsonObject;
