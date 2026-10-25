@@ -104,5 +104,12 @@ describe("DTCO immutable native execution",()=>{
   }
   await fs.writeFile(path.join(root,"output/dtco/metrics.json"),JSON.stringify(valid));
   await expect(readDtcoMetrics(root)).resolves.toMatchObject({areaUm2:7.2576});
+  const proof={status:"validated",drcCount:0,drcStyle:"drc(full)",sourceGeometryMatched:true,finalGdsRoundtrip:true,resistanceExtracted:false,devices:[{w:1e-6,l:2.8e-7},{w:2e-6,l:2.8e-7}],capacitorCount:6,validationSha256:"b".repeat(64),electricalNetlistSha256:"c".repeat(64)};
+  await fs.writeFile(path.join(root,"output/dtco/metrics.json"),JSON.stringify({...valid,electricalMode:"extracted",extraction:proof,selectedGdsPath:"output/dtco/physical/completed.gds"}));
+  await expect(readDtcoMetrics(root)).resolves.toMatchObject({electricalMode:"extracted"});
+  for(const extraction of [null,{}, {...proof,drcStyle:"drc(fast)"}, {...proof,drcCount:2}, {...proof,devices:[]}]){
+   await fs.writeFile(path.join(root,"output/dtco/metrics.json"),JSON.stringify({...valid,electricalMode:"extracted",extraction}));
+   await expect(readDtcoMetrics(root)).rejects.toThrow(/extraction evidence/);
+  }
  });
 });

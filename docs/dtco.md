@@ -6,9 +6,9 @@ The accepted **schematic sweep** measures transient delay and supply power, plus
 
 ## Development checkpoint — 2026-10-25
 
-The code now includes persistent adaptive optimization API/UI, bounded transistor-width candidates, DC inverter analysis, per-iteration job/result history, objective scoring and best-candidate retention. Physical completion and final-GDS capacitance extraction/validation are implemented as additional JobRunner steps. These are development implementations: **`PHYSICAL_PIPELINE_READY=false`** in [environment.ts](../server/modules/dtco/environment.ts). Extracted mode, `mr-sa-12t-pex` and optimization execution remain unavailable. A real run of at least three complete adaptive layout/extraction/PPA iterations has **not** passed acceptance; no optimization improvement, production readiness or signoff is claimed.
+The code includes persistent adaptive optimization API/UI, bounded transistor-width candidates, DC inverter analysis, per-iteration job/result history, objective scoring and best-candidate retention. Physical completion and final-GDS capacitance extraction/validation run as additional JobRunner steps. **`PHYSICAL_PIPELINE_READY=true`** in [environment.ts](../server/modules/dtco/environment.ts); extracted mode, `mr-sa-12t-pex` and optimization are offered when all required configured tools are healthy. Live options confirmed availability in the resource capture below. After the first UI attempt paused on contact-landing validation, the helper's contact-overlap and completed-PMOS diffusion-enclosure repairs passed external replay of that failed GDS through all physical stages and DC/transient analysis, plus three native-fixture regressions; a new real UI run with at least three complete adaptive layout/extraction/PPA iterations is still pending. No measured optimization improvement or production readiness is claimed at this checkpoint.
 
-Standalone physical evidence includes an official LVS match and Magic `drc(full)=0`, but the official KLayout deck still reports two `NP.1` nplus minimum-width violations. These checks cover different rules; neither the LVS match nor Magic's zero count establishes complete physical acceptance. Extraction implements capacitance without wire resistance. The 2026-10-24 sweep results below remain historical schematic evidence, not acceptance of this new path.
+The corrected standalone candidate has official KLayout DRC zero reported items, LVS MATCH and Magic `drc(full)=0` (`/home/duhaochen/dtco-phase4-20261025/ppa-research/official-v3-verification.json`); the earlier `NP.1` violations were corrected. These results apply to that candidate and the recorded decks. Runtime checks require final-GDS roundtrip device topology, body connections, source W/L, finite capacitance and zero Magic full DRC; they do not run the official KLayout decks for every candidate. The supported physical path is only the GF180 MCU A inverter, fixed L 0.28 µm, with device and capacitance extraction, **no extracted wire resistance and no foundry signoff claim**. The 2026-10-24 sweep results below remain historical schematic evidence, not acceptance of this new path.
 
 Migration [005](../server/migrations/005_dtco_optimization.ts) adds `dtco_optimizations` and `dtco_optimization_iterations`. The new API exposes `GET/POST /api/dtco/optimizations`, `GET /api/dtco/optimizations/:id` and `POST .../:id/start`, `/stop`, `/resume`. Creation uses `{clientRequestId,definition}`; resume requires `{iterationId,attemptId}`. Availability remains authoritative in `GET /api/dtco/options`; enabling tools alone does not override the source gate.
 
@@ -30,7 +30,17 @@ npm run typecheck
 npm test
 ```
 
-The remaining guide describes the existing schematic sweep and its retained evidence.
+## Adaptive optimization configuration
+
+Choose the GF180 inverter, process/model, temperature, supply, load, slew and period. Optimization requires `mr-sa-12t-pex` and extracted electrical mode. NMOS width is bounded to 0.95–1.30 µm and PMOS to 1.40–2.60 µm on a 0.05 µm grid; L is fixed at 0.28 µm. Each axis has minimum, maximum, initial width and search step. DC analysis reports inverter switching behavior; it is not a MOS threshold-voltage extraction.
+
+Objectives minimize `delayPs`, `averagePowerW`, `areaUm2` or `balanced`. Balanced score is the weighted mean of delay/power/area divided by their baseline values, with nonnegative weights and at least one positive weight. Limits include 1–64 iterations, optional objective target, minimum relative improvement and patience. The measured incumbent drives subsequent bounded coordinate proposals; unsuccessful neighborhoods reduce the step on the same width grid. Worse evaluated candidates remain in history without replacing the best.
+
+Create and save an optimization, start it, then inspect per-iteration parameters, measured results, decisions, best history and linked jobs/artifacts. Stop requests preserve history; resuming requires the recorded iteration and predecessor attempt identities. These controls and persistence are implemented; the pending real acceptance report must establish their end-to-end behavior before claiming the full loop passed.
+
+Resource/source snapshot: `/home/duhaochen/dtco-phase4-20261025/resources/inventory-phase4-gate-open.json`; initial source HEAD `af0b225616210daabadad204d6d438d616eb78ed` plus timed working-file hashes. The requirement matrix and final run/result placeholders are in `/home/duhaochen/dtco-phase4-20261025/acceptance-plan.md`. No pending result is counted as a successful round.
+
+The remaining guide covers common job execution, existing sweep controls and retained historical evidence; extracted-only steps are identified explicitly.
 
 ## Configure and save
 
@@ -62,23 +72,32 @@ Saving persists the definition and points in SQLite. Saving an edit appends an i
 5. Inspect delay, supply power, generated area and the comparison/Pareto view with their conditions and scope.
 6. Reopen saved experiments, revisions and attempts; download their actual evidence.
 
-Every point runs this ordered plan:
+Every point follows this ordered plan. The five physical steps run only in extracted mode, after native normalization and before transient characterization; schematic mode skips them.
 
 | Step key | Work and retained evidence |
 | --- | --- |
 | `dtco-prepare` | Verify frozen resource/input hashes and stage the model, source and measurement files |
+| `model-dc` | Real ngspice DC sweep of the frozen-model source inverter; `model-dc.cir`, `model-dc.txt`, `model-dc.log` |
+| `model-analysis` | Measure inverter VTC switching voltage from the actual DC curve; `model-analysis.json` |
 | `prepare`, `generate` | Existing native ACG MR preparation and routed layout generation |
 | `render` (optional) | Existing GDS preview renderer, when configured |
 | `inspect-native`, `normalize` | Existing ACG native evidence inspection and normalization |
-| `characterize` | Real ngspice transient run of the frozen source schematic |
-| `measure` | Python/gdstk waveform measurements and selected routed GDS boundary area |
+| `physical-complete` (extracted) | Prepare contact, tap, port and physical-completion geometry from the native candidate |
+| `magic-complete` (extracted) | Materialize completion through the configured GF180 Magic technology |
+| `physical-footprint` (extracted) | Freeze the completed GDS footprint and extraction script |
+| `magic-extract` (extracted) | Round-trip the final GDS into Magic, extract devices/capacitance and run full Magic DRC |
+| `physical-validate` (extracted) | Require source W/L, topology/body connections, finite capacitance and zero Magic full DRC; retain `validation.json` |
+| `characterize` | Real ngspice transient run of the frozen source schematic or validated extracted netlist, according to mode |
+| `measure` | Python/gdstk waveform measurements and boundary area of the actual measured GDS; verify DC/physical evidence hashes |
 | `dtco-summary` | Verify measured GDS hash, bind provenance and produce the DTCO result |
 
-The native plan requests additional verification `none`; existing mandatory native structural gates remain. Process exit alone does not certify routing or verification. Measurement requires an actual native candidate whose route status is succeeded. Candidate choice is the first routed candidate after sorting by GDS path, and the selected path and byte hash are retained.
+For reproduction, retain each job's frozen workspace and step process records (tool configuration, argv, working directory, environment names, exit and logs). `model-dc` runs `dtco-ngspice -b -o model-dc.log model-dc.cir` in `output/dtco`; `model-analysis` runs the frozen analyzer with `--workspace . --measurement input/measurement.json --dc-only` from the job root. Replay only in a separate evidence copy using the recorded tool versions; changing current helper/model bytes creates a different environment and is not the same run.
+
+The native plan requests additional verification `none`; existing mandatory native structural gates remain. Process exit alone does not certify routing or verification. Measurement requires an actual native candidate whose route status is succeeded. Native candidate choice is the first routed candidate after sorting by GDS path. Schematic mode measures its boundary directly; extracted mode retains that original candidate separately and measures `output/dtco/physical/completed.gds` after validated physical completion. Both original and measured GDS paths/hashes are retained.
 
 ## Identity, retries and recovery
 
-A canonical point key hashes circuit, technology, model version, load, slew, period, one temperature/voltage/layout coordinate, environment hash and identity schema version. It excludes experiment name and the other axis members. Revision definitions stay immutable; a canonical point's shared attempt history can grow after an older revision was saved.
+A canonical point key hashes circuit, technology, model version, load, slew, period, explicit design/electrical-mode fields when provided, one temperature/voltage/layout coordinate, environment hash and identity schema version. It excludes experiment name and the other axis members. Revision definitions stay immutable; a canonical point's shared attempt history can grow after an older revision was saved.
 
 Submission reserves all eligible points synchronously in SQLite before asynchronous preparation. Repeated or concurrent submit requests skip points that already have an attempt, including failed points. Responses distinguish `submitted`, `skipped` and preparation `failed` point IDs. A preparation failure remains durable even if no native process started.
 
@@ -95,6 +114,8 @@ Anonymous requests use the platform's shared `public-runner` account and therefo
 ## Measurements and scientific boundaries
 
 Analysis limits each waveform and selected GDS file to 128 MiB and waveforms to 1,100,000 data rows; oversized evidence fails rather than consuming unbounded resources. The measurement request is limited to 64 KiB and native output manifest to 8 MiB.
+
+DC analysis runs in both modes before native layout generation. `modelAnalysis.switchingVoltageV` is the interpolated inverter VTC crossing where Vout = Vin; `lowInputSupplyCurrentA` and `highInputSupplyCurrentA` are endpoint supply currents. The curve path/hash is retained. This analysis uses the source inverter and frozen model even for extracted-mode jobs: **it is inverter switching voltage, not MOS Vth and not an extracted-layout DC measurement**.
 
 The transient run covers four periods; analysis uses the settled interval from two through four periods. Rise and fall propagation delays use input/output 50% crossings with linear interpolation; `delayPs` is their arithmetic mean. Supply energy is trapezoidal integration of `-VDD × i(VDD)`; average power divides by the two-period window and energy per cycle divides by two. Missing crossings, simulator errors and nonfinite or nonpositive metrics fail measurement. Pulse period is not Fmax.
 
@@ -148,7 +169,7 @@ The default storage root is `.eda-storage`, with database `.eda-storage/eda.sqli
 | `jobs/<jobId>/work/`, `output/`, `logs/` | Native working data, generated evidence and process logs |
 | `results/dtco/<resultId>/` | Atomically committed result artifacts and manifest, initially private |
 
-Within each workspace, `output/dtco/` retains `characterize.cir`, `waveforms.txt` (time, input voltage, output voltage, supply current), `ngspice.log`, `metrics.json`, `snapshot.json`, `provenance.json`, and copied `model/`, `catalog/`, `helpers/` and `resources/`. Native ACG evidence remains under its original output paths, including `output/acg-native.json`, `output/acg-result.json` and actual GDS candidates. The final normalized DTCO result is `output/dtco-result.json`; published copies preserve these relative paths.
+Within each workspace, `output/dtco/` retains `model-dc.cir`, `model-dc.txt`, `model-dc.log`, `model-analysis.json`, `characterize.cir`, `waveforms.txt` (time, input voltage, output voltage, supply current), `ngspice.log`, `metrics.json`, `snapshot.json`, `provenance.json`, and copied `model/`, `catalog/`, `helpers/` and `resources/`. Native ACG evidence remains under its original output paths, including `output/acg-native.json`, `output/acg-result.json` and actual GDS candidates. Extracted mode additionally retains `output/dtco/physical/completed.gds`, `completed.png`, `extracted.spice`, `validation.json` and physical/Magic logs and scripts; original native output remains separate. Result `data.dtco` includes `electricalMode`, `design`, `modelAnalysis` and artifact paths alongside metrics/provenance. The final normalized DTCO result is `output/dtco-result.json`; published copies preserve these relative paths.
 
 The snapshot binds definition/coordinates, model hash/version, environment hash, trusted source/resource/executable SHA-256 values and every frozen input hash. The environment fingerprint includes full selected tool configurations and revisions; an optional healthy renderer also binds its executable/interpreter and helper entry-point hashes. The model hash covers the sorted relative paths and SHA-256 values of the recursively resolved model include closure. Includes must stay within the administrator model root. Provenance binds the selected GDS and waveform hashes, output hashes, tool versions, measurement conventions and limitations. Output hashes in provenance cover evidence present before writing provenance and the final normalized result; they do not recursively hash themselves. Published artifact metadata supplies individual byte sizes and hashes.
 

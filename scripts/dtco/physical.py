@@ -11,6 +11,13 @@ def safe(root,relative):
     if candidate.is_symlink() or not candidate.is_file() or root not in candidate.resolve().parents or candidate.stat().st_size>128*1024*1024: raise ValueError("Unsafe/missing/oversize artifact")
     return candidate
 
+def contact_material(cut,gates,active):
+    # The actual cut can straddle an OD edge even when its center is outside.
+    on_gate=bool(gdstk.boolean(cut,gates,'and',precision=.001))
+    on_active=bool(gdstk.boolean(cut,active,'and',precision=.001))
+    if on_gate==on_active: raise ValueError('Ambiguous contact landing: '+str(cut.bounding_box()))
+    return on_gate,on_active
+
 def prepare(root,gds,manifest,source,output):
     output.mkdir(parents=True,exist_ok=False)
     lib=gdstk.read_gds(gds); cells=lib.top_level()
@@ -51,16 +58,14 @@ def prepare(root,gds,manifest,source,output):
     pads=[]
     for cut in cuts:
         box=cut.bounding_box();x=sum(b[0] for b in box)/2;y=sum(b[1] for b in box)/2
-        on_gate=gdstk.inside([(x,y)],gates)[0]
+        on_gate,on_active=contact_material(cut,gates,active)
         contact_nets[id(cut)]='A' if on_gate else physical_net(x,y)
-        on_active=gdstk.inside([(x,y)],active)[0]
-        if on_gate==on_active: raise ValueError('Ambiguous contact landing')
         landing=gdstk.rectangle((x-.18,y-.18),(x+.18,y+.18),layer=30 if on_gate else 22)
         if not on_gate and gdstk.boolean(landing,gates,'and'): raise ValueError('Contact landing changes channel')
         pads.extend([landing,gdstk.rectangle((x-.115,y-.115),(x+.115,y+.115),layer=33),gdstk.rectangle((x-.175,y-.175),(x+.175,y+.175),layer=34)])
     cell.remove(*cuts);cell.add(*pads)
     # Physical DRC cleanup: continuous gate pads, no sub-minimum M1 notches.
-    gate_cuts=[c for c in cuts if gdstk.inside([tuple(sum(b[k] for b in c.bounding_box())/2 for k in [0,1])],gates)[0]]
+    gate_cuts=[c for c in cuts if contact_nets[id(c)]=='A']
     gx=anchors['A'][0]
     gy=[sum(b[1] for b in c.bounding_box())/2 for c in gate_cuts]
     cell.add(gdstk.rectangle((gx-.18,min(gy)-.18),(gx+.18,max(gy)+.18),layer=30))
@@ -80,8 +85,8 @@ def prepare(root,gds,manifest,source,output):
     outputs=[]
     for cut in cuts:
         cb=cut.bounding_box();cx=sum(b[0] for b in cb)/2;cy=sum(b[1] for b in cb)/2
-        if gdstk.inside([(cx,cy)],gates)[0]: continue
         net=contact_nets[id(cut)]
+        if net=='A': continue
         if net in ['VDD','VSS']:
             ry=anchors[net][1]
             cell.add(gdstk.rectangle((cx-.175,min(ry-.115,cy-.175)),(cx+.175,max(ry+.115,cy+.175)),layer=34))
@@ -93,12 +98,18 @@ def prepare(root,gds,manifest,source,output):
     commands=['set scalefac [tech lambda]','if {[lindex $scalefac 1] < 10} {scalegrid 1 10}','drc euclidean on','snap lambda','set VDD VDD','set GND VSS','set SUB VSUBS','drc off','gds readonly false','gds rescale true',f'gds read {output}/pins.gds',f'load {top}','select top cell']
     def paint(layer,x0,y0,x1,y1):
         commands.extend([f'box values {x0:.6f}um {y0:.6f}um {x1:.6f}um {y1:.6f}um',f'paint {layer}'])
-    pactive=[a for a in active if gdstk.boolean(a,wells,'and')]
+    # Enclose the completed PMOS diffusion, including edge-contact landing
+    # pads, rather than the smaller original native active rectangle.
+    pactive=gdstk.boolean([a for a in cell.polygons if a.layer==22 and a.datatype==0 and gdstk.boolean(a,wells,'and')],[],'or',precision=.001)
     if len(pactive)!=1: raise ValueError('Expected one physical PMOS active island')
-    p_right=max(a.bounding_box()[1][0] for a in pactive)
+    p_bounds=[a.bounding_box() for a in pactive]
+    p_lo=[min(b[0][k] for b in p_bounds) for k in range(2)]
+    p_hi=[max(b[1][k] for b in p_bounds) for k in range(2)]
     for net,diff,contact in [('VSS','psubdiff','psc'),('VDD','nsubdiff','nsc')]:
         rx,ry=anchors[net]
-        if net=='VDD': paint('nwell',min(wx0,tx-.68),min(wy0,ry-.68),max(wx1,p_right+.45),max(wy1,ry+.68))
+        # GF180 DF.7 needs .43um PMOS enclosure; use .45 on all four
+        # completed-diffusion edges, united with the tap's .45um enclosure.
+        if net=='VDD': paint('nwell',min(wx0,tx-.73,p_lo[0]-.45),min(wy0,ry-.73,p_lo[1]-.45),max(wx1,tx+.73,p_hi[0]+.45),max(wy1,ry+.73,p_hi[1]+.45))
         paint(diff,tx-.28,ry-.28,tx+.28,ry+.28)
         paint(contact,tx-.115,ry-.115,tx+.115,ry+.115)
         paint('metal1',tx-.23,ry-.23,tx+.23,ry+.23)
@@ -183,6 +194,15 @@ def main():
         from PIL import Image
         assert Image.new("RGB",(2,2)).size==(2,2)
         assert gdstk.rectangle((0,0),(2,3)).area()==6
+        # Real-run regression: center .22 lies outside OD, cut overlaps by .03.
+        cut=gdstk.rectangle((.11,.30),(.33,.52))
+        active=[gdstk.rectangle((.30,.30),(1.14,1.30))]
+        gate=[gdstk.rectangle((.575,2),(.865,4))]
+        assert contact_material(cut,gate,active)==(False,True)
+        for ambiguous in [[],[cut]]:
+            try: contact_material(cut,ambiguous,ambiguous)
+            except ValueError: pass
+            else: raise AssertionError("Ambiguous contact accepted")
         print(json.dumps({"schemaVersion":"dtco.physical-self-test.v1","passed":True}));return
     root=Path(a.workspace).resolve();output=root/"output/dtco/physical";source=safe(root,"input/netlist.sp")
     native=json.loads(safe(root,"output/acg-native.json").read_text())

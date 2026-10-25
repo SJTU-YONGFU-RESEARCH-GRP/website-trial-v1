@@ -9,7 +9,7 @@ import { projectRoot, AcgError } from "../acg/types.ts";
 import { buildDtcoPlan } from "./planner.ts";
 import { buildNetlist, buildDcDeck, circuitHeader, resolveDesign, DESIGN_BOUNDS, EXTRACTED_SCOPE } from "./circuit.ts";
 export const DTCO_VERSION = "dtco.adapter.v2";
-export const PHYSICAL_PIPELINE_READY=false;
+export const PHYSICAL_PIPELINE_READY=true;
 export const METRIC_SCOPE = "Schematic transient delay/power + generated-layout boundary area; no extracted RC or foundry signoff; layouts do not electrically alter the model.";
 export const ASSETS = path.resolve(import.meta.dirname, "../../../scripts/dtco");
 export const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
@@ -65,7 +65,8 @@ async function environment(repositories:Repositories) {
   if(["acg-renderer","dtco-physical"].includes(tool.toolId)&&tool.entryPoint){const source=path.resolve(tool.rootPath??"",tool.entryPoint);trusted.push({source,relativePath:"helpers/"+tool.toolId+path.extname(source),sha256:hash(await bytes(source))});}
  }
  trusted.push({source:entry,relativePath:"helpers/analyze.py",sha256:hash(await bytes(entry))});
- if(physical&&path.resolve(physical.rootPath??"",physical.entryPoint??"")!==path.join(ASSETS,"physical.py"))dtcoError("DTCO_PHYSICAL_HELPER","Configure trusted repository physical.py");
+ if(physical&&(!physical.interpreterPath||path.resolve(physical.rootPath??"",physical.entryPoint??"")!==path.join(ASSETS,"physical.py")))dtcoError("DTCO_PHYSICAL_HELPER","Configure trusted repository physical.py with a Python interpreter");
+ if(magic&&(!magic.executablePath||magic.interpreterPath))dtcoError("DTCO_MAGIC_EXECUTABLE","Configure the native Magic executable");
  if(magic){const file=magic.environment.DTCO_MAGIC_TECH_FILE;if(!magic.rootPath||file!=="gf180mcuA.tech")dtcoError("DTCO_MAGIC_TECH","Configure GF180MCUA Magic technology");const source=path.resolve(magic.rootPath,file);trusted.push({source,relativePath:"magic/gf180mcuA.tech",sha256:hash(await bytes(source))});}
  const project=await projectRoot(native!,"mr");
  const rules=path.join(project,"config/gf180/rules_gf180.json");
