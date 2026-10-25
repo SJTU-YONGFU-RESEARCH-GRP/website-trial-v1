@@ -1,0 +1,244 @@
+{
+  "modelId": "sky130__fd__pr__nfet__20v0__zvt__base__fitting_reduction_translation",
+  "sourceId": "sky130__fd__pr__nfet__20v0__zvt__base",
+  "kind": "processed",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/3d6238f92babe26000f6e20791eb7081/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/3d6238f92babe26000f6e20791eb7081/hspice.lib",
+  "astParsedInput": true,
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "benchmark netlists",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "4.6612499999999996e-06",
+        "w": "2.9997499999999999e-05",
+        "m": "1"
+      },
+      "transient": {
+        "l": "4.6612499999999996e-06",
+        "w": "2.9997499999999999e-05",
+        "m": "1"
+      },
+      "ac": {
+        "l": "4.6612499999999996e-06",
+        "w": "2.9997499999999999e-05",
+        "m": "1"
+      },
+      "noise": {
+        "l": "4.6612499999999996e-06",
+        "w": "2.9997499999999999e-05",
+        "m": "1"
+      }
+    },
+    "parameterCount": 19,
+    "parameters": [
+      {
+        "name": "sky130_fd_pr__nfet_20v0__ajunction_mult",
+        "value": "9.9505e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__dlc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__dwc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__overlap_mult",
+        "value": "0.89805",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__pjunction_mult",
+        "value": "1.0144",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__rshn_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__toxe_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0__wint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0/sky130_fd_pr__nfet_20v0__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__agidl_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__ags_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__k2_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__keta_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__mjswgatejunction_mult",
+        "value": "5.3981e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__subcircuit.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__pbswgatejunction_mult",
+        "value": "3.4999e+0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__subcircuit.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__pgatejunction_mult",
+        "value": "1.7357",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__subcircuit.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__u0_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__nfet_20v0_zvt__vsat_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/nfet_20v0_zvt/sky130_fd_pr__nfet_20v0_zvt__tt_discrete.corner.spice"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_pr__nfet_20v0_zvt__base.0": "__benchmark_selected_nmos"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_nmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_pr__nfet_20v0_zvt__base.0",
+      "modelFamily": "sky130_fd_pr__nfet_20v0_zvt__base",
+      "deviceType": "nmos",
+      "selectionMode": "nearest-real-bin-outside-range",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "4.6612499999999996e-06",
+        "w": "2.9997499999999999e-05",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": "stock-fixture-geometry-outside-selected-real-bin",
+      "selectedBinBounds": {
+        "lmin": 4.95e-07,
+        "lmax": 6.05e-06,
+        "wmin": 1.9995e-05,
+        "wmax": 6.0005e-05
+      },
+      "benchmarkModelName": "__benchmark_selected_nmos"
+    },
+    "sha256": "4e7b4833cf4d57c6e2293bf9d6f5df73d4736277085c9cdba43a7cadcf80c477"
+  },
+  "benchmarkFixtureAdjustments": [
+    "added PMOS complementary-circuit fixture",
+    "stock benchmark DUT geometry adjusted to selected real bin: L=4.6612499999999996e-06, W=2.9997499999999999e-05"
+  ],
+  "md5": "3d6238f92babe26000f6e20791eb7081",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-28T12:54:15.571866+00:00",
+  "finishedAt": "2026-07-28T12:56:56.849618+00:00",
+  "elapsedSeconds": 161.277773,
+  "peakRssKiB": 288868,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.sp",
+      "bytes": 2112,
+      "sha256": "c4c636b50a1db8d5d3d13a2f6a5dd98d1b08bf9ae05a9c1d7b5d762eab278086"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.sp",
+      "bytes": 3717,
+      "sha256": "6c3e8dddeab67529b1b8511aee81a024735a740d1a2fe55e4a1439d37b13dbbf"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.sp",
+      "bytes": 54943,
+      "sha256": "12ae07894112c994a58483effd58ce0a4c9904f84d72e09f4c58e66adafb162b"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.sp",
+      "bytes": 4654,
+      "sha256": "bea9ccc5992c3ab0f2466699448822862609506d5507c04c99c4b903e790e76f"
+    }
+  ]
+}

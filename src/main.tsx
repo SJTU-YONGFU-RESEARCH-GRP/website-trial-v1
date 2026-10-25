@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import App from "./App";
+import { AuthProvider } from "./auth/AuthContext";
 import { RootErrorBoundary } from "./components/RootErrorBoundary";
 import { ThemeProvider } from "./theme/ThemeContext";
 import "./index.css";
@@ -11,14 +12,20 @@ if (!rootEl) {
   throw new Error("Missing #root element");
 }
 
+const Router = import.meta.env.VITE_READ_ONLY_DEMO === "true"
+  ? HashRouter
+  : BrowserRouter;
+
 createRoot(rootEl).render(
   <StrictMode>
     <RootErrorBoundary>
-      <HashRouter>
+      <Router>
         <ThemeProvider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </ThemeProvider>
-      </HashRouter>
+      </Router>
     </RootErrorBoundary>
   </StrictMode>,
 );

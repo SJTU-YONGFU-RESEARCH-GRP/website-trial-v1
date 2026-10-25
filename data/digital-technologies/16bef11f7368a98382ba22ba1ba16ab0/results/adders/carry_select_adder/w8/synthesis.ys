@@ -1,0 +1,9 @@
+read_verilog /home/duhaochen/website-trial-v1/data/digital-technologies/16bef11f7368a98382ba22ba1ba16ab0/results/adders/carry_select_adder/w8/rtl.v
+hierarchy -check -top adder_top
+synth -top adder_top -noabc
+abc -liberty /home/duhaochen/website-trial-v1/data/digital-technologies/16bef11f7368a98382ba22ba1ba16ab0/library/timing.lib
+clean -purge
+check
+tee -o /home/duhaochen/website-trial-v1/data/digital-technologies/16bef11f7368a98382ba22ba1ba16ab0/results/adders/carry_select_adder/w8/area.rpt stat -liberty /home/duhaochen/website-trial-v1/data/digital-technologies/16bef11f7368a98382ba22ba1ba16ab0/library/timing.lib
+write_verilog -noattr -noexpr /home/duhaochen/website-trial-v1/data/digital-technologies/16bef11f7368a98382ba22ba1ba16ab0/results/adders/carry_select_adder/w8/mapped.v
+write_json /home/duhaochen/website-trial-v1/data/digital-technologies/16bef11f7368a98382ba22ba1ba16ab0/results/adders/carry_select_adder/w8/mapped.json

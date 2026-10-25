@@ -1,0 +1,109 @@
+{
+  "id": "sky130__fd__pr__special__nfet__pass__lvt__model__fitting_reduction_translation",
+  "sourceId": "sky130__fd__pr__special__nfet__pass__lvt__model",
+  "kind": "processed",
+  "chainId": "fitting_reduction_translation",
+  "chain": [
+    "fitting",
+    "reduction",
+    "translation"
+  ],
+  "toolCount": 3,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass_lvt/sky130_fd_pr__special_nfet_pass_lvt.pm3.spice",
+  "sourceMd5": "f1e8fe795c337976862d15f43387423f",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/9bc1c74a2e8f39e164a42af240115c53/model.lib",
+  "md5": "9bc1c74a2e8f39e164a42af240115c53",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 119
+    }
+  ],
+  "completedAt": "2026-07-28T11:43:48.478768+00:00",
+  "stages": [
+    {
+      "tool": "fitting",
+      "startedAt": "2026-07-28T11:43:41.970952+00:00",
+      "elapsedSeconds": 2.249816,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/original/model.lib",
+      "inputMd5": "a3e55488b907296eff9aaac12a373e65",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+      "rawOutputMd5": "f593519261665345c53e8220ae292a73",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/01-fitting/normalized.lib",
+      "outputMd5": "e686c71b0649fd7f4dab08c18351a00d",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/01-fitting/fitted-with-companions.lib",
+        "inputMd5": "f593519261665345c53e8220ae292a73",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/01-fitting/normalized.lib",
+        "outputMd5": "e686c71b0649fd7f4dab08c18351a00d",
+        "physicalModelSignature": "a8b8b34f0fc539ae30c547c86399a352e7e015626975f2660575e5c18e7760bd",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 239
+          }
+        ]
+      }
+    },
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:43:44.509335+00:00",
+      "elapsedSeconds": 1.956404,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/01-fitting/normalized.lib",
+      "inputMd5": "e686c71b0649fd7f4dab08c18351a00d",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/02-reduction/reduced.lib",
+      "rawOutputMd5": "d5ccde6836d864b957a01edb68acbcc2",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/02-reduction/normalized.lib",
+      "outputMd5": "ccd5cce642f775e3a8dfb129edab0e14",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/02-reduction/reduced.lib",
+        "inputMd5": "d5ccde6836d864b957a01edb68acbcc2",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/02-reduction/normalized.lib",
+        "outputMd5": "ccd5cce642f775e3a8dfb129edab0e14",
+        "physicalModelSignature": "90442e16b7fa97502482f5f636f766f32a30f242ba4c23fb77b4db0706605290",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:43:46.672701+00:00",
+      "elapsedSeconds": 0.931038,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/02-reduction/normalized.lib",
+      "inputMd5": "ccd5cce642f775e3a8dfb129edab0e14",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/03-translation/translated.hspice",
+      "rawOutputMd5": "d52f693ebed556e98a64d373ad7d1fae",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/03-translation/normalized.lib",
+      "outputMd5": "02474f421ac689560eb7b644b96156d3",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/03-translation/translated.hspice",
+        "inputMd5": "d52f693ebed556e98a64d373ad7d1fae",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/fitting_reduction_translation/03-translation/normalized.lib",
+        "outputMd5": "02474f421ac689560eb7b644b96156d3",
+        "physicalModelSignature": "90442e16b7fa97502482f5f636f766f32a30f242ba4c23fb77b4db0706605290",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 119
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

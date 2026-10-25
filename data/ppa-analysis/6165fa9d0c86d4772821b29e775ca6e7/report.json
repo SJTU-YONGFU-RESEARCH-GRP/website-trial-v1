@@ -1,0 +1,4046 @@
+{
+  "schemaVersion": "1.3.0",
+  "manifest": {
+    "schemaVersion": "1.3.0",
+    "uid": "6165fa9d0c86d4772821b29e775ca6e7",
+    "flow": "openroad",
+    "pdk": "gf180mcuD",
+    "scl": "gf180mcu_fd_sc_mcu9t5v0",
+    "design": "uart",
+    "runName": "RUN_2026-08-06_17-20-09",
+    "variant": null,
+    "techfileRcScale": null,
+    "sourceKind": "final-metrics-json",
+    "relativePath": "openroad/gf180mcuD/gf180mcu_fd_sc_mcu9t5v0/uart/RUN_2026-08-06_17-20-09/metrics.json",
+    "filterFacets": [
+      {
+        "category": "design",
+        "categoryLabel": "Design & constraints",
+        "categoryOrder": 10,
+        "dimension": "design",
+        "dimensionLabel": "Design",
+        "value": "uart",
+        "valueLabel": "uart",
+        "dimensionOrder": 10,
+        "valueOrder": 100
+      },
+      {
+        "category": "design",
+        "categoryLabel": "Design & constraints",
+        "categoryOrder": 10,
+        "dimension": "clock_period",
+        "dimensionLabel": "Clock period",
+        "value": "24",
+        "valueLabel": "24 ns",
+        "dimensionOrder": 30,
+        "valueOrder": 24
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "pdk",
+        "dimensionLabel": "PDK",
+        "value": "gf180mcuD",
+        "valueLabel": "gf180mcuD",
+        "dimensionOrder": 10,
+        "valueOrder": 100
+      },
+      {
+        "category": "technology",
+        "categoryLabel": "Technology",
+        "categoryOrder": 20,
+        "dimension": "scl",
+        "dimensionLabel": "Standard-cell library",
+        "value": "gf180mcu_fd_sc_mcu9t5v0",
+        "valueLabel": "gf180mcu_fd_sc_mcu9t5v0",
+        "dimensionOrder": 20,
+        "valueOrder": 100
+      },
+      {
+        "category": "implementation",
+        "categoryLabel": "Implementation",
+        "categoryOrder": 30,
+        "dimension": "tool",
+        "dimensionLabel": "Tools",
+        "value": "openroad",
+        "valueLabel": "OpenROAD / ORFS",
+        "dimensionOrder": 10,
+        "valueOrder": 10
+      }
+    ],
+    "sourceSha256": "40fcbab10cdcec3eb076c1bd93a8088c65d45b76d709f93d5122e63b83aa6022",
+    "bundleSha256": "eaae628adee475761cb25930cca2aeeb4f78e77972c5379c14a1c9f11c79fba8",
+    "reportSchema": "openroad.final_metrics",
+    "tool": "OpenROAD / OpenROAD-flow-scripts",
+    "scope": "packaged final PPA, routing, artifact, and signoff summary",
+    "authoritativeOverallStatus": false,
+    "ast": {
+      "format": "json",
+      "bytesUtf8": 7367,
+      "rootKind": "object",
+      "nodeCount": 360,
+      "leafCount": 342,
+      "maxDepth": 3,
+      "standardJson": true,
+      "nonFiniteNumberNodes": 0,
+      "duplicateKeyGroups": 0,
+      "nodeKinds": {
+        "array": 2,
+        "boolean": 9,
+        "number": 105,
+        "object": 16,
+        "string": 228
+      }
+    },
+    "summary": {
+      "hasPpa": true,
+      "areaUm2": 76524.2,
+      "coreAreaUm2": 73297.7,
+      "instanceAreaUm2": 37696,
+      "utilization": 0.514286,
+      "instances": 1113,
+      "physicalInstances": 2794,
+      "macros": 0,
+      "ioCount": 46,
+      "totalPowerMw": 27.371199999999998,
+      "powerComparisonValid": true,
+      "powerComparisonReason": null,
+      "internalPowerMw": 17.3146,
+      "switchingPowerMw": 10.0563,
+      "leakagePowerMw": 0.000277111,
+      "referenceCorner": "tt_025C_5v00",
+      "setupSlackNs": 15.5128,
+      "holdSlackNs": 0.406817,
+      "worstSetupSlackNs": 15.5128,
+      "worstHoldSlackNs": 0.406817,
+      "setupTnsNs": 0,
+      "holdTnsNs": 0,
+      "clockPeriodNs": 24,
+      "criticalPathNs": 8.487163165711861,
+      "fmaxHz": 117825000,
+      "fmaxMethod": "reported by OpenROAD report_clock_min_period",
+      "setupViolations": 0,
+      "holdViolations": 0,
+      "maxSlewViolations": 0,
+      "maxCapViolations": 4,
+      "maxFanoutViolations": 0,
+      "wirelengthUm": 37044,
+      "vias": 5356,
+      "nets": 976,
+      "routeDrcErrors": 0,
+      "antennaViolations": 0,
+      "flowErrors": 0,
+      "flowWarnings": 1,
+      "magicDrcErrors": 0,
+      "averageIrDropV": null,
+      "worstIrDropV": null,
+      "cellUsageAvailable": true,
+      "finalDefComponents": 2794,
+      "uniqueCellMasters": 46,
+      "metricCount": 60,
+      "cornerSetupSlackNs": {
+        "tt_025C_5v00": 15.5128
+      },
+      "timingEndpointSlacks": {
+        "availability": "available",
+        "referenceCorner": "tt_025C_5v00",
+        "reason": null,
+        "setupEndpointCount": 94,
+        "holdEndpointCount": 94,
+        "setupViolationCount": 0,
+        "holdViolationCount": 0,
+        "setupSlackNs": [
+          15.510000000000002,
+          15.65,
+          15.69,
+          15.76,
+          15.770000000000001,
+          15.790000000000001,
+          15.799999999999999,
+          15.81,
+          15.81,
+          15.819999999999999,
+          15.819999999999999,
+          15.83,
+          15.83,
+          15.840000000000002,
+          15.840000000000002,
+          15.840000000000002,
+          15.840000000000002,
+          15.840000000000002,
+          15.85,
+          15.88,
+          15.889999999999999,
+          15.889999999999999,
+          15.92,
+          15.92,
+          15.930000000000001,
+          15.930000000000001,
+          15.94,
+          15.94,
+          15.97,
+          15.980000000000002,
+          16.009999999999998,
+          16.04,
+          16.06,
+          16.08,
+          16.12,
+          16.12,
+          16.13,
+          16.169999999999998,
+          16.18,
+          16.18,
+          16.18,
+          16.18,
+          16.18,
+          16.19,
+          16.2,
+          16.21,
+          16.24,
+          16.25,
+          16.25,
+          16.34,
+          16.35,
+          16.37,
+          16.44,
+          16.45,
+          16.45,
+          16.48,
+          16.48,
+          16.48,
+          16.490000000000002,
+          16.490000000000002,
+          16.51,
+          16.52,
+          16.52,
+          16.52,
+          16.52,
+          16.53,
+          16.53,
+          16.53,
+          16.53,
+          16.53,
+          16.57,
+          16.590000000000003,
+          16.6,
+          16.7,
+          16.709999999999997,
+          16.74,
+          16.75,
+          16.779999999999998,
+          16.779999999999998,
+          16.779999999999998,
+          16.779999999999998,
+          16.779999999999998,
+          16.79,
+          16.79,
+          16.79,
+          16.849999999999998,
+          16.919999999999998,
+          17.38,
+          17.54,
+          17.56,
+          17.56,
+          17.58,
+          17.82,
+          17.93
+        ],
+        "holdSlackNs": [
+          0.4068,
+          0.4613,
+          0.4777,
+          0.47880000000000006,
+          0.4799,
+          0.4804,
+          0.48119999999999996,
+          0.48189999999999994,
+          0.48669999999999997,
+          0.48990000000000006,
+          0.4912,
+          0.49900000000000005,
+          0.5012,
+          0.5034000000000001,
+          0.5085999999999999,
+          0.5108,
+          0.5111,
+          0.5135000000000001,
+          0.5153,
+          0.5166,
+          0.5166,
+          0.5166999999999999,
+          0.5418000000000001,
+          0.5502,
+          0.5509000000000001,
+          0.5547,
+          0.6174999999999999,
+          0.6457999999999999,
+          0.6799,
+          0.7124,
+          0.7161000000000001,
+          0.7169,
+          0.7187,
+          0.7219,
+          0.7228,
+          0.7262000000000001,
+          0.7263,
+          0.7283999999999999,
+          0.7365,
+          0.7413000000000001,
+          0.7452,
+          0.7484999999999999,
+          0.7521,
+          0.764,
+          0.7913,
+          0.8051,
+          0.8188,
+          0.8195,
+          0.8199000000000001,
+          0.8498,
+          0.8517,
+          0.8545,
+          0.8646,
+          0.8658,
+          0.876,
+          0.8998,
+          0.9038999999999999,
+          0.9142,
+          0.9182,
+          0.9266,
+          0.9478,
+          0.9672,
+          0.981,
+          0.9873000000000001,
+          0.9919,
+          0.9940000000000001,
+          1.009,
+          1.0190000000000001,
+          1.0210000000000001,
+          1.039,
+          1.0439999999999998,
+          1.084,
+          1.086,
+          1.148,
+          1.1700000000000002,
+          1.194,
+          1.2650000000000001,
+          1.596,
+          4.634,
+          7.3149999999999995,
+          7.324,
+          7.361,
+          7.363,
+          7.364,
+          7.3660000000000005,
+          7.367,
+          7.378,
+          7.378,
+          7.386,
+          7.391,
+          7.3950000000000005,
+          7.407,
+          7.418,
+          7.44
+        ]
+      },
+      "powerBreakdownMw": {
+        "internal": 17.3146,
+        "switching": 10.0563,
+        "leakage": 0.000277111
+      },
+      "metricsByCategory": {
+        "clock": 2,
+        "design": 36,
+        "flow": 4,
+        "power": 4,
+        "timing": 14
+      },
+      "completionStatus": "completed"
+    },
+    "sourceBundle": {
+      "flow": "openroad",
+      "run_directory": "RUN_2026-08-06_17-20-09",
+      "primary_source": "metrics.json",
+      "supporting_sources": [
+        {
+          "source": "sta.rpt",
+          "format": "rpt",
+          "bytes": 26490,
+          "sha256": "565ac11c873c5f28eed8535acb4254223d0297a97925255ff8b45b680d241799"
+        },
+        {
+          "source": "power.rpt",
+          "format": "rpt",
+          "bytes": 1128,
+          "sha256": "0144beeddadc87b6f8e15c4f36bd493e17b3ce6b144e671f9424792965448b53"
+        },
+        {
+          "source": "drc.rpt",
+          "format": "rpt",
+          "bytes": 865,
+          "sha256": "5345e4de41e62b700dafffa2a3e36304815616979527bad6d45234a014a35f41"
+        },
+        {
+          "source": "manifest.json",
+          "format": "json",
+          "bytes": 2635,
+          "sha256": "0a0fe5e8b25b2f19ad367b4e4057042e253f30876442aa83565bdfa2c7c3c323"
+        },
+        {
+          "source": "orfs/results/gf180/uart/base/6_final.def",
+          "format": "def",
+          "bytes": 2801555,
+          "sha256": "bda1c864b19dc0b30ef69aedc05a6eb35debe4d576a3ee079e934cab81b8a798"
+        },
+        {
+          "source": "timing_endpoints.json",
+          "format": "json",
+          "bytes": 20761,
+          "sha256": "14fea58bdb3701143db421af7d8446f673889c366d6a527719ea51f7a6cdb627"
+        }
+      ]
+    },
+    "reportPath": "6165fa9d0c86d4772821b29e775ca6e7/report.json"
+  },
+  "ast": {
+    "source": "openroad/gf180mcuD/gf180mcu_fd_sc_mcu9t5v0/uart/RUN_2026-08-06_17-20-09/metrics.json",
+    "format": "json",
+    "bytes_utf8": 7367,
+    "sha256": "40fcbab10cdcec3eb076c1bd93a8088c65d45b76d709f93d5122e63b83aa6022",
+    "root_kind": "object",
+    "node_count_including_keys": 360,
+    "leaf_count_including_keys": 342,
+    "max_depth": 3,
+    "node_kinds": {
+      "array": 2,
+      "boolean": 9,
+      "number": 105,
+      "object": 16,
+      "string": 228
+    },
+    "duplicate_key_groups": 0,
+    "duplicate_keys": [],
+    "non_finite_number_nodes": 0,
+    "standard_json": true
+  },
+  "source_bundle": {
+    "flow": "openroad",
+    "run_directory": "RUN_2026-08-06_17-20-09",
+    "primary_source": "metrics.json",
+    "supporting_sources": [
+      {
+        "source": "sta.rpt",
+        "format": "rpt",
+        "bytes": 26490,
+        "sha256": "565ac11c873c5f28eed8535acb4254223d0297a97925255ff8b45b680d241799"
+      },
+      {
+        "source": "power.rpt",
+        "format": "rpt",
+        "bytes": 1128,
+        "sha256": "0144beeddadc87b6f8e15c4f36bd493e17b3ce6b144e671f9424792965448b53"
+      },
+      {
+        "source": "drc.rpt",
+        "format": "rpt",
+        "bytes": 865,
+        "sha256": "5345e4de41e62b700dafffa2a3e36304815616979527bad6d45234a014a35f41"
+      },
+      {
+        "source": "manifest.json",
+        "format": "json",
+        "bytes": 2635,
+        "sha256": "0a0fe5e8b25b2f19ad367b4e4057042e253f30876442aa83565bdfa2c7c3c323"
+      },
+      {
+        "source": "orfs/results/gf180/uart/base/6_final.def",
+        "format": "def",
+        "bytes": 2801555,
+        "sha256": "bda1c864b19dc0b30ef69aedc05a6eb35debe4d576a3ee079e934cab81b8a798"
+      },
+      {
+        "source": "timing_endpoints.json",
+        "format": "json",
+        "bytes": 20761,
+        "sha256": "14fea58bdb3701143db421af7d8446f673889c366d6a527719ea51f7a6cdb627"
+      }
+    ]
+  },
+  "interpretation": {
+    "schema": "openroad.final_metrics",
+    "tool": "OpenROAD / OpenROAD-flow-scripts",
+    "scope": "packaged final PPA, routing, artifact, and signoff summary",
+    "authoritative_overall_status": false,
+    "metric_count": 60,
+    "metrics_by_category": {
+      "clock": 2,
+      "design": 36,
+      "flow": 4,
+      "power": 4,
+      "timing": 14
+    },
+    "design": {
+      "instances": 1113,
+      "standard_cells": 1113,
+      "physical_instances": 2794,
+      "macros": 0,
+      "instance_area_um2": 37696,
+      "die_area_um2": 76524.2,
+      "core_area_um2": 73297.7,
+      "utilization": 0.514286,
+      "io_count": 46
+    },
+    "timing_aggregate": {
+      "reference_corner": "tt_025C_5v00",
+      "reference_setup_slack_ns": 15.5128,
+      "reference_hold_slack_ns": 0.406817,
+      "setup_worst_slack_ns": 15.5128,
+      "hold_worst_slack_ns": 0.406817,
+      "setup_tns_ns": 0,
+      "hold_tns_ns": 0,
+      "setup_violation_count": 0,
+      "hold_violation_count": 0,
+      "max_slew_violation_count": 0,
+      "max_cap_violation_count": 4,
+      "max_fanout_violation_count": 0,
+      "clock_period_ns": 24,
+      "critical_path_ns": 8.487163165711861,
+      "fmax_hz": 117825000,
+      "fmax_method": "reported by OpenROAD report_clock_min_period",
+      "corners": {
+        "tt_025C_5v00": {
+          "setup_slack_ns": 15.5128,
+          "hold_slack_ns": 0.406817
+        }
+      }
+    },
+    "routing": {
+      "nets": 976,
+      "wirelength_um": 37044,
+      "vias": 5356,
+      "detailed_route_drc_errors": 0,
+      "antenna_violation_count": 0
+    },
+    "signoff_indicators": {
+      "flow_errors": 0,
+      "flow_warnings": 1,
+      "magic_drc_errors": 0
+    },
+    "power_w": {
+      "internal": 0.0173146,
+      "switching": 0.0100563,
+      "leakage": 2.77111e-7,
+      "total": 0.0273712
+    },
+    "power_mw": {
+      "internal": 17.3146,
+      "switching": 10.0563,
+      "leakage": 0.000277111,
+      "total": 27.371199999999998
+    },
+    "power_corners_mw": {},
+    "ir_drop": {
+      "average_v": null,
+      "worst_v": null,
+      "status": "not_run",
+      "reason": "Public GF180 ORFS RC table assigns zero resistance to Via1--Via4, which PDNSim rejects"
+    },
+    "completion": {
+      "status": "completed",
+      "implementation_complete": true
+    },
+    "boundaries": [
+      "Reference PPA uses TT; timing_aggregate.corners and power_corners_mw preserve explicit final post-route TT/SS/FF analyses.",
+      "Power is vectorless/default-activity post-route power, not simulation-vector power.",
+      "Static IR drop was not run for this GF180 result and is represented as not_run, never as zero drop.",
+      "The package reports four maximum-capacitance violations, so clean setup/hold does not imply all electrical checks pass."
+    ],
+    "normalized_metric_provenance": [
+      {
+        "metric_id": "area.die_um2",
+        "value": 76524.2,
+        "unit": "um^2",
+        "source_field": "ppa.area.die_um2",
+        "transformation": "direct",
+        "raw_value": "76524.2",
+        "span": {
+          "start": {
+            "offset": 1423,
+            "line": 54,
+            "column": 18
+          },
+          "end": {
+            "offset": 1430,
+            "line": 54,
+            "column": 25
+          }
+        }
+      },
+      {
+        "metric_id": "area.core_um2",
+        "value": 73297.7,
+        "unit": "um^2",
+        "source_field": "ppa.area.core_um2",
+        "transformation": "direct",
+        "raw_value": "73297.7",
+        "span": {
+          "start": {
+            "offset": 1397,
+            "line": 53,
+            "column": 19
+          },
+          "end": {
+            "offset": 1404,
+            "line": 53,
+            "column": 26
+          }
+        }
+      },
+      {
+        "metric_id": "area.instance_um2",
+        "value": 37696,
+        "unit": "um^2",
+        "source_field": "ppa.area.instance_um2",
+        "transformation": "direct",
+        "raw_value": "37696",
+        "span": {
+          "start": {
+            "offset": 1454,
+            "line": 55,
+            "column": 23
+          },
+          "end": {
+            "offset": 1459,
+            "line": 55,
+            "column": 28
+          }
+        }
+      },
+      {
+        "metric_id": "design.logical_instances",
+        "value": 1113,
+        "unit": "count",
+        "source_field": "ppa.area.logical_and_timing_cells",
+        "transformation": "direct",
+        "raw_value": "1113",
+        "span": {
+          "start": {
+            "offset": 1495,
+            "line": 56,
+            "column": 35
+          },
+          "end": {
+            "offset": 1499,
+            "line": 56,
+            "column": 39
+          }
+        }
+      },
+      {
+        "metric_id": "design.physical_instances",
+        "value": 2794,
+        "unit": "count",
+        "source_field": "ppa.area.all_physical_instances",
+        "transformation": "direct",
+        "raw_value": "2794",
+        "span": {
+          "start": {
+            "offset": 1373,
+            "line": 52,
+            "column": 33
+          },
+          "end": {
+            "offset": 1377,
+            "line": 52,
+            "column": 37
+          }
+        }
+      },
+      {
+        "metric_id": "design.utilization",
+        "value": 0.514286,
+        "unit": "ratio",
+        "source_field": "ppa.area.utilization_fraction",
+        "transformation": "direct",
+        "raw_value": "0.514286",
+        "span": {
+          "start": {
+            "offset": 1531,
+            "line": 57,
+            "column": 31
+          },
+          "end": {
+            "offset": 1539,
+            "line": 57,
+            "column": 39
+          }
+        }
+      },
+      {
+        "metric_id": "timing.clock_period_ns",
+        "value": 24,
+        "unit": "ns",
+        "source_field": "configuration.clock_period_ns",
+        "transformation": "direct",
+        "raw_value": "24.0",
+        "span": {
+          "start": {
+            "offset": 470,
+            "line": 19,
+            "column": 24
+          },
+          "end": {
+            "offset": 474,
+            "line": 19,
+            "column": 28
+          }
+        }
+      },
+      {
+        "metric_id": "timing.fmax_hz",
+        "value": 117825000,
+        "unit": "Hz",
+        "source_field": "ppa.timing.fmax_hz",
+        "transformation": "direct",
+        "raw_value": "117825000.0",
+        "span": {
+          "start": {
+            "offset": 1826,
+            "line": 68,
+            "column": 18
+          },
+          "end": {
+            "offset": 1837,
+            "line": 68,
+            "column": 29
+          }
+        }
+      },
+      {
+        "metric_id": "timing.reference_setup_slack_ns",
+        "value": 15.5128,
+        "unit": "ns",
+        "source_field": "ppa.timing.setup_wns_ns",
+        "transformation": "direct",
+        "raw_value": "15.5128",
+        "span": {
+          "start": {
+            "offset": 2184,
+            "line": 79,
+            "column": 23
+          },
+          "end": {
+            "offset": 2191,
+            "line": 79,
+            "column": 30
+          }
+        }
+      },
+      {
+        "metric_id": "timing.reference_hold_slack_ns",
+        "value": 0.406817,
+        "unit": "ns",
+        "source_field": "ppa.timing.hold_wns_ns",
+        "transformation": "direct",
+        "raw_value": "0.406817",
+        "span": {
+          "start": {
+            "offset": 1949,
+            "line": 72,
+            "column": 22
+          },
+          "end": {
+            "offset": 1957,
+            "line": 72,
+            "column": 30
+          }
+        }
+      },
+      {
+        "metric_id": "timing.worst_setup_slack_ns",
+        "value": 15.5128,
+        "unit": "ns",
+        "source_field": "ppa.timing.setup_wns_ns",
+        "transformation": "minimum across reported corners",
+        "raw_value": "15.5128",
+        "span": {
+          "start": {
+            "offset": 2184,
+            "line": 79,
+            "column": 23
+          },
+          "end": {
+            "offset": 2191,
+            "line": 79,
+            "column": 30
+          }
+        }
+      },
+      {
+        "metric_id": "timing.worst_hold_slack_ns",
+        "value": 0.406817,
+        "unit": "ns",
+        "source_field": "ppa.timing.hold_wns_ns",
+        "transformation": "minimum across reported corners",
+        "raw_value": "0.406817",
+        "span": {
+          "start": {
+            "offset": 1949,
+            "line": 72,
+            "column": 22
+          },
+          "end": {
+            "offset": 1957,
+            "line": 72,
+            "column": 30
+          }
+        }
+      },
+      {
+        "metric_id": "timing.setup_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "raw_finish_metrics.finish__timing__drv__setup_violation_count",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5748,
+            "line": 153,
+            "column": 51
+          },
+          "end": {
+            "offset": 5749,
+            "line": 153,
+            "column": 52
+          }
+        }
+      },
+      {
+        "metric_id": "timing.hold_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "raw_finish_metrics.finish__timing__drv__hold_violation_count",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5421,
+            "line": 146,
+            "column": 50
+          },
+          "end": {
+            "offset": 5422,
+            "line": 146,
+            "column": 51
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_slew_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "ppa.timing.max_slew_violations",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 2061,
+            "line": 75,
+            "column": 30
+          },
+          "end": {
+            "offset": 2062,
+            "line": 75,
+            "column": 31
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_cap_violations",
+        "value": 4,
+        "unit": "count",
+        "source_field": "ppa.timing.max_capacitance_violations",
+        "transformation": "direct",
+        "raw_value": "4",
+        "span": {
+          "start": {
+            "offset": 1995,
+            "line": 73,
+            "column": 37
+          },
+          "end": {
+            "offset": 1996,
+            "line": 73,
+            "column": 38
+          }
+        }
+      },
+      {
+        "metric_id": "timing.max_fanout_violations",
+        "value": 0,
+        "unit": "count",
+        "source_field": "ppa.timing.max_fanout_violations",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 2029,
+            "line": 74,
+            "column": 32
+          },
+          "end": {
+            "offset": 2030,
+            "line": 74,
+            "column": 33
+          }
+        }
+      },
+      {
+        "metric_id": "power.internal_mw",
+        "value": 17.3146,
+        "unit": "mW",
+        "source_field": "ppa.power.internal_w",
+        "transformation": "W * 1000",
+        "raw_value": "0.0173146",
+        "span": {
+          "start": {
+            "offset": 1582,
+            "line": 60,
+            "column": 21
+          },
+          "end": {
+            "offset": 1591,
+            "line": 60,
+            "column": 30
+          }
+        }
+      },
+      {
+        "metric_id": "power.switching_mw",
+        "value": 10.0563,
+        "unit": "mW",
+        "source_field": "ppa.power.switching_w",
+        "transformation": "W * 1000",
+        "raw_value": "0.0100563",
+        "span": {
+          "start": {
+            "offset": 1721,
+            "line": 63,
+            "column": 22
+          },
+          "end": {
+            "offset": 1730,
+            "line": 63,
+            "column": 31
+          }
+        }
+      },
+      {
+        "metric_id": "power.leakage_mw",
+        "value": 0.000277111,
+        "unit": "mW",
+        "source_field": "ppa.power.leakage_w",
+        "transformation": "W * 1000",
+        "raw_value": "2.77111e-07",
+        "span": {
+          "start": {
+            "offset": 1612,
+            "line": 61,
+            "column": 20
+          },
+          "end": {
+            "offset": 1623,
+            "line": 61,
+            "column": 31
+          }
+        }
+      },
+      {
+        "metric_id": "power.total_mw",
+        "value": 27.371199999999998,
+        "unit": "mW",
+        "source_field": "ppa.power.total_w",
+        "transformation": "W * 1000",
+        "raw_value": "0.0273712",
+        "span": {
+          "start": {
+            "offset": 1776,
+            "line": 65,
+            "column": 18
+          },
+          "end": {
+            "offset": 1785,
+            "line": 65,
+            "column": 27
+          }
+        }
+      },
+      {
+        "metric_id": "routing.wirelength_um",
+        "value": 37044,
+        "unit": "um",
+        "source_field": "routing.wirelength_um",
+        "transformation": "direct",
+        "raw_value": "37044",
+        "span": {
+          "start": {
+            "offset": 6208,
+            "line": 168,
+            "column": 22
+          },
+          "end": {
+            "offset": 6213,
+            "line": 168,
+            "column": 27
+          }
+        }
+      },
+      {
+        "metric_id": "routing.vias",
+        "value": 5356,
+        "unit": "count",
+        "source_field": "routing.vias",
+        "transformation": "direct",
+        "raw_value": "5356",
+        "span": {
+          "start": {
+            "offset": 6181,
+            "line": 167,
+            "column": 13
+          },
+          "end": {
+            "offset": 6185,
+            "line": 167,
+            "column": 17
+          }
+        }
+      },
+      {
+        "metric_id": "routing.drc_errors",
+        "value": 0,
+        "unit": "count",
+        "source_field": "routing.detailed_route_drc_errors",
+        "transformation": "direct",
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 6119,
+            "line": 164,
+            "column": 34
+          },
+          "end": {
+            "offset": 6120,
+            "line": 164,
+            "column": 35
+          }
+        }
+      },
+      {
+        "metric_id": "timing.critical_path_ns",
+        "value": 8.487163165711861,
+        "unit": "ns",
+        "source_field": "ppa.timing.fmax_hz",
+        "transformation": "1e9 / fmax_hz",
+        "raw_value": "117825000.0",
+        "span": {
+          "start": {
+            "offset": 1826,
+            "line": 68,
+            "column": 18
+          },
+          "end": {
+            "offset": 1837,
+            "line": 68,
+            "column": 29
+          }
+        }
+      }
+    ],
+    "all_metrics": [
+      {
+        "index": 0,
+        "name": "finish__clock__skew__hold",
+        "category": "clock",
+        "components": [
+          "finish",
+          "clock",
+          "skew",
+          "hold"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.266337,
+        "raw_value": "0.266337",
+        "span": {
+          "start": {
+            "offset": 2943,
+            "line": 100,
+            "column": 34
+          },
+          "end": {
+            "offset": 2951,
+            "line": 100,
+            "column": 42
+          }
+        }
+      },
+      {
+        "index": 1,
+        "name": "finish__clock__skew__setup",
+        "category": "clock",
+        "components": [
+          "finish",
+          "clock",
+          "skew",
+          "setup"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.27451,
+        "raw_value": "0.27451",
+        "span": {
+          "start": {
+            "offset": 2987,
+            "line": 101,
+            "column": 35
+          },
+          "end": {
+            "offset": 2994,
+            "line": 101,
+            "column": 42
+          }
+        }
+      },
+      {
+        "index": 2,
+        "name": "finish__design__core__area",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "core",
+          "area"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 73297.7,
+        "raw_value": "73297.7",
+        "span": {
+          "start": {
+            "offset": 3030,
+            "line": 102,
+            "column": 35
+          },
+          "end": {
+            "offset": 3037,
+            "line": 102,
+            "column": 42
+          }
+        }
+      },
+      {
+        "index": 3,
+        "name": "finish__design__die__area",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "die",
+          "area"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 76524.2,
+        "raw_value": "76524.2",
+        "span": {
+          "start": {
+            "offset": 3072,
+            "line": 103,
+            "column": 34
+          },
+          "end": {
+            "offset": 3079,
+            "line": 103,
+            "column": 41
+          }
+        }
+      },
+      {
+        "index": 4,
+        "name": "finish__design__instance__area",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 37696,
+        "raw_value": "37696",
+        "span": {
+          "start": {
+            "offset": 3119,
+            "line": 104,
+            "column": 39
+          },
+          "end": {
+            "offset": 3124,
+            "line": 104,
+            "column": 44
+          }
+        }
+      },
+      {
+        "index": 5,
+        "name": "finish__design__instance__area__class:clock_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "clock_buffer"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 4476.33,
+        "raw_value": "4476.33",
+        "span": {
+          "start": {
+            "offset": 3184,
+            "line": 105,
+            "column": 59
+          },
+          "end": {
+            "offset": 3191,
+            "line": 105,
+            "column": 66
+          }
+        }
+      },
+      {
+        "index": 6,
+        "name": "finish__design__instance__area__class:endcap_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "endcap_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 598.349,
+        "raw_value": "598.349",
+        "span": {
+          "start": {
+            "offset": 3250,
+            "line": 106,
+            "column": 58
+          },
+          "end": {
+            "offset": 3257,
+            "line": 106,
+            "column": 65
+          }
+        }
+      },
+      {
+        "index": 7,
+        "name": "finish__design__instance__area__class:fill_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "fill_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 35601.8,
+        "raw_value": "35601.8",
+        "span": {
+          "start": {
+            "offset": 3314,
+            "line": 107,
+            "column": 56
+          },
+          "end": {
+            "offset": 3321,
+            "line": 107,
+            "column": 63
+          }
+        }
+      },
+      {
+        "index": 8,
+        "name": "finish__design__instance__area__class:inverter",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "inverter"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 1795.05,
+        "raw_value": "1795.05",
+        "span": {
+          "start": {
+            "offset": 3377,
+            "line": 108,
+            "column": 55
+          },
+          "end": {
+            "offset": 3384,
+            "line": 108,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 9,
+        "name": "finish__design__instance__area__class:multi_input_combinational_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "multi_input_combinational_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 20866,
+        "raw_value": "20866",
+        "span": {
+          "start": {
+            "offset": 3462,
+            "line": 109,
+            "column": 77
+          },
+          "end": {
+            "offset": 3467,
+            "line": 109,
+            "column": 82
+          }
+        }
+      },
+      {
+        "index": 10,
+        "name": "finish__design__instance__area__class:sequential_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "sequential_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 6689.09,
+        "raw_value": "6689.09",
+        "span": {
+          "start": {
+            "offset": 3530,
+            "line": 110,
+            "column": 62
+          },
+          "end": {
+            "offset": 3537,
+            "line": 110,
+            "column": 69
+          }
+        }
+      },
+      {
+        "index": 11,
+        "name": "finish__design__instance__area__class:tap_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "tap_cell"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 310.464,
+        "raw_value": "310.464",
+        "span": {
+          "start": {
+            "offset": 3593,
+            "line": 111,
+            "column": 55
+          },
+          "end": {
+            "offset": 3600,
+            "line": 111,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 12,
+        "name": "finish__design__instance__area__class:timing_repair_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "timing_repair_buffer"
+          }
+        ],
+        "unit": "um^2",
+        "kind": "number",
+        "value": 2960.7,
+        "raw_value": "2960.7",
+        "span": {
+          "start": {
+            "offset": 3668,
+            "line": 112,
+            "column": 67
+          },
+          "end": {
+            "offset": 3674,
+            "line": 112,
+            "column": 73
+          }
+        }
+      },
+      {
+        "index": 13,
+        "name": "finish__design__instance__area__cover",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "cover"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 3721,
+            "line": 113,
+            "column": 46
+          },
+          "end": {
+            "offset": 3722,
+            "line": 113,
+            "column": 47
+          }
+        }
+      },
+      {
+        "index": 14,
+        "name": "finish__design__instance__area__macros",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "macros"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 3770,
+            "line": 114,
+            "column": 47
+          },
+          "end": {
+            "offset": 3771,
+            "line": 114,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 15,
+        "name": "finish__design__instance__area__padcells",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "padcells"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 3821,
+            "line": 115,
+            "column": 49
+          },
+          "end": {
+            "offset": 3822,
+            "line": 115,
+            "column": 50
+          }
+        }
+      },
+      {
+        "index": 16,
+        "name": "finish__design__instance__area__stdcell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "area",
+          "stdcell"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 37696,
+        "raw_value": "37696",
+        "span": {
+          "start": {
+            "offset": 3871,
+            "line": 116,
+            "column": 48
+          },
+          "end": {
+            "offset": 3876,
+            "line": 116,
+            "column": 53
+          }
+        }
+      },
+      {
+        "index": 17,
+        "name": "finish__design__instance__count",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 2794,
+        "raw_value": "2794",
+        "span": {
+          "start": {
+            "offset": 3917,
+            "line": 117,
+            "column": 40
+          },
+          "end": {
+            "offset": 3921,
+            "line": 117,
+            "column": 44
+          }
+        }
+      },
+      {
+        "index": 18,
+        "name": "finish__design__instance__count__class:clock_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "clock_buffer"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 64,
+        "raw_value": "64",
+        "span": {
+          "start": {
+            "offset": 3982,
+            "line": 118,
+            "column": 60
+          },
+          "end": {
+            "offset": 3984,
+            "line": 118,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 19,
+        "name": "finish__design__instance__count__class:endcap_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "endcap_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 106,
+        "raw_value": "106",
+        "span": {
+          "start": {
+            "offset": 4044,
+            "line": 119,
+            "column": 59
+          },
+          "end": {
+            "offset": 4047,
+            "line": 119,
+            "column": 62
+          }
+        }
+      },
+      {
+        "index": 20,
+        "name": "finish__design__instance__count__class:fill_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "fill_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 1681,
+        "raw_value": "1681",
+        "span": {
+          "start": {
+            "offset": 4105,
+            "line": 120,
+            "column": 57
+          },
+          "end": {
+            "offset": 4109,
+            "line": 120,
+            "column": 61
+          }
+        }
+      },
+      {
+        "index": 21,
+        "name": "finish__design__instance__count__class:inverter",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "inverter"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 102,
+        "raw_value": "102",
+        "span": {
+          "start": {
+            "offset": 4166,
+            "line": 121,
+            "column": 56
+          },
+          "end": {
+            "offset": 4169,
+            "line": 121,
+            "column": 59
+          }
+        }
+      },
+      {
+        "index": 22,
+        "name": "finish__design__instance__count__class:multi_input_combinational_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "multi_input_combinational_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 648,
+        "raw_value": "648",
+        "span": {
+          "start": {
+            "offset": 4248,
+            "line": 122,
+            "column": 78
+          },
+          "end": {
+            "offset": 4251,
+            "line": 122,
+            "column": 81
+          }
+        }
+      },
+      {
+        "index": 23,
+        "name": "finish__design__instance__count__class:sequential_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "sequential_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 79,
+        "raw_value": "79",
+        "span": {
+          "start": {
+            "offset": 4315,
+            "line": 123,
+            "column": 63
+          },
+          "end": {
+            "offset": 4317,
+            "line": 123,
+            "column": 65
+          }
+        }
+      },
+      {
+        "index": 24,
+        "name": "finish__design__instance__count__class:tap_cell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "tap_cell"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 55,
+        "raw_value": "55",
+        "span": {
+          "start": {
+            "offset": 4374,
+            "line": 124,
+            "column": 56
+          },
+          "end": {
+            "offset": 4376,
+            "line": 124,
+            "column": 58
+          }
+        }
+      },
+      {
+        "index": 25,
+        "name": "finish__design__instance__count__class:timing_repair_buffer",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count"
+        ],
+        "qualifiers": [
+          {
+            "name": "class",
+            "value": "timing_repair_buffer"
+          }
+        ],
+        "unit": "count",
+        "kind": "number",
+        "value": 59,
+        "raw_value": "59",
+        "span": {
+          "start": {
+            "offset": 4445,
+            "line": 125,
+            "column": 68
+          },
+          "end": {
+            "offset": 4447,
+            "line": 125,
+            "column": 70
+          }
+        }
+      },
+      {
+        "index": 26,
+        "name": "finish__design__instance__count__cover",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "cover"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 4495,
+            "line": 126,
+            "column": 47
+          },
+          "end": {
+            "offset": 4496,
+            "line": 126,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 27,
+        "name": "finish__design__instance__count__macros",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "macros"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 4545,
+            "line": 127,
+            "column": 48
+          },
+          "end": {
+            "offset": 4546,
+            "line": 127,
+            "column": 49
+          }
+        }
+      },
+      {
+        "index": 28,
+        "name": "finish__design__instance__count__padcells",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "padcells"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 4597,
+            "line": 128,
+            "column": 50
+          },
+          "end": {
+            "offset": 4598,
+            "line": 128,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 29,
+        "name": "finish__design__instance__count__stdcell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "count",
+          "stdcell"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 1113,
+        "raw_value": "1113",
+        "span": {
+          "start": {
+            "offset": 4648,
+            "line": 129,
+            "column": 49
+          },
+          "end": {
+            "offset": 4652,
+            "line": 129,
+            "column": 53
+          }
+        }
+      },
+      {
+        "index": 30,
+        "name": "finish__design__instance__utilization",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "utilization"
+        ],
+        "qualifiers": [],
+        "unit": "ratio",
+        "kind": "number",
+        "value": 0.514286,
+        "raw_value": "0.514286",
+        "span": {
+          "start": {
+            "offset": 4699,
+            "line": 130,
+            "column": 46
+          },
+          "end": {
+            "offset": 4707,
+            "line": 130,
+            "column": 54
+          }
+        }
+      },
+      {
+        "index": 31,
+        "name": "finish__design__instance__utilization__stdcell",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "instance",
+          "utilization",
+          "stdcell"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.514286,
+        "raw_value": "0.514286",
+        "span": {
+          "start": {
+            "offset": 4763,
+            "line": 131,
+            "column": 55
+          },
+          "end": {
+            "offset": 4771,
+            "line": 131,
+            "column": 63
+          }
+        }
+      },
+      {
+        "index": 32,
+        "name": "finish__design__io",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "io"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 46,
+        "raw_value": "46",
+        "span": {
+          "start": {
+            "offset": 4799,
+            "line": 132,
+            "column": 27
+          },
+          "end": {
+            "offset": 4801,
+            "line": 132,
+            "column": 29
+          }
+        }
+      },
+      {
+        "index": 33,
+        "name": "finish__design__nets",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "nets"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 978,
+        "raw_value": "978",
+        "span": {
+          "start": {
+            "offset": 4831,
+            "line": 133,
+            "column": 29
+          },
+          "end": {
+            "offset": 4834,
+            "line": 133,
+            "column": 32
+          }
+        }
+      },
+      {
+        "index": 34,
+        "name": "finish__design__rows",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "rows"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 53,
+        "raw_value": "53",
+        "span": {
+          "start": {
+            "offset": 4864,
+            "line": 134,
+            "column": 29
+          },
+          "end": {
+            "offset": 4866,
+            "line": 134,
+            "column": 31
+          }
+        }
+      },
+      {
+        "index": 35,
+        "name": "finish__design__rows:GF018hv5v_green_sc9",
+        "category": "design",
+        "components": [
+          "finish",
+          "design"
+        ],
+        "qualifiers": [
+          {
+            "name": "rows",
+            "value": "GF018hv5v_green_sc9"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 53,
+        "raw_value": "53",
+        "span": {
+          "start": {
+            "offset": 4916,
+            "line": 135,
+            "column": 49
+          },
+          "end": {
+            "offset": 4918,
+            "line": 135,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 36,
+        "name": "finish__design__sites",
+        "category": "design",
+        "components": [
+          "finish",
+          "design",
+          "sites"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 25970,
+        "raw_value": "25970",
+        "span": {
+          "start": {
+            "offset": 4949,
+            "line": 136,
+            "column": 30
+          },
+          "end": {
+            "offset": 4954,
+            "line": 136,
+            "column": 35
+          }
+        }
+      },
+      {
+        "index": 37,
+        "name": "finish__design__sites:GF018hv5v_green_sc9",
+        "category": "design",
+        "components": [
+          "finish",
+          "design"
+        ],
+        "qualifiers": [
+          {
+            "name": "sites",
+            "value": "GF018hv5v_green_sc9"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 25970,
+        "raw_value": "25970",
+        "span": {
+          "start": {
+            "offset": 5005,
+            "line": 137,
+            "column": 50
+          },
+          "end": {
+            "offset": 5010,
+            "line": 137,
+            "column": 55
+          }
+        }
+      },
+      {
+        "index": 38,
+        "name": "finish__flow__errors__count",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "errors",
+          "count"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5047,
+            "line": 138,
+            "column": 36
+          },
+          "end": {
+            "offset": 5048,
+            "line": 138,
+            "column": 37
+          }
+        }
+      },
+      {
+        "index": 39,
+        "name": "finish__flow__warnings__count",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings",
+          "count"
+        ],
+        "qualifiers": [],
+        "unit": "count",
+        "kind": "number",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 5087,
+            "line": 139,
+            "column": 38
+          },
+          "end": {
+            "offset": 5088,
+            "line": 139,
+            "column": 39
+          }
+        }
+      },
+      {
+        "index": 40,
+        "name": "finish__flow__warnings__count:RCX-0514",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings"
+        ],
+        "qualifiers": [
+          {
+            "name": "count",
+            "value": "RCX-0514"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 5136,
+            "line": 140,
+            "column": 47
+          },
+          "end": {
+            "offset": 5137,
+            "line": 140,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 41,
+        "name": "finish__flow__warnings__type_count",
+        "category": "flow",
+        "components": [
+          "finish",
+          "flow",
+          "warnings",
+          "type_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 1,
+        "raw_value": "1",
+        "span": {
+          "start": {
+            "offset": 5181,
+            "line": 141,
+            "column": 43
+          },
+          "end": {
+            "offset": 5182,
+            "line": 141,
+            "column": 44
+          }
+        }
+      },
+      {
+        "index": 42,
+        "name": "finish__power__internal__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "internal",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.0173146,
+        "raw_value": "0.0173146",
+        "span": {
+          "start": {
+            "offset": 5222,
+            "line": 142,
+            "column": 39
+          },
+          "end": {
+            "offset": 5231,
+            "line": 142,
+            "column": 48
+          }
+        }
+      },
+      {
+        "index": 43,
+        "name": "finish__power__leakage__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "leakage",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 2.77111e-7,
+        "raw_value": "2.77111e-07",
+        "span": {
+          "start": {
+            "offset": 5270,
+            "line": 143,
+            "column": 38
+          },
+          "end": {
+            "offset": 5281,
+            "line": 143,
+            "column": 49
+          }
+        }
+      },
+      {
+        "index": 44,
+        "name": "finish__power__switching__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "switching",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.0100563,
+        "raw_value": "0.0100563",
+        "span": {
+          "start": {
+            "offset": 5322,
+            "line": 144,
+            "column": 40
+          },
+          "end": {
+            "offset": 5331,
+            "line": 144,
+            "column": 49
+          }
+        }
+      },
+      {
+        "index": 45,
+        "name": "finish__power__total",
+        "category": "power",
+        "components": [
+          "finish",
+          "power",
+          "total"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.0273712,
+        "raw_value": "0.0273712",
+        "span": {
+          "start": {
+            "offset": 5361,
+            "line": 145,
+            "column": 29
+          },
+          "end": {
+            "offset": 5370,
+            "line": 145,
+            "column": 38
+          }
+        }
+      },
+      {
+        "index": 46,
+        "name": "finish__timing__drv__hold_violation_count",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "hold_violation_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5421,
+            "line": 146,
+            "column": 50
+          },
+          "end": {
+            "offset": 5422,
+            "line": 146,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 47,
+        "name": "finish__timing__drv__max_cap",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_cap"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 4,
+        "raw_value": "4",
+        "span": {
+          "start": {
+            "offset": 5460,
+            "line": 147,
+            "column": 37
+          },
+          "end": {
+            "offset": 5461,
+            "line": 147,
+            "column": 38
+          }
+        }
+      },
+      {
+        "index": 48,
+        "name": "finish__timing__drv__max_cap_limit",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_cap_limit"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": -2.00032,
+        "raw_value": "-2.00032",
+        "span": {
+          "start": {
+            "offset": 5505,
+            "line": 148,
+            "column": 43
+          },
+          "end": {
+            "offset": 5513,
+            "line": 148,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 49,
+        "name": "finish__timing__drv__max_fanout",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_fanout"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5554,
+            "line": 149,
+            "column": 40
+          },
+          "end": {
+            "offset": 5555,
+            "line": 149,
+            "column": 41
+          }
+        }
+      },
+      {
+        "index": 50,
+        "name": "finish__timing__drv__max_fanout_limit",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_fanout_limit"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 4,
+        "raw_value": "4",
+        "span": {
+          "start": {
+            "offset": 5602,
+            "line": 150,
+            "column": 46
+          },
+          "end": {
+            "offset": 5603,
+            "line": 150,
+            "column": 47
+          }
+        }
+      },
+      {
+        "index": 51,
+        "name": "finish__timing__drv__max_slew",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_slew"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5642,
+            "line": 151,
+            "column": 38
+          },
+          "end": {
+            "offset": 5643,
+            "line": 151,
+            "column": 39
+          }
+        }
+      },
+      {
+        "index": 52,
+        "name": "finish__timing__drv__max_slew_limit",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "max_slew_limit"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.653167,
+        "raw_value": "0.653167",
+        "span": {
+          "start": {
+            "offset": 5688,
+            "line": 152,
+            "column": 44
+          },
+          "end": {
+            "offset": 5696,
+            "line": 152,
+            "column": 52
+          }
+        }
+      },
+      {
+        "index": 53,
+        "name": "finish__timing__drv__setup_violation_count",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "drv",
+          "setup_violation_count"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5748,
+            "line": 153,
+            "column": 51
+          },
+          "end": {
+            "offset": 5749,
+            "line": 153,
+            "column": 52
+          }
+        }
+      },
+      {
+        "index": 54,
+        "name": "finish__timing__fmax",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "fmax"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 117825000,
+        "raw_value": "117825000.0",
+        "span": {
+          "start": {
+            "offset": 5779,
+            "line": 154,
+            "column": 29
+          },
+          "end": {
+            "offset": 5790,
+            "line": 154,
+            "column": 40
+          }
+        }
+      },
+      {
+        "index": 55,
+        "name": "finish__timing__fmax__clock:clk",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "fmax"
+        ],
+        "qualifiers": [
+          {
+            "name": "clock",
+            "value": "clk"
+          }
+        ],
+        "unit": null,
+        "kind": "number",
+        "value": 117825000,
+        "raw_value": "117825000.0",
+        "span": {
+          "start": {
+            "offset": 5831,
+            "line": 155,
+            "column": 40
+          },
+          "end": {
+            "offset": 5842,
+            "line": 155,
+            "column": 51
+          }
+        }
+      },
+      {
+        "index": 56,
+        "name": "finish__timing__hold__tns",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "hold",
+          "tns"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5877,
+            "line": 156,
+            "column": 34
+          },
+          "end": {
+            "offset": 5878,
+            "line": 156,
+            "column": 35
+          }
+        }
+      },
+      {
+        "index": 57,
+        "name": "finish__timing__hold__ws",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "hold",
+          "ws"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0.406817,
+        "raw_value": "0.406817",
+        "span": {
+          "start": {
+            "offset": 5912,
+            "line": 157,
+            "column": 33
+          },
+          "end": {
+            "offset": 5920,
+            "line": 157,
+            "column": 41
+          }
+        }
+      },
+      {
+        "index": 58,
+        "name": "finish__timing__setup__tns",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "setup",
+          "tns"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 0,
+        "raw_value": "0",
+        "span": {
+          "start": {
+            "offset": 5956,
+            "line": 158,
+            "column": 35
+          },
+          "end": {
+            "offset": 5957,
+            "line": 158,
+            "column": 36
+          }
+        }
+      },
+      {
+        "index": 59,
+        "name": "finish__timing__setup__ws",
+        "category": "timing",
+        "components": [
+          "finish",
+          "timing",
+          "setup",
+          "ws"
+        ],
+        "qualifiers": [],
+        "unit": null,
+        "kind": "number",
+        "value": 15.5128,
+        "raw_value": "15.5128",
+        "span": {
+          "start": {
+            "offset": 5992,
+            "line": 159,
+            "column": 34
+          },
+          "end": {
+            "offset": 5999,
+            "line": 159,
+            "column": 41
+          }
+        }
+      }
+    ],
+    "standard_cell_usage": {
+      "schema": "def.components.v1",
+      "availability": "available",
+      "source": "orfs/results/gf180/uart/base/6_final.def",
+      "sha256": "bda1c864b19dc0b30ef69aedc05a6eb35debe4d576a3ee079e934cab81b8a798",
+      "scope": "all final-DEF COMPONENT master instances, including functional and physical-only standard cells",
+      "declared_component_count": 2794,
+      "parsed_component_count": 2794,
+      "unique_master_count": 46,
+      "cells": [
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_1",
+          "count": 380,
+          "first_source_line": 92
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_4",
+          "count": 363,
+          "first_source_line": 97
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_2",
+          "count": 347,
+          "first_source_line": 91
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_8",
+          "count": 261,
+          "first_source_line": 96
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nand2_2",
+          "count": 213,
+          "first_source_line": 1961
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_16",
+          "count": 208,
+          "first_source_line": 89
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__endcap",
+          "count": 106,
+          "first_source_line": 1769
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_32",
+          "count": 98,
+          "first_source_line": 87
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__dffq_2",
+          "count": 79,
+          "first_source_line": 2802
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__and2_2",
+          "count": 72,
+          "first_source_line": 1940
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nand3_2",
+          "count": 70,
+          "first_source_line": 1954
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__clkinv_2",
+          "count": 66,
+          "first_source_line": 1930
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nor2_2",
+          "count": 59,
+          "first_source_line": 1962
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__filltie",
+          "count": 55,
+          "first_source_line": 1875
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__clkbuf_8",
+          "count": 48,
+          "first_source_line": 2680
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__dlyb_2",
+          "count": 43,
+          "first_source_line": 2744
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__aoi21_2",
+          "count": 38,
+          "first_source_line": 2012
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__or2_2",
+          "count": 33,
+          "first_source_line": 2031
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__oai21_2",
+          "count": 28,
+          "first_source_line": 2130
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__inv_2",
+          "count": 27,
+          "first_source_line": 1938
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__fill_64",
+          "count": 24,
+          "first_source_line": 93
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__xor2_2",
+          "count": 21,
+          "first_source_line": 2162
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__and3_2",
+          "count": 18,
+          "first_source_line": 2026
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__clkbuf_12",
+          "count": 16,
+          "first_source_line": 2681
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__clkbuf_2",
+          "count": 15,
+          "first_source_line": 2729
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__or3_2",
+          "count": 15,
+          "first_source_line": 2040
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nand2_4",
+          "count": 14,
+          "first_source_line": 1973
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__and2_4",
+          "count": 12,
+          "first_source_line": 1948
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nand4_2",
+          "count": 12,
+          "first_source_line": 2043
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__addh_1",
+          "count": 10,
+          "first_source_line": 2670
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nor2_4",
+          "count": 9,
+          "first_source_line": 2002
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__and4_2",
+          "count": 7,
+          "first_source_line": 1966
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__inv_3",
+          "count": 5,
+          "first_source_line": 1959
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__inv_4",
+          "count": 3,
+          "first_source_line": 1974
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nand3_4",
+          "count": 3,
+          "first_source_line": 1967
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__oai211_2",
+          "count": 3,
+          "first_source_line": 2551
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nor3_2",
+          "count": 2,
+          "first_source_line": 2365
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__nor3_4",
+          "count": 2,
+          "first_source_line": 2137
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__or4_2",
+          "count": 2,
+          "first_source_line": 2368
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__and4_4",
+          "count": 1,
+          "first_source_line": 2260
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__aoi211_2",
+          "count": 1,
+          "first_source_line": 2568
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__buf_4",
+          "count": 1,
+          "first_source_line": 2801
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__clkinv_3",
+          "count": 1,
+          "first_source_line": 1970
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__mux2_2",
+          "count": 1,
+          "first_source_line": 2573
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__oai31_2",
+          "count": 1,
+          "first_source_line": 2547
+        },
+        {
+          "master": "gf180mcu_fd_sc_mcu9t5v0__or4_4",
+          "count": 1,
+          "first_source_line": 2581
+        }
+      ]
+    },
+    "timing_endpoint_slacks": {
+      "schema": "opensta.endpoint-slacks.v1",
+      "scope": "one worst setup and hold check per constrained timed endpoint at the final post-route reference corner",
+      "reference_corner": "tt_025C_5v00",
+      "units": "ns",
+      "sta_endpoint_count": 114,
+      "setup": {
+        "endpoint_count": 94,
+        "endpoints": [
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.510000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.65,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.69,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.76,
+            "status": "met"
+          },
+          {
+            "endpoint": "s_axis_tready",
+            "slack_ns": 15.770000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tvalid",
+            "slack_ns": 15.790000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "txd",
+            "slack_ns": 15.799999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[0]",
+            "slack_ns": 15.81,
+            "status": "met"
+          },
+          {
+            "endpoint": "tx_busy",
+            "slack_ns": 15.81,
+            "status": "met"
+          },
+          {
+            "endpoint": "rx_busy",
+            "slack_ns": 15.819999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.819999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[1]",
+            "slack_ns": 15.83,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[6]",
+            "slack_ns": 15.83,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[5]",
+            "slack_ns": 15.840000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[4]",
+            "slack_ns": 15.840000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[2]",
+            "slack_ns": 15.840000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[3]",
+            "slack_ns": 15.840000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[7]",
+            "slack_ns": 15.840000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.85,
+            "status": "met"
+          },
+          {
+            "endpoint": "rx_overrun_error",
+            "slack_ns": 15.88,
+            "status": "met"
+          },
+          {
+            "endpoint": "rx_frame_error",
+            "slack_ns": 15.889999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.889999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.92,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.92,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.930000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.930000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.94,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.94,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.97,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+            "slack_ns": 15.980000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.009999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.04,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.06,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.08,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.12,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.12,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.13,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.169999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.18,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[5]$_DFFE_PP_/D",
+            "slack_ns": 16.18,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[4]$_DFFE_PP_/D",
+            "slack_ns": 16.18,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[6]$_DFFE_PP_/D",
+            "slack_ns": 16.18,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[7]$_DFFE_PP_/D",
+            "slack_ns": 16.18,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[8]$_DFFE_PP_/D",
+            "slack_ns": 16.19,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.2,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.21,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.24,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.25,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.25,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.34,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.35,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.37,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.frame_error_reg$_SDFF_PP0_/D",
+            "slack_ns": 16.44,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.overrun_error_reg$_SDFF_PP0_/D",
+            "slack_ns": 16.45,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.45,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[1]$_DFFE_PP_/D",
+            "slack_ns": 16.48,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.s_axis_tready_reg$_SDFFE_PP0P_/D",
+            "slack_ns": 16.48,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[0]$_DFFE_PP_/D",
+            "slack_ns": 16.48,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[2]$_DFFE_PP_/D",
+            "slack_ns": 16.490000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[3]$_DFFE_PP_/D",
+            "slack_ns": 16.490000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.51,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.busy_reg$_SDFFE_PP0P_/D",
+            "slack_ns": 16.52,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.52,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.52,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[6]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.52,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[7]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.53,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[4]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.53,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.53,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[5]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.53,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.53,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.57,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.590000000000003,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.6,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.7,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.709999999999997,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.txd_reg$_SDFFE_PP1P_/D",
+            "slack_ns": 16.74,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.75,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[7]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.779999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[3]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.779999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[1]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.779999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[6]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.779999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[5]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.779999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[2]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.79,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[0]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.79,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[4]$_SDFFCE_PP0P_/D",
+            "slack_ns": 16.79,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.busy_reg$_SDFFE_PP0P_/D",
+            "slack_ns": 16.849999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 16.919999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 17.38,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.rxd_reg$_SDFF_PP1_/D",
+            "slack_ns": 17.54,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tvalid_reg$_SDFF_PP0_/D",
+            "slack_ns": 17.56,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 17.56,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 17.58,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 17.82,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 17.93,
+            "status": "met"
+          }
+        ],
+        "analysis": "setup",
+        "violation_count": 0
+      },
+      "hold": {
+        "endpoint_count": 94,
+        "endpoints": [
+          {
+            "endpoint": "uart_tx_inst.busy_reg$_SDFFE_PP0P_/D",
+            "slack_ns": 0.4068,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[0]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.4613,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[2]$_DFFE_PP_/D",
+            "slack_ns": 0.4777,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[5]$_DFFE_PP_/D",
+            "slack_ns": 0.47880000000000006,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[8]$_DFFE_PP_/D",
+            "slack_ns": 0.4799,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[4]$_DFFE_PP_/D",
+            "slack_ns": 0.4804,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[6]$_DFFE_PP_/D",
+            "slack_ns": 0.48119999999999996,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[3]$_DFFE_PP_/D",
+            "slack_ns": 0.48189999999999994,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[7]$_DFFE_PP_/D",
+            "slack_ns": 0.48669999999999997,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.48990000000000006,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[1]$_DFFE_PP_/D",
+            "slack_ns": 0.4912,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[4]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.49900000000000005,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.txd_reg$_SDFFE_PP1P_/D",
+            "slack_ns": 0.5012,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tvalid_reg$_SDFF_PP0_/D",
+            "slack_ns": 0.5034000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[3]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.5085999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.data_reg[0]$_DFFE_PP_/D",
+            "slack_ns": 0.5108,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.5111,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[5]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.5135000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[6]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.5153,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[2]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.5166,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[1]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.5166,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.data_reg[7]$_SDFFCE_PP0P_/D",
+            "slack_ns": 0.5166999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.5418000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.5502,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.5509000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.5547,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.6174999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.6457999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.s_axis_tready_reg$_SDFFE_PP0P_/D",
+            "slack_ns": 0.6799,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[7]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7124,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[5]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7161000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7169,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[4]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7187,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7219,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7228,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7262000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[6]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7263,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7283999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.m_axis_tdata_reg[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7365,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7413000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7452,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7484999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.busy_reg$_SDFFE_PP0P_/D",
+            "slack_ns": 0.7521,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.764,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.overrun_error_reg$_SDFF_PP0_/D",
+            "slack_ns": 0.7913,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8051,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8188,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8195,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8199000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8498,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8517,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8545,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8646,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8658,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.876,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.8998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9038999999999999,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9142,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9182,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9266,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9478,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9672,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.981,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9873000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9919,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+            "slack_ns": 0.9940000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.009,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.0190000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.0210000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.039,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.0439999999999998,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.084,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.086,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.148,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.1700000000000002,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.frame_error_reg$_SDFF_PP0_/D",
+            "slack_ns": 1.194,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_tx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.2650000000000001,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+            "slack_ns": 1.596,
+            "status": "met"
+          },
+          {
+            "endpoint": "uart_rx_inst.rxd_reg$_SDFF_PP1_/D",
+            "slack_ns": 4.634,
+            "status": "met"
+          },
+          {
+            "endpoint": "rx_frame_error",
+            "slack_ns": 7.3149999999999995,
+            "status": "met"
+          },
+          {
+            "endpoint": "rx_overrun_error",
+            "slack_ns": 7.324,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[7]",
+            "slack_ns": 7.361,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[3]",
+            "slack_ns": 7.363,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[2]",
+            "slack_ns": 7.364,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[4]",
+            "slack_ns": 7.3660000000000005,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[5]",
+            "slack_ns": 7.367,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[1]",
+            "slack_ns": 7.378,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[6]",
+            "slack_ns": 7.378,
+            "status": "met"
+          },
+          {
+            "endpoint": "rx_busy",
+            "slack_ns": 7.386,
+            "status": "met"
+          },
+          {
+            "endpoint": "tx_busy",
+            "slack_ns": 7.391,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tdata[0]",
+            "slack_ns": 7.3950000000000005,
+            "status": "met"
+          },
+          {
+            "endpoint": "txd",
+            "slack_ns": 7.407,
+            "status": "met"
+          },
+          {
+            "endpoint": "m_axis_tvalid",
+            "slack_ns": 7.418,
+            "status": "met"
+          },
+          {
+            "endpoint": "s_axis_tready",
+            "slack_ns": 7.44,
+            "status": "met"
+          }
+        ],
+        "analysis": "hold",
+        "violation_count": 0
+      },
+      "availability": "available",
+      "source": "timing_endpoints.json",
+      "sha256": "14fea58bdb3701143db421af7d8446f673889c366d6a527719ea51f7a6cdb627"
+    }
+  }
+}

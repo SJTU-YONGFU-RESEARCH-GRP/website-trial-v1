@@ -1,0 +1,76 @@
+{
+  "architecture": "carry_select_adder",
+  "designFamily": "libcharx_sky130_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "sky130hd_libcharx",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 975.465102,
+  "powerMw": 3.64513102849,
+  "areaUm2": 593.0688,
+  "flow": {
+    "schemaVersion": 1,
+    "importedAtUtc": "2026-08-02T03:12:12.130357+00:00",
+    "technologyUid": "0091c863eda291a4a48d9b013eeb1b05",
+    "sourceExperiment": "LibCharX/characterization/sky130_adders",
+    "pdk": "SKY130A",
+    "standardCellLibrary": "sky130_fd_sc_hd \u00b7 LibCharX adder-cell subset",
+    "corner": "tt_025C_1v80",
+    "libertySha256": "fe758dc59aff5e948ce9107beec300e219185c98b434f9a614f62ad9eeb035d2",
+    "characterization": {
+      "status": "pass",
+      "simulator": "ngspice",
+      "simulationCalls": 538,
+      "simulationSuccesses": 538,
+      "nldmGrid": "3x3",
+      "representativeInputSlewNs": 0.0531329,
+      "representativeOutputLoadPf": 0.00956858
+    },
+    "formalVerification": {
+      "status": "pass",
+      "method": "Yosys SAT exhaustive equivalence",
+      "rtlAndMappedNetlist": true
+    },
+    "synthesis": {
+      "status": "pass",
+      "numCells": 27,
+      "numCellsByType": {
+        "sky130_fd_sc_hd__fah_1": 12,
+        "sky130_fd_sc_hd__ha_1": 15
+      },
+      "mappedNetlist": "mapped.v",
+      "mappedJson": "mapped.json",
+      "log": "synthesis.log"
+    },
+    "sta": {
+      "status": "pass",
+      "criticalPathDelayNs": 1.025152,
+      "fmaxEstimateMhz": 975.465102,
+      "startpoint": "A[4] (input port clocked by vclk)",
+      "endpoint": "SUM[7] (output port clocked by vclk)",
+      "slackNs": 8.974848,
+      "constraints": {
+        "virtualClockPeriodNs": 10.0,
+        "inputSlewNs": 0.0531329,
+        "outputLoadPf": 0.00956858
+      },
+      "log": "sta.log"
+    },
+    "ppa": {
+      "areaUm2": 593.0688,
+      "representativeTransitionPowerMw": 3.64513102849,
+      "powerMetric": "LibCharX middle-point mean rise/fall transition-power proxy",
+      "cellRepresentativePowerW": {
+        "sky130_fd_sc_hd__fah_1": 0.000139889294587,
+        "sky130_fd_sc_hd__ha_1": 0.000131097299563
+      }
+    },
+    "notes": [
+      "This is the existing verified 8-bit closed-loop experiment; no synthetic widths were added.",
+      "Timing is pre-layout OpenSTA with the LibCharX-generated Liberty and common constraints.",
+      "Area is mapped standard-cell area and excludes routing.",
+      "powerMw is a representative transition-power proxy, not activity/VCD-based total design power or leakage."
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "checks": [
+    "LibCharX manifest, hashes, cells, and zero-failure counters",
+    "five-cell 3x3 NLDM tables and 28 emitted timing groups",
+    "RTL and mapped-netlist SAT equivalence proofs",
+    "same-version/common-flow Yosys mapping, cell counts, and area",
+    "common-constraint OpenSTA paths with the identical Liberty",
+    "final report, CSV, summaries, and evidence hashes"
+  ],
+  "liberty": "/home/duhaochen/LibCharX/characterization/sky130_adders/results/libcharx_adder_test.lib",
+  "liberty_sha256": "fe758dc59aff5e948ce9107beec300e219185c98b434f9a614f62ad9eeb035d2",
+  "cells": [
+    "sky130_fd_sc_hd__fa_1",
+    "sky130_fd_sc_hd__fah_1",
+    "sky130_fd_sc_hd__fahcin_1",
+    "sky130_fd_sc_hd__fahcon_1",
+    "sky130_fd_sc_hd__ha_1"
+  ],
+  "architectures": [
+    "adder8_ripple",
+    "adder8_kogge_stone",
+    "adder8_carry_select",
+    "adder8_carry_skip",
+    "adder8_alternating_polarity"
+  ]
+}

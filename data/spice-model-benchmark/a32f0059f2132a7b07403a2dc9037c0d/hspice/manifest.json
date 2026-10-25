@@ -1,0 +1,356 @@
+{
+  "modelId": "sky130__fd__pr__special__nfet__pass__flash__model__original",
+  "sourceId": "sky130__fd__pr__special__nfet__pass__flash__model",
+  "kind": "original",
+  "chain": [],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/a32f0059f2132a7b07403a2dc9037c0d/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/a32f0059f2132a7b07403a2dc9037c0d/hspice.lib",
+  "astParsedInput": true,
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "benchmark netlists",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "1.5025000000000001e-07",
+        "w": "4.4975000000000001e-07",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1.5025000000000001e-07",
+        "w": "4.4975000000000001e-07",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1.5025000000000001e-07",
+        "w": "4.4975000000000001e-07",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1.5025000000000001e-07",
+        "w": "4.4975000000000001e-07",
+        "m": "1"
+      }
+    },
+    "parameterCount": 42,
+    "parameters": [
+      {
+        "name": "hv_dlc_rotweak",
+        "value": ".00e-9",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/all.spice"
+      },
+      {
+        "name": "l",
+        "value": "1.5025000000000001e-07",
+        "source": "benchmark netlist DUT geometry"
+      },
+      {
+        "name": "mult",
+        "value": "1",
+        "source": "benchmark netlist DUT geometry"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__ajunction_mult",
+        "value": "9.9543e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__cdsc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__cdscb_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__cdscd_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__cit_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__dlc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__dlc_rotweak",
+        "value": "hv_dlc_rotweak",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/all.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__dvt0_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__dvt0w_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__dwc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__dwg_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__k2_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__k2_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__k3_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__kt1_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__kt1_diff_1",
+        "value": "3.8227e-2",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__kt1l_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__kt2_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__nfactor_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__nfactor_diff_1",
+        "value": "1.4138e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__nlx_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__overlap_mult",
+        "value": "0.89805",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__pjunction_mult",
+        "value": "1.0204e+0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__tox_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__tox_slope",
+        "value": "6.589e-03",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass_flash/sky130_fd_pr__special_nfet_pass_flash__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__tox_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass_flash/sky130_fd_pr__special_nfet_pass_flash.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__u0_diff_0",
+        "value": "0.0027584",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__u0_diff_1",
+        "value": "1.2956e-3",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__voff_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__voff_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__vsat_diff_0",
+        "value": "3855.4",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__vsat_diff_1",
+        "value": "1.3679e+4",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__vth0_diff_0",
+        "value": "-0.15663",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__vth0_diff_1",
+        "value": "-5.7093e-3",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__vth0_slope",
+        "value": "1.0889e-2",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass_flash/sky130_fd_pr__special_nfet_pass_flash__mismatch.corner.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__vth0_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass_flash/sky130_fd_pr__special_nfet_pass_flash.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_pr__special_nfet_pass_flash__wint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/corners/tt/specialized_cells.spice"
+      },
+      {
+        "name": "w",
+        "value": "4.4975000000000001e-07",
+        "source": "benchmark netlist DUT geometry"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_pr__special_nfet_pass_flash__model.0": "__benchmark_selected_nmos",
+      "sky130_fd_pr__special_nfet_pass_flash__model.1": "sky130_fd_pr__special_nfet_pass_flash__model.1"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_nmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_pr__special_nfet_pass_flash__model.0",
+      "modelFamily": "sky130_fd_pr__special_nfet_pass_flash__model",
+      "deviceType": "nmos",
+      "selectionMode": "nearest-real-bin-outside-range",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "1.5025000000000001e-07",
+        "w": "4.4975000000000001e-07",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": "stock-fixture-geometry-outside-selected-real-bin",
+      "selectedBinBounds": {
+        "lmin": 1.495e-07,
+        "lmax": 1.505e-07,
+        "wmin": 4.495e-07,
+        "wmax": 4.505e-07
+      },
+      "benchmarkModelName": "__benchmark_selected_nmos"
+    },
+    "sha256": "c97f32c05364087189bd1a2fb441a588d5b9cb455272ff15e6a5b872d502b6f9"
+  },
+  "benchmarkFixtureAdjustments": [
+    "added PMOS complementary-circuit fixture",
+    "stock benchmark DUT geometry adjusted to selected real bin: L=1.5025000000000001e-07, W=4.4975000000000001e-07"
+  ],
+  "md5": "a32f0059f2132a7b07403a2dc9037c0d",
+  "simulator": "hspice",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-28T15:34:09.962594+00:00",
+  "finishedAt": "2026-07-28T15:37:16.755616+00:00",
+  "elapsedSeconds": 186.793031,
+  "peakRssKiB": 290904,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.sp",
+      "bytes": 2112,
+      "sha256": "f295b24505dc6ac65ac8c15af584bb9b88a40d0e7531f7863c76f8e0c56ef652"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.sp",
+      "bytes": 3717,
+      "sha256": "03410f5fbe68788dbca0062e68b7e83c438606c61a1d298a979132524e2c55f3"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.sp",
+      "bytes": 54943,
+      "sha256": "6ea822fa489f3bda3376874b6aea7c9d3fc84ecddcbdf76a2f45fa2e02ab1214"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.sp",
+      "bytes": 4654,
+      "sha256": "9d5c382e4215251b7f18c93905426a63546fd04325466bb719de1430eafc814d"
+    }
+  ]
+}

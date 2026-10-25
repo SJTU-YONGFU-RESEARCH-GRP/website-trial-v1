@@ -1,0 +1,329 @@
+OpenSTA 3.1.0 543361765b Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[7] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.614501 v gen_bits[2].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.614501 v gen_bits[3].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.805067 v gen_bits[3].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.805067 v gen_bits[4].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.995633 v gen_bits[4].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.995633 v gen_bits[5].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    1.186200 v gen_bits[5].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    1.186200 v gen_bits[6].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    1.376766 v gen_bits[6].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    1.376766 v gen_bits[7].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    1.714447 v gen_bits[7].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    1.714447 v SUM[7] (out)
+                                       1.714447   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -1.714447   data arrival time
+---------------------------------------------------------------------------------------
+                                       8.285554   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: COUT (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.614501 v gen_bits[2].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.614501 v gen_bits[3].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.805067 v gen_bits[3].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.805067 v gen_bits[4].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.995633 v gen_bits[4].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.995633 v gen_bits[5].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    1.186200 v gen_bits[5].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    1.186200 v gen_bits[6].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    1.376766 v gen_bits[6].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    1.376766 v gen_bits[7].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079601    0.245877    1.622643 v gen_bits[7].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.079601    0.000000    1.622643 v COUT (out)
+                                       1.622643   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -1.622643   data arrival time
+---------------------------------------------------------------------------------------
+                                       8.377357   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[6] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.614501 v gen_bits[2].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.614501 v gen_bits[3].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.805067 v gen_bits[3].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.805067 v gen_bits[4].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.995633 v gen_bits[4].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.995633 v gen_bits[5].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    1.186200 v gen_bits[5].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    1.186200 v gen_bits[6].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    1.523881 v gen_bits[6].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    1.523881 v SUM[6] (out)
+                                       1.523881   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -1.523881   data arrival time
+---------------------------------------------------------------------------------------
+                                       8.476120   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[5] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.614501 v gen_bits[2].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.614501 v gen_bits[3].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.805067 v gen_bits[3].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.805067 v gen_bits[4].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.995633 v gen_bits[4].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.995633 v gen_bits[5].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    1.333315 v gen_bits[5].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    1.333315 v SUM[5] (out)
+                                       1.333315   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -1.333315   data arrival time
+---------------------------------------------------------------------------------------
+                                       8.666685   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[4] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.614501 v gen_bits[2].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.614501 v gen_bits[3].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.805067 v gen_bits[3].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.805067 v gen_bits[4].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    1.142748 v gen_bits[4].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    1.142748 v SUM[4] (out)
+                                       1.142748   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -1.142748   data arrival time
+---------------------------------------------------------------------------------------
+                                       8.857252   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[3] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190566    0.614501 v gen_bits[2].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.614501 v gen_bits[3].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    0.952182 v gen_bits[3].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    0.952182 v SUM[3] (out)
+                                       0.952182   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -0.952182   data arrival time
+---------------------------------------------------------------------------------------
+                                       9.047818   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[2] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039153    0.190568    0.423935 v gen_bits[1].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039153    0.000000    0.423935 v gen_bits[2].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    0.761616 v gen_bits[2].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    0.761616 v SUM[2] (out)
+                                       0.761616   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -0.761616   data arrival time
+---------------------------------------------------------------------------------------
+                                       9.238383   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.002520    0.039159    0.233367    0.233367 v gen_bits[0].u_fa/COUT (sky130_fd_sc_hd__fa_1)
+               0.039159    0.000000    0.233367 v gen_bits[1].u_fa/CIN (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.337681    0.571048 v gen_bits[1].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    0.571048 v SUM[1] (out)
+                                       0.571048   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -0.571048   data arrival time
+---------------------------------------------------------------------------------------
+                                       9.428952   slack (MET)
+
+
+Startpoint: A[0] (input port clocked by vclk)
+Endpoint: SUM[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004070    0.053133    0.000000    0.000000 v A[0] (in)
+               0.053133    0.000000    0.000000 v gen_bits[0].u_fa/A (sky130_fd_sc_hd__fa_1)
+   0.009569    0.079710    0.359639    0.359639 v gen_bits[0].u_fa/SUM (sky130_fd_sc_hd__fa_1)
+               0.079710    0.000000    0.359639 v SUM[0] (out)
+                                       0.359639   data arrival time
+
+               0.000000   10.000000   10.000000   clock vclk (rise edge)
+                           0.000000   10.000000   clock network delay (ideal)
+                           0.000000   10.000000   clock reconvergence pessimism
+                           0.000000   10.000000   output external delay
+                                      10.000000   data required time
+---------------------------------------------------------------------------------------
+                                      10.000000   data required time
+                                      -0.359639   data arrival time
+---------------------------------------------------------------------------------------
+                                       9.640362   slack (MET)
+
+
+worst slack max 8.285554

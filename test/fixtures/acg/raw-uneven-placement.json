@@ -1,0 +1,139 @@
+{
+  "cell_fingerprint": "e0778632b9a5eee6",
+  "cell_name": "inv4_common",
+  "cell_width_cpp": 5,
+  "grid": {
+    "cell_width": 3,
+    "row_count": 3,
+    "rows": [
+      {
+        "nmos": [
+          {
+            "gate": "A",
+            "left": "VSS",
+            "name": "XMN3",
+            "nfin": 1,
+            "right": "X3",
+            "vt": "SVT",
+            "width": 1000.0
+          },
+          {
+            "gate": "dummy",
+            "left": "dummy",
+            "name": "dummy",
+            "nfin": 0,
+            "right": "dummy",
+            "vt": "SVT",
+            "width": 0.0
+          },
+          {
+            "gate": "A",
+            "left": "VSS",
+            "name": "XMN0",
+            "nfin": 1,
+            "right": "X0",
+            "vt": "SVT",
+            "width": 1000.0
+          }
+        ],
+        "pmos": [
+          {
+            "gate": "A",
+            "left": "VDD",
+            "name": "XMP3",
+            "nfin": 1,
+            "right": "X3",
+            "vt": "SVT",
+            "width": 2000.0
+          },
+          {
+            "gate": "dummy",
+            "left": "dummy",
+            "name": "dummy",
+            "nfin": 0,
+            "right": "dummy",
+            "vt": "SVT",
+            "width": 0.0
+          },
+          {
+            "gate": "A",
+            "left": "VDD",
+            "name": "XMP0",
+            "nfin": 1,
+            "right": "X0",
+            "vt": "SVT",
+            "width": 2000.0
+          }
+        ],
+        "width": 3
+      },
+      {
+        "nmos": [
+          {
+            "gate": "A",
+            "left": "VSS",
+            "name": "XMN2",
+            "nfin": 1,
+            "right": "X2",
+            "vt": "SVT",
+            "width": 1000.0
+          }
+        ],
+        "pmos": [
+          {
+            "gate": "A",
+            "left": "VDD",
+            "name": "XMP2",
+            "nfin": 1,
+            "right": "X2",
+            "vt": "SVT",
+            "width": 2000.0
+          }
+        ],
+        "width": 1
+      },
+      {
+        "nmos": [
+          {
+            "gate": "A",
+            "left": "VSS",
+            "name": "XMN1",
+            "nfin": 1,
+            "right": "X1",
+            "vt": "SVT",
+            "width": 1000.0
+          }
+        ],
+        "pmos": [
+          {
+            "gate": "A",
+            "left": "VDD",
+            "name": "XMP1",
+            "nfin": 1,
+            "right": "X1",
+            "vt": "SVT",
+            "width": 2000.0
+          }
+        ],
+        "width": 1
+      }
+    ]
+  },
+  "num_rows": 3,
+  "origin": {
+    "placement_algorithm": "greedy_min",
+    "placement_seed": 7
+  },
+  "parent_placement_hash": "",
+  "placement_hash": "b02de05bff0d3be6",
+  "schema_version": 1,
+  "tech": "gf180",
+  "track_num": 9,
+  "widen": {
+    "break_cost": 0,
+    "extra_cpp": 0,
+    "gap_positions": [],
+    "policy": "none",
+    "source_diagnostic": ""
+  }
+}

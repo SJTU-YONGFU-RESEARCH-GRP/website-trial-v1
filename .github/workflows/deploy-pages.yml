@@ -1,4 +1,4 @@
-# GitHub Pages: build Vite app at repo root and deploy dist/
+# GitHub Pages: build Vite app (any branch) and deploy (main/master only)
 # Repo: https://github.com/SJTU-YONGFU-RESEARCH-GRP/website-trial-v1
 #
 # Site URL: https://sjtu-yongfu-research-grp.github.io/website-trial-v1/
@@ -9,7 +9,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, dhc]
   workflow_dispatch:
 
 permissions:
@@ -18,7 +18,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -27,15 +27,45 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Checkout spice_model_benchmark (results only)
+        uses: actions/checkout@v4
+        with:
+          repository: SJTU-YONGFU-RESEARCH-GRP/spice_model_benchmark
+          path: external/spice_model_benchmark
+          sparse-checkout: |
+            results
+            reference_results
+            netlists
+            README.md
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout new-spice-translator (docs only)
+        uses: actions/checkout@v4
+        with:
+          repository: SJTU-YONGFU-RESEARCH-GRP/new-spice-translator
+          path: external/new-spice-translator
+          sparse-checkout: |
+            docs/finalbatchrun2
+            output/**/plots/**/*.png
+            output/**/plots/**/*.svg
+            output/**/verification_summary.png
+            output/verification_summary.png
+            README.md
+          sparse-checkout-cone-mode: false
+
       # Optional: add npm cache after package-lock.json is stable in git:
       #   with:
       #     cache: npm
       #     cache-dependency-path: package-lock.json
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install and build
+        env:
+          SPICE_BENCHMARK_SOURCE: external/spice_model_benchmark
+          VITE_BASE_PATH: /website-trial-v1/
+          VITE_READ_ONLY_DEMO: "true"
         run: |
           npm ci
           npm run build
@@ -46,6 +76,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

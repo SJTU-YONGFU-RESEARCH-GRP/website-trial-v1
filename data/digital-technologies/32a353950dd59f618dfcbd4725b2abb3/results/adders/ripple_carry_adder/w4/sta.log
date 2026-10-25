@@ -1,0 +1,194 @@
+OpenSTA 3.1.0 543361765b Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Startpoint: cin (input port clocked by vclk)
+Endpoint: sum[3] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.006018    0.050000    0.000000    0.000000 v cin (in)
+               0.050000    0.000000    0.000000 v _23_/B (OR2X1)
+   0.004623    0.017130    0.057750    0.057750 v _23_/Y (OR2X1)
+               0.017130    0.000000    0.057750 v _25_/B (AOI21X1)
+   0.007954    0.054966    0.050438    0.108187 ^ _25_/Y (AOI21X1)
+               0.054966    0.000000    0.108187 ^ _27_/B (XNOR2X1)
+   0.008390    0.067890    0.073375    0.181562 ^ _27_/Y (XNOR2X1)
+               0.067890    0.000000    0.181562 ^ _28_/B (AOI21X1)
+   0.007301    0.028698    0.046910    0.228472 v _28_/Y (AOI21X1)
+               0.028698    0.000000    0.228472 v _30_/B (XNOR2X1)
+   0.010733    0.079168    0.078297    0.306770 ^ _30_/Y (XNOR2X1)
+               0.079168    0.000000    0.306770 ^ _34_/B (AOI21X1)
+   0.005004    0.022862    0.045678    0.352448 v _34_/Y (AOI21X1)
+               0.022862    0.000000    0.352448 v _37_/B (XNOR2X1)
+   0.005589    0.054575    0.060984    0.413432 ^ _37_/Y (XNOR2X1)
+               0.054575    0.000000    0.413432 ^ _39_/B (XNOR2X1)
+   0.010000    0.075730    0.078571    0.492003 ^ _39_/Y (XNOR2X1)
+               0.075730    0.000000    0.492003 ^ sum[3] (out)
+                                       0.492003   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.492003   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.507996   slack (MET)
+
+
+Startpoint: cin (input port clocked by vclk)
+Endpoint: cout (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.006018    0.050000    0.000000    0.000000 v cin (in)
+               0.050000    0.000000    0.000000 v _23_/B (OR2X1)
+   0.004623    0.017130    0.057750    0.057750 v _23_/Y (OR2X1)
+               0.017130    0.000000    0.057750 v _25_/B (AOI21X1)
+   0.007954    0.054966    0.050438    0.108187 ^ _25_/Y (AOI21X1)
+               0.054966    0.000000    0.108187 ^ _27_/B (XNOR2X1)
+   0.008390    0.067890    0.073375    0.181562 ^ _27_/Y (XNOR2X1)
+               0.067890    0.000000    0.181562 ^ _28_/B (AOI21X1)
+   0.007301    0.028698    0.046910    0.228472 v _28_/Y (AOI21X1)
+               0.028698    0.000000    0.228472 v _30_/B (XNOR2X1)
+   0.010733    0.079168    0.078297    0.306770 ^ _30_/Y (XNOR2X1)
+               0.079168    0.000000    0.306770 ^ _31_/B (AND2X1)
+   0.006120    0.044223    0.049618    0.356387 ^ _31_/Y (AND2X1)
+               0.044223    0.000000    0.356387 ^ _36_/C (NOR3X1)
+   0.002632    0.028436    0.029353    0.385740 v _36_/Y (NOR3X1)
+               0.028436    0.000000    0.385740 v _38_/B (OAI21X1)
+   0.010000    0.077673    0.068747    0.454487 ^ _38_/Y (OAI21X1)
+               0.077673    0.000000    0.454487 ^ cout (out)
+                                       0.454487   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.454487   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.545509   slack (MET)
+
+
+Startpoint: cin (input port clocked by vclk)
+Endpoint: sum[2] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.006018    0.050000    0.000000    0.000000 v cin (in)
+               0.050000    0.000000    0.000000 v _23_/B (OR2X1)
+   0.004623    0.017130    0.057750    0.057750 v _23_/Y (OR2X1)
+               0.017130    0.000000    0.057750 v _25_/B (AOI21X1)
+   0.007954    0.054966    0.050438    0.108187 ^ _25_/Y (AOI21X1)
+               0.054966    0.000000    0.108187 ^ _27_/B (XNOR2X1)
+   0.008390    0.067890    0.073375    0.181562 ^ _27_/Y (XNOR2X1)
+               0.067890    0.000000    0.181562 ^ _28_/B (AOI21X1)
+   0.007301    0.028698    0.046910    0.228472 v _28_/Y (AOI21X1)
+               0.028698    0.000000    0.228472 v _30_/B (XNOR2X1)
+   0.010733    0.079168    0.078297    0.306770 ^ _30_/Y (XNOR2X1)
+               0.079168    0.000000    0.306770 ^ _32_/B (XOR2X1)
+   0.010000    0.078949    0.080910    0.387680 ^ _32_/Y (XOR2X1)
+               0.078949    0.000000    0.387680 ^ sum[2] (out)
+                                       0.387680   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.387680   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.612320   slack (MET)
+
+
+Startpoint: cin (input port clocked by vclk)
+Endpoint: sum[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.006018    0.050000    0.000000    0.000000 v cin (in)
+               0.050000    0.000000    0.000000 v _23_/B (OR2X1)
+   0.004623    0.017130    0.057750    0.057750 v _23_/Y (OR2X1)
+               0.017130    0.000000    0.057750 v _25_/B (AOI21X1)
+   0.007954    0.054966    0.050438    0.108187 ^ _25_/Y (AOI21X1)
+               0.054966    0.000000    0.108187 ^ _27_/B (XNOR2X1)
+   0.008390    0.067890    0.073375    0.181562 ^ _27_/Y (XNOR2X1)
+               0.067890    0.000000    0.181562 ^ _40_/B (XOR2X1)
+   0.010000    0.079128    0.079824    0.261387 ^ _40_/Y (XOR2X1)
+               0.079128    0.000000    0.261387 ^ sum[1] (out)
+                                       0.261387   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.261387   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.738609   slack (MET)
+
+
+Startpoint: cin (input port clocked by vclk)
+Endpoint: sum[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.006018    0.050000    0.000000    0.000000 v cin (in)
+               0.050000    0.000000    0.000000 v _23_/B (OR2X1)
+   0.004623    0.017130    0.057750    0.057750 v _23_/Y (OR2X1)
+               0.017130    0.000000    0.057750 v _24_/B (NAND2X1)
+   0.005589    0.050454    0.025353    0.083103 ^ _24_/Y (NAND2X1)
+               0.050454    0.000000    0.083103 ^ _33_/B (XNOR2X1)
+   0.010000    0.075676    0.078148    0.161251 ^ _33_/Y (XNOR2X1)
+               0.075676    0.000000    0.161251 ^ sum[0] (out)
+                                       0.161251   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.161251   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.838745   slack (MET)
+
+

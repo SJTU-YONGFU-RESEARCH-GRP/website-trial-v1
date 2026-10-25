@@ -1,0 +1,9 @@
+read_verilog /home/duhaochen/website-trial-v1/data/digital-technologies/161c42aef93a0c013cfec30bc361600b/results/adders/ripple_carry_adder/w32/rtl.v
+hierarchy -check -top adder_top
+synth -top adder_top -noabc
+abc -liberty /home/duhaochen/website-trial-v1/data/digital-technologies/161c42aef93a0c013cfec30bc361600b/library/timing.lib
+clean -purge
+check
+tee -o /home/duhaochen/website-trial-v1/data/digital-technologies/161c42aef93a0c013cfec30bc361600b/results/adders/ripple_carry_adder/w32/area.rpt stat -liberty /home/duhaochen/website-trial-v1/data/digital-technologies/161c42aef93a0c013cfec30bc361600b/library/timing.lib
+write_verilog -noattr -noexpr /home/duhaochen/website-trial-v1/data/digital-technologies/161c42aef93a0c013cfec30bc361600b/results/adders/ripple_carry_adder/w32/mapped.v
+write_json /home/duhaochen/website-trial-v1/data/digital-technologies/161c42aef93a0c013cfec30bc361600b/results/adders/ripple_carry_adder/w32/mapped.json
