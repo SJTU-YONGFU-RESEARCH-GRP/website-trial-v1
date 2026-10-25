@@ -41,6 +41,23 @@ describe("DTCO persisted experiments",() => {
    expect(normalized.temperaturesC).toEqual([25,85]);expect(normalized.layoutIds).toEqual(["dp","sa"]);
    for(const invalid of [{temperaturesC:[]},{voltagesV:[Infinity]},{voltagesV:[1.8]},{layoutIds:["unknown"]},{modelVersion:"wrong"},{loadFf:0},{inputSlewPs:1000,periodNs:1},{temperaturesC:Array.from({length:20},(_,i)=>i)}]) expect(()=>normalizeDefinition({...definition,...invalid},options)).toThrow();
  });
+ it("rejects widths below registered bounds before saving and accepts the minimum",async() => {
+   const f=await fixture();
+   const advertised={...options,designBounds:{nmosWidthUm:{min:.95,max:1.3,step:.05},pmosWidthUm:{min:1.4,max:2.6,step:.05}}};
+   mocks.options.mockResolvedValue(advertised);
+   const invalid={...definition,design:{nmosWidthUm:.9,pmosWidthUm:2}};
+   await expect(f.service.save(f.user.id,invalid)).rejects.toMatchObject({code:"DTCO_DESIGN_INVALID"});
+   expect(f.repositories.dtco.list(f.user.id)).toEqual([]);
+   expect(f.repositories.jobs.list({moduleId:"dtco"})).toEqual([]);
+   expect(f.db.sqlite.prepare("SELECT COUNT(*) AS count FROM dtco_attempts").get()).toMatchObject({count:0});
+   const valid={...definition,design:{nmosWidthUm:.95,pmosWidthUm:2}};
+   const saved=await f.service.save(f.user.id,valid);
+   expect(saved.definition.design).toEqual(valid.design);
+   expect(saved.points.every(point=>point.attempts.length===0)).toBe(true);
+   expect(mocks.prepare).not.toHaveBeenCalled();
+   expect(()=>normalizeDefinition(invalid,options)).toThrow(expect.objectContaining({code:"DTCO_DESIGN_INVALID"}));
+   expect(normalizeDefinition(valid,options).design).toEqual(valid.design);
+ });
  it("rejects oversized transient waveforms before saving or reserving any jobs",async() => {
    const f=await fixture();const extreme={...definition,periodNs:1000,inputSlewPs:1};
    expect(()=>normalizeDefinition(extreme,options)).toThrow(expect.objectContaining({code:"DTCO_WAVEFORM_BUDGET"}));

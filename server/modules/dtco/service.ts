@@ -4,6 +4,7 @@ import type { StorageService } from "../../app/storage/storage.ts";
 import { ApiError } from "../../app/api/errors.ts";
 import { DtcoRepository, preparationError } from "./repository.ts";
 import { getDtcoOptions, prepareDtcoJob } from "./environment.ts";
+import { DESIGN_BOUNDS } from "./circuit.ts";
 
 function assertWaveformBudget(definition: Pick<DtcoExperimentDefinition, "periodNs" | "inputSlewPs">): void {
   const estimatedSteps = 4 * definition.periodNs / Math.min(definition.inputSlewPs / 1000 / 20, definition.periodNs / 10000);
@@ -46,7 +47,8 @@ export function normalizeDefinition(value: unknown, options: DtcoOptions): DtcoE
       if (typeof value !== "number" || !Number.isFinite(value) || value < min || value > max || Math.abs(value / 0.05 - Math.round(value / 0.05)) > 1e-8) throw new ApiError(400,"DTCO_DESIGN_INVALID",key + " must lie on the 0.05 um grid within " + min + " to " + max);
       return Number(value.toFixed(8));
     };
-    result.design = { nmosWidthUm: width("nmosWidthUm",0.7,1.3), pmosWidthUm: width("pmosWidthUm",1.4,2.6) };
+    const bounds = options.designBounds ?? DESIGN_BOUNDS;
+    result.design = { nmosWidthUm: width("nmosWidthUm",bounds.nmosWidthUm.min,bounds.nmosWidthUm.max), pmosWidthUm: width("pmosWidthUm",bounds.pmosWidthUm.min,bounds.pmosWidthUm.max) };
   }
   if (body.electricalMode !== undefined) {
     if (body.electricalMode !== "schematic" && body.electricalMode !== "extracted") throw new ApiError(400,"DTCO_MODE_INVALID","electricalMode must be schematic or extracted");

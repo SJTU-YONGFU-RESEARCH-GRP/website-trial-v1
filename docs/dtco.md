@@ -1,12 +1,12 @@
 # DTCO experiments
 
-DTCO is available at `/dtco`. The existing experiment sweep expands temperature × supply voltage × layout plan into independent composite jobs. Each point uses the existing JobRunner, queue, process supervision and result publication. There is no separate DTCO scheduler. Adaptive optimization is a separate development path with the availability gate described below.
+DTCO is available at `/dtco`. The existing experiment sweep expands temperature × supply voltage × layout plan into independent composite jobs. Each point uses the existing JobRunner, queue, process supervision and result publication. There is no separate DTCO scheduler. Adaptive optimization uses the same job machinery with the availability gate described below.
 
 The accepted **schematic sweep** measures transient delay and supply power, plus independently generated layout boundary area. Layout choices affect measured area. Electrical simulation uses the source schematic, without extracted layout RC. An external output load is a testbench condition, not extracted capacitance. The sweep does not establish post-layout closure, maximum frequency, LVS or foundry signoff.
 
 ## Development checkpoint — 2026-10-25
 
-The code includes persistent adaptive optimization API/UI, bounded transistor-width candidates, DC inverter analysis, per-iteration job/result history, objective scoring and best-candidate retention. Physical completion and final-GDS capacitance extraction/validation run as additional JobRunner steps. **`PHYSICAL_PIPELINE_READY=true`** in [environment.ts](../server/modules/dtco/environment.ts); extracted mode, `mr-sa-12t-pex` and optimization are offered when all required configured tools are healthy. Live options confirmed availability in the resource capture below. After the first UI attempt paused on contact-landing validation, the helper's contact-overlap and completed-PMOS diffusion-enclosure repairs passed external replay of that failed GDS through all physical stages and DC/transient analysis, plus three native-fixture regressions; a new real UI run with at least three complete adaptive layout/extraction/PPA iterations is still pending. No measured optimization improvement or production readiness is claimed at this checkpoint.
+The code includes persistent adaptive optimization API/UI, bounded transistor-width candidates, DC inverter analysis, per-iteration job/result history, objective scoring and best-candidate retention. Physical completion and final-GDS capacitance extraction/validation run as additional JobRunner steps. **`PHYSICAL_PIPELINE_READY=true`** in [environment.ts](../server/modules/dtco/environment.ts); extracted mode, `mr-sa-12t-pex` and optimization are offered when all required configured tools are healthy. Live options confirmed availability in the resource capture below. After the first UI attempt paused on contact-landing validation, contact-overlap and completed-PMOS diffusion-enclosure repairs passed external failed-GDS replay through all physical stages and DC/transient analysis, plus three native-fixture regressions. A subsequent UI-origin optimization completed three real evaluations, detailed below. Its power improvement trades against delay. Independent official audits of all three final GDS files and the read-only browser inspection passed as detailed below; fresh sweep/cancellation/retry, full regression and build also passed, with evidence below. Production readiness and foundry signoff are not claimed.
 
 The corrected standalone candidate has official KLayout DRC zero reported items, LVS MATCH and Magic `drc(full)=0` (`/home/duhaochen/dtco-phase4-20261025/ppa-research/official-v3-verification.json`); the earlier `NP.1` violations were corrected. These results apply to that candidate and the recorded decks. Runtime checks require final-GDS roundtrip device topology, body connections, source W/L, finite capacitance and zero Magic full DRC; they do not run the official KLayout decks for every candidate. The supported physical path is only the GF180 MCU A inverter, fixed L 0.28 µm, with device and capacitance extraction, **no extracted wire resistance and no foundry signoff claim**. The 2026-10-24 sweep results below remain historical schematic evidence, not acceptance of this new path.
 
@@ -36,9 +36,55 @@ Choose the GF180 inverter, process/model, temperature, supply, load, slew and pe
 
 Objectives minimize `delayPs`, `averagePowerW`, `areaUm2` or `balanced`. Balanced score is the weighted mean of delay/power/area divided by their baseline values, with nonnegative weights and at least one positive weight. Limits include 1–64 iterations, optional objective target, minimum relative improvement and patience. The measured incumbent drives subsequent bounded coordinate proposals; unsuccessful neighborhoods reduce the step on the same width grid. Worse evaluated candidates remain in history without replacing the best.
 
-Create and save an optimization, start it, then inspect per-iteration parameters, measured results, decisions, best history and linked jobs/artifacts. Stop requests preserve history; resuming requires the recorded iteration and predecessor attempt identities. These controls and persistence are implemented; the pending real acceptance report must establish their end-to-end behavior before claiming the full loop passed.
+Create and save an optimization, start it, then inspect per-iteration parameters, measured results, decisions, best history and linked jobs/artifacts. Stop requests preserve history; resuming requires the recorded iteration and predecessor attempt identities. The three-evaluation sequence below establishes measured feedback and best retention for that run; lifecycle and regression checks have their own recorded evidence and qualifications.
 
-Resource/source snapshot: `/home/duhaochen/dtco-phase4-20261025/resources/inventory-phase4-gate-open.json`; initial source HEAD `af0b225616210daabadad204d6d438d616eb78ed` plus timed working-file hashes. The requirement matrix and final run/result placeholders are in `/home/duhaochen/dtco-phase4-20261025/acceptance-plan.md`. No pending result is counted as a successful round.
+Frozen execution-source inventory: `/home/duhaochen/dtco-phase4-20261025/resources/inventory-final-source.json` (SHA-256 `0a9dd34d2a308e904031cea7f969cbbc372274dc44b041e57d8167a0838253dd`), HEAD `41023433dc74f0b100b146cb76db295ad1965d54` plus timed working-file hashes. It records local source/license paths and versions; installed resources were reused without downloading replacements. The post-run review snapshot `resources/inventory-final-review-v2.json` (SHA-256 `4b29c61ff8dc94612244167141992a75a339b88ddad7f2a239ef7b01f8a68f12`) additionally records the subsequent service bounds fix, DTCO tests and Python/package versions. It preserves the executed-source snapshot rather than replacing it. The requirement matrix and outstanding checks are in `/home/duhaochen/dtco-phase4-20261025/acceptance-plan.md`.
+
+## Real optimization evidence — 2026-10-25
+
+`GET /api/dtco/optimizations/d71b94dd-26d2-4c61-8502-e87f4d8a9552` was captured directly as `resources/optimization-three-rounds.json` (SHA-256 `0a348ef7f098c12e34f475cf1ed290d9e5722a397fff644b9672b83584174afd`). Status is `completed`, stop reason `max_iterations`. Three effective evaluations include the baseline and two feedback-driven proposals, satisfying the user's minimum of three design evaluations; no failed attempt is counted.
+
+Conditions: GF180 inverter, N 1 µm, L 0.28 µm, 25 °C, 3.3 V, 10 fF, 100 ps slew, 10 ns period, `mr-sa-12t-pex`; objective minimizes average power. PMOS range 1.4–2.6 µm, initial 2 µm, step 0.6 µm; NMOS fixed at 1 µm. Maximum iterations 3, patience 3, minimum relative improvement 0.01.
+
+| Round | PMOS µm | Delay ps | Power µW | Area µm² | Decision |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 2.0 | 70.80036 | 16.61902 | 27.745 | Baseline incumbent |
+| 2 | 2.6 | 67.34835 | 17.48638 | 27.745 | Power 5.2191% worse; rejected, baseline retained |
+| 3 | 1.4 | 78.57387 | 15.69571 | 27.745 | Power 5.5557% lower; accepted as best |
+
+Round 2's actual worse power kept round 1 as incumbent; the next recorded proposal reversed the PMOS direction around that incumbent. All three jobs regenerated native layout and validated final-GDS devices/capacitance before transient measurement, with distinct source-netlist, GDS and extracted-netlist hashes. Each reports six capacitors and zero Magic full DRC. Final best iteration is `427784f5-9cb8-48e5-bbdb-09ad8b435207`. Against baseline, **power falls 5.56%, delay rises 10.98%, and boundary area is unchanged**; this is a power/delay tradeoff, not improvement in every metric or proof of global optimality.
+
+| Round | Job ID | Result ID |
+| --- | --- | --- |
+| 1 | `d75b7f6e-8e97-4adc-ab94-3ea70d91f5ec` | `598af507-f980-4894-b415-8c021717f423` |
+| 2 | `f51847e9-026d-4998-a51e-4dc4894f1252` | `ca478a61-73b8-4195-a78b-77f3fe0305a6` |
+| 3 | `0aeca26a-ee51-4238-8891-1c4c16e80f6f` | `77898173-fc85-4003-9f0c-8e8dda4021c3` |
+
+Environment hash: `2a9e1e2b738efabf6b3bff2dc8b07dab2b6ca8b3b24e152d7357c3a41ef6db97`; frozen physical-helper SHA-256: `49f9a0870bf14ec61780fd12947aa6152699cf06b633c3970672ed3dfccd3d43`. The full API capture and `optimization-three-rounds-summary.json` retain per-round input/output/netlist/GDS hashes. Workspaces are `.eda-storage/jobs/<jobId>/`; published evidence is `.eda-storage/results/dtco/<resultId>/`.
+
+Independent checks of this run are retained under `/home/duhaochen/dtco-phase4-20261025`:
+
+| Check | Actual result | Evidence |
+| --- | --- | --- |
+| Decision/input/output audit | 1,184 checks, zero errors; independent waveform/GDS recomputation and measured-result/source/extracted-W/L checks | `final-review/optimization-decision-audit.json` |
+| Official final-GDS verification | All three: zero DRC items, LVS MATCH; original input bytes unchanged | `ppa-research/live-run-d71b94dd-official/summary.json`, `verification.json`, `inputs-and-commands.json` |
+| Read-only browser inspection | 1,081 checks; trajectory, retained worse/best, geometry/electrical effect, reload and 273 artifact downloads verified | `acceptance/final-inspect-optimize-2026-10-25T08-54-34-262Z/acceptance.json` |
+| Fresh schematic sweep | 1,073 checks; experiment `32e4c9b6-1792-4b51-baea-a39e57a71683`, all four points succeeded; name-only revision 2 reused results | `acceptance/final-sweep-2026-10-25T08-56-07-864Z/acceptance.json` |
+| Fresh cancellation/retry | 282 checks; experiment `82a57a6d-67d8-4341-81c7-ab9469cf880f`, cancelled attempt retained without metrics, second attempt succeeded | `acceptance/final-recovery-2026-10-25T08-57-43-143Z/acceptance.json` |
+| Final browser/database matrix | 604 artifacts/34,408,420 bytes verified; SQLite quick check OK, no FK violations or orphan attempts/optimization iterations | `acceptance/final-acceptance-matrix.json`, `database-final-readonly.json` |
+| Full regression | `npm test` exit 0, 288 tests passed/6 skipped, 32 files passed/1 skipped; DTCO frontend 11 passed | `final-review/final-backend-tests{.log,-result.json}`, `frontend-unit-result.json` |
+| Full build | `npm run build` exit 0, 114.3 s, including typechecks and repository validators | `final-review/final-build{.log,-result.json}` |
+| Independent requirement review | Mandatory requirements satisfied within the bounded supported inverter scope; qualifications retained | `final-review/requirements-audit.{md,json}` |
+
+The fresh schematic temperature comparison at 3.3 V measured 25 °C: 63.42872 ps/14.34810 µW versus 85 °C: 67.75365 ps/14.44937 µW, with unchanged testbench/design. Both schematic layouts share these electrical values, while their areas are 7.2576 and 9.6768 µm². This demonstrates temperature influence without asserting schematic layout-dependent electrical performance.
+
+Live worker restart during optimization was not repeated, and the browser cancellation check did not independently prove disappearance of the native process group. SQLite reopen, ownership, concurrency, malformed-input and additional objective/stop-condition coverage principally comes from automated tests. These distinctions are recorded in the independent requirement audit; check counts are not counts of native executions.
+
+The independent official audit used KLayout 0.30.7 and the unmodified installed GF180 default cell FEOL, BEOL, connectivity and off-grid rules, with no waiver. Optional density and antenna checks were not enabled. This is bounded verification evidence, not foundry signoff; runtime still uses the Magic checks described above.
+
+The initial failed UI optimization `488d5eb9-c04c-4298-9a9a-367d971ee962` remains `paused/execution_failed`, job `76407c6d-a9d2-4046-8709-bd2bde9c582f`, without a successful result. Its retained API capture is `resources/optimization-initial-failed.json`; the corrected run uses a new environment. This failure is preserved rather than rewritten as success.
+
+To reproduce, configure the audited tools above, read current options, then create an optimization with the exact conditions/ranges above and a fresh `clientRequestId`; start it and inspect every round's job/result and artifacts. Set `objective.metric="averagePowerW"`, `maxIterations=3`, `patience=3`, `minRelativeImprovement=0.01`, NMOS min/max/initial 1 with step 0.05, and PMOS min 1.4/max 2.6/initial 2/step 0.6. Follow the API commands in the external acceptance plan or create/start through `/dtco`. Routing can vary; a rerun must retain its own measured values and hashes.
 
 The remaining guide covers common job execution, existing sweep controls and retained historical evidence; extracted-only steps are identified explicitly.
 
@@ -54,12 +100,14 @@ The remaining guide covers common job execution, existing sweep controls and ret
 | `modelVersion` | Exact options ID, `gf180-typical-<first 12 model-closure hash characters>` |
 | `temperaturesC` | Nonempty numeric array, −40 through 125 °C |
 | `voltagesV` | Nonempty numeric array, 2.7 through 3.6 V |
-| `layoutIds` | `mr-dp-9t` (MR DP, 9 tracks), `mr-sa-12t` (MR SA, 12 tracks) |
+| `layoutIds` | `mr-dp-9t` (MR DP, 9 tracks), `mr-sa-12t` (MR SA, 12 tracks); extracted `mr-sa-12t-pex` when available |
+| `design` (optional) | `nmosWidthUm` 0.95–1.30, `pmosWidthUm` 1.40–2.60, both on the 0.05 µm grid; omitted means N1/P2, fixed L0.28 µm |
+| `electricalMode` (optional) | `schematic` by default; `extracted` requires the physical layout plan and healthy physical tools |
 | `loadFf` | External load, 0.1 through 1000 fF |
 | `inputSlewPs` | Pulse transition time, 1 through 10000 ps |
 | `periodNs` | Pulse period, 1 through 1000 ns |
 
-Input slew in ns must be **strictly less than one quarter of the period**. The estimated transient budget must also satisfy `4 × periodNs / min(inputSlewPs / 20000, periodNs / 10000) ≤ 1,000,000`; increase slew or shorten the period if it exceeds the limit. Numeric axes are normalized, sorted and deduplicated; layouts are deduplicated. The unique Cartesian product may contain at most 64 points. Defaults are 25/85 °C × 3.0/3.3 V × both layouts, 10 fF load, 100 ps slew and 10 ns period: eight points.
+Input slew in ns must be **strictly less than one quarter of the period**. The estimated transient budget must also satisfy `4 × periodNs / min(inputSlewPs / 20000, periodNs / 10000) ≤ 1,000,000`; increase slew or shorten the period if it exceeds the limit. Numeric axes are normalized, sorted and deduplicated; layouts are deduplicated. The unique Cartesian product may contain at most 64 points. Schematic defaults are 25/85 °C × 3.0/3.3 V × the two schematic layouts, 10 fF load, 100 ps slew and 10 ns period: eight points.
 
 Saving persists the definition and points in SQLite. Saving an edit appends an immutable revision and new revision point IDs; saving an unchanged definition/environment is a no-op. Older definitions and environment identities remain available. Matching canonical computations within the same experiment share their attempt/job/result history across revisions: renaming queues nothing, and adding a temperature queues only new combinations. Deduplication does not span separate experiments.
 
@@ -121,9 +169,9 @@ The transient run covers four periods; analysis uses the settled interval from t
 
 `areaUm2` is the union area of actual selected GDS top-cell boundary polygons on layer 63, datatype 0, in square micrometres. It is not transistor area or extracted capacitance. The GDS must have exactly one top-level cell and a nonempty boundary. Metric keys are `delayPs`, `delayRisePs`, `delayFallPs`, `averagePowerW`, `energyPerCycleJ` and `areaUm2`.
 
-DTCO reuses the generic PPA comparison/Pareto helper. The existing native PPA importer expects OpenROAD/OpenLane/LibreLane physical-flow result provenance; it does not characterize this inverter or convert these schematic measurements into a physical-flow result. DTCO preserves its own result schema and scope.
+DTCO reuses the generic PPA comparison/Pareto helper. The existing native PPA importer expects OpenROAD/OpenLane/LibreLane physical-flow result provenance; it does not characterize this inverter or convert DTCO measurements into a physical-flow result. DTCO preserves its own result schema and scope.
 
-The initial 2026-10-24 Magic extraction research found nonfinite full-capacitance values, missing A/Y ports and floating well/substrate connectivity in the investigated outputs. Device extraction alone did not validate those circuits. The investigated DP 9-track output also extracted P width 2.035 µm against the source 2 µm, while SA 12-track width matched. Those historical outputs did not prove geometry preservation or LVS. The accepted schematic sweep reports source-schematic electrical metrics alongside layout area, with `extraction.status="unavailable"`; the newer physical implementation has the separate, incomplete acceptance status described in the checkpoint above.
+The initial 2026-10-24 Magic extraction research found nonfinite full-capacitance values, missing A/Y ports and floating well/substrate connectivity in the investigated outputs. Device extraction alone did not validate those circuits. The investigated DP 9-track output also extracted P width 2.035 µm against the source 2 µm, while SA 12-track width matched. Those historical outputs did not prove geometry preservation or LVS. The accepted schematic sweep reports source-schematic electrical metrics alongside layout area, with `extraction.status="unavailable"`; the newer validated device/capacitance path has the separate, bounded evidence described in the checkpoint above.
 
 ## API
 
@@ -163,6 +211,7 @@ The default storage root is `.eda-storage`, with database `.eda-storage/eda.sqli
 | Location relative to storage root | Contents |
 | --- | --- |
 | SQLite `dtco_experiments`, `dtco_revisions`, `dtco_points`, `dtco_attempts` | Definitions, revision environment hashes, coordinates, attempt/job links and preparation state |
+| SQLite `dtco_optimizations`, `dtco_optimization_iterations` | Saved objective/ranges/limits, iteration candidates, decisions, incumbent and job/attempt/result links |
 | SQLite `jobs`, `job_steps`, `job_events` | Common execution state, processes and errors |
 | SQLite `dtco_results`, `artifacts` | Normalized results and downloadable output metadata |
 | `jobs/<jobId>/input/` | Frozen source, layout config/rules, complete model include closure, analyzer, resources and measurement request |
@@ -199,7 +248,7 @@ In Admin → Tools, configure the dedicated entries below. The Benchmark `ngspic
 | `entryPoint` | Empty | `scripts/dtco/analyze.py` (or its absolute repository path) |
 | Environment | `DTCO_MODEL_FILE=sm141064.ngspice`; optional `PATH` | Optional `PATH` |
 
-The model entry must be relative to its root; the recursive include tree must exist and be readable. The analyzer entry must resolve to this repository's trusted helper. Save configurations, check paths, probe versions, run minimal self-tests, enable them and recheck DTCO options. All three required tools—`acg-mr`, `dtco-ngspice`, `dtco-analysis`—must have healthy current probes and successful self-tests. Optional `acg-renderer` enables previews. Tool self-tests are dependency/adapter checks, not proof that a saved experiment will route or that a design passes signoff.
+The model entry must be relative to its root; the recursive include tree must exist and be readable. The analyzer entry must resolve to this repository's trusted helper. Save configurations, check paths, probe versions, run minimal self-tests, enable them and recheck DTCO options. Schematic mode requires healthy current probes and successful self-tests for `acg-mr`, `dtco-ngspice` and `dtco-analysis`; extracted mode additionally requires `dtco-physical` and `dtco-magic`, configured above. Optional `acg-renderer` enables previews. Tool self-tests are dependency/adapter checks, not proof that a saved experiment will route or that a design passes signoff.
 
 Direct probes for the helper/native installation are reproducible without launching an experiment:
 
