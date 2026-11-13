@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "simulator": "hspice",
+  "fixtureMode": "fixed-simulator-native",
+  "netlistAstUsed": false,
+  "benchmarkContract": "/home/duhaochen/spice_model_benchmark/netlists/benchmark_contract.json",
+  "benchmarkContractSha256": "8b8fd67ae3dd54834b283ee6d3f132cd79406c04868a9e13f5404c2e0a8b3931",
+  "allowedRuntimeBindings": [
+    "model_file",
+    "primary_model",
+    "nmos_model",
+    "pmos_model"
+  ],
+  "modelFile": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice.lib",
+  "modelNames": {
+    "primary": "__benchmark_selected_nmos",
+    "nmos": "__benchmark_selected_nmos",
+    "pmos": "__fixture_pmos"
+  },
+  "primaryDeviceType": "nmos",
+  "fixtures": {
+    "dc": {
+      "template": "/home/duhaochen/spice_model_benchmark/netlists/hspice/dc_circuit.sp",
+      "submitted": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlists/hspice_dc_native.sp",
+      "templateSha256": "b39e00b7c85bf59ede0343224a58ee7b89492951e43f6a72b96c3d4db0e7ea40",
+      "submittedSha256": "48df312f2e594bf8f9d00897aa945081f706976e3e66f6f904f9341d0ebcd5b0",
+      "archived": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlist/dc.sp"
+    },
+    "transient": {
+      "template": "/home/duhaochen/spice_model_benchmark/netlists/hspice/transient_circuit.sp",
+      "submitted": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlists/hspice_transient_native.sp",
+      "templateSha256": "d721e613d8d09a54f8736974d7adb1bbd65b8fa9d97012323e06b8324d2755f9",
+      "submittedSha256": "2daadc82a57fd1c800f6f3c694b431e2cd35e712878bfd3684cdf36fe019b501",
+      "archived": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlist/transient.sp"
+    },
+    "ac": {
+      "template": "/home/duhaochen/spice_model_benchmark/netlists/hspice/ac_circuit.sp",
+      "submitted": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlists/hspice_ac_native.sp",
+      "templateSha256": "c60a773aad54200c0f1c5bb1765170bec89b33372e5a131af25db6668c85e419",
+      "submittedSha256": "72d5b8a7ab0b9eb357820db50fcafdc9b79cb6ae7c33921d0ac63e97ac0290b1",
+      "archived": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlist/ac.sp"
+    },
+    "noise": {
+      "template": "/home/duhaochen/spice_model_benchmark/netlists/hspice/noise_circuit.sp",
+      "submitted": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlists/hspice_noise_native.sp",
+      "templateSha256": "4e3e606999c00752949c106dc566fcb95486e3fa0952abddf7cc2cb70f5d855e",
+      "submittedSha256": "595fdd0a256e62bc83882fd861ada5216123563a92861610823a321872ccb7d6",
+      "archived": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/09d52d65e2ca8b44ef9981e8e3a48f9a/hspice/netlist/noise.sp"
+    }
+  }
+}

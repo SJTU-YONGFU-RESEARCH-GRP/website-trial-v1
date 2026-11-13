@@ -1,0 +1,78 @@
+{
+  "architecture": "kogge_stone_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "ihpsg13g2",
+  "canonicalTechnology": "130nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 1099.675706,
+  "powerMw": 6.2206851e-06,
+  "areaUm2": 493.4034,
+  "flow": {
+    "schemaVersion": 1,
+    "generatedAtUtc": "2026-08-01T09:17:22.704736+00:00",
+    "technologyUid": "161c42aef93a0c013cfec30bc361600b",
+    "pdk": "IHP-Open-PDK SG13G2",
+    "standardCellLibrary": "sg13g2_stdcell",
+    "corner": "typ_1p20V_25C",
+    "libertySha256": "6f50333c719d8f324c9f8a18197e034ae531de3655002eb9d10c04f281ee0660",
+    "tools": {
+      "yosys": "Yosys 0.64+72 (git sha1 22ef99218, clang++ 20.1.8 -fPIC -O3)",
+      "opensta": "3.1.0",
+      "iverilog": "Icarus Verilog version 12.0 (stable) ()"
+    },
+    "rtlSimulation": {
+      "status": "pass",
+      "vectors": 128,
+      "log": "rtl-simulation.log"
+    },
+    "synthesis": {
+      "status": "pass",
+      "numCells": 44,
+      "numCellsByType": {
+        "sg13g2_a21o_1": 3,
+        "sg13g2_a21oi_1": 1,
+        "sg13g2_a221oi_1": 3,
+        "sg13g2_a22oi_1": 3,
+        "sg13g2_and2_1": 4,
+        "sg13g2_inv_1": 3,
+        "sg13g2_nand2_1": 2,
+        "sg13g2_nor2_1": 4,
+        "sg13g2_o21ai_1": 2,
+        "sg13g2_or2_1": 3,
+        "sg13g2_or3_1": 2,
+        "sg13g2_xnor2_1": 8,
+        "sg13g2_xor2_1": 6
+      },
+      "mappedNetlist": "mapped.v",
+      "mappedJson": "mapped.json",
+      "log": "synthesis.log"
+    },
+    "sta": {
+      "status": "pass",
+      "criticalPathDelayNs": 0.909359,
+      "fmaxEstimateMhz": 1099.675706,
+      "startpoint": "a[0] (input port clocked by vclk)",
+      "endpoint": "sum[6] (output port clocked by vclk)",
+      "arrivalNs": 0.909359,
+      "constraints": {
+        "virtualClockPeriodNs": 100.0,
+        "inputSlewNs": 0.05,
+        "outputLoadPf": 0.01
+      },
+      "log": "sta.log"
+    },
+    "ppa": {
+      "areaUm2": 493.4034,
+      "leakagePowerMw": 6.2206851e-06,
+      "powerMetric": "Liberty static cell leakage sum",
+      "missingLeakageCells": []
+    },
+    "notes": [
+      "Timing is pre-layout combinational OpenSTA using a virtual clock, common input slew, and common output load.",
+      "Area is the mapped standard-cell area from the selected Liberty; routing area is not included.",
+      "powerMw is static Liberty leakage only; dynamic power requires activity/VCD and physical parasitics."
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+// Fixed native Spectre AC benchmark fixture.
+// Benchmark contract: mosfet-fixed-native-v1
+// Compact named sweeps replace the former generated 341-analysis expansion.
+simulator lang=spectre
+global 0
+simulatorOptions options temp=27 tnom=27 gmin=1e-15 reltol=1e-8 \
+    iabstol=1e-12 method=gear2only
+simulator lang=spice
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/35c51eb2c9233d013d733a2942a7daa4/spectre.lib'
+simulator lang=spectre
+
+parameters vg_bias=-0.8
+
+// Four identical DUTs form the four columns of the terminal Y/C matrix.
+m_cg (dg gg sg bg) __benchmark_selected_nmos l=1u w=10u
+vg_g (gg 0) vsource dc=vg_bias mag=1
+vd_g (dg 0) vsource dc=1.0 mag=0
+vs_g (sg 0) vsource dc=0 mag=0
+vb_g (bg 0) vsource dc=0 mag=0
+m_cd (dd gd sd bd) __benchmark_selected_nmos l=1u w=10u
+vg_d (gd 0) vsource dc=vg_bias mag=0
+vd_d (dd 0) vsource dc=1.0 mag=1
+vs_d (sd 0) vsource dc=0 mag=0
+vb_d (bd 0) vsource dc=0 mag=0
+m_cs (ds gs ss bs) __benchmark_selected_nmos l=1u w=10u
+vg_s (gs 0) vsource dc=vg_bias mag=0
+vd_s (ds 0) vsource dc=1.0 mag=0
+vs_s (ss 0) vsource dc=0 mag=1
+vb_s (bs 0) vsource dc=0 mag=0
+m_cb (db gb sb bb) __benchmark_selected_nmos l=1u w=10u
+vg_b (gb 0) vsource dc=vg_bias mag=0
+vd_b (db 0) vsource dc=1.0 mag=0
+vs_b (sb 0) vsource dc=0 mag=0
+vb_b (bb 0) vsource dc=0 mag=1
+
+// Two simultaneous port excitations recover all four Y parameters.
+m_spg (drain_spg gate_spg 0 0) __benchmark_selected_nmos l=1u w=10u
+rg_g (gate_spg gate_in_g) resistor r=50
+rd_g (drain_spg drain_in_g) resistor r=50
+vsp_g (gate_in_g 0) vsource dc=0.8 mag=1
+vsp_d0 (drain_in_g 0) vsource dc=1.0 mag=0
+m_spd (drain_spd gate_spd 0 0) __benchmark_selected_nmos l=1u w=10u
+rg_d (gate_spd gate_in_d) resistor r=50
+rd_d (drain_spd drain_in_d) resistor r=50
+vsp_g0 (gate_in_d 0) vsource dc=0.8 mag=0
+vsp_d (drain_in_d 0) vsource dc=1.0 mag=1
+
+m_nqs (drain_nqs gate_nqs 0 0) __benchmark_selected_nmos l=1u w=10u
+vnqs_g (gate_nqs 0) vsource dc=0.8 mag=1
+vnqs_d (drain_nqs 0) vsource dc=1.0 mag=0
+
+m_q (drain_q gate_q source_q bulk_q) __benchmark_selected_nmos l=1u w=10u
+vqg (gate_q 0) vsource type=pwl wave=[0 0 1n 0 2n 1.0 5n 1.0]
+vqd (drain_q 0) vsource dc=1.0
+vqs (source_q 0) vsource dc=0
+vqb (bulk_q 0) vsource dc=0
+
+cv_bias sweep param=vg_bias start=-0.8 stop=1.2 step=0.05 {
+  cv_ac ac start=1e3 stop=1e6 dec=1
+}
+sp_ac ac start=1e6 stop=1e9 dec=1
+nqs_ac ac start=1e7 stop=1e10 dec=1
+charge_tran tran step=0.01n stop=5n errpreset=conservative method=gear2only

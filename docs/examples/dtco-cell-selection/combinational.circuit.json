@@ -1,0 +1,73 @@
+{
+  "name": "selection_comb",
+  "inputs": [
+    "a",
+    "b",
+    "c"
+  ],
+  "outputs": [
+    "y"
+  ],
+  "clock": null,
+  "instances": [
+    {
+      "id": "u_nand",
+      "family": "NAND",
+      "inputs": [
+        "a",
+        "b"
+      ],
+      "output": "n1",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    },
+    {
+      "id": "u_nor",
+      "family": "NOR",
+      "inputs": [
+        "n1",
+        "c"
+      ],
+      "output": "n2",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    },
+    {
+      "id": "u_inv",
+      "family": "INV",
+      "inputs": [
+        "n2"
+      ],
+      "output": "n3",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    },
+    {
+      "id": "u_and",
+      "family": "AND",
+      "inputs": [
+        "n3",
+        "a"
+      ],
+      "output": "y",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    }
+  ]
+}

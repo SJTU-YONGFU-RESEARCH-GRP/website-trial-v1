@@ -1,0 +1,169 @@
+* Translated benchmark circuit
+* semantic-sha256: 1775cfeb1bf3e0a1e85e628065e4f0024ef970cfc26209ccd44d453f092cadb2
+simulator lang=spectre
+global 0
+benchmarkNumerics options max_approach_minstep=10000 max_minstep_nonconv=10000
+simulatorOptions options temp=27
+simulatorOptions options temp=27 tnom=27
+simulatorOptions options gmin=1e-12
+simulatorOptions options reltol=1e-3
+simulatorOptions options iabstol=1e-12
+simulatorOptions options method=gear2only
+simulatorOptions options TEMP=27
+simulatorOptions options TNOM=27
+simulator lang=spice
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/6fe3e0e4c6b7d4ba743fb9a89cb18dbe/spectre.lib'
+simulator lang=spectre
+vdd_noise (vdd_noise 0) vsource dc=1.2
+vin_noise (in_noise 0) vsource dc=0.6 mag=1
+rb_noise (in_noise gate_noise) resistor r=1k
+cb_noise (in_noise gate_noise) capacitor c=1u
+rs_noise (source_noise 0) resistor r=100
+rd_noise (vdd_noise drain_noise) resistor r=10k
+vgs_noise (gate_noise source_noise) vsource dc=0
+vds_noise (drain_noise source_noise) vsource dc=0
+vbulk_noise (bulk_noise 0) vsource dc=0
+m_noise (drain_noise gate_noise source_noise bulk_noise) __benchmark_selected_nmos l=9.0250000000000004e-07 w=9.9975000000000004e-06
+vin_f (flicker_in 0) vsource dc=0 mag=1
+rin_f (flicker_in flicker_gate) resistor r=1k
+vbias_f (flicker_vdd 0) vsource dc=1.2
+vgs_flicker (flicker_gate_bias 0) vsource dc=0.6
+m_flicker (flicker_drain flicker_gate flicker_source flicker_bulk) __benchmark_selected_nmos l=9.0250000000000004e-07 w=9.9975000000000004e-06
+vgs_inp_f (flicker_gate flicker_gate_bias) vsource dc=0
+rout_f (flicker_drain flicker_vdd) resistor r=10k
+vbulk_f (flicker_bulk 0) vsource dc=0
+vsrc_f (flicker_source 0) vsource dc=0
+vdd_shot (shot_vdd 0) vsource dc=1.2 mag=1
+vgs_shot (shot_gate 0) vsource dc=0.9
+rload_shot (shot_vdd shot_drain) resistor r=10k
+m_shot (shot_drain shot_gate shot_source shot_bulk) __benchmark_selected_nmos l=9.0250000000000004e-07 w=9.9975000000000004e-06
+vbulk_shot (shot_bulk 0) vsource dc=0
+vsrc_shot (shot_source 0) vsource dc=0
+a0_1 sweep param=dc dev=vgs_noise values=[0.3] {
+  a0_0 sweep param=dc dev=vds_noise values=[0.3] {
+  x0 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+a1_1 sweep param=dc dev=vgs_noise values=[0.3] {
+  a1_0 sweep param=dc dev=vds_noise values=[0.6] {
+  x1 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+a2_1 sweep param=dc dev=vgs_noise values=[0.3] {
+  a2_0 sweep param=dc dev=vds_noise values=[0.9] {
+  x2 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+a3_1 sweep param=dc dev=vgs_noise values=[0.3] {
+  a3_0 sweep param=dc dev=vds_noise values=[1.2] {
+  x3 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+a4_1 sweep param=dc dev=vgs_noise values=[0.6] {
+  a4_0 sweep param=dc dev=vds_noise values=[0.3] {
+  x4 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+a5_1 sweep param=dc dev=vgs_noise values=[0.6] {
+  a5_0 sweep param=dc dev=vds_noise values=[0.6] {
+  x5 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+a6_3 sweep param=dc dev=vgs_noise values=[0.6] {
+  a6_2 sweep param=dc dev=vds_noise values=[0.6] {
+  a6_1 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a6_0 sweep param=dc dev=vbias_f values=[1.2] {
+  x6 (flicker_drain 0) noise start=0.1 stop=1000000 iprobe=vin_f dec=20
+}
+}
+}
+}
+a7_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a7_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a7_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a7_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a7_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x7 (shot_drain 0) noise start=1 stop=1000000000 iprobe=vdd_shot dec=20
+}
+}
+}
+}
+}
+t8 sweep param=temp values=[-40] {
+  a8_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a8_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a8_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a8_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a8_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x8 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+}
+}
+}
+}
+t9 sweep param=temp values=[0] {
+  a9_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a9_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a9_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a9_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a9_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x9 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+}
+}
+}
+}
+t10 sweep param=temp values=[27] {
+  a10_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a10_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a10_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a10_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a10_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x10 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+}
+}
+}
+}
+t11 sweep param=temp values=[50] {
+  a11_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a11_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a11_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a11_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a11_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x11 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+}
+}
+}
+}
+t12 sweep param=temp values=[100] {
+  a12_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a12_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a12_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a12_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a12_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x12 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+}
+}
+}
+}
+t13 sweep param=temp values=[150] {
+  a13_4 sweep param=dc dev=vgs_noise values=[0.6] {
+  a13_3 sweep param=dc dev=vds_noise values=[0.6] {
+  a13_2 sweep param=dc dev=vgs_flicker values=[0.6] {
+  a13_1 sweep param=dc dev=vbias_f values=[1.2] {
+  a13_0 sweep param=dc dev=vgs_shot values=[0.9] {
+  x13 (drain_noise 0) noise start=1 stop=1000000000 iprobe=vin_noise dec=20
+}
+}
+}
+}
+}
+}

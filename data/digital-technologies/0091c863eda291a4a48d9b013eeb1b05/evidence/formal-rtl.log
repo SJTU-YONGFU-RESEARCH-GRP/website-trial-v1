@@ -1,0 +1,1079 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.64+72 (git sha1 22ef99218, clang++ 20.1.8 -fPIC -O3)
+
+-- Executing script file `formal.ys' --
+
+1. Executing Verilog-2005 frontend: ../rtl/cells_functional.v
+Parsing formal Verilog input from `../rtl/cells_functional.v' to AST representation.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__fa_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__fah_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__fahcin_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__fahcon_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__ha_1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: ../rtl/adder_primitives.v
+Parsing formal Verilog input from `../rtl/adder_primitives.v' to AST representation.
+Generating RTLIL representation for module `\adder_and2'.
+Generating RTLIL representation for module `\adder_xor2'.
+Generating RTLIL representation for module `\adder_or2'.
+Generating RTLIL representation for module `\adder_mux2'.
+Generating RTLIL representation for module `\adder_prefix_node'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: ../rtl/adder8_ripple.v
+Parsing formal Verilog input from `../rtl/adder8_ripple.v' to AST representation.
+Generating RTLIL representation for module `\adder8_ripple'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ../rtl/adder8_kogge_stone.v
+Parsing formal Verilog input from `../rtl/adder8_kogge_stone.v' to AST representation.
+Generating RTLIL representation for module `\adder8_kogge_stone'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: ../rtl/adder8_carry_select.v
+Parsing formal Verilog input from `../rtl/adder8_carry_select.v' to AST representation.
+Generating RTLIL representation for module `\adder8_carry_select'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: ../rtl/adder8_carry_skip.v
+Parsing formal Verilog input from `../rtl/adder8_carry_skip.v' to AST representation.
+Generating RTLIL representation for module `\adder8_carry_skip'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: ../rtl/adder8_alternating_polarity.v
+Parsing formal Verilog input from `../rtl/adder8_alternating_polarity.v' to AST representation.
+Generating RTLIL representation for module `\adder8_alternating_polarity'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: ../rtl/formal_all.v
+Parsing formal Verilog input from `../rtl/formal_all.v' to AST representation.
+Generating RTLIL representation for module `\formal_all'.
+Successfully finished Verilog frontend.
+
+9. Executing PREP pass.
+
+9.1. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1.1. Analyzing design hierarchy..
+Top module:  \formal_all
+Used module:     \adder8_alternating_polarity
+Used module:         \sky130_fd_sc_hd__fahcin_1
+Used module:         \sky130_fd_sc_hd__fahcon_1
+Used module:     \adder8_carry_skip
+Used module:         \adder_xor2
+Used module:             \sky130_fd_sc_hd__ha_1
+Used module:         \adder_mux2
+Used module:             \adder_and2
+Used module:         \sky130_fd_sc_hd__fah_1
+Used module:     \adder8_carry_select
+Used module:     \adder8_kogge_stone
+Used module:         \adder_or2
+Used module:             \sky130_fd_sc_hd__fa_1
+Used module:         \adder_prefix_node
+Used module:     \adder8_ripple
+
+9.1.2. Analyzing design hierarchy..
+Top module:  \formal_all
+Used module:     \adder8_alternating_polarity
+Used module:         \sky130_fd_sc_hd__fahcin_1
+Used module:         \sky130_fd_sc_hd__fahcon_1
+Used module:     \adder8_carry_skip
+Used module:         \adder_xor2
+Used module:             \sky130_fd_sc_hd__ha_1
+Used module:         \adder_mux2
+Used module:             \adder_and2
+Used module:         \sky130_fd_sc_hd__fah_1
+Used module:     \adder8_carry_select
+Used module:     \adder8_kogge_stone
+Used module:         \adder_or2
+Used module:             \sky130_fd_sc_hd__fa_1
+Used module:         \adder_prefix_node
+Used module:     \adder8_ripple
+Removed 0 unused modules.
+
+9.2. Executing PROC pass (convert processes to netlists).
+
+9.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+9.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+9.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+9.2.4. Executing PROC_INIT pass (extract init attributes).
+
+9.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+9.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+9.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+9.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+9.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+9.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+9.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+9.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal_all.
+Optimizing module adder8_alternating_polarity.
+Optimizing module adder8_carry_skip.
+Optimizing module adder8_carry_select.
+Optimizing module adder8_kogge_stone.
+Optimizing module adder8_ripple.
+Optimizing module adder_prefix_node.
+Optimizing module adder_mux2.
+Optimizing module adder_or2.
+Optimizing module adder_xor2.
+Optimizing module adder_and2.
+Optimizing module sky130_fd_sc_hd__ha_1.
+Optimizing module sky130_fd_sc_hd__fahcon_1.
+Optimizing module sky130_fd_sc_hd__fahcin_1.
+Optimizing module sky130_fd_sc_hd__fah_1.
+Optimizing module sky130_fd_sc_hd__fa_1.
+
+9.3. Executing FUTURE pass.
+
+9.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal_all.
+Optimizing module adder8_alternating_polarity.
+Optimizing module adder8_carry_skip.
+Optimizing module adder8_carry_select.
+Optimizing module adder8_kogge_stone.
+Optimizing module adder8_ripple.
+Optimizing module adder_prefix_node.
+Optimizing module adder_mux2.
+Optimizing module adder_or2.
+Optimizing module adder_xor2.
+Optimizing module adder_and2.
+Optimizing module sky130_fd_sc_hd__ha_1.
+Optimizing module sky130_fd_sc_hd__fahcon_1.
+Optimizing module sky130_fd_sc_hd__fahcin_1.
+Optimizing module sky130_fd_sc_hd__fah_1.
+Optimizing module sky130_fd_sc_hd__fa_1.
+
+9.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal_all..
+Finding unused cells or wires in module \adder8_alternating_polarity..
+Finding unused cells or wires in module \adder8_carry_skip..
+Finding unused cells or wires in module \adder8_carry_select..
+Finding unused cells or wires in module \adder8_kogge_stone..
+Finding unused cells or wires in module \adder8_ripple..
+Finding unused cells or wires in module \adder_prefix_node..
+Finding unused cells or wires in module \adder_mux2..
+Finding unused cells or wires in module \adder_or2..
+Finding unused cells or wires in module \adder_xor2..
+Finding unused cells or wires in module \adder_and2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__ha_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcon_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcin_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fah_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fa_1..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~6 debug messages>
+
+9.6. Executing CHECK pass (checking for obvious problems).
+Checking module formal_all...
+Checking module adder8_alternating_polarity...
+Checking module adder8_carry_skip...
+Checking module adder8_carry_select...
+Checking module adder8_kogge_stone...
+Checking module adder8_ripple...
+Checking module adder_prefix_node...
+Checking module adder_mux2...
+Checking module adder_or2...
+Checking module adder_xor2...
+Checking module adder_and2...
+Checking module sky130_fd_sc_hd__ha_1...
+Checking module sky130_fd_sc_hd__fahcon_1...
+Checking module sky130_fd_sc_hd__fahcin_1...
+Checking module sky130_fd_sc_hd__fah_1...
+Checking module sky130_fd_sc_hd__fa_1...
+Found and reported 0 problems.
+
+9.7. Executing OPT pass (performing simple optimizations).
+
+9.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal_all.
+Optimizing module adder8_alternating_polarity.
+Optimizing module adder8_carry_skip.
+Optimizing module adder8_carry_select.
+Optimizing module adder8_kogge_stone.
+Optimizing module adder8_ripple.
+Optimizing module adder_prefix_node.
+Optimizing module adder_mux2.
+Optimizing module adder_or2.
+Optimizing module adder_xor2.
+Optimizing module adder_and2.
+Optimizing module sky130_fd_sc_hd__ha_1.
+Optimizing module sky130_fd_sc_hd__fahcon_1.
+Optimizing module sky130_fd_sc_hd__fahcin_1.
+Optimizing module sky130_fd_sc_hd__fah_1.
+Optimizing module sky130_fd_sc_hd__fa_1.
+
+9.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal_all'.
+Computing hashes of 16 cells of `\formal_all'.
+Finding duplicate cells in `\formal_all'.
+Finding identical cells in module `\adder8_alternating_polarity'.
+Computing hashes of 8 cells of `\adder8_alternating_polarity'.
+Finding duplicate cells in `\adder8_alternating_polarity'.
+Finding identical cells in module `\adder8_carry_skip'.
+Computing hashes of 24 cells of `\adder8_carry_skip'.
+Finding duplicate cells in `\adder8_carry_skip'.
+Finding identical cells in module `\adder8_carry_select'.
+Computing hashes of 17 cells of `\adder8_carry_select'.
+Finding duplicate cells in `\adder8_carry_select'.
+Finding identical cells in module `\adder8_kogge_stone'.
+Computing hashes of 49 cells of `\adder8_kogge_stone'.
+Finding duplicate cells in `\adder8_kogge_stone'.
+Finding identical cells in module `\adder8_ripple'.
+Computing hashes of 8 cells of `\adder8_ripple'.
+Finding duplicate cells in `\adder8_ripple'.
+Finding identical cells in module `\adder_prefix_node'.
+Computing hashes of 3 cells of `\adder_prefix_node'.
+Finding duplicate cells in `\adder_prefix_node'.
+Finding identical cells in module `\adder_mux2'.
+Computing hashes of 3 cells of `\adder_mux2'.
+Finding duplicate cells in `\adder_mux2'.
+Finding identical cells in module `\adder_or2'.
+Computing hashes of 1 cells of `\adder_or2'.
+Finding duplicate cells in `\adder_or2'.
+Finding identical cells in module `\adder_xor2'.
+Computing hashes of 1 cells of `\adder_xor2'.
+Finding duplicate cells in `\adder_xor2'.
+Finding identical cells in module `\adder_and2'.
+Computing hashes of 1 cells of `\adder_and2'.
+Finding duplicate cells in `\adder_and2'.
+Finding identical cells in module `\sky130_fd_sc_hd__ha_1'.
+Computing hashes of 2 cells of `\sky130_fd_sc_hd__ha_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__ha_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcon_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcon_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcon_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcin_1'.
+Computing hashes of 10 cells of `\sky130_fd_sc_hd__fahcin_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcin_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcin_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcin_1'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\sky130_fd_sc_hd__fah_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fah_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fah_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fa_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fa_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fa_1'.
+Removed a total of 2 cells.
+
+9.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \formal_all..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_alternating_polarity..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_carry_skip..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_carry_select..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_kogge_stone..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_ripple..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_prefix_node..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_mux2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_or2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_xor2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_and2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__ha_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fahcon_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fahcin_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fah_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fa_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+9.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \formal_all.
+  Optimizing cells in module \adder8_alternating_polarity.
+  Optimizing cells in module \adder8_carry_skip.
+  Optimizing cells in module \adder8_carry_select.
+  Optimizing cells in module \adder8_kogge_stone.
+  Optimizing cells in module \adder8_ripple.
+  Optimizing cells in module \adder_prefix_node.
+  Optimizing cells in module \adder_mux2.
+  Optimizing cells in module \adder_or2.
+  Optimizing cells in module \adder_xor2.
+  Optimizing cells in module \adder_and2.
+  Optimizing cells in module \sky130_fd_sc_hd__ha_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fahcon_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fahcin_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fah_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fa_1.
+Performed a total of 0 changes.
+
+9.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal_all'.
+Computing hashes of 16 cells of `\formal_all'.
+Finding duplicate cells in `\formal_all'.
+Finding identical cells in module `\adder8_alternating_polarity'.
+Computing hashes of 8 cells of `\adder8_alternating_polarity'.
+Finding duplicate cells in `\adder8_alternating_polarity'.
+Finding identical cells in module `\adder8_carry_skip'.
+Computing hashes of 24 cells of `\adder8_carry_skip'.
+Finding duplicate cells in `\adder8_carry_skip'.
+Finding identical cells in module `\adder8_carry_select'.
+Computing hashes of 17 cells of `\adder8_carry_select'.
+Finding duplicate cells in `\adder8_carry_select'.
+Finding identical cells in module `\adder8_kogge_stone'.
+Computing hashes of 49 cells of `\adder8_kogge_stone'.
+Finding duplicate cells in `\adder8_kogge_stone'.
+Finding identical cells in module `\adder8_ripple'.
+Computing hashes of 8 cells of `\adder8_ripple'.
+Finding duplicate cells in `\adder8_ripple'.
+Finding identical cells in module `\adder_prefix_node'.
+Computing hashes of 3 cells of `\adder_prefix_node'.
+Finding duplicate cells in `\adder_prefix_node'.
+Finding identical cells in module `\adder_mux2'.
+Computing hashes of 3 cells of `\adder_mux2'.
+Finding duplicate cells in `\adder_mux2'.
+Finding identical cells in module `\adder_or2'.
+Computing hashes of 1 cells of `\adder_or2'.
+Finding duplicate cells in `\adder_or2'.
+Finding identical cells in module `\adder_xor2'.
+Computing hashes of 1 cells of `\adder_xor2'.
+Finding duplicate cells in `\adder_xor2'.
+Finding identical cells in module `\adder_and2'.
+Computing hashes of 1 cells of `\adder_and2'.
+Finding duplicate cells in `\adder_and2'.
+Finding identical cells in module `\sky130_fd_sc_hd__ha_1'.
+Computing hashes of 2 cells of `\sky130_fd_sc_hd__ha_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__ha_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcon_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcon_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcon_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcin_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcin_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcin_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fah_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fah_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fah_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fa_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fa_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fa_1'.
+Removed a total of 0 cells.
+
+9.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal_all..
+Finding unused cells or wires in module \adder8_alternating_polarity..
+Finding unused cells or wires in module \adder8_carry_skip..
+Finding unused cells or wires in module \adder8_carry_select..
+Finding unused cells or wires in module \adder8_kogge_stone..
+Finding unused cells or wires in module \adder8_ripple..
+Finding unused cells or wires in module \adder_prefix_node..
+Finding unused cells or wires in module \adder_mux2..
+Finding unused cells or wires in module \adder_or2..
+Finding unused cells or wires in module \adder_xor2..
+Finding unused cells or wires in module \adder_and2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__ha_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcon_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcin_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fah_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fa_1..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+9.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal_all.
+Optimizing module adder8_alternating_polarity.
+Optimizing module adder8_carry_skip.
+Optimizing module adder8_carry_select.
+Optimizing module adder8_kogge_stone.
+Optimizing module adder8_ripple.
+Optimizing module adder_prefix_node.
+Optimizing module adder_mux2.
+Optimizing module adder_or2.
+Optimizing module adder_xor2.
+Optimizing module adder_and2.
+Optimizing module sky130_fd_sc_hd__ha_1.
+Optimizing module sky130_fd_sc_hd__fahcon_1.
+Optimizing module sky130_fd_sc_hd__fahcin_1.
+Optimizing module sky130_fd_sc_hd__fah_1.
+Optimizing module sky130_fd_sc_hd__fa_1.
+
+9.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \formal_all..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_alternating_polarity..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_carry_skip..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_carry_select..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_kogge_stone..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder8_ripple..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_prefix_node..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_mux2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_or2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_xor2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \adder_and2..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__ha_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fahcon_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fahcin_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fah_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sky130_fd_sc_hd__fa_1..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+9.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \formal_all.
+  Optimizing cells in module \adder8_alternating_polarity.
+  Optimizing cells in module \adder8_carry_skip.
+  Optimizing cells in module \adder8_carry_select.
+  Optimizing cells in module \adder8_kogge_stone.
+  Optimizing cells in module \adder8_ripple.
+  Optimizing cells in module \adder_prefix_node.
+  Optimizing cells in module \adder_mux2.
+  Optimizing cells in module \adder_or2.
+  Optimizing cells in module \adder_xor2.
+  Optimizing cells in module \adder_and2.
+  Optimizing cells in module \sky130_fd_sc_hd__ha_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fahcon_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fahcin_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fah_1.
+  Optimizing cells in module \sky130_fd_sc_hd__fa_1.
+Performed a total of 0 changes.
+
+9.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal_all'.
+Computing hashes of 16 cells of `\formal_all'.
+Finding duplicate cells in `\formal_all'.
+Finding identical cells in module `\adder8_alternating_polarity'.
+Computing hashes of 8 cells of `\adder8_alternating_polarity'.
+Finding duplicate cells in `\adder8_alternating_polarity'.
+Finding identical cells in module `\adder8_carry_skip'.
+Computing hashes of 24 cells of `\adder8_carry_skip'.
+Finding duplicate cells in `\adder8_carry_skip'.
+Finding identical cells in module `\adder8_carry_select'.
+Computing hashes of 17 cells of `\adder8_carry_select'.
+Finding duplicate cells in `\adder8_carry_select'.
+Finding identical cells in module `\adder8_kogge_stone'.
+Computing hashes of 49 cells of `\adder8_kogge_stone'.
+Finding duplicate cells in `\adder8_kogge_stone'.
+Finding identical cells in module `\adder8_ripple'.
+Computing hashes of 8 cells of `\adder8_ripple'.
+Finding duplicate cells in `\adder8_ripple'.
+Finding identical cells in module `\adder_prefix_node'.
+Computing hashes of 3 cells of `\adder_prefix_node'.
+Finding duplicate cells in `\adder_prefix_node'.
+Finding identical cells in module `\adder_mux2'.
+Computing hashes of 3 cells of `\adder_mux2'.
+Finding duplicate cells in `\adder_mux2'.
+Finding identical cells in module `\adder_or2'.
+Computing hashes of 1 cells of `\adder_or2'.
+Finding duplicate cells in `\adder_or2'.
+Finding identical cells in module `\adder_xor2'.
+Computing hashes of 1 cells of `\adder_xor2'.
+Finding duplicate cells in `\adder_xor2'.
+Finding identical cells in module `\adder_and2'.
+Computing hashes of 1 cells of `\adder_and2'.
+Finding duplicate cells in `\adder_and2'.
+Finding identical cells in module `\sky130_fd_sc_hd__ha_1'.
+Computing hashes of 2 cells of `\sky130_fd_sc_hd__ha_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__ha_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcon_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcon_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcon_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcin_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcin_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcin_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fah_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fah_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fah_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fa_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fa_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fa_1'.
+Removed a total of 0 cells.
+
+9.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal_all..
+Finding unused cells or wires in module \adder8_alternating_polarity..
+Finding unused cells or wires in module \adder8_carry_skip..
+Finding unused cells or wires in module \adder8_carry_select..
+Finding unused cells or wires in module \adder8_kogge_stone..
+Finding unused cells or wires in module \adder8_ripple..
+Finding unused cells or wires in module \adder_prefix_node..
+Finding unused cells or wires in module \adder_mux2..
+Finding unused cells or wires in module \adder_or2..
+Finding unused cells or wires in module \adder_xor2..
+Finding unused cells or wires in module \adder_and2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__ha_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcon_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcin_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fah_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fa_1..
+
+9.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal_all.
+Optimizing module adder8_alternating_polarity.
+Optimizing module adder8_carry_skip.
+Optimizing module adder8_carry_select.
+Optimizing module adder8_kogge_stone.
+Optimizing module adder8_ripple.
+Optimizing module adder_prefix_node.
+Optimizing module adder_mux2.
+Optimizing module adder_or2.
+Optimizing module adder_xor2.
+Optimizing module adder_and2.
+Optimizing module sky130_fd_sc_hd__ha_1.
+Optimizing module sky130_fd_sc_hd__fahcon_1.
+Optimizing module sky130_fd_sc_hd__fahcin_1.
+Optimizing module sky130_fd_sc_hd__fah_1.
+Optimizing module sky130_fd_sc_hd__fa_1.
+
+9.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+9.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 9) from port A of cell formal_all.$add$../rtl/formal_all.v:8$35 ($add).
+Removed top 1 bits (of 9) from port B of cell formal_all.$add$../rtl/formal_all.v:8$35 ($add).
+
+9.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal_all..
+Finding unused cells or wires in module \adder8_alternating_polarity..
+Finding unused cells or wires in module \adder8_carry_skip..
+Finding unused cells or wires in module \adder8_carry_select..
+Finding unused cells or wires in module \adder8_kogge_stone..
+Finding unused cells or wires in module \adder8_ripple..
+Finding unused cells or wires in module \adder_prefix_node..
+Finding unused cells or wires in module \adder_mux2..
+Finding unused cells or wires in module \adder_or2..
+Finding unused cells or wires in module \adder_xor2..
+Finding unused cells or wires in module \adder_and2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__ha_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcon_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcin_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fah_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fa_1..
+
+9.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+9.11. Executing OPT pass (performing simple optimizations).
+
+9.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module formal_all.
+Optimizing module adder8_alternating_polarity.
+Optimizing module adder8_carry_skip.
+Optimizing module adder8_carry_select.
+Optimizing module adder8_kogge_stone.
+Optimizing module adder8_ripple.
+Optimizing module adder_prefix_node.
+Optimizing module adder_mux2.
+Optimizing module adder_or2.
+Optimizing module adder_xor2.
+Optimizing module adder_and2.
+Optimizing module sky130_fd_sc_hd__ha_1.
+Optimizing module sky130_fd_sc_hd__fahcon_1.
+Optimizing module sky130_fd_sc_hd__fahcin_1.
+Optimizing module sky130_fd_sc_hd__fah_1.
+Optimizing module sky130_fd_sc_hd__fa_1.
+
+9.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\formal_all'.
+Computing hashes of 16 cells of `\formal_all'.
+Finding duplicate cells in `\formal_all'.
+Finding identical cells in module `\adder8_alternating_polarity'.
+Computing hashes of 8 cells of `\adder8_alternating_polarity'.
+Finding duplicate cells in `\adder8_alternating_polarity'.
+Finding identical cells in module `\adder8_carry_skip'.
+Computing hashes of 24 cells of `\adder8_carry_skip'.
+Finding duplicate cells in `\adder8_carry_skip'.
+Finding identical cells in module `\adder8_carry_select'.
+Computing hashes of 17 cells of `\adder8_carry_select'.
+Finding duplicate cells in `\adder8_carry_select'.
+Finding identical cells in module `\adder8_kogge_stone'.
+Computing hashes of 49 cells of `\adder8_kogge_stone'.
+Finding duplicate cells in `\adder8_kogge_stone'.
+Finding identical cells in module `\adder8_ripple'.
+Computing hashes of 8 cells of `\adder8_ripple'.
+Finding duplicate cells in `\adder8_ripple'.
+Finding identical cells in module `\adder_prefix_node'.
+Computing hashes of 3 cells of `\adder_prefix_node'.
+Finding duplicate cells in `\adder_prefix_node'.
+Finding identical cells in module `\adder_mux2'.
+Computing hashes of 3 cells of `\adder_mux2'.
+Finding duplicate cells in `\adder_mux2'.
+Finding identical cells in module `\adder_or2'.
+Computing hashes of 1 cells of `\adder_or2'.
+Finding duplicate cells in `\adder_or2'.
+Finding identical cells in module `\adder_xor2'.
+Computing hashes of 1 cells of `\adder_xor2'.
+Finding duplicate cells in `\adder_xor2'.
+Finding identical cells in module `\adder_and2'.
+Computing hashes of 1 cells of `\adder_and2'.
+Finding duplicate cells in `\adder_and2'.
+Finding identical cells in module `\sky130_fd_sc_hd__ha_1'.
+Computing hashes of 2 cells of `\sky130_fd_sc_hd__ha_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__ha_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcon_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcon_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcon_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fahcin_1'.
+Computing hashes of 8 cells of `\sky130_fd_sc_hd__fahcin_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fahcin_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fah_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fah_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fah_1'.
+Finding identical cells in module `\sky130_fd_sc_hd__fa_1'.
+Computing hashes of 7 cells of `\sky130_fd_sc_hd__fa_1'.
+Finding duplicate cells in `\sky130_fd_sc_hd__fa_1'.
+Removed a total of 0 cells.
+
+9.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal_all..
+Finding unused cells or wires in module \adder8_alternating_polarity..
+Finding unused cells or wires in module \adder8_carry_skip..
+Finding unused cells or wires in module \adder8_carry_select..
+Finding unused cells or wires in module \adder8_kogge_stone..
+Finding unused cells or wires in module \adder8_ripple..
+Finding unused cells or wires in module \adder_prefix_node..
+Finding unused cells or wires in module \adder_mux2..
+Finding unused cells or wires in module \adder_or2..
+Finding unused cells or wires in module \adder_xor2..
+Finding unused cells or wires in module \adder_and2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__ha_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcon_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fahcin_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fah_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__fa_1..
+
+9.11.4. Finished fast OPT passes.
+
+9.12. Executing SORT pass.
+
+9.13. Printing statistics.
+
+=== adder8_alternating_polarity ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       12 wires
+       33 wire bits
+       12 public wires
+       33 public wire bits
+        5 ports
+       26 port bits
+        8 submodules
+        4   sky130_fd_sc_hd__fahcin_1
+        4   sky130_fd_sc_hd__fahcon_1
+
+=== adder8_carry_select ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       12 wires
+       51 wire bits
+       12 public wires
+       51 public wire bits
+        5 ports
+       26 port bits
+       17 submodules
+        5   adder_mux2
+       12   sky130_fd_sc_hd__fah_1
+
+=== adder8_carry_skip ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       17 wires
+       49 wire bits
+       17 public wires
+       49 public wire bits
+        5 ports
+       26 port bits
+       24 submodules
+        6   adder_and2
+        2   adder_mux2
+        8   adder_xor2
+        8   sky130_fd_sc_hd__fah_1
+
+=== adder8_kogge_stone ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       22 wires
+      107 wire bits
+       22 public wires
+      107 public wire bits
+        5 ports
+       26 port bits
+       49 submodules
+        8   adder_and2
+        8   adder_or2
+       17   adder_prefix_node
+        8   adder_xor2
+        8   sky130_fd_sc_hd__ha_1
+
+=== adder8_ripple ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+       35 wire bits
+        6 public wires
+       35 public wire bits
+        5 ports
+       26 port bits
+        8 submodules
+        8   sky130_fd_sc_hd__fa_1
+
+=== adder_and2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        3 ports
+        3 port bits
+        1 submodules
+        1   sky130_fd_sc_hd__ha_1
+
+=== adder_mux2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+        6 wire bits
+        6 public wires
+        6 public wire bits
+        4 ports
+        4 port bits
+        3 submodules
+        1   adder_and2
+        2   adder_xor2
+
+=== adder_or2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        3 ports
+        3 port bits
+        1 submodules
+        1   sky130_fd_sc_hd__fa_1
+
+=== adder_prefix_node ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        7 wires
+        7 wire bits
+        7 public wires
+        7 public wire bits
+        6 ports
+        6 port bits
+        3 submodules
+        2   adder_and2
+        1   adder_or2
+
+=== adder_xor2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        3 ports
+        3 port bits
+        1 submodules
+        1   sky130_fd_sc_hd__ha_1
+
+=== formal_all ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       24 wires
+       89 wire bits
+       15 public wires
+       72 public wire bits
+        4 ports
+       18 port bits
+       11 cells
+        2   $add
+        5   $ne
+        4   $or
+        5 submodules
+        1   adder8_alternating_polarity
+        1   adder8_carry_select
+        1   adder8_carry_skip
+        1   adder8_kogge_stone
+        1   adder8_ripple
+
+=== sky130_fd_sc_hd__fa_1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       10 wires
+       10 wire bits
+        5 public wires
+        5 public wire bits
+        5 ports
+        5 port bits
+        7 cells
+        3   $and
+        2   $or
+        2   $xor
+
+=== sky130_fd_sc_hd__fah_1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       10 wires
+       10 wire bits
+        5 public wires
+        5 public wire bits
+        5 ports
+        5 port bits
+        7 cells
+        3   $and
+        2   $or
+        2   $xor
+
+=== sky130_fd_sc_hd__fahcin_1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+       11 wire bits
+        5 public wires
+        5 public wire bits
+        5 ports
+        5 port bits
+        8 cells
+        3   $and
+        1   $not
+        2   $or
+        2   $xor
+
+=== sky130_fd_sc_hd__fahcon_1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+       11 wire bits
+        5 public wires
+        5 public wire bits
+        5 ports
+        5 port bits
+        8 cells
+        3   $and
+        1   $not
+        2   $or
+        2   $xor
+
+=== sky130_fd_sc_hd__ha_1 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        4 public wires
+        4 public wire bits
+        4 ports
+        4 port bits
+        2 cells
+        1   $and
+        1   $xor
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      632 formal_all
+        8   sky130_fd_sc_hd__fahcin_1
+        8   sky130_fd_sc_hd__fahcon_1
+        2       sky130_fd_sc_hd__ha_1
+        2       sky130_fd_sc_hd__ha_1
+        7   sky130_fd_sc_hd__fah_1
+        2     sky130_fd_sc_hd__ha_1
+        2       sky130_fd_sc_hd__ha_1
+        2       sky130_fd_sc_hd__ha_1
+        2     sky130_fd_sc_hd__ha_1
+        7   sky130_fd_sc_hd__fah_1
+        2     sky130_fd_sc_hd__ha_1
+        7     sky130_fd_sc_hd__fa_1
+        2       sky130_fd_sc_hd__ha_1
+        7       sky130_fd_sc_hd__fa_1
+        2     sky130_fd_sc_hd__ha_1
+        2   sky130_fd_sc_hd__ha_1
+        7   sky130_fd_sc_hd__fa_1
+
+        +----------Count including submodules.
+        | 
+     1684 wires
+     1955 wire bits
+     1362 public wires
+     1625 public wire bits
+     1166 ports
+     1285 port bits
+        - memories
+        - memory bits
+        - processes
+      632 cells
+        2   $add
+      276   $and
+        5   $ne
+        8   $not
+      126   $or
+      215   $xor
+        5 submodules
+        1   adder8_alternating_polarity
+        1   adder8_carry_select
+        1   adder8_carry_skip
+        1   adder8_kogge_stone
+        1   adder8_ripple
+
+9.14. Executing CHECK pass (checking for obvious problems).
+Checking module adder8_alternating_polarity...
+Checking module adder8_carry_select...
+Checking module adder8_carry_skip...
+Checking module adder8_kogge_stone...
+Checking module adder8_ripple...
+Checking module adder_and2...
+Checking module adder_mux2...
+Checking module adder_or2...
+Checking module adder_prefix_node...
+Checking module adder_xor2...
+Checking module formal_all...
+Checking module sky130_fd_sc_hd__fa_1...
+Checking module sky130_fd_sc_hd__fah_1...
+Checking module sky130_fd_sc_hd__fahcin_1...
+Checking module sky130_fd_sc_hd__fahcon_1...
+Checking module sky130_fd_sc_hd__ha_1...
+Found and reported 0 problems.
+
+10. Executing FLATTEN pass (flatten design).
+Deleting now unused module adder8_alternating_polarity.
+Deleting now unused module adder8_carry_select.
+Deleting now unused module adder8_carry_skip.
+Deleting now unused module adder8_kogge_stone.
+Deleting now unused module adder8_ripple.
+Deleting now unused module adder_and2.
+Deleting now unused module adder_mux2.
+Deleting now unused module adder_or2.
+Deleting now unused module adder_prefix_node.
+Deleting now unused module adder_xor2.
+Deleting now unused module sky130_fd_sc_hd__fa_1.
+Deleting now unused module sky130_fd_sc_hd__fah_1.
+Deleting now unused module sky130_fd_sc_hd__fahcin_1.
+Deleting now unused module sky130_fd_sc_hd__fahcon_1.
+Deleting now unused module sky130_fd_sc_hd__ha_1.
+<suppressed ~120 debug messages>
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \formal_all..
+Removed 135 unused cells and 245 unused wires.
+<suppressed ~356 debug messages>
+
+12. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \CIN
+Import def constraint for this timestep: \A
+Import def constraint for this timestep: \B
+Imported 790 cells to SAT database.
+Import proof-constraint: \mismatch = 1'0
+Final proof equation: \mismatch = 1'0
+Import show expression: \A
+Import show expression: \B
+Import show expression: \CIN
+Import show expression: \mismatch
+
+Solving problem with 8545 variables and 22587 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 05aa964316, time: 0.25s, user: 0.24s, system: 0.02s, MEM: 25.10 MB peak
+Yosys 0.64+72 (git sha1 22ef99218, clang++ 20.1.8 -fPIC -O3)
+Time spent: 50% 1x sat (0 sec), 15% 6x opt_clean (0 sec), ...

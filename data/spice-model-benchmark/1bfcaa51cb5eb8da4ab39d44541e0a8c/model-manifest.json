@@ -1,0 +1,63 @@
+{
+  "id": "sky130__fd__pr__special__pfet__pass__model__reduction",
+  "sourceId": "sky130__fd__pr__special__pfet__pass__model",
+  "kind": "processed",
+  "chainId": "reduction",
+  "chain": [
+    "reduction"
+  ],
+  "toolCount": 1,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_pfet_pass/sky130_fd_pr__special_pfet_pass.pm3.spice",
+  "sourceMd5": "c5215fac382f126b9671de9e56a897df",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/1bfcaa51cb5eb8da4ab39d44541e0a8c/model.lib",
+  "md5": "1bfcaa51cb5eb8da4ab39d44541e0a8c",
+  "cardCount": 2,
+  "models": [
+    {
+      "name": "sky130_fd_pr__special_pfet_pass__model.0",
+      "deviceType": "pmos",
+      "parameterCount": 82
+    },
+    {
+      "name": "sky130_fd_pr__special_pfet_pass__model.1",
+      "deviceType": "pmos",
+      "parameterCount": 85
+    }
+  ],
+  "completedAt": "2026-07-28T11:43:44.976881+00:00",
+  "stages": [
+    {
+      "tool": "reduction",
+      "startedAt": "2026-07-28T11:43:41.589073+00:00",
+      "elapsedSeconds": 2.538239,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__pfet__pass__model/original/model.lib",
+      "inputMd5": "b44cb1bbedc188beb035727153c715fb",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__pfet__pass__model/reduction/01-reduction/reduced.lib",
+      "rawOutputMd5": "cf53cbeceadd109b4ba2d9637a4bc32b",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__pfet__pass__model/reduction/01-reduction/normalized.lib",
+      "outputMd5": "10cc6b3ec09e4b4dca105b0ea0b542d8",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__pfet__pass__model/reduction/01-reduction/reduced.lib",
+        "inputMd5": "cf53cbeceadd109b4ba2d9637a4bc32b",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__pfet__pass__model/reduction/01-reduction/normalized.lib",
+        "outputMd5": "10cc6b3ec09e4b4dca105b0ea0b542d8",
+        "physicalModelSignature": "e2ef4e118ecdffa4501b66c67bf209d467491bde2dca5e1044b644250f7d22c7",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_pfet_pass__model.0",
+            "deviceType": "pmos",
+            "parameterCount": 82
+          },
+          {
+            "name": "sky130_fd_pr__special_pfet_pass__model.1",
+            "deviceType": "pmos",
+            "parameterCount": 85
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

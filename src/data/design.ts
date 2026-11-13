@@ -5,23 +5,27 @@ import {
   DEFAULT_TECHNOLOGY_NODE,
   DESIGN_CATEGORY_IDS,
   DESIGN_ROWS,
+  DESIGN_TECHNOLOGIES,
   NAMED_KIT_PROCESS_NODES,
   type DesignCategoryId,
+  type DesignTechnology,
 } from "./generatedDesignRows";
 
 export type { DesignRow } from "./designTypes";
 export type { DesignCategoryId } from "./generatedDesignRows";
+export type { DesignTechnology } from "./generatedDesignRows";
 export {
   DEFAULT_TECHNOLOGY_NODE,
   DESIGN_CATEGORY_IDS,
   DESIGN_ROWS,
+  DESIGN_TECHNOLOGIES,
   NAMED_KIT_PROCESS_NODES,
 };
 
 /** Rows whose `category` matches (empty if field missing). */
 export function designRowsForCategory(
   rows: readonly DesignRow[],
-  category: DesignCategoryId,
+  category: string,
 ): DesignRow[] {
   return rows.filter((r) => r.category === category);
 }
@@ -76,6 +80,15 @@ export function designRowsForTechnology(
   technologyNode: string = DEFAULT_TECHNOLOGY_NODE,
 ): DesignRow[] {
   return rows.filter((r) => r.processNode === technologyNode);
+}
+
+/** Set union of rows belonging to any selected technology node. */
+export function designRowsForTechnologies(
+  rows: readonly DesignRow[],
+  technologyNodes: readonly string[],
+): DesignRow[] {
+  const selected = new Set(technologyNodes);
+  return rows.filter((row) => selected.has(row.processNode));
 }
 
 /** Single row for (architecture, bit width, technology node), if present in merged data. */
@@ -147,18 +160,52 @@ export function designTechnologyNodesForRows(rows: readonly DesignRow[]): string
   return uniqueTechnologyNodesSorted(rows);
 }
 
+const TECHNOLOGY_BY_PROCESS_NODE = new Map(
+  DESIGN_TECHNOLOGIES.map((technology) => [technology.processNode, technology]),
+);
+const TECHNOLOGY_BY_UID = new Map(
+  DESIGN_TECHNOLOGIES.map((technology) => [technology.uid, technology]),
+);
+
+/** UID-backed technology resources present in the row set, in chart node order. */
+export function designTechnologiesForRows(rows: readonly DesignRow[]): DesignTechnology[] {
+  return designTechnologyNodesForRows(rows)
+    .map((processNode) => TECHNOLOGY_BY_PROCESS_NODE.get(processNode) ?? dynamicTechnology(processNode, rows));
+}
+
+function dynamicTechnology(processNode: string, rows: readonly DesignRow[]): DesignTechnology {
+  const row = rows.find((candidate) => candidate.processNode === processNode);
+  let hash = 0x811c9dc5;
+  for (const character of processNode) { hash ^= character.charCodeAt(0); hash = Math.imul(hash, 0x01000193) >>> 0; }
+  const hex = hash.toString(16).padStart(8, "0").repeat(4);
+  return {
+    uid: hex,
+    processNode,
+    displayName: processNode,
+    canonicalTechnology: row?.canonicalTechnology ?? processNode,
+    isNamedPdk: row?.isNamedPdk ?? !/^\d+(?:\.\d+)?nm$/i.test(processNode),
+  };
+}
+
+/** Resolve the selected frontend UID to its technology metadata. */
+export function designTechnologyForUid(uid: string): DesignTechnology | undefined {
+  return TECHNOLOGY_BY_UID.get(uid);
+}
+
 /**
  * First available technology node and bit width for a category (same ordering as Explore dropdowns).
  * Used for initial Explore panel state; falls back to global defaults only if the category has no rows.
  */
 export function defaultExploreSliceForCategory(
   category: DesignCategoryId,
-): { technologyNode: string; bitWidth: number } {
+): { technologyUid: string; bitWidth: number } {
   const rows = designRowsForCategory(DESIGN_ROWS, category);
-  const tech = designTechnologyNodesForRows(rows);
+  const technologies = designTechnologiesForRows(rows);
   const bws = designBitWidthsForRows(rows);
+  const fallbackTechnology = TECHNOLOGY_BY_PROCESS_NODE.get(DEFAULT_TECHNOLOGY_NODE)
+    ?? DESIGN_TECHNOLOGIES[0];
   return {
-    technologyNode: tech[0] ?? DEFAULT_TECHNOLOGY_NODE,
+    technologyUid: technologies[0]?.uid ?? fallbackTechnology?.uid ?? "",
     bitWidth: bws.length > 0 ? bws[0] : DESIGN_BIT_WIDTHS[0] ?? 1,
   };
 }

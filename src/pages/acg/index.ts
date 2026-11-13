@@ -1,0 +1,1 @@
+export { AcgPage } from "./AcgPage";

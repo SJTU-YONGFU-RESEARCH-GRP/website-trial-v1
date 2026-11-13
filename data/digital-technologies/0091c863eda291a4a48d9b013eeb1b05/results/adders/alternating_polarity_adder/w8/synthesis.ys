@@ -1,0 +1,10 @@
+read_verilog -lib /home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v
+read_verilog /home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v /home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_alternating_polarity.v
+hierarchy -check -top adder8_alternating_polarity
+proc
+flatten
+opt_clean -purge
+check
+tee -o /home/duhaochen/LibCharX/characterization/sky130_adders/application/reports/adder8_alternating_polarity_stat.txt stat -liberty /home/duhaochen/LibCharX/characterization/sky130_adders/results/libcharx_adder_test.lib
+write_verilog -noattr -noexpr /home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_alternating_polarity_mapped.v
+write_json /home/duhaochen/LibCharX/characterization/sky130_adders/application/netlists/adder8_alternating_polarity_mapped.json

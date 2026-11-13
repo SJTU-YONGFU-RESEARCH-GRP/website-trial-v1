@@ -1,0 +1,81 @@
+{
+  "id": "sky130__fd__pr__special__nfet__pass__lvt__model__expansion_translation",
+  "sourceId": "sky130__fd__pr__special__nfet__pass__lvt__model",
+  "kind": "processed",
+  "chainId": "expansion_translation",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "toolCount": 2,
+  "sourcePath": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/cells/special_nfet_pass_lvt/sky130_fd_pr__special_nfet_pass_lvt.pm3.spice",
+  "sourceMd5": "f1e8fe795c337976862d15f43387423f",
+  "finalModel": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/bb095809145539b0a1ea3e2df4ac1f5b/model.lib",
+  "md5": "bb095809145539b0a1ea3e2df4ac1f5b",
+  "cardCount": 1,
+  "models": [
+    {
+      "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+      "deviceType": "nmos",
+      "parameterCount": 239
+    }
+  ],
+  "completedAt": "2026-07-28T11:43:45.588732+00:00",
+  "stages": [
+    {
+      "tool": "expansion",
+      "startedAt": "2026-07-28T11:43:41.469503+00:00",
+      "elapsedSeconds": 2.191829,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/original/model.lib",
+      "inputMd5": "a3e55488b907296eff9aaac12a373e65",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+      "rawOutputMd5": "c9475a4a01e20c35b43c7e1f052f8fc0",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/01-expansion/normalized.lib",
+      "outputMd5": "6cf98f9d978c5b75dbb11a7760dcadb9",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/01-expansion/corners/models/model_f.sp",
+        "inputMd5": "c9475a4a01e20c35b43c7e1f052f8fc0",
+        "inputFormat": "ngspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/01-expansion/normalized.lib",
+        "outputMd5": "6cf98f9d978c5b75dbb11a7760dcadb9",
+        "physicalModelSignature": "f53503025b910bd4383447364870ad1b9e680703a82f04361c1daa5029df0014",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 239
+          }
+        ]
+      }
+    },
+    {
+      "tool": "translation",
+      "startedAt": "2026-07-28T11:43:43.975872+00:00",
+      "elapsedSeconds": 0.707736,
+      "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/01-expansion/normalized.lib",
+      "inputMd5": "6cf98f9d978c5b75dbb11a7760dcadb9",
+      "rawOutput": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/02-translation/translated.hspice",
+      "rawOutputMd5": "9c9a1cef90d1e24a4c92a59e1aa868e1",
+      "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/02-translation/normalized.lib",
+      "outputMd5": "40ee5998272bd27b11f14ea96803dcac",
+      "ast": {
+        "input": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/02-translation/translated.hspice",
+        "inputMd5": "9c9a1cef90d1e24a4c92a59e1aa868e1",
+        "inputFormat": "hspice",
+        "output": "/home/duhaochen/pipeline_sky130_mos/models/sky130__fd__pr__special__nfet__pass__lvt__model/expansion_translation/02-translation/normalized.lib",
+        "outputMd5": "40ee5998272bd27b11f14ea96803dcac",
+        "physicalModelSignature": "f53503025b910bd4383447364870ad1b9e680703a82f04361c1daa5029df0014",
+        "parameterPreserving": true,
+        "cards": [
+          {
+            "name": "sky130_fd_pr__special_nfet_pass_lvt__model.0",
+            "deviceType": "nmos",
+            "parameterCount": 239
+          }
+        ]
+      }
+    }
+  ],
+  "modelFile": "model.lib"
+}

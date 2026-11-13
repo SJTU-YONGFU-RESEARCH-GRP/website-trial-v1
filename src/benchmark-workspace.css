@@ -1,0 +1,1245 @@
+/* ==================================================================
+ *  benchmark-workspace.css (goal2.md §5, §9)
+ *  Scoped styles for the Benchmark Workspace page.
+ *  Prefix: bmw- (benchmark workspace)
+ * ================================================================== */
+
+/* ─── Provenance banner ─── */
+.bmw-provenance-banner {
+  font-size: 0.72rem;
+  color: var(--muted, #888);
+  background: var(--surface-inset, #f9f9f9);
+  border: 1px solid var(--border-light, #e5e5e5);
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ─── Form field label ─── */
+.bmw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.bmw-field input,
+.bmw-field select,
+.bmw-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* ─── Four-column operation grid (goal2.md §5.3) ─── */
+.bmw-operation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .bmw-operation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .bmw-operation-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ─── Operation card (goal2.md §5.2) ─── */
+.bmw-operation-card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle, #e5e5e5);
+  background: var(--surface, #fff);
+  min-width: 0;
+}
+
+.bmw-operation-card.is-enabled {
+  border-color: var(--accent, #0071e3);
+  background: var(--accent-bg, rgba(0, 113, 227, 0.03));
+}
+
+.bmw-operation-card.is-disabled {
+  opacity: 0.65;
+}
+
+.bmw-operation-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.bmw-operation-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.bmw-operation-toggle input[type="checkbox"] {
+  width: auto;
+  flex-shrink: 0;
+}
+
+.bmw-operation-order {
+  font-size: 0.62rem;
+  color: var(--muted, #aaa);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.bmw-operation-card__summary {
+  font-size: 0.72rem;
+  color: var(--text-secondary, #666);
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+}
+
+.bmw-operation-card__settings {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle, #eee);
+}
+
+.bmw-operation-card__footer {
+  font-size: 0.65rem;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle, #eee);
+  color: var(--muted, #aaa);
+}
+
+.bmw-operation-advanced {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle, #eee);
+}
+
+.bmw-operation-advanced > summary {
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--accent, #0071e3);
+}
+
+.bmw-operation-advanced > .bmw-advanced-body {
+  margin-top: 6px;
+}
+
+/* ─── Settings inline fields ─── */
+.bmw-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.bmw-settings-field input,
+.bmw-settings-field select,
+.bmw-settings-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.72rem;
+  min-width: 0;
+}
+
+.bmw-settings-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.bmw-settings-checkboxes label {
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Badge row ─── */
+.bmw-badge-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+
+/* ─── Button row ─── */
+.bmw-btn-row {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ─── Model metadata ─── */
+.bmw-model-meta {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+/* ─── Code preview ─── */
+.bmw-code-preview {
+  margin-top: 0;
+  font-size: 0.65rem;
+  background: var(--surface-inset, #f5f5f7);
+  padding: 0.5rem;
+  border-radius: 6px;
+  overflow: auto;
+  max-height: 300px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ─── Diff table ─── */
+.bmw-diff-table-wrap {
+  overflow-x: auto;
+}
+
+.bmw-diff-table {
+  width: 100%;
+  font-size: 0.68rem;
+  border-collapse: collapse;
+}
+
+.bmw-diff-table th,
+.bmw-diff-table td {
+  padding: 0.2rem 0.4rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light, #eee);
+}
+
+.bmw-diff-param {
+  font-family: monospace;
+  font-weight: 600;
+  font-size: 0.68rem;
+}
+
+.bmw-diff-mono {
+  font-family: monospace;
+  font-size: 0.65rem;
+}
+
+.bmw-diff-changed {
+  background: rgba(255, 59, 48, 0.04);
+}
+
+/* ─── Pipeline ─── */
+.bmw-pipeline {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--surface-inset, #f9f9f9);
+  border-radius: 8px;
+}
+
+.bmw-pipeline-arrow {
+  color: var(--muted, #999);
+  font-size: 0.8rem;
+}
+
+/* ─── Scenario radio ─── */
+.bmw-scenario-option {
+  cursor: pointer;
+  padding: 0.65rem 0.75rem;
+}
+
+.bmw-scenario-option--active {
+  border: 2px solid var(--accent, #0071e3);
+  background: var(--accent-bg, rgba(0, 113, 227, 0.04));
+}
+
+.bmw-scenario-dot {
+  color: var(--accent, #0071e3);
+  margin-right: 0.35rem;
+}
+
+/* ─── Cross-Model filters (goal2.md §6.2) ─── */
+.bmw-cm-filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--surface-inset, #f9f9f9);
+  border-radius: 8px;
+}
+
+.bmw-cm-filters fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.bmw-cm-filters legend {
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  padding: 0;
+}
+
+.bmw-cm-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  margin-right: 0.65rem;
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+
+/* ─── Cross-Model plot pairs (goal2.md §6.10) ─── */
+.bmw-model-domain-section {
+  margin-bottom: 0.65rem;
+}
+
+.bmw-model-domain-section > header {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.bmw-model-simulator-section {
+  margin-bottom: 0.5rem;
+}
+
+.bmw-model-simulator-section > header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  text-transform: capitalize;
+  color: var(--text-secondary, #555);
+}
+
+.bmw-model-plot-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .bmw-model-plot-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.bmw-model-plot-panel {
+  margin: 0;
+  border: 1px solid var(--border-subtle, #e5e5e5);
+  border-radius: 10px;
+  background: var(--plot-inset-bg, var(--surface-inset, #f5f5f7));
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bmw-model-plot-panel figcaption {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-secondary, #555);
+}
+
+.bmw-model-plot-panel img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: pointer;
+  background: var(--plot-inset-bg, #fafafa);
+}
+
+.bmw-model-plot-panel .bmw-plot-title {
+  font-size: 0.68rem;
+  color: var(--muted, #888);
+  margin-top: 4px;
+}
+
+.bmw-model-plot-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  font-size: 0.7rem;
+  color: var(--muted, #aaa);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.bmw-model-empty-state {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--muted, #888);
+  font-size: 0.78rem;
+  border: 1px dashed var(--border-subtle, #ddd);
+  border-radius: 8px;
+}
+
+/* ─── Multi-model horizontal scroll rows ─── */
+.bmw-model-metric-block {
+  margin-bottom: 0.6rem;
+}
+
+.bmw-model-metric-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #555);
+}
+
+.bmw-model-metric-sim {
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--surface-raised, #e8e8ed);
+  font-size: 0.7rem;
+}
+
+.bmw-model-metric-title {
+  font-weight: 500;
+  font-size: 0.73rem;
+}
+
+.bmw-model-scroll-row {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted, #bbb) transparent;
+}
+
+.bmw-model-scroll-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.bmw-model-scroll-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bmw-model-scroll-row::-webkit-scrollbar-thumb {
+  background: var(--muted, #bbb);
+  border-radius: 3px;
+}
+
+.bmw-model-plot-panel--multi {
+  flex: 0 0 520px;
+  max-width: 600px;
+  min-width: 360px;
+}
+
+@media (max-width: 640px) {
+  .bmw-model-plot-panel--multi {
+    flex: 0 0 320px;
+    max-width: 400px;
+    min-width: 260px;
+  }
+}
+
+/* ─── Multi-select dropdown ─── */
+.bmw-multi-select {
+  position: relative;
+  font-size: 0.75rem;
+}
+
+.bmw-result-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  align-items: end;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.bmw-cm-filters .bmw-result-search {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.2rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.bmw-result-search input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 7px 9px;
+  border: 1px solid var(--border-subtle, #d0d0d0);
+  border-radius: 6px;
+  background: var(--bg, #fff);
+  color: var(--text-primary, #222);
+  font: inherit;
+}
+
+.bmw-result-search input:focus {
+  border-color: var(--accent, #0071e3);
+  outline: 2px solid color-mix(in srgb, var(--accent, #0071e3) 18%, transparent);
+  outline-offset: 1px;
+}
+
+.bmw-cm-filters .bmw-simulator-filter {
+  min-width: max-content;
+}
+
+.bmw-cm-filters .bmw-simulator-filter legend {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #555);
+  margin-bottom: 0.2rem;
+}
+
+.bmw-simulator-filter > div {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 30px;
+}
+
+.bmw-cm-filters .bmw-simulator-filter label {
+  margin: 0;
+  text-transform: none;
+}
+
+.bmw-simulator-filter input {
+  margin: 0;
+}
+
+.bmw-multi-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border-subtle, #d0d0d0);
+  border-radius: 6px;
+  background: var(--bg, #fff);
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-primary, #222);
+}
+
+.bmw-multi-select-trigger:hover {
+  border-color: var(--accent, #5b8def);
+}
+
+.bmw-multi-select-arrow {
+  font-size: 0.6rem;
+  margin-left: 8px;
+  opacity: 0.5;
+}
+
+.bmw-multi-select-dropdown {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid var(--border-subtle, #d0d0d0);
+  border-radius: 6px;
+  background: var(--bg, #fff);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 30;
+  margin-top: 3px;
+}
+
+.bmw-multi-select-option {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+  font-size: 0.73rem;
+  border-bottom: 1px solid var(--border-subtle, #f0f0f0);
+  width: 100%;
+  box-sizing: border-box;
+  float: none;
+  clear: both;
+}
+
+.bmw-multi-select-option:last-child {
+  border-bottom: none;
+}
+
+.bmw-multi-select-option:hover {
+  background: var(--surface-hover, #f5f5f7);
+}
+
+.bmw-multi-select-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.bmw-multi-select-sub {
+  font-size: 0.65rem;
+  color: var(--muted, #999);
+  text-transform: capitalize;
+}
+
+.bmw-multi-select-md5 {
+  font-size: 0.6rem;
+  color: var(--muted, #aaa);
+  font-family: monospace;
+}
+
+.bmw-multi-select-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--muted, #888);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 640px) {
+  .bmw-result-filter-bar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  .bmw-simulator-filter > div {
+    flex-wrap: wrap;
+  }
+}
+
+.bmw-multi-select-empty {
+  padding: 10px;
+  text-align: center;
+  color: var(--muted, #aaa);
+  font-size: 0.72rem;
+}
+
+/* ─── Benchmark status badges ─── */
+.bmw-plot-status {
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bmw-status-pass {
+  background: var(--status-pass-bg, #e6f7e6);
+  color: var(--status-pass-text, #1a7a1a);
+}
+
+.bmw-status-fail {
+  background: var(--status-fail-bg, #fde8e8);
+  color: var(--status-fail-text, #c41e1e);
+}
+
+.bmw-status-partial {
+  background: var(--status-partial-bg, #fef3c7);
+  color: var(--status-partial-text, #92400e);
+}
+
+.bmw-status-unavailable {
+  background: var(--status-unavailable-bg, #f3f4f6);
+  color: var(--status-unavailable-text, #747b87);
+}
+
+/* ─── Verdict Grid ─── */
+.bmw-verdict-section {
+  margin-top: 1.2rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border-subtle, #e5e5e5);
+}
+
+.bmw-verdict-section h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+}
+
+.bmw-verdict-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.bmw-verdict-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  min-width: 600px;
+}
+
+.bmw-verdict-table th,
+.bmw-verdict-table td {
+  padding: 6px 10px;
+  text-align: center;
+  border: 1px solid var(--border-subtle, #e5e5e5);
+  white-space: nowrap;
+}
+
+.bmw-verdict-table thead th {
+  background: var(--surface-inset, #f5f5f7);
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.bmw-verdict-table thead th small {
+  font-weight: 400;
+  opacity: 0.6;
+  text-transform: capitalize;
+}
+
+.bmw-verdict-domain {
+  font-weight: 600;
+  text-align: left !important;
+  background: var(--surface-inset, #f5f5f7);
+  min-width: 80px;
+}
+
+.bmw-verdict-cell {
+  font-weight: 700;
+  font-size: 0.8rem;
+  min-width: 48px;
+  text-align: center;
+}
+
+.bmw-verdict-cell .bmw-verdict-status {
+  display: block;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.bmw-verdict-cell .bmw-verdict-ion {
+  display: block;
+  font-weight: 400;
+  font-size: 0.58rem;
+  font-family: monospace;
+  margin-top: 1px;
+  opacity: 0.75;
+}
+
+.bmw-verdict-cell.bmw-status-pass { background: var(--status-pass-bg, #e6f7e6); color: var(--status-pass-text, #1a7a1a); }
+.bmw-verdict-cell.bmw-status-fail { background: var(--status-fail-bg, #fde8e8); color: var(--status-fail-text, #c41e1e); }
+.bmw-verdict-cell.bmw-status-partial { background: var(--status-partial-bg, #fef3c7); color: var(--status-partial-text, #92400e); }
+.bmw-verdict-cell.bmw-status-unavailable { background: var(--status-unavailable-bg, #f3f4f6); color: var(--status-unavailable-text, #747b87); }
+
+/* ─── Lightbox ─── */
+.bmw-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: bmw-fade-in 0.15s ease-out;
+}
+
+.bmw-lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.bmw-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.bmw-lightbox-close:hover {
+  background: #fff;
+}
+
+.bmw-lightbox-prev,
+.bmw-lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.bmw-lightbox-prev:hover,
+.bmw-lightbox-next:hover {
+  background: #fff;
+}
+
+.bmw-lightbox-prev {
+  left: 1rem;
+}
+
+.bmw-lightbox-next {
+  right: 1rem;
+}
+
+.bmw-lightbox-counter {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.78rem;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+}
+
+/* ─── Animations ─── */
+@keyframes bmw-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bmw-lightbox-overlay {
+    animation: none;
+  }
+}
+
+/* ─── Drag handle (goal3.md §3.4) ─── */
+.bmw-drag-handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #999);
+  padding: 0;
+  margin-right: 4px;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+.bmw-drag-handle:active {
+  cursor: grabbing;
+}
+
+.bmw-drag-handle:focus-visible {
+  outline: 2px solid var(--accent, #0071e3);
+  outline-offset: 1px;
+  border-radius: 2px;
+}
+
+.bmw-operation-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bmw-sortable-wrapper {
+  min-width: 0;
+}
+
+/* ─── Move buttons ─── */
+.bmw-move-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.bmw-move-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid var(--border-subtle, #ddd);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.5rem;
+  color: var(--text-secondary, #888);
+  line-height: 1;
+}
+
+.bmw-move-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.bmw-move-btn:not(:disabled):hover {
+  background: var(--surface-inset, #f5f5f7);
+}
+
+.bmw-move-btn:focus-visible {
+  outline: 2px solid var(--accent, #0071e3);
+  outline-offset: 1px;
+}
+
+/* ─── Artifact table shell ─── */
+.bmw-artifact-table-shell {
+  width: min(100%, 1080px);
+  margin-inline: auto;
+  overflow-x: auto;
+}
+
+.bmw-artifact-table-shell table {
+  width: 100%;
+  font-size: 0.76rem;
+  border-collapse: collapse;
+}
+
+.bmw-artifact-table-shell th,
+.bmw-artifact-table-shell td {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle, #eee);
+  text-align: left;
+}
+
+.bmw-artifact-table-shell th {
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--text-secondary, #555);
+}
+
+/* ─── Metadata table ─── */
+.bmw-metadata-table {
+  width: 100%;
+  font-size: 0.76rem;
+  border-collapse: collapse;
+}
+
+.bmw-metadata-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle, #eee);
+}
+
+.bmw-metadata-table td:first-child {
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  width: 40%;
+}
+
+/* ─── Pipeline step ─── */
+.bmw-pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .bmw-lightbox-prev,
+  .bmw-lightbox-next {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+  .bmw-lightbox-prev { left: 0.5rem; }
+  .bmw-lightbox-next { right: 0.5rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  Report Viewer (rv-)                                                 */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.rv-section {
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.rv-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-secondary, #f5f5f7);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.rv-section-header:hover { background: var(--bg-hover, #eaeaef); }
+
+.rv-section-header h3 { margin: 0; font-size: 0.9rem; font-weight: 700; flex: 1; }
+.rv-section-header h4 { margin: 0; font-size: 0.82rem; font-weight: 600; flex: 1; }
+
+.rv-caret { font-size: 0.65rem; color: var(--muted, #888); min-width: 0.8rem; }
+.rv-caret--lg { font-size: 0.75rem; }
+
+.rv-entry-count { font-size: 0.68rem; color: var(--muted, #999); white-space: nowrap; }
+
+.rv-section-body { padding: 0.5rem 0.75rem; }
+
+.rv-subsection {
+  margin-bottom: 0.4rem;
+}
+.rv-subsection-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.12s;
+}
+.rv-subsection-header:hover { background: var(--bg-secondary, #f5f5f7); }
+.rv-subsection-header h4 { margin: 0; font-size: 0.78rem; font-weight: 600; flex: 1; }
+
+.rv-subsection-body { padding: 0.3rem 0 0.3rem 1.2rem; }
+
+/* Report entry table */
+.rv-entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  margin: 0.3rem 0;
+}
+
+.rv-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.rv-table-scroll--fit-comparison {
+  overflow-x: visible;
+}
+
+.rv-entry-table--fit-comparison {
+  table-layout: fixed;
+  min-width: 0;
+}
+
+.rv-entry-table--fit-comparison .rv-comparison-test-column {
+  width: clamp(130px, 22%, 220px);
+}
+
+.rv-entry-table--fit-comparison th,
+.rv-entry-table--fit-comparison td {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.rv-entry-table.rv-entry-table--comparison th,
+.rv-entry-table.rv-entry-table--comparison td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.rv-entry-table th {
+  text-align: left;
+  padding: 0.3rem 0.4rem;
+  background: var(--bg-secondary, #f0f0f3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-secondary, #555);
+  border-bottom: 2px solid var(--border, #ddd);
+}
+
+.rv-entry-table td {
+  padding: 0.28rem 0.4rem;
+  border-bottom: 1px solid var(--border-light, #eee);
+  vertical-align: top;
+}
+
+.rv-entry-test { font-weight: 500; }
+.rv-entry-findings { font-family: "SF Mono", "Cascadia Code", monospace; font-size: 0.68rem; color: var(--text-secondary, #555); }
+.rv-na { color: var(--muted, #bbb); font-style: italic; }
+
+/* Status badges */
+.rv-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.rv-status-pass    { background: var(--status-pass-bg, #e6f7e6); color: var(--status-pass-text, #1a7a1a); }
+.rv-status-fail    { background: var(--status-fail-bg, #fde8e8); color: var(--status-fail-text, #c41e1e); }
+.rv-status-progress { background: var(--status-partial-bg, #fef3c7); color: var(--status-partial-text, #92400e); }
+.rv-status-unavail { background: var(--status-unavailable-bg, #f3f4f6); color: var(--status-unavailable-text, #747b87); }
+
+/* Plot references */
+.rv-plot-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  border-top: 1px dashed var(--border-light, #eee);
+}
+.rv-plot-ref {
+  font-size: 0.62rem;
+  font-family: monospace;
+  color: var(--accent, #0071e3);
+  background: var(--bg-accent, #e8f0fe);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+/* Metric deltas */
+.rv-metric-deltas {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--border, #ddd);
+}
+.rv-metric-deltas h4 { font-size: 0.85rem; margin-bottom: 0.5rem; }
+
+.rv-verdict-scroll { overflow-x: auto; }
+.rv-verdict-cell { text-align: center; padding: 0.3rem 0.5rem; }
+
+/* Embedded plot images in report */
+.rv-plot-embed { margin-top: 0.5rem; }
+.rv-plot-embed-item { margin-bottom: 0.6rem; }
+.rv-plot-embed-label {
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: var(--text-secondary, #666);
+  margin-bottom: 0.2rem;
+}
+.rv-plot-embed-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+.rv-plot-embed-row--images {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+}
+.rv-plot-embed-row--images > .rv-plot-image-fig,
+.rv-plot-embed-row--images > .rv-plot-unavailable {
+  flex: 0 0 calc((100% - 0.5rem) / 2);
+  scroll-snap-align: start;
+}
+.rv-plot-embed-fig {
+  flex: 0 0 auto;
+  width: 420px;
+  margin: 0;
+  border: 1px solid var(--border-light, #eee);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rv-plot-image-fig {
+  width: 100%;
+  min-width: 0;
+}
+.rv-plot-embed-fig img {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 150px;
+  object-fit: contain;
+  background: var(--plot-inset-bg, #fafafa);
+}
+
+/* The benchmark plots are raster files with a baked-in white canvas. In dark
+   mode, invert luminance while rotating hue back by 180deg: white/black become
+   dark/light, while colored traces retain approximately their original hue.
+   This is display-only and never modifies the source artifact. */
+:root[data-theme="dark"] .bmw-model-plot-panel img,
+:root[data-theme="dark"] .rv-plot-embed-fig img,
+:root[data-theme="dark"] .bmw-lightbox-img,
+:root[data-theme="dark"] .rv-lightbox-image {
+  filter: invert(0.88) hue-rotate(180deg) saturate(1.05);
+}
+
+/* Markdown reports contain legacy inline status colors. Keep their meaning,
+   but make the text readable on both theme surfaces. */
+.rv-section span[style*="color: green"] { color: var(--ok, green) !important; }
+.rv-section span[style*="color: red"] { color: var(--fail, red) !important; }
+.rv-section span[style*="color: gray"],
+.rv-section span[style*="color: grey"] { color: var(--muted, gray) !important; }
+.rv-plot-image-fig img {
+  min-height: 0;
+}
+.rv-plot-embed-fig figcaption {
+  font-size: 0.65rem;
+  text-align: center;
+  padding: 0.2rem;
+  color: var(--text-secondary, #666);
+  background: var(--bg-secondary, #f5f5f7);
+}
+.rv-plot-unavailable {
+  padding: 2rem 0.5rem;
+  text-align: center;
+  font-size: 0.68rem;
+  color: var(--muted, #999);
+  background: var(--bg-secondary, #f8f8f8);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .rv-plot-embed-row--images > .rv-plot-image-fig,
+  .rv-plot-embed-row--images > .rv-plot-unavailable {
+    flex-basis: 100%;
+  }
+}
+
+/* Multi-model finding text */
+.rv-finding-text {
+  font-size: 0.68rem;
+  color: var(--text-secondary, #555);
+  margin-top: 3px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+/* Utility */
+.rv-hidden { display: none !important; }

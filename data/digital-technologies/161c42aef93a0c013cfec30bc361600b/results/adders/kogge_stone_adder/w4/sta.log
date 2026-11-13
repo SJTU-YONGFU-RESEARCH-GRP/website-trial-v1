@@ -1,0 +1,176 @@
+OpenSTA 3.1.0 543361765b Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Startpoint: a[0] (input port clocked by vclk)
+Endpoint: sum[3] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.005035    0.050000    0.000000    0.000000 v a[0] (in)
+               0.050000    0.000000    0.000000 v _17_/A (sg13g2_or2_1)
+   0.005921    0.036782    0.118697    0.118697 v _17_/X (sg13g2_or2_1)
+               0.036782    0.000000    0.118697 v _19_/A2 (sg13g2_a21oi_1)
+   0.009051    0.102173    0.109089    0.227785 ^ _19_/Y (sg13g2_a21oi_1)
+               0.102173    0.000000    0.227785 ^ _22_/A1 (sg13g2_o21ai_1)
+   0.008313    0.074956    0.108342    0.336127 v _22_/Y (sg13g2_o21ai_1)
+               0.074956    0.000000    0.336127 v _29_/A1 (sg13g2_a21oi_1)
+   0.009051    0.102173    0.114337    0.450463 ^ _29_/Y (sg13g2_a21oi_1)
+               0.102173    0.000000    0.450463 ^ _33_/A (sg13g2_xnor2_1)
+   0.010000    0.115697    0.133564    0.584027 ^ _33_/Y (sg13g2_xnor2_1)
+               0.115697    0.000000    0.584027 ^ sum[3] (out)
+                                       0.584027   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.584027   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.415970   slack (MET)
+
+
+Startpoint: a[0] (input port clocked by vclk)
+Endpoint: cout (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 ^ input external delay
+   0.005019    0.050000    0.000000    0.000000 ^ a[0] (in)
+               0.050000    0.000000    0.000000 ^ _17_/A (sg13g2_or2_1)
+   0.006267    0.037058    0.086742    0.086742 ^ _17_/X (sg13g2_or2_1)
+               0.037058    0.000000    0.086742 ^ _19_/A2 (sg13g2_a21oi_1)
+   0.008778    0.074538    0.084000    0.170742 v _19_/Y (sg13g2_a21oi_1)
+               0.074538    0.000000    0.170742 v _22_/A1 (sg13g2_o21ai_1)
+   0.008595    0.123343    0.141435    0.312177 ^ _22_/Y (sg13g2_o21ai_1)
+               0.123343    0.000000    0.312177 ^ _29_/A1 (sg13g2_a21oi_1)
+   0.008778    0.086049    0.114610    0.426787 v _29_/Y (sg13g2_a21oi_1)
+               0.086049    0.000000    0.426787 v _34_/A1 (sg13g2_o21ai_1)
+   0.010000    0.137125    0.155852    0.582640 ^ _34_/Y (sg13g2_o21ai_1)
+               0.137125    0.000000    0.582640 ^ cout (out)
+                                       0.582640   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.582640   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.417358   slack (MET)
+
+
+Startpoint: a[0] (input port clocked by vclk)
+Endpoint: sum[2] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.005035    0.050000    0.000000    0.000000 v a[0] (in)
+               0.050000    0.000000    0.000000 v _17_/A (sg13g2_or2_1)
+   0.005921    0.036782    0.118697    0.118697 v _17_/X (sg13g2_or2_1)
+               0.036782    0.000000    0.118697 v _19_/A2 (sg13g2_a21oi_1)
+   0.009051    0.102173    0.109089    0.227785 ^ _19_/Y (sg13g2_a21oi_1)
+               0.102173    0.000000    0.227785 ^ _22_/A1 (sg13g2_o21ai_1)
+   0.008313    0.074956    0.108342    0.336127 v _22_/Y (sg13g2_o21ai_1)
+               0.074956    0.000000    0.336127 v _26_/A (sg13g2_xnor2_1)
+   0.010000    0.086038    0.135587    0.471714 v _26_/Y (sg13g2_xnor2_1)
+               0.086038    0.000000    0.471714 v sum[2] (out)
+                                       0.471714   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.471714   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.528282   slack (MET)
+
+
+Startpoint: a[0] (input port clocked by vclk)
+Endpoint: sum[1] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.005035    0.050000    0.000000    0.000000 v a[0] (in)
+               0.050000    0.000000    0.000000 v _17_/A (sg13g2_or2_1)
+   0.005921    0.036782    0.118697    0.118697 v _17_/X (sg13g2_or2_1)
+               0.036782    0.000000    0.118697 v _19_/A2 (sg13g2_a21oi_1)
+   0.009051    0.102173    0.109089    0.227785 ^ _19_/Y (sg13g2_a21oi_1)
+               0.102173    0.000000    0.227785 ^ _27_/A (sg13g2_xnor2_1)
+   0.010000    0.115664    0.133563    0.361349 ^ _27_/Y (sg13g2_xnor2_1)
+               0.115664    0.000000    0.361349 ^ sum[1] (out)
+                                       0.361349   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.361349   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.638649   slack (MET)
+
+
+Startpoint: b[0] (input port clocked by vclk)
+Endpoint: sum[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+        Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------
+               0.000000    0.000000    0.000000   clock vclk (rise edge)
+                           0.000000    0.000000   clock network delay (ideal)
+                           0.000000    0.000000 v input external delay
+   0.004752    0.050000    0.000000    0.000000 v b[0] (in)
+               0.050000    0.000000    0.000000 v _16_/B (sg13g2_and2_1)
+   0.005006    0.027688    0.086068    0.086068 v _16_/X (sg13g2_and2_1)
+               0.027688    0.000000    0.086068 v _18_/A_N (sg13g2_nand2b_1)
+   0.005056    0.044920    0.083651    0.169719 v _18_/Y (sg13g2_nand2b_1)
+               0.044920    0.000000    0.169719 v _28_/B (sg13g2_xnor2_1)
+   0.010000    0.079782    0.119585    0.289305 v _28_/Y (sg13g2_xnor2_1)
+               0.079782    0.000000    0.289305 v sum[0] (out)
+                                       0.289305   data arrival time
+
+               0.000000  100.000000  100.000000   clock vclk (rise edge)
+                           0.000000  100.000000   clock network delay (ideal)
+                           0.000000  100.000000   clock reconvergence pessimism
+                           0.000000  100.000000   output external delay
+                                     100.000000   data required time
+---------------------------------------------------------------------------------------
+                                     100.000000   data required time
+                                      -0.289305   data arrival time
+---------------------------------------------------------------------------------------
+                                      99.710693   slack (MET)
+
+

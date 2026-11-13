@@ -1,0 +1,3737 @@
+{
+  "creator": "Yosys 0.64+72 (git sha1 22ef99218, clang++ 20.1.8 -fPIC -O3)",
+  "modules": {
+    "adder8_kogge_stone": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:3.1-65.10"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2, 3, 4, 5, 6, 7, 8, 9 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 10, 11, 12, 13, 14, 15, 16, 17 ]
+        },
+        "CIN": {
+          "direction": "input",
+          "bits": [ 18 ]
+        },
+        "SUM": {
+          "direction": "output",
+          "bits": [ 19, 20, 21, 22, 23, 24, 25, 26 ]
+        },
+        "COUT": {
+          "direction": "output",
+          "bits": [ 27 ]
+        }
+      },
+      "cells": {
+        "gen_carry_sum[0].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 28 ],
+            "B": [ 29 ],
+            "CIN": [ "1" ],
+            "COUT": [ 30 ],
+            "SUM": [ 31 ]
+          }
+        },
+        "gen_carry_sum[0].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 32 ],
+            "B": [ 18 ],
+            "COUT": [ 29 ],
+            "SUM": [ 33 ]
+          }
+        },
+        "gen_carry_sum[0].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 32 ],
+            "B": [ 18 ],
+            "COUT": [ 34 ],
+            "SUM": [ 19 ]
+          }
+        },
+        "gen_carry_sum[1].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 35 ],
+            "B": [ 36 ],
+            "CIN": [ "1" ],
+            "COUT": [ 37 ],
+            "SUM": [ 38 ]
+          }
+        },
+        "gen_carry_sum[1].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 39 ],
+            "B": [ 18 ],
+            "COUT": [ 36 ],
+            "SUM": [ 40 ]
+          }
+        },
+        "gen_carry_sum[1].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 41 ],
+            "B": [ 30 ],
+            "COUT": [ 42 ],
+            "SUM": [ 20 ]
+          }
+        },
+        "gen_carry_sum[2].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 43 ],
+            "B": [ 44 ],
+            "CIN": [ "1" ],
+            "COUT": [ 45 ],
+            "SUM": [ 46 ]
+          }
+        },
+        "gen_carry_sum[2].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 47 ],
+            "B": [ 18 ],
+            "COUT": [ 44 ],
+            "SUM": [ 48 ]
+          }
+        },
+        "gen_carry_sum[2].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 49 ],
+            "B": [ 37 ],
+            "COUT": [ 50 ],
+            "SUM": [ 21 ]
+          }
+        },
+        "gen_carry_sum[3].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 51 ],
+            "B": [ 52 ],
+            "CIN": [ "1" ],
+            "COUT": [ 53 ],
+            "SUM": [ 54 ]
+          }
+        },
+        "gen_carry_sum[3].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 55 ],
+            "B": [ 18 ],
+            "COUT": [ 52 ],
+            "SUM": [ 56 ]
+          }
+        },
+        "gen_carry_sum[3].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 57 ],
+            "B": [ 45 ],
+            "COUT": [ 58 ],
+            "SUM": [ 22 ]
+          }
+        },
+        "gen_carry_sum[4].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 59 ],
+            "B": [ 60 ],
+            "CIN": [ "1" ],
+            "COUT": [ 61 ],
+            "SUM": [ 62 ]
+          }
+        },
+        "gen_carry_sum[4].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 63 ],
+            "B": [ 18 ],
+            "COUT": [ 60 ],
+            "SUM": [ 64 ]
+          }
+        },
+        "gen_carry_sum[4].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 65 ],
+            "B": [ 53 ],
+            "COUT": [ 66 ],
+            "SUM": [ 23 ]
+          }
+        },
+        "gen_carry_sum[5].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 67 ],
+            "B": [ 68 ],
+            "CIN": [ "1" ],
+            "COUT": [ 69 ],
+            "SUM": [ 70 ]
+          }
+        },
+        "gen_carry_sum[5].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 71 ],
+            "B": [ 18 ],
+            "COUT": [ 68 ],
+            "SUM": [ 72 ]
+          }
+        },
+        "gen_carry_sum[5].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 73 ],
+            "B": [ 61 ],
+            "COUT": [ 74 ],
+            "SUM": [ 24 ]
+          }
+        },
+        "gen_carry_sum[6].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 75 ],
+            "B": [ 76 ],
+            "CIN": [ "1" ],
+            "COUT": [ 77 ],
+            "SUM": [ 78 ]
+          }
+        },
+        "gen_carry_sum[6].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 79 ],
+            "B": [ 18 ],
+            "COUT": [ 76 ],
+            "SUM": [ 80 ]
+          }
+        },
+        "gen_carry_sum[6].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 81 ],
+            "B": [ 69 ],
+            "COUT": [ 82 ],
+            "SUM": [ 25 ]
+          }
+        },
+        "gen_carry_sum[7].u_carry.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_carry u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 83 ],
+            "B": [ 84 ],
+            "CIN": [ "1" ],
+            "COUT": [ 27 ],
+            "SUM": [ 85 ]
+          }
+        },
+        "gen_carry_sum[7].u_cin_term.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_cin_term u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 86 ],
+            "B": [ 18 ],
+            "COUT": [ 84 ],
+            "SUM": [ 87 ]
+          }
+        },
+        "gen_carry_sum[7].u_sum.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_sum u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:10.25-10.74"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 88 ],
+            "B": [ 77 ],
+            "COUT": [ 89 ],
+            "SUM": [ 26 ]
+          }
+        },
+        "gen_pg[0].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 2 ],
+            "B": [ 10 ],
+            "COUT": [ 28 ],
+            "SUM": [ 32 ]
+          }
+        },
+        "gen_pg[1].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 11 ],
+            "COUT": [ 90 ],
+            "SUM": [ 41 ]
+          }
+        },
+        "gen_pg[2].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 4 ],
+            "B": [ 12 ],
+            "COUT": [ 91 ],
+            "SUM": [ 49 ]
+          }
+        },
+        "gen_pg[3].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 5 ],
+            "B": [ 13 ],
+            "COUT": [ 92 ],
+            "SUM": [ 57 ]
+          }
+        },
+        "gen_pg[4].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 6 ],
+            "B": [ 14 ],
+            "COUT": [ 93 ],
+            "SUM": [ 65 ]
+          }
+        },
+        "gen_pg[5].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 7 ],
+            "B": [ 15 ],
+            "COUT": [ 94 ],
+            "SUM": [ 73 ]
+          }
+        },
+        "gen_pg[6].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 8 ],
+            "B": [ 16 ],
+            "COUT": [ 95 ],
+            "SUM": [ 81 ]
+          }
+        },
+        "gen_pg[7].u_pg": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:21.29-23.8"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 9 ],
+            "B": [ 17 ],
+            "COUT": [ 96 ],
+            "SUM": [ 88 ]
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 90 ],
+            "B": [ 97 ],
+            "CIN": [ "1" ],
+            "COUT": [ 35 ],
+            "SUM": [ 98 ]
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 41 ],
+            "B": [ 28 ],
+            "COUT": [ 97 ],
+            "SUM": [ 99 ]
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 41 ],
+            "B": [ 32 ],
+            "COUT": [ 39 ],
+            "SUM": [ 100 ]
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 91 ],
+            "B": [ 101 ],
+            "CIN": [ "1" ],
+            "COUT": [ 102 ],
+            "SUM": [ 103 ]
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 49 ],
+            "B": [ 90 ],
+            "COUT": [ 101 ],
+            "SUM": [ 104 ]
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 49 ],
+            "B": [ 41 ],
+            "COUT": [ 105 ],
+            "SUM": [ 106 ]
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 92 ],
+            "B": [ 107 ],
+            "CIN": [ "1" ],
+            "COUT": [ 108 ],
+            "SUM": [ 109 ]
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 57 ],
+            "B": [ 91 ],
+            "COUT": [ 107 ],
+            "SUM": [ 110 ]
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 57 ],
+            "B": [ 49 ],
+            "COUT": [ 111 ],
+            "SUM": [ 112 ]
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 93 ],
+            "B": [ 113 ],
+            "CIN": [ "1" ],
+            "COUT": [ 114 ],
+            "SUM": [ 115 ]
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 65 ],
+            "B": [ 92 ],
+            "COUT": [ 113 ],
+            "SUM": [ 116 ]
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 65 ],
+            "B": [ 57 ],
+            "COUT": [ 117 ],
+            "SUM": [ 118 ]
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 94 ],
+            "B": [ 119 ],
+            "CIN": [ "1" ],
+            "COUT": [ 120 ],
+            "SUM": [ 121 ]
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 73 ],
+            "B": [ 93 ],
+            "COUT": [ 119 ],
+            "SUM": [ 122 ]
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 73 ],
+            "B": [ 65 ],
+            "COUT": [ 123 ],
+            "SUM": [ 124 ]
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 95 ],
+            "B": [ 125 ],
+            "CIN": [ "1" ],
+            "COUT": [ 126 ],
+            "SUM": [ 127 ]
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 81 ],
+            "B": [ 94 ],
+            "COUT": [ 125 ],
+            "SUM": [ 128 ]
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 81 ],
+            "B": [ 73 ],
+            "COUT": [ 129 ],
+            "SUM": [ 130 ]
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 96 ],
+            "B": [ 131 ],
+            "CIN": [ "1" ],
+            "COUT": [ 132 ],
+            "SUM": [ 133 ]
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 88 ],
+            "B": [ 95 ],
+            "COUT": [ 131 ],
+            "SUM": [ 134 ]
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 88 ],
+            "B": [ 81 ],
+            "COUT": [ 135 ],
+            "SUM": [ 136 ]
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 102 ],
+            "B": [ 137 ],
+            "CIN": [ "1" ],
+            "COUT": [ 43 ],
+            "SUM": [ 138 ]
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 105 ],
+            "B": [ 28 ],
+            "COUT": [ 137 ],
+            "SUM": [ 139 ]
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 105 ],
+            "B": [ 32 ],
+            "COUT": [ 47 ],
+            "SUM": [ 140 ]
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 108 ],
+            "B": [ 141 ],
+            "CIN": [ "1" ],
+            "COUT": [ 51 ],
+            "SUM": [ 142 ]
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 111 ],
+            "B": [ 35 ],
+            "COUT": [ 141 ],
+            "SUM": [ 143 ]
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 111 ],
+            "B": [ 39 ],
+            "COUT": [ 55 ],
+            "SUM": [ 144 ]
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 114 ],
+            "B": [ 145 ],
+            "CIN": [ "1" ],
+            "COUT": [ 146 ],
+            "SUM": [ 147 ]
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 117 ],
+            "B": [ 102 ],
+            "COUT": [ 145 ],
+            "SUM": [ 148 ]
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 117 ],
+            "B": [ 105 ],
+            "COUT": [ 149 ],
+            "SUM": [ 150 ]
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 120 ],
+            "B": [ 151 ],
+            "CIN": [ "1" ],
+            "COUT": [ 152 ],
+            "SUM": [ 153 ]
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 123 ],
+            "B": [ 108 ],
+            "COUT": [ 151 ],
+            "SUM": [ 154 ]
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 123 ],
+            "B": [ 111 ],
+            "COUT": [ 155 ],
+            "SUM": [ 156 ]
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 126 ],
+            "B": [ 157 ],
+            "CIN": [ "1" ],
+            "COUT": [ 158 ],
+            "SUM": [ 159 ]
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 129 ],
+            "B": [ 114 ],
+            "COUT": [ 157 ],
+            "SUM": [ 160 ]
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 129 ],
+            "B": [ 117 ],
+            "COUT": [ 161 ],
+            "SUM": [ 162 ]
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 132 ],
+            "B": [ 163 ],
+            "CIN": [ "1" ],
+            "COUT": [ 164 ],
+            "SUM": [ 165 ]
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 135 ],
+            "B": [ 120 ],
+            "COUT": [ 163 ],
+            "SUM": [ 166 ]
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 135 ],
+            "B": [ 123 ],
+            "COUT": [ 167 ],
+            "SUM": [ 168 ]
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 146 ],
+            "B": [ 169 ],
+            "CIN": [ "1" ],
+            "COUT": [ 59 ],
+            "SUM": [ 170 ]
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 149 ],
+            "B": [ 28 ],
+            "COUT": [ 169 ],
+            "SUM": [ 171 ]
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 149 ],
+            "B": [ 32 ],
+            "COUT": [ 63 ],
+            "SUM": [ 172 ]
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 152 ],
+            "B": [ 173 ],
+            "CIN": [ "1" ],
+            "COUT": [ 67 ],
+            "SUM": [ 174 ]
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 155 ],
+            "B": [ 35 ],
+            "COUT": [ 173 ],
+            "SUM": [ 175 ]
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 155 ],
+            "B": [ 39 ],
+            "COUT": [ 71 ],
+            "SUM": [ 176 ]
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 158 ],
+            "B": [ 177 ],
+            "CIN": [ "1" ],
+            "COUT": [ 75 ],
+            "SUM": [ 178 ]
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 161 ],
+            "B": [ 43 ],
+            "COUT": [ 177 ],
+            "SUM": [ 179 ]
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 161 ],
+            "B": [ 47 ],
+            "COUT": [ 79 ],
+            "SUM": [ 180 ]
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.u_gg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__fa_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix u_gg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:15.25-17.4"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "CIN": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 164 ],
+            "B": [ 181 ],
+            "CIN": [ "1" ],
+            "COUT": [ 83 ],
+            "SUM": [ 182 ]
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.u_pg.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix u_pg u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 167 ],
+            "B": [ 51 ],
+            "COUT": [ 181 ],
+            "SUM": [ 183 ]
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.u_pp.u_cell": {
+          "hide_name": 0,
+          "type": "sky130_fd_sc_hd__ha_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix u_pp u_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:5.25-5.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "COUT": "output",
+            "SUM": "output"
+          },
+          "connections": {
+            "A": [ 167 ],
+            "B": [ 55 ],
+            "COUT": [ 86 ],
+            "SUM": [ 184 ]
+          }
+        }
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2, 3, 4, 5, 6, 7, 8, 9 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:4.15-4.16"
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 10, 11, 12, 13, 14, 15, 16, 17 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:4.18-4.19"
+          }
+        },
+        "CIN": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:5.9-5.12"
+          }
+        },
+        "COUT": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:7.10-7.14"
+          }
+        },
+        "SUM": {
+          "hide_name": 0,
+          "bits": [ 19, 20, 21, 22, 23, 24, 25, 26 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:6.16-6.19"
+          }
+        },
+        "gen_carry_sum[0].cin_term": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[0].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[0].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[0].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[0].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[0].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 33 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[0].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 19 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[0].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[0].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[1].cin_term": {
+          "hide_name": 0,
+          "bits": [ 36 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[1].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[1].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 37 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[1].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[1].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 39 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[1].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 40 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[1].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 41 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[1].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[1].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 42 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[1].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[2].cin_term": {
+          "hide_name": 0,
+          "bits": [ 44 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[2].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 43 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[2].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 45 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[2].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 46 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[2].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 47 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[2].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 48 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[2].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 49 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[2].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[2].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 50 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[2].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[3].cin_term": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[3].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[3].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[3].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[3].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 55 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[3].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[3].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[3].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[3].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[3].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[4].cin_term": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[4].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[4].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 61 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[4].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[4].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 63 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[4].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 64 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[4].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 65 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[4].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[4].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 66 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[4].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[5].cin_term": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[5].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 67 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[5].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 69 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[5].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 70 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[5].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 71 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[5].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 72 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[5].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 73 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[5].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[5].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 74 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[5].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[6].cin_term": {
+          "hide_name": 0,
+          "bits": [ 76 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[6].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 75 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[6].u_carry.Y": {
+          "hide_name": 0,
+          "bits": [ 77 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_carry Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.37-13.38"
+          }
+        },
+        "gen_carry_sum[6].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 78 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[6].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 79 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[6].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 80 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[6].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 81 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[6].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[6].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 82 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[6].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[7].cin_term": {
+          "hide_name": 0,
+          "bits": [ 84 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder8_kogge_stone.v:59.12-59.20"
+          }
+        },
+        "gen_carry_sum[7].u_carry.A": {
+          "hide_name": 0,
+          "bits": [ 83 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_carry A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:13.24-13.25"
+          }
+        },
+        "gen_carry_sum[7].u_carry.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 85 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_carry unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[7].u_cin_term.A": {
+          "hide_name": 0,
+          "bits": [ 86 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_cin_term A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:3.25-3.26"
+          }
+        },
+        "gen_carry_sum[7].u_cin_term.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_cin_term unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_carry_sum[7].u_sum.A": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_sum A",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.25-8.26"
+          }
+        },
+        "gen_carry_sum[7].u_sum.Y": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_sum Y",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:8.38-8.39"
+          }
+        },
+        "gen_carry_sum[7].u_sum.unused_cout": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "gen_carry_sum[7].u_sum unused_cout",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:9.8-9.19",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 90 ],
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 97 ],
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 98 ],
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 99 ],
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[1].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "gen_stage1[1].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 91 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 102 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 105 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 104 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[2].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "gen_stage1[2].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 92 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 111 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 107 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 109 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 110 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[3].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 112 ],
+          "attributes": {
+            "hdlname": "gen_stage1[3].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 93 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 114 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 117 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 115 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 116 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[4].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "gen_stage1[4].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 94 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 120 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 123 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 119 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 121 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 122 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[5].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 124 ],
+          "attributes": {
+            "hdlname": "gen_stage1[5].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 126 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 129 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 125 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 127 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 128 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[6].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 130 ],
+          "attributes": {
+            "hdlname": "gen_stage1[6].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.G_HI": {
+          "hide_name": 0,
+          "bits": [ 96 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix G_HI",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:29.9-29.13"
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 132 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 135 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 131 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 133 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 134 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage1[7].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 136 ],
+          "attributes": {
+            "hdlname": "gen_stage1[7].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 137 ],
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 138 ],
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 139 ],
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[2].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 140 ],
+          "attributes": {
+            "hdlname": "gen_stage2[2].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 141 ],
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 142 ],
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 143 ],
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[3].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 144 ],
+          "attributes": {
+            "hdlname": "gen_stage2[3].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 146 ],
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 149 ],
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 145 ],
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 147 ],
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 148 ],
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[4].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 150 ],
+          "attributes": {
+            "hdlname": "gen_stage2[4].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 152 ],
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 155 ],
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 151 ],
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 153 ],
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 154 ],
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[5].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 156 ],
+          "attributes": {
+            "hdlname": "gen_stage2[5].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 158 ],
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 161 ],
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 157 ],
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 159 ],
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 160 ],
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[6].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 162 ],
+          "attributes": {
+            "hdlname": "gen_stage2[6].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.G_OUT": {
+          "hide_name": 0,
+          "bits": [ 164 ],
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix G_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.10-30.15"
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.P_OUT": {
+          "hide_name": 0,
+          "bits": [ 167 ],
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix P_OUT",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:30.17-30.22"
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 163 ],
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 165 ],
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 166 ],
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage2[7].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 168 ],
+          "attributes": {
+            "hdlname": "gen_stage2[7].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 169 ],
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 170 ],
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 171 ],
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[4].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 172 ],
+          "attributes": {
+            "hdlname": "gen_stage3[4].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 173 ],
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 174 ],
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 175 ],
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[5].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 176 ],
+          "attributes": {
+            "hdlname": "gen_stage3[5].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 177 ],
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 178 ],
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 179 ],
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[6].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 180 ],
+          "attributes": {
+            "hdlname": "gen_stage3[6].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.propagated_g": {
+          "hide_name": 0,
+          "bits": [ 181 ],
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix propagated_g",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:32.8-32.20"
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.u_gg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 182 ],
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix u_gg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:14.8-14.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.u_pg.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 183 ],
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix u_pg unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        },
+        "gen_stage3[7].genblk1.u_prefix.u_pp.unused_sum": {
+          "hide_name": 0,
+          "bits": [ 184 ],
+          "attributes": {
+            "hdlname": "gen_stage3[7].genblk1.u_prefix u_pp unused_sum",
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/adder_primitives.v:4.8-4.18",
+            "unused_bits": "0 "
+          }
+        }
+      }
+    },
+    "sky130_fd_sc_hd__fa_1": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001",
+        "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:3.16-5.13"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "CIN": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "COUT": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "SUM": {
+          "direction": "output",
+          "bits": [ 6 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:4.9-4.10"
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:4.12-4.13"
+          }
+        },
+        "CIN": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:4.15-4.18"
+          }
+        },
+        "COUT": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:4.27-4.31"
+          }
+        },
+        "SUM": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:4.33-4.36"
+          }
+        }
+      }
+    },
+    "sky130_fd_sc_hd__fah_1": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001",
+        "cells_not_processed": "00000000000000000000000000000001",
+        "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:6.16-8.13"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "CI": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "COUT": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "SUM": {
+          "direction": "output",
+          "bits": [ 6 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:7.9-7.10"
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:7.12-7.13"
+          }
+        },
+        "CI": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:7.15-7.17"
+          }
+        },
+        "COUT": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:7.26-7.30"
+          }
+        },
+        "SUM": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:7.32-7.35"
+          }
+        }
+      }
+    },
+    "sky130_fd_sc_hd__fahcin_1": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001",
+        "cells_not_processed": "00000000000000000000000000000001",
+        "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:9.16-11.13"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "CIN": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "COUT": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "SUM": {
+          "direction": "output",
+          "bits": [ 6 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:10.9-10.10"
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:10.12-10.13"
+          }
+        },
+        "CIN": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:10.15-10.18"
+          }
+        },
+        "COUT": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:10.27-10.31"
+          }
+        },
+        "SUM": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:10.33-10.36"
+          }
+        }
+      }
+    },
+    "sky130_fd_sc_hd__fahcon_1": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001",
+        "cells_not_processed": "00000000000000000000000000000001",
+        "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:12.16-14.13"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "CI": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "COUT_N": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "SUM": {
+          "direction": "output",
+          "bits": [ 6 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:13.9-13.10"
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:13.12-13.13"
+          }
+        },
+        "CI": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:13.15-13.17"
+          }
+        },
+        "COUT_N": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:13.26-13.32"
+          }
+        },
+        "SUM": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:13.34-13.37"
+          }
+        }
+      }
+    },
+    "sky130_fd_sc_hd__ha_1": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001",
+        "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:15.16-17.13"
+      },
+      "ports": {
+        "A": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "B": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "COUT": {
+          "direction": "output",
+          "bits": [ 4 ]
+        },
+        "SUM": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "A": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:16.9-16.10"
+          }
+        },
+        "B": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:16.12-16.13"
+          }
+        },
+        "COUT": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:16.22-16.26"
+          }
+        },
+        "SUM": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "/home/duhaochen/LibCharX/characterization/sky130_adders/application/rtl/cells_blackbox.v:16.28-16.31"
+          }
+        }
+      }
+    }
+  }
+}

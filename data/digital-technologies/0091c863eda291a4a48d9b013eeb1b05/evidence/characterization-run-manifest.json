@@ -1,0 +1,96 @@
+{
+  "argv": [
+    "/home/duhaochen/LibCharX/.venv/bin/python",
+    "characterization/sky130_adders/run_characterization.py",
+    "--sum-polarity",
+    "primary"
+  ],
+  "command": "/home/duhaochen/LibCharX/.venv/bin/python characterization/sky130_adders/run_characterization.py --sum-polarity primary",
+  "smoke": false,
+  "sum_polarity": "primary",
+  "config": "/home/duhaochen/LibCharX/characterization/sky130_adders/sky130_adders.yaml",
+  "cells": [
+    "sky130_fd_sc_hd__fa_1",
+    "sky130_fd_sc_hd__fah_1",
+    "sky130_fd_sc_hd__fahcin_1",
+    "sky130_fd_sc_hd__fahcon_1",
+    "sky130_fd_sc_hd__ha_1"
+  ],
+  "runtime": {
+    "per_cell": {
+      "sky130_fd_sc_hd__fa_1": {
+        "simulation_calls": 114.0,
+        "simulation_successes": 114.0,
+        "simulation_failures": 0.0,
+        "extraction_calls": 114.0,
+        "extraction_successes": 114.0,
+        "extraction_failures": 0.0,
+        "static_vector_trials": 108.0,
+        "static_vector_successes": 108.0,
+        "arc_skipped": 0.0
+      },
+      "sky130_fd_sc_hd__fah_1": {
+        "simulation_calls": 114.0,
+        "simulation_successes": 114.0,
+        "simulation_failures": 0.0,
+        "extraction_calls": 114.0,
+        "extraction_successes": 114.0,
+        "extraction_failures": 0.0,
+        "static_vector_trials": 108.0,
+        "static_vector_successes": 108.0,
+        "arc_skipped": 0.0
+      },
+      "sky130_fd_sc_hd__fahcin_1": {
+        "simulation_calls": 117.0,
+        "simulation_successes": 117.0,
+        "simulation_failures": 0.0,
+        "extraction_calls": 114.0,
+        "extraction_successes": 114.0,
+        "extraction_failures": 0.0,
+        "static_vector_trials": 111.0,
+        "static_vector_successes": 108.0,
+        "arc_skipped": 0.0
+      },
+      "sky130_fd_sc_hd__fahcon_1": {
+        "simulation_calls": 117.0,
+        "simulation_successes": 117.0,
+        "simulation_failures": 0.0,
+        "extraction_calls": 114.0,
+        "extraction_successes": 114.0,
+        "extraction_failures": 0.0,
+        "static_vector_trials": 111.0,
+        "static_vector_successes": 108.0,
+        "arc_skipped": 0.0
+      },
+      "sky130_fd_sc_hd__ha_1": {
+        "simulation_calls": 76.0,
+        "simulation_successes": 76.0,
+        "simulation_failures": 0.0,
+        "extraction_calls": 76.0,
+        "extraction_successes": 76.0,
+        "extraction_failures": 0.0,
+        "static_vector_trials": 72.0,
+        "static_vector_successes": 72.0,
+        "arc_skipped": 0.0
+      }
+    },
+    "totals": {
+      "simulation_calls": 538.0,
+      "simulation_successes": 538.0,
+      "simulation_failures": 0.0,
+      "extraction_calls": 532.0,
+      "extraction_successes": 532.0,
+      "extraction_failures": 0.0,
+      "static_vector_trials": 510.0,
+      "static_vector_successes": 504.0,
+      "arc_skipped": 0.0
+    }
+  },
+  "results": "/home/duhaochen/LibCharX/characterization/sky130_adders/results/results.json",
+  "liberty": "/home/duhaochen/LibCharX/characterization/sky130_adders/results/libcharx_adder_test.lib",
+  "sha256": {
+    "config": "dadf2f7fe18bcbf0b7fb38f80f41ed403e82538ab25e1e98c976d209c1b20a99",
+    "results": "b784f014234b8c996c48489d23e0824205f71f8e04c352176a76e69b36a5ac12",
+    "liberty": "fe758dc59aff5e948ce9107beec300e219185c98b434f9a614f62ad9eeb035d2"
+  }
+}

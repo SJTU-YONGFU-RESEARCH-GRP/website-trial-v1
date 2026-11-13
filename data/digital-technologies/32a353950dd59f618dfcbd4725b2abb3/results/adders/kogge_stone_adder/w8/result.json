@@ -1,0 +1,76 @@
+{
+  "architecture": "kogge_stone_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "freepdk45",
+  "canonicalTechnology": "45nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 2596.842759,
+  "powerMw": 0.0007277557,
+  "areaUm2": 138.4435,
+  "flow": {
+    "schemaVersion": 1,
+    "generatedAtUtc": "2026-08-01T09:16:18.919416+00:00",
+    "technologyUid": "32a353950dd59f618dfcbd4725b2abb3",
+    "pdk": "FreePDK45",
+    "standardCellLibrary": "gscl45nm",
+    "corner": "typical",
+    "libertySha256": "69c0641df1dc737e5c8dbd3950f2daf3b52c6e7767aa081e35e9b0739bf62d6f",
+    "tools": {
+      "yosys": "Yosys 0.64+72 (git sha1 22ef99218, clang++ 20.1.8 -fPIC -O3)",
+      "opensta": "3.1.0",
+      "iverilog": "Icarus Verilog version 12.0 (stable) ()"
+    },
+    "rtlSimulation": {
+      "status": "pass",
+      "vectors": 128,
+      "log": "rtl-simulation.log"
+    },
+    "synthesis": {
+      "status": "pass",
+      "numCells": 47,
+      "numCellsByType": {
+        "AND2X1": 5,
+        "AOI21X1": 4,
+        "AOI22X1": 1,
+        "INVX1": 2,
+        "NAND2X1": 11,
+        "NAND3X1": 1,
+        "NOR2X1": 3,
+        "OAI21X1": 4,
+        "OR2X1": 3,
+        "XNOR2X1": 5,
+        "XOR2X1": 8
+      },
+      "mappedNetlist": "mapped.v",
+      "mappedJson": "mapped.json",
+      "log": "synthesis.log"
+    },
+    "sta": {
+      "status": "pass",
+      "criticalPathDelayNs": 0.385083,
+      "fmaxEstimateMhz": 2596.842759,
+      "startpoint": "cin (input port clocked by vclk)",
+      "endpoint": "cout (output port clocked by vclk)",
+      "arrivalNs": 0.385083,
+      "constraints": {
+        "virtualClockPeriodNs": 100.0,
+        "inputSlewNs": 0.05,
+        "outputLoadPf": 0.01
+      },
+      "log": "sta.log"
+    },
+    "ppa": {
+      "areaUm2": 138.4435,
+      "leakagePowerMw": 0.0007277557,
+      "powerMetric": "Liberty static cell leakage sum",
+      "missingLeakageCells": []
+    },
+    "notes": [
+      "Timing is pre-layout combinational OpenSTA using a virtual clock, common input slew, and common output load.",
+      "Area is the mapped standard-cell area from the selected Liberty; routing area is not included.",
+      "powerMw is static Liberty leakage only; dynamic power requires activity/VCD and physical parasitics."
+    ]
+  }
+}

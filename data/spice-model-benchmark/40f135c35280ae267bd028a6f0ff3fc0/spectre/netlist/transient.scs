@@ -1,0 +1,74 @@
+* Translated benchmark circuit
+* semantic-sha256: 2ad8cde147b2424235ca92430457ce42415aeb19771c7ec53de3872285a20c06
+simulator lang=spectre
+global 0
+benchmarkNumerics options max_approach_minstep=10000 max_minstep_nonconv=10000
+simulatorOptions options temp=27
+simulatorOptions options temp=27 tnom=27
+simulatorOptions options gmin=1e-12
+simulatorOptions options reltol=1e-3
+simulatorOptions options iabstol=1e-12
+simulatorOptions options method=gear2only
+simulatorOptions options TEMP=27
+simulatorOptions options TNOM=27
+simulator lang=spice
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/40f135c35280ae267bd028a6f0ff3fc0/spectre.lib'
+simulator lang=spectre
+m_tran (drain_tran gate_tran source_tran bulk_tran) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+vgs_tran (gate_tran 0) vsource type=pulse val0=0 val1=1.2 delay=0n rise=0.5n fall=0.5n width=10n period=20n
+vds_tran (drain_tran 0) vsource dc=1.2
+vs_tran (source_tran 0) vsource dc=0
+vb_tran (bulk_tran 0) vsource dc=0
+cload (drain_tran 0) capacitor c=1f
+m_inv_n (out_inv in_inv 0 0) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+m_inv_p (out_inv in_inv vdd_inv vdd_inv) __fixture_pmos l=1u w=20u
+vdd_inv (vdd_inv 0) vsource dc=1.2
+vin_inv (in_inv 0) vsource type=pulse val0=0 val1=1.2 delay=0n rise=0.5n fall=0.5n width=10n period=20n
+cload_inv (out_inv 0) capacitor c=1f
+vdd_delay (vdd_delay 0) vsource dc=1.2
+vin_delay (in_delay 0) vsource type=pulse val0=0 val1=1.2 delay=0n rise=0.5n fall=0.5n width=10n period=20n
+m_d1_n (mid1_delay in_delay 0 0) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+m_d1_p (mid1_delay in_delay vdd_delay vdd_delay) __fixture_pmos l=1u w=20u
+cload_d1 (mid1_delay 0) capacitor c=1f
+m_d2_n (mid2_delay mid1_delay 0 0) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+m_d2_p (mid2_delay mid1_delay vdd_delay vdd_delay) __fixture_pmos l=1u w=20u
+cload_d2 (mid2_delay 0) capacitor c=1f
+m_d3_n (out_delay mid2_delay 0 0) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+m_d3_p (out_delay mid2_delay vdd_delay vdd_delay) __fixture_pmos l=1u w=20u
+cload_d3 (out_delay 0) capacitor c=1f
+m_power_n (out_power in_power 0 0) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+m_power_p (out_power in_power vdd_power vdd_power) __fixture_pmos l=1u w=20u
+vdd_power (vdd_power 0) vsource dc=1.2
+vin_power (in_power 0) vsource type=pulse val0=0 val1=1.2 delay=0n rise=0.5n fall=0.5n width=10n period=20n
+cload_power (out_power 0) capacitor c=1f
+vdd_charge (vdd_charge 0) vsource dc=1.2
+vg_charge (gate_charge 0) vsource type=pulse val0=0 val1=1.2 delay=0n rise=1n fall=1n width=10n period=20n
+m_charge (drain_charge gate_charge source_charge bulk_charge) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+vd_charge (drain_charge 0) vsource dc=1.2
+vs_charge (source_charge 0) vsource dc=0
+vb_charge (bulk_charge 0) vsource dc=0
+cg (gate_charge 0) capacitor c=1e-18
+cd (drain_charge 0) capacitor c=1e-18
+cs (source_charge 0) capacitor c=1e-18
+cb (bulk_charge 0) capacitor c=1e-18
+m_qs (drain_qs gate_qs source_qs bulk_qs) __benchmark_selected_nmos l=5.0250000000000006e-07 w=9.9749999999999998e-07
+vgs_qs (gate_qs 0) vsource type=pulse val0=0 val1=1.2 delay=0n rise=20n fall=20n width=100n period=200n
+vds_qs (drain_qs 0) vsource dc=1.2
+vs_qs (source_qs 0) vsource dc=0
+vb_qs (bulk_qs 0) vsource dc=0
+cload_qs (drain_qs 0) capacitor c=10f
+x0 tran step=1e-11 stop=1e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+x1 tran step=1e-11 stop=1e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+x2 tran step=1e-11 stop=1e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+t3 sweep param=temp values=[27] {
+  x3 tran step=1e-11 stop=1e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+}
+t4 sweep param=temp values=[100] {
+  x4 tran step=1e-11 stop=1e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+}
+t5 sweep param=temp values=[27] {
+  x5 tran step=1e-10 stop=5e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+}
+t6 sweep param=temp values=[27] {
+  x6 tran step=1e-11 stop=1e-07 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+}

@@ -1,0 +1,369 @@
+{
+  "modelId": "sky130__fd__bs__flash__special__sonosfet__original__model__expansion_translation",
+  "sourceId": "sky130__fd__bs__flash__special__sonosfet__original__model",
+  "kind": "processed",
+  "chain": [
+    "expansion",
+    "translation"
+  ],
+  "modelPath": "/home/duhaochen/website-trial-v1/data/spice-model-benchmark/35c51eb2c9233d013d733a2942a7daa4/model.lib",
+  "benchmarkInputPath": "/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/35c51eb2c9233d013d733a2942a7daa4/spectre.lib",
+  "benchmarkFixtureMode": "fixed-simulator-native",
+  "netlistAstUsed": false,
+  "fixtureManifest": "native-fixture-manifest.json",
+  "benchmarkContractSha256": "3536913684d2a50618f6b9aaee49c88acffe99dbd318a0dd2dc19a5b01d391dc",
+  "fixtureTemplateHashes": {
+    "dc": "b280eb8ad5e6de5a47866aa393855aecb44bd7561bd4a774b163a69ed70c8f2e",
+    "transient": "7ea2f3e199b6f8009aee38bc913881b42303d6b251a98232c4cfb5a310a82932",
+    "ac": "6ab2d59f15d5c9c2b4e1791431ea78b7e6d571da46e37b447bf64b528aaa6f92",
+    "noise": "87f71225bf7c3ae8a8511c54006addfc7eb95f1cb1e64212e36de39e68666147"
+  },
+  "fixtureSubmittedHashes": {
+    "dc": "ae69f878aa57b621f9008bc969feb9ba74b02003fbc8bba68f3574a32b8037ab",
+    "transient": "04e49941ff009d95222c1d8e1d322fe99193e923dcdb197de7b517c8620f94b3",
+    "ac": "fba245075799fefac161b8c8a6f219c0c17aec9a667c8302d885833f289177b6",
+    "noise": "d33c08b585583becb9cdd32b30c10c2f2746f8564a56c6c61946ad1d8fe63aff"
+  },
+  "parameterPreservingInput": true,
+  "modelFallbackApplied": false,
+  "parameterContext": {
+    "kind": "sky130-pdk-tt",
+    "guessedDefaults": false,
+    "unresolvedSymbols": [],
+    "geometrySource": "mosfet-fixed-native-v1 benchmark contract",
+    "geometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "effectiveGeometry": {
+      "dc": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "transient": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "ac": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "noise": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      }
+    },
+    "parameterCount": 41,
+    "parameters": [
+      {
+        "name": "hv_dlc_rotweak",
+        "value": ".00e-9",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/all.spice"
+      },
+      {
+        "name": "l",
+        "value": "1u",
+        "source": "benchmark netlist DUT geometry"
+      },
+      {
+        "name": "mult",
+        "value": "1",
+        "source": "benchmark netlist DUT geometry"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__ajunction_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__dlc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__dlc_rotweak",
+        "value": "hv_dlc_rotweak",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/all.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__dwc_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__k2_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__k2_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__k2_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__kt1_diff_0",
+        "value": "-3.5612e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__kt1_diff_1",
+        "value": "-2.9107e-2",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__kt1_diff_2",
+        "value": "-6.5907e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__lint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__nfactor_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__nfactor_diff_1",
+        "value": "1.3597",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__nfactor_diff_2",
+        "value": "1.0202",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__overlap_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__pjunction_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__rdsw_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__rdsw_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__rdsw_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__tox_mult",
+        "value": "1.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__tox_slope",
+        "value": "5e-3",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life/mm.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__tox_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__u0_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__u0_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__u0_diff_2",
+        "value": "1.3468e-3",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__voff_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__voff_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__voff_diff_2",
+        "value": "-2.0912e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vsat_diff_0",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vsat_diff_1",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vsat_diff_2",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vth0_diff_0",
+        "value": "-4.3060e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vth0_diff_1",
+        "value": "-8.5561e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vth0_diff_2",
+        "value": "-1.5565e-1",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vth0_slope",
+        "value": "0.026",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life/mm.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__vth0_slope_spectre",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.pm3.spice"
+      },
+      {
+        "name": "sky130_fd_bs_flash__special_sonosfet_original__wint_diff",
+        "value": "0.0",
+        "source": "/home/duhaochen/skywater-pdk/libraries/sky130_fd_pr/latest/models/sonos_p/begin_of_life.spice"
+      },
+      {
+        "name": "w",
+        "value": "10u",
+        "source": "benchmark netlist DUT geometry"
+      }
+    ],
+    "modelNameAliases": {
+      "sky130_fd_bs_flash__special_sonosfet_original__model.0": "sky130_fd_bs_flash__special_sonosfet_original__model.0",
+      "sky130_fd_bs_flash__special_sonosfet_original__model.1": "__benchmark_selected_nmos",
+      "sky130_fd_bs_flash__special_sonosfet_original__model.2": "sky130_fd_bs_flash__special_sonosfet_original__model.2"
+    },
+    "modelSelectorNames": [
+      "__benchmark_selected_nmos"
+    ],
+    "modelSelection": {
+      "sourceModelName": "sky130_fd_bs_flash__special_sonosfet_original__model.1",
+      "modelFamily": "sky130_fd_bs_flash__special_sonosfet_original__model",
+      "deviceType": "nmos",
+      "selectionMode": "nearest-real-bin-outside-range",
+      "dutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "effectiveDutGeometry": {
+        "l": "1u",
+        "w": "10u",
+        "m": "1"
+      },
+      "geometryAdjustmentReason": null,
+      "selectedBinBounds": {
+        "lmin": 4.95e-07,
+        "lmax": 5.05e-07,
+        "wmin": 9.95e-07,
+        "wmax": 1.005e-06
+      },
+      "benchmarkModelName": "__benchmark_selected_nmos"
+    },
+    "sha256": "1ec48f1f017f21c9961cad5517cfd2c53da34d7cc595e07d55dbc8e0a6b78c80"
+  },
+  "modelHandoffAdjustments": [
+    "added PMOS complementary-circuit fixture"
+  ],
+  "md5": "35c51eb2c9233d013d733a2942a7daa4",
+  "simulator": "spectre",
+  "modes": [
+    "dc",
+    "transient",
+    "ac",
+    "noise"
+  ],
+  "startedAt": "2026-07-29T11:53:57.071795+00:00",
+  "finishedAt": "2026-07-29T11:55:53.207598+00:00",
+  "elapsedSeconds": 116.135801,
+  "peakRssKiB": 360896,
+  "returnCode": 0,
+  "status": "completed",
+  "error": null,
+  "internalFailureMarkers": [],
+  "report": "REPORT.md",
+  "dataDirectory": "data",
+  "plotDirectory": "plot",
+  "netlistDirectory": "netlist",
+  "netlists": [
+    {
+      "mode": "dc",
+      "path": "netlist/dc.scs",
+      "bytes": 2912,
+      "sha256": "ae69f878aa57b621f9008bc969feb9ba74b02003fbc8bba68f3574a32b8037ab"
+    },
+    {
+      "mode": "transient",
+      "path": "netlist/transient.scs",
+      "bytes": 3552,
+      "sha256": "04e49941ff009d95222c1d8e1d322fe99193e923dcdb197de7b517c8620f94b3"
+    },
+    {
+      "mode": "ac",
+      "path": "netlist/ac.scs",
+      "bytes": 2462,
+      "sha256": "fba245075799fefac161b8c8a6f219c0c17aec9a667c8302d885833f289177b6"
+    },
+    {
+      "mode": "noise",
+      "path": "netlist/noise.scs",
+      "bytes": 3332,
+      "sha256": "d33c08b585583becb9cdd32b30c10c2f2746f8564a56c6c61946ad1d8fe63aff"
+    }
+  ]
+}

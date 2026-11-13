@@ -1,0 +1,55 @@
+{
+  "name": "selection_seq",
+  "inputs": [
+    "d",
+    "clk"
+  ],
+  "outputs": [
+    "q"
+  ],
+  "clock": "clk",
+  "instances": [
+    {
+      "id": "launch",
+      "family": "DFF",
+      "inputs": [
+        "d"
+      ],
+      "output": "n1",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    },
+    {
+      "id": "u_logic",
+      "family": "INV",
+      "inputs": [
+        "n1"
+      ],
+      "output": "n2",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    },
+    {
+      "id": "capture",
+      "family": "DFF",
+      "inputs": [
+        "n2"
+      ],
+      "output": "q",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 2
+    }
+  ]
+}

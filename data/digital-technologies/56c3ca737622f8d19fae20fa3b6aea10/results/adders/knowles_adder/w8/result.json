@@ -1,0 +1,53 @@
+{
+  "architecture": "knowles_adder",
+  "designFamily": "core_adders",
+  "category": "adders",
+  "bitWidth": 8,
+  "processNode": "cfet",
+  "canonicalTechnology": "7nm",
+  "isNamedPdk": true,
+  "fmaxMhz": 694.975328,
+  "powerMw": 1.4525e-7,
+  "areaUm2": 360.3456,
+  "yosys": {
+    "pdk": "cfet",
+    "designStem": "knowles_adder",
+    "numCells": 50,
+    "numWireBits": 220,
+    "numCellsByType": {
+      "cfet_a21o_1": 4,
+      "cfet_a21oi_2": 2,
+      "cfet_a221oi_2": 1,
+      "cfet_a31o_2": 1,
+      "cfet_clkbuf_1": 1,
+      "cfet_inv_1": 3,
+      "cfet_lpflow_inputiso0n_1": 1,
+      "cfet_lpflow_isobufsrc_1": 1,
+      "cfet_nand2_1": 5,
+      "cfet_nor2_1": 8,
+      "cfet_nor3_1": 1,
+      "cfet_o211ai_1": 1,
+      "cfet_o21ai_0": 2,
+      "cfet_o21ai_2": 1,
+      "cfet_o21bai_1": 1,
+      "cfet_o21bai_2": 1,
+      "cfet_o311ai_2": 1,
+      "cfet_xnor2_1": 10,
+      "cfet_xnor2_2": 2,
+      "cfet_xor2_1": 3
+    },
+    "workDir": "/home/yongfu/proj/website/digital-circuit-designs-ppa/results/cfet/knowles_adder_w8",
+    "metrics": {
+      "criticalPathDelayPs": 1438.9,
+      "fmaxEstimateMhz": 694.975328,
+      "leakagePowerNw": 0.145250296,
+      "powerLeakageMw": 1.4525e-7,
+      "powerMw": 1.4525e-7,
+      "missingLeakageCells": [],
+      "estimateNotes": [
+        "fmax from ABC stime critical-path delay (Liberty timing); not signoff STA.",
+        "powerMw is Liberty cell_leakage_power sum (static); dynamic power needs activity/VCD."
+      ]
+    }
+  }
+}

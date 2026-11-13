@@ -1,0 +1,48 @@
+{
+  "inv_x1": {
+    "transistors": 2,
+    "dp_r1": {
+      "success": true,
+      "trials": [
+        {
+          "algo": "dp_r1",
+          "success": true,
+          "timeout": false,
+          "return_code": 0,
+          "wall_sec": 5.272353,
+          "min_cpp": 3,
+          "candidates": 2,
+          "cost": 10.0,
+          "nor_hpwl": 0.333333,
+          "placement_ms": 6
+        }
+      ],
+      "best_cpp": 3,
+      "mean_cpp": 3.0,
+      "best_cost": 10.0
+    },
+    "sa_r1": {
+      "success": true,
+      "trials": [
+        {
+          "algo": "sa_r1",
+          "success": true,
+          "timeout": false,
+          "return_code": 0,
+          "wall_sec": 4.381416,
+          "algo_line": "sa_exp",
+          "cell_width": 1,
+          "min_cpp": 3,
+          "cost": 10.0,
+          "nor_hpwl": 0.5,
+          "candidates": 1,
+          "cross_rows": 0,
+          "placement_ms": 23
+        }
+      ],
+      "best_cpp": 3,
+      "mean_cpp": 3.0,
+      "best_cost": 10.0
+    }
+  }
+}

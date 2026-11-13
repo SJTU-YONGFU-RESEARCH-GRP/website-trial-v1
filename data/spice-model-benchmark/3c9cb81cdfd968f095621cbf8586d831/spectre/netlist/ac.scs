@@ -1,0 +1,3862 @@
+* Translated benchmark circuit
+* semantic-sha256: d6c948ccf16e517a029ef02e05919ecb87131b13cb144b12369baae54a3a4da4
+simulator lang=spectre
+global 0
+benchmarkNumerics options max_approach_minstep=10000 max_minstep_nonconv=10000
+simulatorOptions options temp=27
+simulatorOptions options temp=27 tnom=27
+simulatorOptions options gmin=1e-12
+simulatorOptions options reltol=1e-3
+simulatorOptions options iabstol=1e-12
+simulatorOptions options method=gear2only
+simulator lang=spice
+.inc '/home/duhaochen/pipeline_sky130_mos/benchmark-inputs/3c9cb81cdfd968f095621cbf8586d831/spectre.lib'
+simulator lang=spectre
+m1 (drain_1 gate_1 source_1 bulk_1) __benchmark_selected_nmos l=5.0250000000000006e-07 w=7.0874999999999995e-06
+vg (gate_1 0) vsource dc=0 mag=1
+vd (drain_1 0) vsource dc=1.0 mag=0
+vs (source_1 0) vsource dc=0 mag=0
+vb (bulk_1 0) vsource dc=0 mag=0
+m2 (drain_2 gate_2 0 0) __benchmark_selected_nmos l=5.0250000000000006e-07 w=7.0874999999999995e-06
+rg (gate_2 gate_in2) resistor r=50
+rd (drain_2 drain_in2) resistor r=50
+vgs (gate_in2 0) vsource dc=0.8 mag=0
+vds (drain_in2 0) vsource dc=1.0 mag=0
+m3 (drain_3 gate_3 source_3 bulk_3) __benchmark_selected_nmos l=5.0250000000000006e-07 w=7.0874999999999995e-06
+vgq (gate_3 0) vsource dc=0 type=pwl wave=[0 0 1n 0 2n 1.0 5n 1.0]
+vdq (drain_3 0) vsource dc=1.0
+vsq (source_3 0) vsource dc=0
+vbq (bulk_3 0) vsource dc=0
+a0_0 sweep param=dc dev=vg values=[-0.8] {
+  x0 ac values=[1000]
+}
+a1_0 sweep param=dc dev=vg values=[-0.8] {
+  x1 ac values=[10000]
+}
+a2_0 sweep param=dc dev=vg values=[-0.8] {
+  x2 ac values=[100000]
+}
+a3_0 sweep param=dc dev=vg values=[-0.8] {
+  x3 ac values=[1000000]
+}
+a4_4 sweep param=dc dev=vg values=[-0.8] {
+  a4_3 sweep param=mag dev=vg values=[1] {
+  a4_2 sweep param=mag dev=vd values=[0] {
+  a4_1 sweep param=mag dev=vs values=[0] {
+  a4_0 sweep param=mag dev=vb values=[0] {
+  x4 ac values=[1000000]
+}
+}
+}
+}
+}
+a5_4 sweep param=dc dev=vg values=[-0.8] {
+  a5_3 sweep param=mag dev=vg values=[0] {
+  a5_2 sweep param=mag dev=vd values=[1] {
+  a5_1 sweep param=mag dev=vs values=[0] {
+  a5_0 sweep param=mag dev=vb values=[0] {
+  x5 ac values=[1000000]
+}
+}
+}
+}
+}
+a6_4 sweep param=dc dev=vg values=[-0.8] {
+  a6_3 sweep param=mag dev=vg values=[0] {
+  a6_2 sweep param=mag dev=vd values=[0] {
+  a6_1 sweep param=mag dev=vs values=[1] {
+  a6_0 sweep param=mag dev=vb values=[0] {
+  x6 ac values=[1000000]
+}
+}
+}
+}
+}
+a7_4 sweep param=dc dev=vg values=[-0.8] {
+  a7_3 sweep param=mag dev=vg values=[0] {
+  a7_2 sweep param=mag dev=vd values=[0] {
+  a7_1 sweep param=mag dev=vs values=[0] {
+  a7_0 sweep param=mag dev=vb values=[1] {
+  x7 ac values=[1000000]
+}
+}
+}
+}
+}
+a8_4 sweep param=dc dev=vg values=[-0.75] {
+  a8_3 sweep param=mag dev=vg values=[1] {
+  a8_2 sweep param=mag dev=vd values=[0] {
+  a8_1 sweep param=mag dev=vs values=[0] {
+  a8_0 sweep param=mag dev=vb values=[0] {
+  x8 ac values=[1000]
+}
+}
+}
+}
+}
+a9_4 sweep param=dc dev=vg values=[-0.75] {
+  a9_3 sweep param=mag dev=vg values=[1] {
+  a9_2 sweep param=mag dev=vd values=[0] {
+  a9_1 sweep param=mag dev=vs values=[0] {
+  a9_0 sweep param=mag dev=vb values=[0] {
+  x9 ac values=[10000]
+}
+}
+}
+}
+}
+a10_4 sweep param=dc dev=vg values=[-0.75] {
+  a10_3 sweep param=mag dev=vg values=[1] {
+  a10_2 sweep param=mag dev=vd values=[0] {
+  a10_1 sweep param=mag dev=vs values=[0] {
+  a10_0 sweep param=mag dev=vb values=[0] {
+  x10 ac values=[100000]
+}
+}
+}
+}
+}
+a11_4 sweep param=dc dev=vg values=[-0.75] {
+  a11_3 sweep param=mag dev=vg values=[1] {
+  a11_2 sweep param=mag dev=vd values=[0] {
+  a11_1 sweep param=mag dev=vs values=[0] {
+  a11_0 sweep param=mag dev=vb values=[0] {
+  x11 ac values=[1000000]
+}
+}
+}
+}
+}
+a12_4 sweep param=dc dev=vg values=[-0.75] {
+  a12_3 sweep param=mag dev=vg values=[1] {
+  a12_2 sweep param=mag dev=vd values=[0] {
+  a12_1 sweep param=mag dev=vs values=[0] {
+  a12_0 sweep param=mag dev=vb values=[0] {
+  x12 ac values=[1000000]
+}
+}
+}
+}
+}
+a13_4 sweep param=dc dev=vg values=[-0.75] {
+  a13_3 sweep param=mag dev=vg values=[0] {
+  a13_2 sweep param=mag dev=vd values=[1] {
+  a13_1 sweep param=mag dev=vs values=[0] {
+  a13_0 sweep param=mag dev=vb values=[0] {
+  x13 ac values=[1000000]
+}
+}
+}
+}
+}
+a14_4 sweep param=dc dev=vg values=[-0.75] {
+  a14_3 sweep param=mag dev=vg values=[0] {
+  a14_2 sweep param=mag dev=vd values=[0] {
+  a14_1 sweep param=mag dev=vs values=[1] {
+  a14_0 sweep param=mag dev=vb values=[0] {
+  x14 ac values=[1000000]
+}
+}
+}
+}
+}
+a15_4 sweep param=dc dev=vg values=[-0.75] {
+  a15_3 sweep param=mag dev=vg values=[0] {
+  a15_2 sweep param=mag dev=vd values=[0] {
+  a15_1 sweep param=mag dev=vs values=[0] {
+  a15_0 sweep param=mag dev=vb values=[1] {
+  x15 ac values=[1000000]
+}
+}
+}
+}
+}
+a16_4 sweep param=dc dev=vg values=[-0.7] {
+  a16_3 sweep param=mag dev=vg values=[1] {
+  a16_2 sweep param=mag dev=vd values=[0] {
+  a16_1 sweep param=mag dev=vs values=[0] {
+  a16_0 sweep param=mag dev=vb values=[0] {
+  x16 ac values=[1000]
+}
+}
+}
+}
+}
+a17_4 sweep param=dc dev=vg values=[-0.7] {
+  a17_3 sweep param=mag dev=vg values=[1] {
+  a17_2 sweep param=mag dev=vd values=[0] {
+  a17_1 sweep param=mag dev=vs values=[0] {
+  a17_0 sweep param=mag dev=vb values=[0] {
+  x17 ac values=[10000]
+}
+}
+}
+}
+}
+a18_4 sweep param=dc dev=vg values=[-0.7] {
+  a18_3 sweep param=mag dev=vg values=[1] {
+  a18_2 sweep param=mag dev=vd values=[0] {
+  a18_1 sweep param=mag dev=vs values=[0] {
+  a18_0 sweep param=mag dev=vb values=[0] {
+  x18 ac values=[100000]
+}
+}
+}
+}
+}
+a19_4 sweep param=dc dev=vg values=[-0.7] {
+  a19_3 sweep param=mag dev=vg values=[1] {
+  a19_2 sweep param=mag dev=vd values=[0] {
+  a19_1 sweep param=mag dev=vs values=[0] {
+  a19_0 sweep param=mag dev=vb values=[0] {
+  x19 ac values=[1000000]
+}
+}
+}
+}
+}
+a20_4 sweep param=dc dev=vg values=[-0.7] {
+  a20_3 sweep param=mag dev=vg values=[1] {
+  a20_2 sweep param=mag dev=vd values=[0] {
+  a20_1 sweep param=mag dev=vs values=[0] {
+  a20_0 sweep param=mag dev=vb values=[0] {
+  x20 ac values=[1000000]
+}
+}
+}
+}
+}
+a21_4 sweep param=dc dev=vg values=[-0.7] {
+  a21_3 sweep param=mag dev=vg values=[0] {
+  a21_2 sweep param=mag dev=vd values=[1] {
+  a21_1 sweep param=mag dev=vs values=[0] {
+  a21_0 sweep param=mag dev=vb values=[0] {
+  x21 ac values=[1000000]
+}
+}
+}
+}
+}
+a22_4 sweep param=dc dev=vg values=[-0.7] {
+  a22_3 sweep param=mag dev=vg values=[0] {
+  a22_2 sweep param=mag dev=vd values=[0] {
+  a22_1 sweep param=mag dev=vs values=[1] {
+  a22_0 sweep param=mag dev=vb values=[0] {
+  x22 ac values=[1000000]
+}
+}
+}
+}
+}
+a23_4 sweep param=dc dev=vg values=[-0.7] {
+  a23_3 sweep param=mag dev=vg values=[0] {
+  a23_2 sweep param=mag dev=vd values=[0] {
+  a23_1 sweep param=mag dev=vs values=[0] {
+  a23_0 sweep param=mag dev=vb values=[1] {
+  x23 ac values=[1000000]
+}
+}
+}
+}
+}
+a24_4 sweep param=dc dev=vg values=[-0.65] {
+  a24_3 sweep param=mag dev=vg values=[1] {
+  a24_2 sweep param=mag dev=vd values=[0] {
+  a24_1 sweep param=mag dev=vs values=[0] {
+  a24_0 sweep param=mag dev=vb values=[0] {
+  x24 ac values=[1000]
+}
+}
+}
+}
+}
+a25_4 sweep param=dc dev=vg values=[-0.65] {
+  a25_3 sweep param=mag dev=vg values=[1] {
+  a25_2 sweep param=mag dev=vd values=[0] {
+  a25_1 sweep param=mag dev=vs values=[0] {
+  a25_0 sweep param=mag dev=vb values=[0] {
+  x25 ac values=[10000]
+}
+}
+}
+}
+}
+a26_4 sweep param=dc dev=vg values=[-0.65] {
+  a26_3 sweep param=mag dev=vg values=[1] {
+  a26_2 sweep param=mag dev=vd values=[0] {
+  a26_1 sweep param=mag dev=vs values=[0] {
+  a26_0 sweep param=mag dev=vb values=[0] {
+  x26 ac values=[100000]
+}
+}
+}
+}
+}
+a27_4 sweep param=dc dev=vg values=[-0.65] {
+  a27_3 sweep param=mag dev=vg values=[1] {
+  a27_2 sweep param=mag dev=vd values=[0] {
+  a27_1 sweep param=mag dev=vs values=[0] {
+  a27_0 sweep param=mag dev=vb values=[0] {
+  x27 ac values=[1000000]
+}
+}
+}
+}
+}
+a28_4 sweep param=dc dev=vg values=[-0.65] {
+  a28_3 sweep param=mag dev=vg values=[1] {
+  a28_2 sweep param=mag dev=vd values=[0] {
+  a28_1 sweep param=mag dev=vs values=[0] {
+  a28_0 sweep param=mag dev=vb values=[0] {
+  x28 ac values=[1000000]
+}
+}
+}
+}
+}
+a29_4 sweep param=dc dev=vg values=[-0.65] {
+  a29_3 sweep param=mag dev=vg values=[0] {
+  a29_2 sweep param=mag dev=vd values=[1] {
+  a29_1 sweep param=mag dev=vs values=[0] {
+  a29_0 sweep param=mag dev=vb values=[0] {
+  x29 ac values=[1000000]
+}
+}
+}
+}
+}
+a30_4 sweep param=dc dev=vg values=[-0.65] {
+  a30_3 sweep param=mag dev=vg values=[0] {
+  a30_2 sweep param=mag dev=vd values=[0] {
+  a30_1 sweep param=mag dev=vs values=[1] {
+  a30_0 sweep param=mag dev=vb values=[0] {
+  x30 ac values=[1000000]
+}
+}
+}
+}
+}
+a31_4 sweep param=dc dev=vg values=[-0.65] {
+  a31_3 sweep param=mag dev=vg values=[0] {
+  a31_2 sweep param=mag dev=vd values=[0] {
+  a31_1 sweep param=mag dev=vs values=[0] {
+  a31_0 sweep param=mag dev=vb values=[1] {
+  x31 ac values=[1000000]
+}
+}
+}
+}
+}
+a32_4 sweep param=dc dev=vg values=[-0.6] {
+  a32_3 sweep param=mag dev=vg values=[1] {
+  a32_2 sweep param=mag dev=vd values=[0] {
+  a32_1 sweep param=mag dev=vs values=[0] {
+  a32_0 sweep param=mag dev=vb values=[0] {
+  x32 ac values=[1000]
+}
+}
+}
+}
+}
+a33_4 sweep param=dc dev=vg values=[-0.6] {
+  a33_3 sweep param=mag dev=vg values=[1] {
+  a33_2 sweep param=mag dev=vd values=[0] {
+  a33_1 sweep param=mag dev=vs values=[0] {
+  a33_0 sweep param=mag dev=vb values=[0] {
+  x33 ac values=[10000]
+}
+}
+}
+}
+}
+a34_4 sweep param=dc dev=vg values=[-0.6] {
+  a34_3 sweep param=mag dev=vg values=[1] {
+  a34_2 sweep param=mag dev=vd values=[0] {
+  a34_1 sweep param=mag dev=vs values=[0] {
+  a34_0 sweep param=mag dev=vb values=[0] {
+  x34 ac values=[100000]
+}
+}
+}
+}
+}
+a35_4 sweep param=dc dev=vg values=[-0.6] {
+  a35_3 sweep param=mag dev=vg values=[1] {
+  a35_2 sweep param=mag dev=vd values=[0] {
+  a35_1 sweep param=mag dev=vs values=[0] {
+  a35_0 sweep param=mag dev=vb values=[0] {
+  x35 ac values=[1000000]
+}
+}
+}
+}
+}
+a36_4 sweep param=dc dev=vg values=[-0.6] {
+  a36_3 sweep param=mag dev=vg values=[1] {
+  a36_2 sweep param=mag dev=vd values=[0] {
+  a36_1 sweep param=mag dev=vs values=[0] {
+  a36_0 sweep param=mag dev=vb values=[0] {
+  x36 ac values=[1000000]
+}
+}
+}
+}
+}
+a37_4 sweep param=dc dev=vg values=[-0.6] {
+  a37_3 sweep param=mag dev=vg values=[0] {
+  a37_2 sweep param=mag dev=vd values=[1] {
+  a37_1 sweep param=mag dev=vs values=[0] {
+  a37_0 sweep param=mag dev=vb values=[0] {
+  x37 ac values=[1000000]
+}
+}
+}
+}
+}
+a38_4 sweep param=dc dev=vg values=[-0.6] {
+  a38_3 sweep param=mag dev=vg values=[0] {
+  a38_2 sweep param=mag dev=vd values=[0] {
+  a38_1 sweep param=mag dev=vs values=[1] {
+  a38_0 sweep param=mag dev=vb values=[0] {
+  x38 ac values=[1000000]
+}
+}
+}
+}
+}
+a39_4 sweep param=dc dev=vg values=[-0.6] {
+  a39_3 sweep param=mag dev=vg values=[0] {
+  a39_2 sweep param=mag dev=vd values=[0] {
+  a39_1 sweep param=mag dev=vs values=[0] {
+  a39_0 sweep param=mag dev=vb values=[1] {
+  x39 ac values=[1000000]
+}
+}
+}
+}
+}
+a40_4 sweep param=dc dev=vg values=[-0.55] {
+  a40_3 sweep param=mag dev=vg values=[1] {
+  a40_2 sweep param=mag dev=vd values=[0] {
+  a40_1 sweep param=mag dev=vs values=[0] {
+  a40_0 sweep param=mag dev=vb values=[0] {
+  x40 ac values=[1000]
+}
+}
+}
+}
+}
+a41_4 sweep param=dc dev=vg values=[-0.55] {
+  a41_3 sweep param=mag dev=vg values=[1] {
+  a41_2 sweep param=mag dev=vd values=[0] {
+  a41_1 sweep param=mag dev=vs values=[0] {
+  a41_0 sweep param=mag dev=vb values=[0] {
+  x41 ac values=[10000]
+}
+}
+}
+}
+}
+a42_4 sweep param=dc dev=vg values=[-0.55] {
+  a42_3 sweep param=mag dev=vg values=[1] {
+  a42_2 sweep param=mag dev=vd values=[0] {
+  a42_1 sweep param=mag dev=vs values=[0] {
+  a42_0 sweep param=mag dev=vb values=[0] {
+  x42 ac values=[100000]
+}
+}
+}
+}
+}
+a43_4 sweep param=dc dev=vg values=[-0.55] {
+  a43_3 sweep param=mag dev=vg values=[1] {
+  a43_2 sweep param=mag dev=vd values=[0] {
+  a43_1 sweep param=mag dev=vs values=[0] {
+  a43_0 sweep param=mag dev=vb values=[0] {
+  x43 ac values=[1000000]
+}
+}
+}
+}
+}
+a44_4 sweep param=dc dev=vg values=[-0.55] {
+  a44_3 sweep param=mag dev=vg values=[1] {
+  a44_2 sweep param=mag dev=vd values=[0] {
+  a44_1 sweep param=mag dev=vs values=[0] {
+  a44_0 sweep param=mag dev=vb values=[0] {
+  x44 ac values=[1000000]
+}
+}
+}
+}
+}
+a45_4 sweep param=dc dev=vg values=[-0.55] {
+  a45_3 sweep param=mag dev=vg values=[0] {
+  a45_2 sweep param=mag dev=vd values=[1] {
+  a45_1 sweep param=mag dev=vs values=[0] {
+  a45_0 sweep param=mag dev=vb values=[0] {
+  x45 ac values=[1000000]
+}
+}
+}
+}
+}
+a46_4 sweep param=dc dev=vg values=[-0.55] {
+  a46_3 sweep param=mag dev=vg values=[0] {
+  a46_2 sweep param=mag dev=vd values=[0] {
+  a46_1 sweep param=mag dev=vs values=[1] {
+  a46_0 sweep param=mag dev=vb values=[0] {
+  x46 ac values=[1000000]
+}
+}
+}
+}
+}
+a47_4 sweep param=dc dev=vg values=[-0.55] {
+  a47_3 sweep param=mag dev=vg values=[0] {
+  a47_2 sweep param=mag dev=vd values=[0] {
+  a47_1 sweep param=mag dev=vs values=[0] {
+  a47_0 sweep param=mag dev=vb values=[1] {
+  x47 ac values=[1000000]
+}
+}
+}
+}
+}
+a48_4 sweep param=dc dev=vg values=[-0.5] {
+  a48_3 sweep param=mag dev=vg values=[1] {
+  a48_2 sweep param=mag dev=vd values=[0] {
+  a48_1 sweep param=mag dev=vs values=[0] {
+  a48_0 sweep param=mag dev=vb values=[0] {
+  x48 ac values=[1000]
+}
+}
+}
+}
+}
+a49_4 sweep param=dc dev=vg values=[-0.5] {
+  a49_3 sweep param=mag dev=vg values=[1] {
+  a49_2 sweep param=mag dev=vd values=[0] {
+  a49_1 sweep param=mag dev=vs values=[0] {
+  a49_0 sweep param=mag dev=vb values=[0] {
+  x49 ac values=[10000]
+}
+}
+}
+}
+}
+a50_4 sweep param=dc dev=vg values=[-0.5] {
+  a50_3 sweep param=mag dev=vg values=[1] {
+  a50_2 sweep param=mag dev=vd values=[0] {
+  a50_1 sweep param=mag dev=vs values=[0] {
+  a50_0 sweep param=mag dev=vb values=[0] {
+  x50 ac values=[100000]
+}
+}
+}
+}
+}
+a51_4 sweep param=dc dev=vg values=[-0.5] {
+  a51_3 sweep param=mag dev=vg values=[1] {
+  a51_2 sweep param=mag dev=vd values=[0] {
+  a51_1 sweep param=mag dev=vs values=[0] {
+  a51_0 sweep param=mag dev=vb values=[0] {
+  x51 ac values=[1000000]
+}
+}
+}
+}
+}
+a52_4 sweep param=dc dev=vg values=[-0.5] {
+  a52_3 sweep param=mag dev=vg values=[1] {
+  a52_2 sweep param=mag dev=vd values=[0] {
+  a52_1 sweep param=mag dev=vs values=[0] {
+  a52_0 sweep param=mag dev=vb values=[0] {
+  x52 ac values=[1000000]
+}
+}
+}
+}
+}
+a53_4 sweep param=dc dev=vg values=[-0.5] {
+  a53_3 sweep param=mag dev=vg values=[0] {
+  a53_2 sweep param=mag dev=vd values=[1] {
+  a53_1 sweep param=mag dev=vs values=[0] {
+  a53_0 sweep param=mag dev=vb values=[0] {
+  x53 ac values=[1000000]
+}
+}
+}
+}
+}
+a54_4 sweep param=dc dev=vg values=[-0.5] {
+  a54_3 sweep param=mag dev=vg values=[0] {
+  a54_2 sweep param=mag dev=vd values=[0] {
+  a54_1 sweep param=mag dev=vs values=[1] {
+  a54_0 sweep param=mag dev=vb values=[0] {
+  x54 ac values=[1000000]
+}
+}
+}
+}
+}
+a55_4 sweep param=dc dev=vg values=[-0.5] {
+  a55_3 sweep param=mag dev=vg values=[0] {
+  a55_2 sweep param=mag dev=vd values=[0] {
+  a55_1 sweep param=mag dev=vs values=[0] {
+  a55_0 sweep param=mag dev=vb values=[1] {
+  x55 ac values=[1000000]
+}
+}
+}
+}
+}
+a56_4 sweep param=dc dev=vg values=[-0.45] {
+  a56_3 sweep param=mag dev=vg values=[1] {
+  a56_2 sweep param=mag dev=vd values=[0] {
+  a56_1 sweep param=mag dev=vs values=[0] {
+  a56_0 sweep param=mag dev=vb values=[0] {
+  x56 ac values=[1000]
+}
+}
+}
+}
+}
+a57_4 sweep param=dc dev=vg values=[-0.45] {
+  a57_3 sweep param=mag dev=vg values=[1] {
+  a57_2 sweep param=mag dev=vd values=[0] {
+  a57_1 sweep param=mag dev=vs values=[0] {
+  a57_0 sweep param=mag dev=vb values=[0] {
+  x57 ac values=[10000]
+}
+}
+}
+}
+}
+a58_4 sweep param=dc dev=vg values=[-0.45] {
+  a58_3 sweep param=mag dev=vg values=[1] {
+  a58_2 sweep param=mag dev=vd values=[0] {
+  a58_1 sweep param=mag dev=vs values=[0] {
+  a58_0 sweep param=mag dev=vb values=[0] {
+  x58 ac values=[100000]
+}
+}
+}
+}
+}
+a59_4 sweep param=dc dev=vg values=[-0.45] {
+  a59_3 sweep param=mag dev=vg values=[1] {
+  a59_2 sweep param=mag dev=vd values=[0] {
+  a59_1 sweep param=mag dev=vs values=[0] {
+  a59_0 sweep param=mag dev=vb values=[0] {
+  x59 ac values=[1000000]
+}
+}
+}
+}
+}
+a60_4 sweep param=dc dev=vg values=[-0.45] {
+  a60_3 sweep param=mag dev=vg values=[1] {
+  a60_2 sweep param=mag dev=vd values=[0] {
+  a60_1 sweep param=mag dev=vs values=[0] {
+  a60_0 sweep param=mag dev=vb values=[0] {
+  x60 ac values=[1000000]
+}
+}
+}
+}
+}
+a61_4 sweep param=dc dev=vg values=[-0.45] {
+  a61_3 sweep param=mag dev=vg values=[0] {
+  a61_2 sweep param=mag dev=vd values=[1] {
+  a61_1 sweep param=mag dev=vs values=[0] {
+  a61_0 sweep param=mag dev=vb values=[0] {
+  x61 ac values=[1000000]
+}
+}
+}
+}
+}
+a62_4 sweep param=dc dev=vg values=[-0.45] {
+  a62_3 sweep param=mag dev=vg values=[0] {
+  a62_2 sweep param=mag dev=vd values=[0] {
+  a62_1 sweep param=mag dev=vs values=[1] {
+  a62_0 sweep param=mag dev=vb values=[0] {
+  x62 ac values=[1000000]
+}
+}
+}
+}
+}
+a63_4 sweep param=dc dev=vg values=[-0.45] {
+  a63_3 sweep param=mag dev=vg values=[0] {
+  a63_2 sweep param=mag dev=vd values=[0] {
+  a63_1 sweep param=mag dev=vs values=[0] {
+  a63_0 sweep param=mag dev=vb values=[1] {
+  x63 ac values=[1000000]
+}
+}
+}
+}
+}
+a64_4 sweep param=dc dev=vg values=[-0.4] {
+  a64_3 sweep param=mag dev=vg values=[1] {
+  a64_2 sweep param=mag dev=vd values=[0] {
+  a64_1 sweep param=mag dev=vs values=[0] {
+  a64_0 sweep param=mag dev=vb values=[0] {
+  x64 ac values=[1000]
+}
+}
+}
+}
+}
+a65_4 sweep param=dc dev=vg values=[-0.4] {
+  a65_3 sweep param=mag dev=vg values=[1] {
+  a65_2 sweep param=mag dev=vd values=[0] {
+  a65_1 sweep param=mag dev=vs values=[0] {
+  a65_0 sweep param=mag dev=vb values=[0] {
+  x65 ac values=[10000]
+}
+}
+}
+}
+}
+a66_4 sweep param=dc dev=vg values=[-0.4] {
+  a66_3 sweep param=mag dev=vg values=[1] {
+  a66_2 sweep param=mag dev=vd values=[0] {
+  a66_1 sweep param=mag dev=vs values=[0] {
+  a66_0 sweep param=mag dev=vb values=[0] {
+  x66 ac values=[100000]
+}
+}
+}
+}
+}
+a67_4 sweep param=dc dev=vg values=[-0.4] {
+  a67_3 sweep param=mag dev=vg values=[1] {
+  a67_2 sweep param=mag dev=vd values=[0] {
+  a67_1 sweep param=mag dev=vs values=[0] {
+  a67_0 sweep param=mag dev=vb values=[0] {
+  x67 ac values=[1000000]
+}
+}
+}
+}
+}
+a68_4 sweep param=dc dev=vg values=[-0.4] {
+  a68_3 sweep param=mag dev=vg values=[1] {
+  a68_2 sweep param=mag dev=vd values=[0] {
+  a68_1 sweep param=mag dev=vs values=[0] {
+  a68_0 sweep param=mag dev=vb values=[0] {
+  x68 ac values=[1000000]
+}
+}
+}
+}
+}
+a69_4 sweep param=dc dev=vg values=[-0.4] {
+  a69_3 sweep param=mag dev=vg values=[0] {
+  a69_2 sweep param=mag dev=vd values=[1] {
+  a69_1 sweep param=mag dev=vs values=[0] {
+  a69_0 sweep param=mag dev=vb values=[0] {
+  x69 ac values=[1000000]
+}
+}
+}
+}
+}
+a70_4 sweep param=dc dev=vg values=[-0.4] {
+  a70_3 sweep param=mag dev=vg values=[0] {
+  a70_2 sweep param=mag dev=vd values=[0] {
+  a70_1 sweep param=mag dev=vs values=[1] {
+  a70_0 sweep param=mag dev=vb values=[0] {
+  x70 ac values=[1000000]
+}
+}
+}
+}
+}
+a71_4 sweep param=dc dev=vg values=[-0.4] {
+  a71_3 sweep param=mag dev=vg values=[0] {
+  a71_2 sweep param=mag dev=vd values=[0] {
+  a71_1 sweep param=mag dev=vs values=[0] {
+  a71_0 sweep param=mag dev=vb values=[1] {
+  x71 ac values=[1000000]
+}
+}
+}
+}
+}
+a72_4 sweep param=dc dev=vg values=[-0.35] {
+  a72_3 sweep param=mag dev=vg values=[1] {
+  a72_2 sweep param=mag dev=vd values=[0] {
+  a72_1 sweep param=mag dev=vs values=[0] {
+  a72_0 sweep param=mag dev=vb values=[0] {
+  x72 ac values=[1000]
+}
+}
+}
+}
+}
+a73_4 sweep param=dc dev=vg values=[-0.35] {
+  a73_3 sweep param=mag dev=vg values=[1] {
+  a73_2 sweep param=mag dev=vd values=[0] {
+  a73_1 sweep param=mag dev=vs values=[0] {
+  a73_0 sweep param=mag dev=vb values=[0] {
+  x73 ac values=[10000]
+}
+}
+}
+}
+}
+a74_4 sweep param=dc dev=vg values=[-0.35] {
+  a74_3 sweep param=mag dev=vg values=[1] {
+  a74_2 sweep param=mag dev=vd values=[0] {
+  a74_1 sweep param=mag dev=vs values=[0] {
+  a74_0 sweep param=mag dev=vb values=[0] {
+  x74 ac values=[100000]
+}
+}
+}
+}
+}
+a75_4 sweep param=dc dev=vg values=[-0.35] {
+  a75_3 sweep param=mag dev=vg values=[1] {
+  a75_2 sweep param=mag dev=vd values=[0] {
+  a75_1 sweep param=mag dev=vs values=[0] {
+  a75_0 sweep param=mag dev=vb values=[0] {
+  x75 ac values=[1000000]
+}
+}
+}
+}
+}
+a76_4 sweep param=dc dev=vg values=[-0.35] {
+  a76_3 sweep param=mag dev=vg values=[1] {
+  a76_2 sweep param=mag dev=vd values=[0] {
+  a76_1 sweep param=mag dev=vs values=[0] {
+  a76_0 sweep param=mag dev=vb values=[0] {
+  x76 ac values=[1000000]
+}
+}
+}
+}
+}
+a77_4 sweep param=dc dev=vg values=[-0.35] {
+  a77_3 sweep param=mag dev=vg values=[0] {
+  a77_2 sweep param=mag dev=vd values=[1] {
+  a77_1 sweep param=mag dev=vs values=[0] {
+  a77_0 sweep param=mag dev=vb values=[0] {
+  x77 ac values=[1000000]
+}
+}
+}
+}
+}
+a78_4 sweep param=dc dev=vg values=[-0.35] {
+  a78_3 sweep param=mag dev=vg values=[0] {
+  a78_2 sweep param=mag dev=vd values=[0] {
+  a78_1 sweep param=mag dev=vs values=[1] {
+  a78_0 sweep param=mag dev=vb values=[0] {
+  x78 ac values=[1000000]
+}
+}
+}
+}
+}
+a79_4 sweep param=dc dev=vg values=[-0.35] {
+  a79_3 sweep param=mag dev=vg values=[0] {
+  a79_2 sweep param=mag dev=vd values=[0] {
+  a79_1 sweep param=mag dev=vs values=[0] {
+  a79_0 sweep param=mag dev=vb values=[1] {
+  x79 ac values=[1000000]
+}
+}
+}
+}
+}
+a80_4 sweep param=dc dev=vg values=[-0.3] {
+  a80_3 sweep param=mag dev=vg values=[1] {
+  a80_2 sweep param=mag dev=vd values=[0] {
+  a80_1 sweep param=mag dev=vs values=[0] {
+  a80_0 sweep param=mag dev=vb values=[0] {
+  x80 ac values=[1000]
+}
+}
+}
+}
+}
+a81_4 sweep param=dc dev=vg values=[-0.3] {
+  a81_3 sweep param=mag dev=vg values=[1] {
+  a81_2 sweep param=mag dev=vd values=[0] {
+  a81_1 sweep param=mag dev=vs values=[0] {
+  a81_0 sweep param=mag dev=vb values=[0] {
+  x81 ac values=[10000]
+}
+}
+}
+}
+}
+a82_4 sweep param=dc dev=vg values=[-0.3] {
+  a82_3 sweep param=mag dev=vg values=[1] {
+  a82_2 sweep param=mag dev=vd values=[0] {
+  a82_1 sweep param=mag dev=vs values=[0] {
+  a82_0 sweep param=mag dev=vb values=[0] {
+  x82 ac values=[100000]
+}
+}
+}
+}
+}
+a83_4 sweep param=dc dev=vg values=[-0.3] {
+  a83_3 sweep param=mag dev=vg values=[1] {
+  a83_2 sweep param=mag dev=vd values=[0] {
+  a83_1 sweep param=mag dev=vs values=[0] {
+  a83_0 sweep param=mag dev=vb values=[0] {
+  x83 ac values=[1000000]
+}
+}
+}
+}
+}
+a84_4 sweep param=dc dev=vg values=[-0.3] {
+  a84_3 sweep param=mag dev=vg values=[1] {
+  a84_2 sweep param=mag dev=vd values=[0] {
+  a84_1 sweep param=mag dev=vs values=[0] {
+  a84_0 sweep param=mag dev=vb values=[0] {
+  x84 ac values=[1000000]
+}
+}
+}
+}
+}
+a85_4 sweep param=dc dev=vg values=[-0.3] {
+  a85_3 sweep param=mag dev=vg values=[0] {
+  a85_2 sweep param=mag dev=vd values=[1] {
+  a85_1 sweep param=mag dev=vs values=[0] {
+  a85_0 sweep param=mag dev=vb values=[0] {
+  x85 ac values=[1000000]
+}
+}
+}
+}
+}
+a86_4 sweep param=dc dev=vg values=[-0.3] {
+  a86_3 sweep param=mag dev=vg values=[0] {
+  a86_2 sweep param=mag dev=vd values=[0] {
+  a86_1 sweep param=mag dev=vs values=[1] {
+  a86_0 sweep param=mag dev=vb values=[0] {
+  x86 ac values=[1000000]
+}
+}
+}
+}
+}
+a87_4 sweep param=dc dev=vg values=[-0.3] {
+  a87_3 sweep param=mag dev=vg values=[0] {
+  a87_2 sweep param=mag dev=vd values=[0] {
+  a87_1 sweep param=mag dev=vs values=[0] {
+  a87_0 sweep param=mag dev=vb values=[1] {
+  x87 ac values=[1000000]
+}
+}
+}
+}
+}
+a88_4 sweep param=dc dev=vg values=[-0.25] {
+  a88_3 sweep param=mag dev=vg values=[1] {
+  a88_2 sweep param=mag dev=vd values=[0] {
+  a88_1 sweep param=mag dev=vs values=[0] {
+  a88_0 sweep param=mag dev=vb values=[0] {
+  x88 ac values=[1000]
+}
+}
+}
+}
+}
+a89_4 sweep param=dc dev=vg values=[-0.25] {
+  a89_3 sweep param=mag dev=vg values=[1] {
+  a89_2 sweep param=mag dev=vd values=[0] {
+  a89_1 sweep param=mag dev=vs values=[0] {
+  a89_0 sweep param=mag dev=vb values=[0] {
+  x89 ac values=[10000]
+}
+}
+}
+}
+}
+a90_4 sweep param=dc dev=vg values=[-0.25] {
+  a90_3 sweep param=mag dev=vg values=[1] {
+  a90_2 sweep param=mag dev=vd values=[0] {
+  a90_1 sweep param=mag dev=vs values=[0] {
+  a90_0 sweep param=mag dev=vb values=[0] {
+  x90 ac values=[100000]
+}
+}
+}
+}
+}
+a91_4 sweep param=dc dev=vg values=[-0.25] {
+  a91_3 sweep param=mag dev=vg values=[1] {
+  a91_2 sweep param=mag dev=vd values=[0] {
+  a91_1 sweep param=mag dev=vs values=[0] {
+  a91_0 sweep param=mag dev=vb values=[0] {
+  x91 ac values=[1000000]
+}
+}
+}
+}
+}
+a92_4 sweep param=dc dev=vg values=[-0.25] {
+  a92_3 sweep param=mag dev=vg values=[1] {
+  a92_2 sweep param=mag dev=vd values=[0] {
+  a92_1 sweep param=mag dev=vs values=[0] {
+  a92_0 sweep param=mag dev=vb values=[0] {
+  x92 ac values=[1000000]
+}
+}
+}
+}
+}
+a93_4 sweep param=dc dev=vg values=[-0.25] {
+  a93_3 sweep param=mag dev=vg values=[0] {
+  a93_2 sweep param=mag dev=vd values=[1] {
+  a93_1 sweep param=mag dev=vs values=[0] {
+  a93_0 sweep param=mag dev=vb values=[0] {
+  x93 ac values=[1000000]
+}
+}
+}
+}
+}
+a94_4 sweep param=dc dev=vg values=[-0.25] {
+  a94_3 sweep param=mag dev=vg values=[0] {
+  a94_2 sweep param=mag dev=vd values=[0] {
+  a94_1 sweep param=mag dev=vs values=[1] {
+  a94_0 sweep param=mag dev=vb values=[0] {
+  x94 ac values=[1000000]
+}
+}
+}
+}
+}
+a95_4 sweep param=dc dev=vg values=[-0.25] {
+  a95_3 sweep param=mag dev=vg values=[0] {
+  a95_2 sweep param=mag dev=vd values=[0] {
+  a95_1 sweep param=mag dev=vs values=[0] {
+  a95_0 sweep param=mag dev=vb values=[1] {
+  x95 ac values=[1000000]
+}
+}
+}
+}
+}
+a96_4 sweep param=dc dev=vg values=[-0.2] {
+  a96_3 sweep param=mag dev=vg values=[1] {
+  a96_2 sweep param=mag dev=vd values=[0] {
+  a96_1 sweep param=mag dev=vs values=[0] {
+  a96_0 sweep param=mag dev=vb values=[0] {
+  x96 ac values=[1000]
+}
+}
+}
+}
+}
+a97_4 sweep param=dc dev=vg values=[-0.2] {
+  a97_3 sweep param=mag dev=vg values=[1] {
+  a97_2 sweep param=mag dev=vd values=[0] {
+  a97_1 sweep param=mag dev=vs values=[0] {
+  a97_0 sweep param=mag dev=vb values=[0] {
+  x97 ac values=[10000]
+}
+}
+}
+}
+}
+a98_4 sweep param=dc dev=vg values=[-0.2] {
+  a98_3 sweep param=mag dev=vg values=[1] {
+  a98_2 sweep param=mag dev=vd values=[0] {
+  a98_1 sweep param=mag dev=vs values=[0] {
+  a98_0 sweep param=mag dev=vb values=[0] {
+  x98 ac values=[100000]
+}
+}
+}
+}
+}
+a99_4 sweep param=dc dev=vg values=[-0.2] {
+  a99_3 sweep param=mag dev=vg values=[1] {
+  a99_2 sweep param=mag dev=vd values=[0] {
+  a99_1 sweep param=mag dev=vs values=[0] {
+  a99_0 sweep param=mag dev=vb values=[0] {
+  x99 ac values=[1000000]
+}
+}
+}
+}
+}
+a100_4 sweep param=dc dev=vg values=[-0.2] {
+  a100_3 sweep param=mag dev=vg values=[1] {
+  a100_2 sweep param=mag dev=vd values=[0] {
+  a100_1 sweep param=mag dev=vs values=[0] {
+  a100_0 sweep param=mag dev=vb values=[0] {
+  x100 ac values=[1000000]
+}
+}
+}
+}
+}
+a101_4 sweep param=dc dev=vg values=[-0.2] {
+  a101_3 sweep param=mag dev=vg values=[0] {
+  a101_2 sweep param=mag dev=vd values=[1] {
+  a101_1 sweep param=mag dev=vs values=[0] {
+  a101_0 sweep param=mag dev=vb values=[0] {
+  x101 ac values=[1000000]
+}
+}
+}
+}
+}
+a102_4 sweep param=dc dev=vg values=[-0.2] {
+  a102_3 sweep param=mag dev=vg values=[0] {
+  a102_2 sweep param=mag dev=vd values=[0] {
+  a102_1 sweep param=mag dev=vs values=[1] {
+  a102_0 sweep param=mag dev=vb values=[0] {
+  x102 ac values=[1000000]
+}
+}
+}
+}
+}
+a103_4 sweep param=dc dev=vg values=[-0.2] {
+  a103_3 sweep param=mag dev=vg values=[0] {
+  a103_2 sweep param=mag dev=vd values=[0] {
+  a103_1 sweep param=mag dev=vs values=[0] {
+  a103_0 sweep param=mag dev=vb values=[1] {
+  x103 ac values=[1000000]
+}
+}
+}
+}
+}
+a104_4 sweep param=dc dev=vg values=[-0.15] {
+  a104_3 sweep param=mag dev=vg values=[1] {
+  a104_2 sweep param=mag dev=vd values=[0] {
+  a104_1 sweep param=mag dev=vs values=[0] {
+  a104_0 sweep param=mag dev=vb values=[0] {
+  x104 ac values=[1000]
+}
+}
+}
+}
+}
+a105_4 sweep param=dc dev=vg values=[-0.15] {
+  a105_3 sweep param=mag dev=vg values=[1] {
+  a105_2 sweep param=mag dev=vd values=[0] {
+  a105_1 sweep param=mag dev=vs values=[0] {
+  a105_0 sweep param=mag dev=vb values=[0] {
+  x105 ac values=[10000]
+}
+}
+}
+}
+}
+a106_4 sweep param=dc dev=vg values=[-0.15] {
+  a106_3 sweep param=mag dev=vg values=[1] {
+  a106_2 sweep param=mag dev=vd values=[0] {
+  a106_1 sweep param=mag dev=vs values=[0] {
+  a106_0 sweep param=mag dev=vb values=[0] {
+  x106 ac values=[100000]
+}
+}
+}
+}
+}
+a107_4 sweep param=dc dev=vg values=[-0.15] {
+  a107_3 sweep param=mag dev=vg values=[1] {
+  a107_2 sweep param=mag dev=vd values=[0] {
+  a107_1 sweep param=mag dev=vs values=[0] {
+  a107_0 sweep param=mag dev=vb values=[0] {
+  x107 ac values=[1000000]
+}
+}
+}
+}
+}
+a108_4 sweep param=dc dev=vg values=[-0.15] {
+  a108_3 sweep param=mag dev=vg values=[1] {
+  a108_2 sweep param=mag dev=vd values=[0] {
+  a108_1 sweep param=mag dev=vs values=[0] {
+  a108_0 sweep param=mag dev=vb values=[0] {
+  x108 ac values=[1000000]
+}
+}
+}
+}
+}
+a109_4 sweep param=dc dev=vg values=[-0.15] {
+  a109_3 sweep param=mag dev=vg values=[0] {
+  a109_2 sweep param=mag dev=vd values=[1] {
+  a109_1 sweep param=mag dev=vs values=[0] {
+  a109_0 sweep param=mag dev=vb values=[0] {
+  x109 ac values=[1000000]
+}
+}
+}
+}
+}
+a110_4 sweep param=dc dev=vg values=[-0.15] {
+  a110_3 sweep param=mag dev=vg values=[0] {
+  a110_2 sweep param=mag dev=vd values=[0] {
+  a110_1 sweep param=mag dev=vs values=[1] {
+  a110_0 sweep param=mag dev=vb values=[0] {
+  x110 ac values=[1000000]
+}
+}
+}
+}
+}
+a111_4 sweep param=dc dev=vg values=[-0.15] {
+  a111_3 sweep param=mag dev=vg values=[0] {
+  a111_2 sweep param=mag dev=vd values=[0] {
+  a111_1 sweep param=mag dev=vs values=[0] {
+  a111_0 sweep param=mag dev=vb values=[1] {
+  x111 ac values=[1000000]
+}
+}
+}
+}
+}
+a112_4 sweep param=dc dev=vg values=[-0.1] {
+  a112_3 sweep param=mag dev=vg values=[1] {
+  a112_2 sweep param=mag dev=vd values=[0] {
+  a112_1 sweep param=mag dev=vs values=[0] {
+  a112_0 sweep param=mag dev=vb values=[0] {
+  x112 ac values=[1000]
+}
+}
+}
+}
+}
+a113_4 sweep param=dc dev=vg values=[-0.1] {
+  a113_3 sweep param=mag dev=vg values=[1] {
+  a113_2 sweep param=mag dev=vd values=[0] {
+  a113_1 sweep param=mag dev=vs values=[0] {
+  a113_0 sweep param=mag dev=vb values=[0] {
+  x113 ac values=[10000]
+}
+}
+}
+}
+}
+a114_4 sweep param=dc dev=vg values=[-0.1] {
+  a114_3 sweep param=mag dev=vg values=[1] {
+  a114_2 sweep param=mag dev=vd values=[0] {
+  a114_1 sweep param=mag dev=vs values=[0] {
+  a114_0 sweep param=mag dev=vb values=[0] {
+  x114 ac values=[100000]
+}
+}
+}
+}
+}
+a115_4 sweep param=dc dev=vg values=[-0.1] {
+  a115_3 sweep param=mag dev=vg values=[1] {
+  a115_2 sweep param=mag dev=vd values=[0] {
+  a115_1 sweep param=mag dev=vs values=[0] {
+  a115_0 sweep param=mag dev=vb values=[0] {
+  x115 ac values=[1000000]
+}
+}
+}
+}
+}
+a116_4 sweep param=dc dev=vg values=[-0.1] {
+  a116_3 sweep param=mag dev=vg values=[1] {
+  a116_2 sweep param=mag dev=vd values=[0] {
+  a116_1 sweep param=mag dev=vs values=[0] {
+  a116_0 sweep param=mag dev=vb values=[0] {
+  x116 ac values=[1000000]
+}
+}
+}
+}
+}
+a117_4 sweep param=dc dev=vg values=[-0.1] {
+  a117_3 sweep param=mag dev=vg values=[0] {
+  a117_2 sweep param=mag dev=vd values=[1] {
+  a117_1 sweep param=mag dev=vs values=[0] {
+  a117_0 sweep param=mag dev=vb values=[0] {
+  x117 ac values=[1000000]
+}
+}
+}
+}
+}
+a118_4 sweep param=dc dev=vg values=[-0.1] {
+  a118_3 sweep param=mag dev=vg values=[0] {
+  a118_2 sweep param=mag dev=vd values=[0] {
+  a118_1 sweep param=mag dev=vs values=[1] {
+  a118_0 sweep param=mag dev=vb values=[0] {
+  x118 ac values=[1000000]
+}
+}
+}
+}
+}
+a119_4 sweep param=dc dev=vg values=[-0.1] {
+  a119_3 sweep param=mag dev=vg values=[0] {
+  a119_2 sweep param=mag dev=vd values=[0] {
+  a119_1 sweep param=mag dev=vs values=[0] {
+  a119_0 sweep param=mag dev=vb values=[1] {
+  x119 ac values=[1000000]
+}
+}
+}
+}
+}
+a120_4 sweep param=dc dev=vg values=[-0.05] {
+  a120_3 sweep param=mag dev=vg values=[1] {
+  a120_2 sweep param=mag dev=vd values=[0] {
+  a120_1 sweep param=mag dev=vs values=[0] {
+  a120_0 sweep param=mag dev=vb values=[0] {
+  x120 ac values=[1000]
+}
+}
+}
+}
+}
+a121_4 sweep param=dc dev=vg values=[-0.05] {
+  a121_3 sweep param=mag dev=vg values=[1] {
+  a121_2 sweep param=mag dev=vd values=[0] {
+  a121_1 sweep param=mag dev=vs values=[0] {
+  a121_0 sweep param=mag dev=vb values=[0] {
+  x121 ac values=[10000]
+}
+}
+}
+}
+}
+a122_4 sweep param=dc dev=vg values=[-0.05] {
+  a122_3 sweep param=mag dev=vg values=[1] {
+  a122_2 sweep param=mag dev=vd values=[0] {
+  a122_1 sweep param=mag dev=vs values=[0] {
+  a122_0 sweep param=mag dev=vb values=[0] {
+  x122 ac values=[100000]
+}
+}
+}
+}
+}
+a123_4 sweep param=dc dev=vg values=[-0.05] {
+  a123_3 sweep param=mag dev=vg values=[1] {
+  a123_2 sweep param=mag dev=vd values=[0] {
+  a123_1 sweep param=mag dev=vs values=[0] {
+  a123_0 sweep param=mag dev=vb values=[0] {
+  x123 ac values=[1000000]
+}
+}
+}
+}
+}
+a124_4 sweep param=dc dev=vg values=[-0.05] {
+  a124_3 sweep param=mag dev=vg values=[1] {
+  a124_2 sweep param=mag dev=vd values=[0] {
+  a124_1 sweep param=mag dev=vs values=[0] {
+  a124_0 sweep param=mag dev=vb values=[0] {
+  x124 ac values=[1000000]
+}
+}
+}
+}
+}
+a125_4 sweep param=dc dev=vg values=[-0.05] {
+  a125_3 sweep param=mag dev=vg values=[0] {
+  a125_2 sweep param=mag dev=vd values=[1] {
+  a125_1 sweep param=mag dev=vs values=[0] {
+  a125_0 sweep param=mag dev=vb values=[0] {
+  x125 ac values=[1000000]
+}
+}
+}
+}
+}
+a126_4 sweep param=dc dev=vg values=[-0.05] {
+  a126_3 sweep param=mag dev=vg values=[0] {
+  a126_2 sweep param=mag dev=vd values=[0] {
+  a126_1 sweep param=mag dev=vs values=[1] {
+  a126_0 sweep param=mag dev=vb values=[0] {
+  x126 ac values=[1000000]
+}
+}
+}
+}
+}
+a127_4 sweep param=dc dev=vg values=[-0.05] {
+  a127_3 sweep param=mag dev=vg values=[0] {
+  a127_2 sweep param=mag dev=vd values=[0] {
+  a127_1 sweep param=mag dev=vs values=[0] {
+  a127_0 sweep param=mag dev=vb values=[1] {
+  x127 ac values=[1000000]
+}
+}
+}
+}
+}
+a128_4 sweep param=dc dev=vg values=[0] {
+  a128_3 sweep param=mag dev=vg values=[1] {
+  a128_2 sweep param=mag dev=vd values=[0] {
+  a128_1 sweep param=mag dev=vs values=[0] {
+  a128_0 sweep param=mag dev=vb values=[0] {
+  x128 ac values=[1000]
+}
+}
+}
+}
+}
+a129_4 sweep param=dc dev=vg values=[0] {
+  a129_3 sweep param=mag dev=vg values=[1] {
+  a129_2 sweep param=mag dev=vd values=[0] {
+  a129_1 sweep param=mag dev=vs values=[0] {
+  a129_0 sweep param=mag dev=vb values=[0] {
+  x129 ac values=[10000]
+}
+}
+}
+}
+}
+a130_4 sweep param=dc dev=vg values=[0] {
+  a130_3 sweep param=mag dev=vg values=[1] {
+  a130_2 sweep param=mag dev=vd values=[0] {
+  a130_1 sweep param=mag dev=vs values=[0] {
+  a130_0 sweep param=mag dev=vb values=[0] {
+  x130 ac values=[100000]
+}
+}
+}
+}
+}
+a131_4 sweep param=dc dev=vg values=[0] {
+  a131_3 sweep param=mag dev=vg values=[1] {
+  a131_2 sweep param=mag dev=vd values=[0] {
+  a131_1 sweep param=mag dev=vs values=[0] {
+  a131_0 sweep param=mag dev=vb values=[0] {
+  x131 ac values=[1000000]
+}
+}
+}
+}
+}
+a132_4 sweep param=dc dev=vg values=[0] {
+  a132_3 sweep param=mag dev=vg values=[1] {
+  a132_2 sweep param=mag dev=vd values=[0] {
+  a132_1 sweep param=mag dev=vs values=[0] {
+  a132_0 sweep param=mag dev=vb values=[0] {
+  x132 ac values=[1000000]
+}
+}
+}
+}
+}
+a133_4 sweep param=dc dev=vg values=[0] {
+  a133_3 sweep param=mag dev=vg values=[0] {
+  a133_2 sweep param=mag dev=vd values=[1] {
+  a133_1 sweep param=mag dev=vs values=[0] {
+  a133_0 sweep param=mag dev=vb values=[0] {
+  x133 ac values=[1000000]
+}
+}
+}
+}
+}
+a134_4 sweep param=dc dev=vg values=[0] {
+  a134_3 sweep param=mag dev=vg values=[0] {
+  a134_2 sweep param=mag dev=vd values=[0] {
+  a134_1 sweep param=mag dev=vs values=[1] {
+  a134_0 sweep param=mag dev=vb values=[0] {
+  x134 ac values=[1000000]
+}
+}
+}
+}
+}
+a135_4 sweep param=dc dev=vg values=[0] {
+  a135_3 sweep param=mag dev=vg values=[0] {
+  a135_2 sweep param=mag dev=vd values=[0] {
+  a135_1 sweep param=mag dev=vs values=[0] {
+  a135_0 sweep param=mag dev=vb values=[1] {
+  x135 ac values=[1000000]
+}
+}
+}
+}
+}
+a136_4 sweep param=dc dev=vg values=[0.05] {
+  a136_3 sweep param=mag dev=vg values=[1] {
+  a136_2 sweep param=mag dev=vd values=[0] {
+  a136_1 sweep param=mag dev=vs values=[0] {
+  a136_0 sweep param=mag dev=vb values=[0] {
+  x136 ac values=[1000]
+}
+}
+}
+}
+}
+a137_4 sweep param=dc dev=vg values=[0.05] {
+  a137_3 sweep param=mag dev=vg values=[1] {
+  a137_2 sweep param=mag dev=vd values=[0] {
+  a137_1 sweep param=mag dev=vs values=[0] {
+  a137_0 sweep param=mag dev=vb values=[0] {
+  x137 ac values=[10000]
+}
+}
+}
+}
+}
+a138_4 sweep param=dc dev=vg values=[0.05] {
+  a138_3 sweep param=mag dev=vg values=[1] {
+  a138_2 sweep param=mag dev=vd values=[0] {
+  a138_1 sweep param=mag dev=vs values=[0] {
+  a138_0 sweep param=mag dev=vb values=[0] {
+  x138 ac values=[100000]
+}
+}
+}
+}
+}
+a139_4 sweep param=dc dev=vg values=[0.05] {
+  a139_3 sweep param=mag dev=vg values=[1] {
+  a139_2 sweep param=mag dev=vd values=[0] {
+  a139_1 sweep param=mag dev=vs values=[0] {
+  a139_0 sweep param=mag dev=vb values=[0] {
+  x139 ac values=[1000000]
+}
+}
+}
+}
+}
+a140_4 sweep param=dc dev=vg values=[0.05] {
+  a140_3 sweep param=mag dev=vg values=[1] {
+  a140_2 sweep param=mag dev=vd values=[0] {
+  a140_1 sweep param=mag dev=vs values=[0] {
+  a140_0 sweep param=mag dev=vb values=[0] {
+  x140 ac values=[1000000]
+}
+}
+}
+}
+}
+a141_4 sweep param=dc dev=vg values=[0.05] {
+  a141_3 sweep param=mag dev=vg values=[0] {
+  a141_2 sweep param=mag dev=vd values=[1] {
+  a141_1 sweep param=mag dev=vs values=[0] {
+  a141_0 sweep param=mag dev=vb values=[0] {
+  x141 ac values=[1000000]
+}
+}
+}
+}
+}
+a142_4 sweep param=dc dev=vg values=[0.05] {
+  a142_3 sweep param=mag dev=vg values=[0] {
+  a142_2 sweep param=mag dev=vd values=[0] {
+  a142_1 sweep param=mag dev=vs values=[1] {
+  a142_0 sweep param=mag dev=vb values=[0] {
+  x142 ac values=[1000000]
+}
+}
+}
+}
+}
+a143_4 sweep param=dc dev=vg values=[0.05] {
+  a143_3 sweep param=mag dev=vg values=[0] {
+  a143_2 sweep param=mag dev=vd values=[0] {
+  a143_1 sweep param=mag dev=vs values=[0] {
+  a143_0 sweep param=mag dev=vb values=[1] {
+  x143 ac values=[1000000]
+}
+}
+}
+}
+}
+a144_4 sweep param=dc dev=vg values=[0.1] {
+  a144_3 sweep param=mag dev=vg values=[1] {
+  a144_2 sweep param=mag dev=vd values=[0] {
+  a144_1 sweep param=mag dev=vs values=[0] {
+  a144_0 sweep param=mag dev=vb values=[0] {
+  x144 ac values=[1000]
+}
+}
+}
+}
+}
+a145_4 sweep param=dc dev=vg values=[0.1] {
+  a145_3 sweep param=mag dev=vg values=[1] {
+  a145_2 sweep param=mag dev=vd values=[0] {
+  a145_1 sweep param=mag dev=vs values=[0] {
+  a145_0 sweep param=mag dev=vb values=[0] {
+  x145 ac values=[10000]
+}
+}
+}
+}
+}
+a146_4 sweep param=dc dev=vg values=[0.1] {
+  a146_3 sweep param=mag dev=vg values=[1] {
+  a146_2 sweep param=mag dev=vd values=[0] {
+  a146_1 sweep param=mag dev=vs values=[0] {
+  a146_0 sweep param=mag dev=vb values=[0] {
+  x146 ac values=[100000]
+}
+}
+}
+}
+}
+a147_4 sweep param=dc dev=vg values=[0.1] {
+  a147_3 sweep param=mag dev=vg values=[1] {
+  a147_2 sweep param=mag dev=vd values=[0] {
+  a147_1 sweep param=mag dev=vs values=[0] {
+  a147_0 sweep param=mag dev=vb values=[0] {
+  x147 ac values=[1000000]
+}
+}
+}
+}
+}
+a148_4 sweep param=dc dev=vg values=[0.1] {
+  a148_3 sweep param=mag dev=vg values=[1] {
+  a148_2 sweep param=mag dev=vd values=[0] {
+  a148_1 sweep param=mag dev=vs values=[0] {
+  a148_0 sweep param=mag dev=vb values=[0] {
+  x148 ac values=[1000000]
+}
+}
+}
+}
+}
+a149_4 sweep param=dc dev=vg values=[0.1] {
+  a149_3 sweep param=mag dev=vg values=[0] {
+  a149_2 sweep param=mag dev=vd values=[1] {
+  a149_1 sweep param=mag dev=vs values=[0] {
+  a149_0 sweep param=mag dev=vb values=[0] {
+  x149 ac values=[1000000]
+}
+}
+}
+}
+}
+a150_4 sweep param=dc dev=vg values=[0.1] {
+  a150_3 sweep param=mag dev=vg values=[0] {
+  a150_2 sweep param=mag dev=vd values=[0] {
+  a150_1 sweep param=mag dev=vs values=[1] {
+  a150_0 sweep param=mag dev=vb values=[0] {
+  x150 ac values=[1000000]
+}
+}
+}
+}
+}
+a151_4 sweep param=dc dev=vg values=[0.1] {
+  a151_3 sweep param=mag dev=vg values=[0] {
+  a151_2 sweep param=mag dev=vd values=[0] {
+  a151_1 sweep param=mag dev=vs values=[0] {
+  a151_0 sweep param=mag dev=vb values=[1] {
+  x151 ac values=[1000000]
+}
+}
+}
+}
+}
+a152_4 sweep param=dc dev=vg values=[0.15] {
+  a152_3 sweep param=mag dev=vg values=[1] {
+  a152_2 sweep param=mag dev=vd values=[0] {
+  a152_1 sweep param=mag dev=vs values=[0] {
+  a152_0 sweep param=mag dev=vb values=[0] {
+  x152 ac values=[1000]
+}
+}
+}
+}
+}
+a153_4 sweep param=dc dev=vg values=[0.15] {
+  a153_3 sweep param=mag dev=vg values=[1] {
+  a153_2 sweep param=mag dev=vd values=[0] {
+  a153_1 sweep param=mag dev=vs values=[0] {
+  a153_0 sweep param=mag dev=vb values=[0] {
+  x153 ac values=[10000]
+}
+}
+}
+}
+}
+a154_4 sweep param=dc dev=vg values=[0.15] {
+  a154_3 sweep param=mag dev=vg values=[1] {
+  a154_2 sweep param=mag dev=vd values=[0] {
+  a154_1 sweep param=mag dev=vs values=[0] {
+  a154_0 sweep param=mag dev=vb values=[0] {
+  x154 ac values=[100000]
+}
+}
+}
+}
+}
+a155_4 sweep param=dc dev=vg values=[0.15] {
+  a155_3 sweep param=mag dev=vg values=[1] {
+  a155_2 sweep param=mag dev=vd values=[0] {
+  a155_1 sweep param=mag dev=vs values=[0] {
+  a155_0 sweep param=mag dev=vb values=[0] {
+  x155 ac values=[1000000]
+}
+}
+}
+}
+}
+a156_4 sweep param=dc dev=vg values=[0.15] {
+  a156_3 sweep param=mag dev=vg values=[1] {
+  a156_2 sweep param=mag dev=vd values=[0] {
+  a156_1 sweep param=mag dev=vs values=[0] {
+  a156_0 sweep param=mag dev=vb values=[0] {
+  x156 ac values=[1000000]
+}
+}
+}
+}
+}
+a157_4 sweep param=dc dev=vg values=[0.15] {
+  a157_3 sweep param=mag dev=vg values=[0] {
+  a157_2 sweep param=mag dev=vd values=[1] {
+  a157_1 sweep param=mag dev=vs values=[0] {
+  a157_0 sweep param=mag dev=vb values=[0] {
+  x157 ac values=[1000000]
+}
+}
+}
+}
+}
+a158_4 sweep param=dc dev=vg values=[0.15] {
+  a158_3 sweep param=mag dev=vg values=[0] {
+  a158_2 sweep param=mag dev=vd values=[0] {
+  a158_1 sweep param=mag dev=vs values=[1] {
+  a158_0 sweep param=mag dev=vb values=[0] {
+  x158 ac values=[1000000]
+}
+}
+}
+}
+}
+a159_4 sweep param=dc dev=vg values=[0.15] {
+  a159_3 sweep param=mag dev=vg values=[0] {
+  a159_2 sweep param=mag dev=vd values=[0] {
+  a159_1 sweep param=mag dev=vs values=[0] {
+  a159_0 sweep param=mag dev=vb values=[1] {
+  x159 ac values=[1000000]
+}
+}
+}
+}
+}
+a160_4 sweep param=dc dev=vg values=[0.2] {
+  a160_3 sweep param=mag dev=vg values=[1] {
+  a160_2 sweep param=mag dev=vd values=[0] {
+  a160_1 sweep param=mag dev=vs values=[0] {
+  a160_0 sweep param=mag dev=vb values=[0] {
+  x160 ac values=[1000]
+}
+}
+}
+}
+}
+a161_4 sweep param=dc dev=vg values=[0.2] {
+  a161_3 sweep param=mag dev=vg values=[1] {
+  a161_2 sweep param=mag dev=vd values=[0] {
+  a161_1 sweep param=mag dev=vs values=[0] {
+  a161_0 sweep param=mag dev=vb values=[0] {
+  x161 ac values=[10000]
+}
+}
+}
+}
+}
+a162_4 sweep param=dc dev=vg values=[0.2] {
+  a162_3 sweep param=mag dev=vg values=[1] {
+  a162_2 sweep param=mag dev=vd values=[0] {
+  a162_1 sweep param=mag dev=vs values=[0] {
+  a162_0 sweep param=mag dev=vb values=[0] {
+  x162 ac values=[100000]
+}
+}
+}
+}
+}
+a163_4 sweep param=dc dev=vg values=[0.2] {
+  a163_3 sweep param=mag dev=vg values=[1] {
+  a163_2 sweep param=mag dev=vd values=[0] {
+  a163_1 sweep param=mag dev=vs values=[0] {
+  a163_0 sweep param=mag dev=vb values=[0] {
+  x163 ac values=[1000000]
+}
+}
+}
+}
+}
+a164_4 sweep param=dc dev=vg values=[0.2] {
+  a164_3 sweep param=mag dev=vg values=[1] {
+  a164_2 sweep param=mag dev=vd values=[0] {
+  a164_1 sweep param=mag dev=vs values=[0] {
+  a164_0 sweep param=mag dev=vb values=[0] {
+  x164 ac values=[1000000]
+}
+}
+}
+}
+}
+a165_4 sweep param=dc dev=vg values=[0.2] {
+  a165_3 sweep param=mag dev=vg values=[0] {
+  a165_2 sweep param=mag dev=vd values=[1] {
+  a165_1 sweep param=mag dev=vs values=[0] {
+  a165_0 sweep param=mag dev=vb values=[0] {
+  x165 ac values=[1000000]
+}
+}
+}
+}
+}
+a166_4 sweep param=dc dev=vg values=[0.2] {
+  a166_3 sweep param=mag dev=vg values=[0] {
+  a166_2 sweep param=mag dev=vd values=[0] {
+  a166_1 sweep param=mag dev=vs values=[1] {
+  a166_0 sweep param=mag dev=vb values=[0] {
+  x166 ac values=[1000000]
+}
+}
+}
+}
+}
+a167_4 sweep param=dc dev=vg values=[0.2] {
+  a167_3 sweep param=mag dev=vg values=[0] {
+  a167_2 sweep param=mag dev=vd values=[0] {
+  a167_1 sweep param=mag dev=vs values=[0] {
+  a167_0 sweep param=mag dev=vb values=[1] {
+  x167 ac values=[1000000]
+}
+}
+}
+}
+}
+a168_4 sweep param=dc dev=vg values=[0.25] {
+  a168_3 sweep param=mag dev=vg values=[1] {
+  a168_2 sweep param=mag dev=vd values=[0] {
+  a168_1 sweep param=mag dev=vs values=[0] {
+  a168_0 sweep param=mag dev=vb values=[0] {
+  x168 ac values=[1000]
+}
+}
+}
+}
+}
+a169_4 sweep param=dc dev=vg values=[0.25] {
+  a169_3 sweep param=mag dev=vg values=[1] {
+  a169_2 sweep param=mag dev=vd values=[0] {
+  a169_1 sweep param=mag dev=vs values=[0] {
+  a169_0 sweep param=mag dev=vb values=[0] {
+  x169 ac values=[10000]
+}
+}
+}
+}
+}
+a170_4 sweep param=dc dev=vg values=[0.25] {
+  a170_3 sweep param=mag dev=vg values=[1] {
+  a170_2 sweep param=mag dev=vd values=[0] {
+  a170_1 sweep param=mag dev=vs values=[0] {
+  a170_0 sweep param=mag dev=vb values=[0] {
+  x170 ac values=[100000]
+}
+}
+}
+}
+}
+a171_4 sweep param=dc dev=vg values=[0.25] {
+  a171_3 sweep param=mag dev=vg values=[1] {
+  a171_2 sweep param=mag dev=vd values=[0] {
+  a171_1 sweep param=mag dev=vs values=[0] {
+  a171_0 sweep param=mag dev=vb values=[0] {
+  x171 ac values=[1000000]
+}
+}
+}
+}
+}
+a172_4 sweep param=dc dev=vg values=[0.25] {
+  a172_3 sweep param=mag dev=vg values=[1] {
+  a172_2 sweep param=mag dev=vd values=[0] {
+  a172_1 sweep param=mag dev=vs values=[0] {
+  a172_0 sweep param=mag dev=vb values=[0] {
+  x172 ac values=[1000000]
+}
+}
+}
+}
+}
+a173_4 sweep param=dc dev=vg values=[0.25] {
+  a173_3 sweep param=mag dev=vg values=[0] {
+  a173_2 sweep param=mag dev=vd values=[1] {
+  a173_1 sweep param=mag dev=vs values=[0] {
+  a173_0 sweep param=mag dev=vb values=[0] {
+  x173 ac values=[1000000]
+}
+}
+}
+}
+}
+a174_4 sweep param=dc dev=vg values=[0.25] {
+  a174_3 sweep param=mag dev=vg values=[0] {
+  a174_2 sweep param=mag dev=vd values=[0] {
+  a174_1 sweep param=mag dev=vs values=[1] {
+  a174_0 sweep param=mag dev=vb values=[0] {
+  x174 ac values=[1000000]
+}
+}
+}
+}
+}
+a175_4 sweep param=dc dev=vg values=[0.25] {
+  a175_3 sweep param=mag dev=vg values=[0] {
+  a175_2 sweep param=mag dev=vd values=[0] {
+  a175_1 sweep param=mag dev=vs values=[0] {
+  a175_0 sweep param=mag dev=vb values=[1] {
+  x175 ac values=[1000000]
+}
+}
+}
+}
+}
+a176_4 sweep param=dc dev=vg values=[0.3] {
+  a176_3 sweep param=mag dev=vg values=[1] {
+  a176_2 sweep param=mag dev=vd values=[0] {
+  a176_1 sweep param=mag dev=vs values=[0] {
+  a176_0 sweep param=mag dev=vb values=[0] {
+  x176 ac values=[1000]
+}
+}
+}
+}
+}
+a177_4 sweep param=dc dev=vg values=[0.3] {
+  a177_3 sweep param=mag dev=vg values=[1] {
+  a177_2 sweep param=mag dev=vd values=[0] {
+  a177_1 sweep param=mag dev=vs values=[0] {
+  a177_0 sweep param=mag dev=vb values=[0] {
+  x177 ac values=[10000]
+}
+}
+}
+}
+}
+a178_4 sweep param=dc dev=vg values=[0.3] {
+  a178_3 sweep param=mag dev=vg values=[1] {
+  a178_2 sweep param=mag dev=vd values=[0] {
+  a178_1 sweep param=mag dev=vs values=[0] {
+  a178_0 sweep param=mag dev=vb values=[0] {
+  x178 ac values=[100000]
+}
+}
+}
+}
+}
+a179_4 sweep param=dc dev=vg values=[0.3] {
+  a179_3 sweep param=mag dev=vg values=[1] {
+  a179_2 sweep param=mag dev=vd values=[0] {
+  a179_1 sweep param=mag dev=vs values=[0] {
+  a179_0 sweep param=mag dev=vb values=[0] {
+  x179 ac values=[1000000]
+}
+}
+}
+}
+}
+a180_4 sweep param=dc dev=vg values=[0.3] {
+  a180_3 sweep param=mag dev=vg values=[1] {
+  a180_2 sweep param=mag dev=vd values=[0] {
+  a180_1 sweep param=mag dev=vs values=[0] {
+  a180_0 sweep param=mag dev=vb values=[0] {
+  x180 ac values=[1000000]
+}
+}
+}
+}
+}
+a181_4 sweep param=dc dev=vg values=[0.3] {
+  a181_3 sweep param=mag dev=vg values=[0] {
+  a181_2 sweep param=mag dev=vd values=[1] {
+  a181_1 sweep param=mag dev=vs values=[0] {
+  a181_0 sweep param=mag dev=vb values=[0] {
+  x181 ac values=[1000000]
+}
+}
+}
+}
+}
+a182_4 sweep param=dc dev=vg values=[0.3] {
+  a182_3 sweep param=mag dev=vg values=[0] {
+  a182_2 sweep param=mag dev=vd values=[0] {
+  a182_1 sweep param=mag dev=vs values=[1] {
+  a182_0 sweep param=mag dev=vb values=[0] {
+  x182 ac values=[1000000]
+}
+}
+}
+}
+}
+a183_4 sweep param=dc dev=vg values=[0.3] {
+  a183_3 sweep param=mag dev=vg values=[0] {
+  a183_2 sweep param=mag dev=vd values=[0] {
+  a183_1 sweep param=mag dev=vs values=[0] {
+  a183_0 sweep param=mag dev=vb values=[1] {
+  x183 ac values=[1000000]
+}
+}
+}
+}
+}
+a184_4 sweep param=dc dev=vg values=[0.35] {
+  a184_3 sweep param=mag dev=vg values=[1] {
+  a184_2 sweep param=mag dev=vd values=[0] {
+  a184_1 sweep param=mag dev=vs values=[0] {
+  a184_0 sweep param=mag dev=vb values=[0] {
+  x184 ac values=[1000]
+}
+}
+}
+}
+}
+a185_4 sweep param=dc dev=vg values=[0.35] {
+  a185_3 sweep param=mag dev=vg values=[1] {
+  a185_2 sweep param=mag dev=vd values=[0] {
+  a185_1 sweep param=mag dev=vs values=[0] {
+  a185_0 sweep param=mag dev=vb values=[0] {
+  x185 ac values=[10000]
+}
+}
+}
+}
+}
+a186_4 sweep param=dc dev=vg values=[0.35] {
+  a186_3 sweep param=mag dev=vg values=[1] {
+  a186_2 sweep param=mag dev=vd values=[0] {
+  a186_1 sweep param=mag dev=vs values=[0] {
+  a186_0 sweep param=mag dev=vb values=[0] {
+  x186 ac values=[100000]
+}
+}
+}
+}
+}
+a187_4 sweep param=dc dev=vg values=[0.35] {
+  a187_3 sweep param=mag dev=vg values=[1] {
+  a187_2 sweep param=mag dev=vd values=[0] {
+  a187_1 sweep param=mag dev=vs values=[0] {
+  a187_0 sweep param=mag dev=vb values=[0] {
+  x187 ac values=[1000000]
+}
+}
+}
+}
+}
+a188_4 sweep param=dc dev=vg values=[0.35] {
+  a188_3 sweep param=mag dev=vg values=[1] {
+  a188_2 sweep param=mag dev=vd values=[0] {
+  a188_1 sweep param=mag dev=vs values=[0] {
+  a188_0 sweep param=mag dev=vb values=[0] {
+  x188 ac values=[1000000]
+}
+}
+}
+}
+}
+a189_4 sweep param=dc dev=vg values=[0.35] {
+  a189_3 sweep param=mag dev=vg values=[0] {
+  a189_2 sweep param=mag dev=vd values=[1] {
+  a189_1 sweep param=mag dev=vs values=[0] {
+  a189_0 sweep param=mag dev=vb values=[0] {
+  x189 ac values=[1000000]
+}
+}
+}
+}
+}
+a190_4 sweep param=dc dev=vg values=[0.35] {
+  a190_3 sweep param=mag dev=vg values=[0] {
+  a190_2 sweep param=mag dev=vd values=[0] {
+  a190_1 sweep param=mag dev=vs values=[1] {
+  a190_0 sweep param=mag dev=vb values=[0] {
+  x190 ac values=[1000000]
+}
+}
+}
+}
+}
+a191_4 sweep param=dc dev=vg values=[0.35] {
+  a191_3 sweep param=mag dev=vg values=[0] {
+  a191_2 sweep param=mag dev=vd values=[0] {
+  a191_1 sweep param=mag dev=vs values=[0] {
+  a191_0 sweep param=mag dev=vb values=[1] {
+  x191 ac values=[1000000]
+}
+}
+}
+}
+}
+a192_4 sweep param=dc dev=vg values=[0.4] {
+  a192_3 sweep param=mag dev=vg values=[1] {
+  a192_2 sweep param=mag dev=vd values=[0] {
+  a192_1 sweep param=mag dev=vs values=[0] {
+  a192_0 sweep param=mag dev=vb values=[0] {
+  x192 ac values=[1000]
+}
+}
+}
+}
+}
+a193_4 sweep param=dc dev=vg values=[0.4] {
+  a193_3 sweep param=mag dev=vg values=[1] {
+  a193_2 sweep param=mag dev=vd values=[0] {
+  a193_1 sweep param=mag dev=vs values=[0] {
+  a193_0 sweep param=mag dev=vb values=[0] {
+  x193 ac values=[10000]
+}
+}
+}
+}
+}
+a194_4 sweep param=dc dev=vg values=[0.4] {
+  a194_3 sweep param=mag dev=vg values=[1] {
+  a194_2 sweep param=mag dev=vd values=[0] {
+  a194_1 sweep param=mag dev=vs values=[0] {
+  a194_0 sweep param=mag dev=vb values=[0] {
+  x194 ac values=[100000]
+}
+}
+}
+}
+}
+a195_4 sweep param=dc dev=vg values=[0.4] {
+  a195_3 sweep param=mag dev=vg values=[1] {
+  a195_2 sweep param=mag dev=vd values=[0] {
+  a195_1 sweep param=mag dev=vs values=[0] {
+  a195_0 sweep param=mag dev=vb values=[0] {
+  x195 ac values=[1000000]
+}
+}
+}
+}
+}
+a196_4 sweep param=dc dev=vg values=[0.4] {
+  a196_3 sweep param=mag dev=vg values=[1] {
+  a196_2 sweep param=mag dev=vd values=[0] {
+  a196_1 sweep param=mag dev=vs values=[0] {
+  a196_0 sweep param=mag dev=vb values=[0] {
+  x196 ac values=[1000000]
+}
+}
+}
+}
+}
+a197_4 sweep param=dc dev=vg values=[0.4] {
+  a197_3 sweep param=mag dev=vg values=[0] {
+  a197_2 sweep param=mag dev=vd values=[1] {
+  a197_1 sweep param=mag dev=vs values=[0] {
+  a197_0 sweep param=mag dev=vb values=[0] {
+  x197 ac values=[1000000]
+}
+}
+}
+}
+}
+a198_4 sweep param=dc dev=vg values=[0.4] {
+  a198_3 sweep param=mag dev=vg values=[0] {
+  a198_2 sweep param=mag dev=vd values=[0] {
+  a198_1 sweep param=mag dev=vs values=[1] {
+  a198_0 sweep param=mag dev=vb values=[0] {
+  x198 ac values=[1000000]
+}
+}
+}
+}
+}
+a199_4 sweep param=dc dev=vg values=[0.4] {
+  a199_3 sweep param=mag dev=vg values=[0] {
+  a199_2 sweep param=mag dev=vd values=[0] {
+  a199_1 sweep param=mag dev=vs values=[0] {
+  a199_0 sweep param=mag dev=vb values=[1] {
+  x199 ac values=[1000000]
+}
+}
+}
+}
+}
+a200_4 sweep param=dc dev=vg values=[0.45] {
+  a200_3 sweep param=mag dev=vg values=[1] {
+  a200_2 sweep param=mag dev=vd values=[0] {
+  a200_1 sweep param=mag dev=vs values=[0] {
+  a200_0 sweep param=mag dev=vb values=[0] {
+  x200 ac values=[1000]
+}
+}
+}
+}
+}
+a201_4 sweep param=dc dev=vg values=[0.45] {
+  a201_3 sweep param=mag dev=vg values=[1] {
+  a201_2 sweep param=mag dev=vd values=[0] {
+  a201_1 sweep param=mag dev=vs values=[0] {
+  a201_0 sweep param=mag dev=vb values=[0] {
+  x201 ac values=[10000]
+}
+}
+}
+}
+}
+a202_4 sweep param=dc dev=vg values=[0.45] {
+  a202_3 sweep param=mag dev=vg values=[1] {
+  a202_2 sweep param=mag dev=vd values=[0] {
+  a202_1 sweep param=mag dev=vs values=[0] {
+  a202_0 sweep param=mag dev=vb values=[0] {
+  x202 ac values=[100000]
+}
+}
+}
+}
+}
+a203_4 sweep param=dc dev=vg values=[0.45] {
+  a203_3 sweep param=mag dev=vg values=[1] {
+  a203_2 sweep param=mag dev=vd values=[0] {
+  a203_1 sweep param=mag dev=vs values=[0] {
+  a203_0 sweep param=mag dev=vb values=[0] {
+  x203 ac values=[1000000]
+}
+}
+}
+}
+}
+a204_4 sweep param=dc dev=vg values=[0.45] {
+  a204_3 sweep param=mag dev=vg values=[1] {
+  a204_2 sweep param=mag dev=vd values=[0] {
+  a204_1 sweep param=mag dev=vs values=[0] {
+  a204_0 sweep param=mag dev=vb values=[0] {
+  x204 ac values=[1000000]
+}
+}
+}
+}
+}
+a205_4 sweep param=dc dev=vg values=[0.45] {
+  a205_3 sweep param=mag dev=vg values=[0] {
+  a205_2 sweep param=mag dev=vd values=[1] {
+  a205_1 sweep param=mag dev=vs values=[0] {
+  a205_0 sweep param=mag dev=vb values=[0] {
+  x205 ac values=[1000000]
+}
+}
+}
+}
+}
+a206_4 sweep param=dc dev=vg values=[0.45] {
+  a206_3 sweep param=mag dev=vg values=[0] {
+  a206_2 sweep param=mag dev=vd values=[0] {
+  a206_1 sweep param=mag dev=vs values=[1] {
+  a206_0 sweep param=mag dev=vb values=[0] {
+  x206 ac values=[1000000]
+}
+}
+}
+}
+}
+a207_4 sweep param=dc dev=vg values=[0.45] {
+  a207_3 sweep param=mag dev=vg values=[0] {
+  a207_2 sweep param=mag dev=vd values=[0] {
+  a207_1 sweep param=mag dev=vs values=[0] {
+  a207_0 sweep param=mag dev=vb values=[1] {
+  x207 ac values=[1000000]
+}
+}
+}
+}
+}
+a208_4 sweep param=dc dev=vg values=[0.5] {
+  a208_3 sweep param=mag dev=vg values=[1] {
+  a208_2 sweep param=mag dev=vd values=[0] {
+  a208_1 sweep param=mag dev=vs values=[0] {
+  a208_0 sweep param=mag dev=vb values=[0] {
+  x208 ac values=[1000]
+}
+}
+}
+}
+}
+a209_4 sweep param=dc dev=vg values=[0.5] {
+  a209_3 sweep param=mag dev=vg values=[1] {
+  a209_2 sweep param=mag dev=vd values=[0] {
+  a209_1 sweep param=mag dev=vs values=[0] {
+  a209_0 sweep param=mag dev=vb values=[0] {
+  x209 ac values=[10000]
+}
+}
+}
+}
+}
+a210_4 sweep param=dc dev=vg values=[0.5] {
+  a210_3 sweep param=mag dev=vg values=[1] {
+  a210_2 sweep param=mag dev=vd values=[0] {
+  a210_1 sweep param=mag dev=vs values=[0] {
+  a210_0 sweep param=mag dev=vb values=[0] {
+  x210 ac values=[100000]
+}
+}
+}
+}
+}
+a211_4 sweep param=dc dev=vg values=[0.5] {
+  a211_3 sweep param=mag dev=vg values=[1] {
+  a211_2 sweep param=mag dev=vd values=[0] {
+  a211_1 sweep param=mag dev=vs values=[0] {
+  a211_0 sweep param=mag dev=vb values=[0] {
+  x211 ac values=[1000000]
+}
+}
+}
+}
+}
+a212_4 sweep param=dc dev=vg values=[0.5] {
+  a212_3 sweep param=mag dev=vg values=[1] {
+  a212_2 sweep param=mag dev=vd values=[0] {
+  a212_1 sweep param=mag dev=vs values=[0] {
+  a212_0 sweep param=mag dev=vb values=[0] {
+  x212 ac values=[1000000]
+}
+}
+}
+}
+}
+a213_4 sweep param=dc dev=vg values=[0.5] {
+  a213_3 sweep param=mag dev=vg values=[0] {
+  a213_2 sweep param=mag dev=vd values=[1] {
+  a213_1 sweep param=mag dev=vs values=[0] {
+  a213_0 sweep param=mag dev=vb values=[0] {
+  x213 ac values=[1000000]
+}
+}
+}
+}
+}
+a214_4 sweep param=dc dev=vg values=[0.5] {
+  a214_3 sweep param=mag dev=vg values=[0] {
+  a214_2 sweep param=mag dev=vd values=[0] {
+  a214_1 sweep param=mag dev=vs values=[1] {
+  a214_0 sweep param=mag dev=vb values=[0] {
+  x214 ac values=[1000000]
+}
+}
+}
+}
+}
+a215_4 sweep param=dc dev=vg values=[0.5] {
+  a215_3 sweep param=mag dev=vg values=[0] {
+  a215_2 sweep param=mag dev=vd values=[0] {
+  a215_1 sweep param=mag dev=vs values=[0] {
+  a215_0 sweep param=mag dev=vb values=[1] {
+  x215 ac values=[1000000]
+}
+}
+}
+}
+}
+a216_4 sweep param=dc dev=vg values=[0.55] {
+  a216_3 sweep param=mag dev=vg values=[1] {
+  a216_2 sweep param=mag dev=vd values=[0] {
+  a216_1 sweep param=mag dev=vs values=[0] {
+  a216_0 sweep param=mag dev=vb values=[0] {
+  x216 ac values=[1000]
+}
+}
+}
+}
+}
+a217_4 sweep param=dc dev=vg values=[0.55] {
+  a217_3 sweep param=mag dev=vg values=[1] {
+  a217_2 sweep param=mag dev=vd values=[0] {
+  a217_1 sweep param=mag dev=vs values=[0] {
+  a217_0 sweep param=mag dev=vb values=[0] {
+  x217 ac values=[10000]
+}
+}
+}
+}
+}
+a218_4 sweep param=dc dev=vg values=[0.55] {
+  a218_3 sweep param=mag dev=vg values=[1] {
+  a218_2 sweep param=mag dev=vd values=[0] {
+  a218_1 sweep param=mag dev=vs values=[0] {
+  a218_0 sweep param=mag dev=vb values=[0] {
+  x218 ac values=[100000]
+}
+}
+}
+}
+}
+a219_4 sweep param=dc dev=vg values=[0.55] {
+  a219_3 sweep param=mag dev=vg values=[1] {
+  a219_2 sweep param=mag dev=vd values=[0] {
+  a219_1 sweep param=mag dev=vs values=[0] {
+  a219_0 sweep param=mag dev=vb values=[0] {
+  x219 ac values=[1000000]
+}
+}
+}
+}
+}
+a220_4 sweep param=dc dev=vg values=[0.55] {
+  a220_3 sweep param=mag dev=vg values=[1] {
+  a220_2 sweep param=mag dev=vd values=[0] {
+  a220_1 sweep param=mag dev=vs values=[0] {
+  a220_0 sweep param=mag dev=vb values=[0] {
+  x220 ac values=[1000000]
+}
+}
+}
+}
+}
+a221_4 sweep param=dc dev=vg values=[0.55] {
+  a221_3 sweep param=mag dev=vg values=[0] {
+  a221_2 sweep param=mag dev=vd values=[1] {
+  a221_1 sweep param=mag dev=vs values=[0] {
+  a221_0 sweep param=mag dev=vb values=[0] {
+  x221 ac values=[1000000]
+}
+}
+}
+}
+}
+a222_4 sweep param=dc dev=vg values=[0.55] {
+  a222_3 sweep param=mag dev=vg values=[0] {
+  a222_2 sweep param=mag dev=vd values=[0] {
+  a222_1 sweep param=mag dev=vs values=[1] {
+  a222_0 sweep param=mag dev=vb values=[0] {
+  x222 ac values=[1000000]
+}
+}
+}
+}
+}
+a223_4 sweep param=dc dev=vg values=[0.55] {
+  a223_3 sweep param=mag dev=vg values=[0] {
+  a223_2 sweep param=mag dev=vd values=[0] {
+  a223_1 sweep param=mag dev=vs values=[0] {
+  a223_0 sweep param=mag dev=vb values=[1] {
+  x223 ac values=[1000000]
+}
+}
+}
+}
+}
+a224_4 sweep param=dc dev=vg values=[0.6] {
+  a224_3 sweep param=mag dev=vg values=[1] {
+  a224_2 sweep param=mag dev=vd values=[0] {
+  a224_1 sweep param=mag dev=vs values=[0] {
+  a224_0 sweep param=mag dev=vb values=[0] {
+  x224 ac values=[1000]
+}
+}
+}
+}
+}
+a225_4 sweep param=dc dev=vg values=[0.6] {
+  a225_3 sweep param=mag dev=vg values=[1] {
+  a225_2 sweep param=mag dev=vd values=[0] {
+  a225_1 sweep param=mag dev=vs values=[0] {
+  a225_0 sweep param=mag dev=vb values=[0] {
+  x225 ac values=[10000]
+}
+}
+}
+}
+}
+a226_4 sweep param=dc dev=vg values=[0.6] {
+  a226_3 sweep param=mag dev=vg values=[1] {
+  a226_2 sweep param=mag dev=vd values=[0] {
+  a226_1 sweep param=mag dev=vs values=[0] {
+  a226_0 sweep param=mag dev=vb values=[0] {
+  x226 ac values=[100000]
+}
+}
+}
+}
+}
+a227_4 sweep param=dc dev=vg values=[0.6] {
+  a227_3 sweep param=mag dev=vg values=[1] {
+  a227_2 sweep param=mag dev=vd values=[0] {
+  a227_1 sweep param=mag dev=vs values=[0] {
+  a227_0 sweep param=mag dev=vb values=[0] {
+  x227 ac values=[1000000]
+}
+}
+}
+}
+}
+a228_4 sweep param=dc dev=vg values=[0.6] {
+  a228_3 sweep param=mag dev=vg values=[1] {
+  a228_2 sweep param=mag dev=vd values=[0] {
+  a228_1 sweep param=mag dev=vs values=[0] {
+  a228_0 sweep param=mag dev=vb values=[0] {
+  x228 ac values=[1000000]
+}
+}
+}
+}
+}
+a229_4 sweep param=dc dev=vg values=[0.6] {
+  a229_3 sweep param=mag dev=vg values=[0] {
+  a229_2 sweep param=mag dev=vd values=[1] {
+  a229_1 sweep param=mag dev=vs values=[0] {
+  a229_0 sweep param=mag dev=vb values=[0] {
+  x229 ac values=[1000000]
+}
+}
+}
+}
+}
+a230_4 sweep param=dc dev=vg values=[0.6] {
+  a230_3 sweep param=mag dev=vg values=[0] {
+  a230_2 sweep param=mag dev=vd values=[0] {
+  a230_1 sweep param=mag dev=vs values=[1] {
+  a230_0 sweep param=mag dev=vb values=[0] {
+  x230 ac values=[1000000]
+}
+}
+}
+}
+}
+a231_4 sweep param=dc dev=vg values=[0.6] {
+  a231_3 sweep param=mag dev=vg values=[0] {
+  a231_2 sweep param=mag dev=vd values=[0] {
+  a231_1 sweep param=mag dev=vs values=[0] {
+  a231_0 sweep param=mag dev=vb values=[1] {
+  x231 ac values=[1000000]
+}
+}
+}
+}
+}
+a232_4 sweep param=dc dev=vg values=[0.65] {
+  a232_3 sweep param=mag dev=vg values=[1] {
+  a232_2 sweep param=mag dev=vd values=[0] {
+  a232_1 sweep param=mag dev=vs values=[0] {
+  a232_0 sweep param=mag dev=vb values=[0] {
+  x232 ac values=[1000]
+}
+}
+}
+}
+}
+a233_4 sweep param=dc dev=vg values=[0.65] {
+  a233_3 sweep param=mag dev=vg values=[1] {
+  a233_2 sweep param=mag dev=vd values=[0] {
+  a233_1 sweep param=mag dev=vs values=[0] {
+  a233_0 sweep param=mag dev=vb values=[0] {
+  x233 ac values=[10000]
+}
+}
+}
+}
+}
+a234_4 sweep param=dc dev=vg values=[0.65] {
+  a234_3 sweep param=mag dev=vg values=[1] {
+  a234_2 sweep param=mag dev=vd values=[0] {
+  a234_1 sweep param=mag dev=vs values=[0] {
+  a234_0 sweep param=mag dev=vb values=[0] {
+  x234 ac values=[100000]
+}
+}
+}
+}
+}
+a235_4 sweep param=dc dev=vg values=[0.65] {
+  a235_3 sweep param=mag dev=vg values=[1] {
+  a235_2 sweep param=mag dev=vd values=[0] {
+  a235_1 sweep param=mag dev=vs values=[0] {
+  a235_0 sweep param=mag dev=vb values=[0] {
+  x235 ac values=[1000000]
+}
+}
+}
+}
+}
+a236_4 sweep param=dc dev=vg values=[0.65] {
+  a236_3 sweep param=mag dev=vg values=[1] {
+  a236_2 sweep param=mag dev=vd values=[0] {
+  a236_1 sweep param=mag dev=vs values=[0] {
+  a236_0 sweep param=mag dev=vb values=[0] {
+  x236 ac values=[1000000]
+}
+}
+}
+}
+}
+a237_4 sweep param=dc dev=vg values=[0.65] {
+  a237_3 sweep param=mag dev=vg values=[0] {
+  a237_2 sweep param=mag dev=vd values=[1] {
+  a237_1 sweep param=mag dev=vs values=[0] {
+  a237_0 sweep param=mag dev=vb values=[0] {
+  x237 ac values=[1000000]
+}
+}
+}
+}
+}
+a238_4 sweep param=dc dev=vg values=[0.65] {
+  a238_3 sweep param=mag dev=vg values=[0] {
+  a238_2 sweep param=mag dev=vd values=[0] {
+  a238_1 sweep param=mag dev=vs values=[1] {
+  a238_0 sweep param=mag dev=vb values=[0] {
+  x238 ac values=[1000000]
+}
+}
+}
+}
+}
+a239_4 sweep param=dc dev=vg values=[0.65] {
+  a239_3 sweep param=mag dev=vg values=[0] {
+  a239_2 sweep param=mag dev=vd values=[0] {
+  a239_1 sweep param=mag dev=vs values=[0] {
+  a239_0 sweep param=mag dev=vb values=[1] {
+  x239 ac values=[1000000]
+}
+}
+}
+}
+}
+a240_4 sweep param=dc dev=vg values=[0.7] {
+  a240_3 sweep param=mag dev=vg values=[1] {
+  a240_2 sweep param=mag dev=vd values=[0] {
+  a240_1 sweep param=mag dev=vs values=[0] {
+  a240_0 sweep param=mag dev=vb values=[0] {
+  x240 ac values=[1000]
+}
+}
+}
+}
+}
+a241_4 sweep param=dc dev=vg values=[0.7] {
+  a241_3 sweep param=mag dev=vg values=[1] {
+  a241_2 sweep param=mag dev=vd values=[0] {
+  a241_1 sweep param=mag dev=vs values=[0] {
+  a241_0 sweep param=mag dev=vb values=[0] {
+  x241 ac values=[10000]
+}
+}
+}
+}
+}
+a242_4 sweep param=dc dev=vg values=[0.7] {
+  a242_3 sweep param=mag dev=vg values=[1] {
+  a242_2 sweep param=mag dev=vd values=[0] {
+  a242_1 sweep param=mag dev=vs values=[0] {
+  a242_0 sweep param=mag dev=vb values=[0] {
+  x242 ac values=[100000]
+}
+}
+}
+}
+}
+a243_4 sweep param=dc dev=vg values=[0.7] {
+  a243_3 sweep param=mag dev=vg values=[1] {
+  a243_2 sweep param=mag dev=vd values=[0] {
+  a243_1 sweep param=mag dev=vs values=[0] {
+  a243_0 sweep param=mag dev=vb values=[0] {
+  x243 ac values=[1000000]
+}
+}
+}
+}
+}
+a244_4 sweep param=dc dev=vg values=[0.7] {
+  a244_3 sweep param=mag dev=vg values=[1] {
+  a244_2 sweep param=mag dev=vd values=[0] {
+  a244_1 sweep param=mag dev=vs values=[0] {
+  a244_0 sweep param=mag dev=vb values=[0] {
+  x244 ac values=[1000000]
+}
+}
+}
+}
+}
+a245_4 sweep param=dc dev=vg values=[0.7] {
+  a245_3 sweep param=mag dev=vg values=[0] {
+  a245_2 sweep param=mag dev=vd values=[1] {
+  a245_1 sweep param=mag dev=vs values=[0] {
+  a245_0 sweep param=mag dev=vb values=[0] {
+  x245 ac values=[1000000]
+}
+}
+}
+}
+}
+a246_4 sweep param=dc dev=vg values=[0.7] {
+  a246_3 sweep param=mag dev=vg values=[0] {
+  a246_2 sweep param=mag dev=vd values=[0] {
+  a246_1 sweep param=mag dev=vs values=[1] {
+  a246_0 sweep param=mag dev=vb values=[0] {
+  x246 ac values=[1000000]
+}
+}
+}
+}
+}
+a247_4 sweep param=dc dev=vg values=[0.7] {
+  a247_3 sweep param=mag dev=vg values=[0] {
+  a247_2 sweep param=mag dev=vd values=[0] {
+  a247_1 sweep param=mag dev=vs values=[0] {
+  a247_0 sweep param=mag dev=vb values=[1] {
+  x247 ac values=[1000000]
+}
+}
+}
+}
+}
+a248_4 sweep param=dc dev=vg values=[0.75] {
+  a248_3 sweep param=mag dev=vg values=[1] {
+  a248_2 sweep param=mag dev=vd values=[0] {
+  a248_1 sweep param=mag dev=vs values=[0] {
+  a248_0 sweep param=mag dev=vb values=[0] {
+  x248 ac values=[1000]
+}
+}
+}
+}
+}
+a249_4 sweep param=dc dev=vg values=[0.75] {
+  a249_3 sweep param=mag dev=vg values=[1] {
+  a249_2 sweep param=mag dev=vd values=[0] {
+  a249_1 sweep param=mag dev=vs values=[0] {
+  a249_0 sweep param=mag dev=vb values=[0] {
+  x249 ac values=[10000]
+}
+}
+}
+}
+}
+a250_4 sweep param=dc dev=vg values=[0.75] {
+  a250_3 sweep param=mag dev=vg values=[1] {
+  a250_2 sweep param=mag dev=vd values=[0] {
+  a250_1 sweep param=mag dev=vs values=[0] {
+  a250_0 sweep param=mag dev=vb values=[0] {
+  x250 ac values=[100000]
+}
+}
+}
+}
+}
+a251_4 sweep param=dc dev=vg values=[0.75] {
+  a251_3 sweep param=mag dev=vg values=[1] {
+  a251_2 sweep param=mag dev=vd values=[0] {
+  a251_1 sweep param=mag dev=vs values=[0] {
+  a251_0 sweep param=mag dev=vb values=[0] {
+  x251 ac values=[1000000]
+}
+}
+}
+}
+}
+a252_4 sweep param=dc dev=vg values=[0.75] {
+  a252_3 sweep param=mag dev=vg values=[1] {
+  a252_2 sweep param=mag dev=vd values=[0] {
+  a252_1 sweep param=mag dev=vs values=[0] {
+  a252_0 sweep param=mag dev=vb values=[0] {
+  x252 ac values=[1000000]
+}
+}
+}
+}
+}
+a253_4 sweep param=dc dev=vg values=[0.75] {
+  a253_3 sweep param=mag dev=vg values=[0] {
+  a253_2 sweep param=mag dev=vd values=[1] {
+  a253_1 sweep param=mag dev=vs values=[0] {
+  a253_0 sweep param=mag dev=vb values=[0] {
+  x253 ac values=[1000000]
+}
+}
+}
+}
+}
+a254_4 sweep param=dc dev=vg values=[0.75] {
+  a254_3 sweep param=mag dev=vg values=[0] {
+  a254_2 sweep param=mag dev=vd values=[0] {
+  a254_1 sweep param=mag dev=vs values=[1] {
+  a254_0 sweep param=mag dev=vb values=[0] {
+  x254 ac values=[1000000]
+}
+}
+}
+}
+}
+a255_4 sweep param=dc dev=vg values=[0.75] {
+  a255_3 sweep param=mag dev=vg values=[0] {
+  a255_2 sweep param=mag dev=vd values=[0] {
+  a255_1 sweep param=mag dev=vs values=[0] {
+  a255_0 sweep param=mag dev=vb values=[1] {
+  x255 ac values=[1000000]
+}
+}
+}
+}
+}
+a256_4 sweep param=dc dev=vg values=[0.8] {
+  a256_3 sweep param=mag dev=vg values=[1] {
+  a256_2 sweep param=mag dev=vd values=[0] {
+  a256_1 sweep param=mag dev=vs values=[0] {
+  a256_0 sweep param=mag dev=vb values=[0] {
+  x256 ac values=[1000]
+}
+}
+}
+}
+}
+a257_4 sweep param=dc dev=vg values=[0.8] {
+  a257_3 sweep param=mag dev=vg values=[1] {
+  a257_2 sweep param=mag dev=vd values=[0] {
+  a257_1 sweep param=mag dev=vs values=[0] {
+  a257_0 sweep param=mag dev=vb values=[0] {
+  x257 ac values=[10000]
+}
+}
+}
+}
+}
+a258_4 sweep param=dc dev=vg values=[0.8] {
+  a258_3 sweep param=mag dev=vg values=[1] {
+  a258_2 sweep param=mag dev=vd values=[0] {
+  a258_1 sweep param=mag dev=vs values=[0] {
+  a258_0 sweep param=mag dev=vb values=[0] {
+  x258 ac values=[100000]
+}
+}
+}
+}
+}
+a259_4 sweep param=dc dev=vg values=[0.8] {
+  a259_3 sweep param=mag dev=vg values=[1] {
+  a259_2 sweep param=mag dev=vd values=[0] {
+  a259_1 sweep param=mag dev=vs values=[0] {
+  a259_0 sweep param=mag dev=vb values=[0] {
+  x259 ac values=[1000000]
+}
+}
+}
+}
+}
+a260_4 sweep param=dc dev=vg values=[0.8] {
+  a260_3 sweep param=mag dev=vg values=[1] {
+  a260_2 sweep param=mag dev=vd values=[0] {
+  a260_1 sweep param=mag dev=vs values=[0] {
+  a260_0 sweep param=mag dev=vb values=[0] {
+  x260 ac values=[1000000]
+}
+}
+}
+}
+}
+a261_4 sweep param=dc dev=vg values=[0.8] {
+  a261_3 sweep param=mag dev=vg values=[0] {
+  a261_2 sweep param=mag dev=vd values=[1] {
+  a261_1 sweep param=mag dev=vs values=[0] {
+  a261_0 sweep param=mag dev=vb values=[0] {
+  x261 ac values=[1000000]
+}
+}
+}
+}
+}
+a262_4 sweep param=dc dev=vg values=[0.8] {
+  a262_3 sweep param=mag dev=vg values=[0] {
+  a262_2 sweep param=mag dev=vd values=[0] {
+  a262_1 sweep param=mag dev=vs values=[1] {
+  a262_0 sweep param=mag dev=vb values=[0] {
+  x262 ac values=[1000000]
+}
+}
+}
+}
+}
+a263_4 sweep param=dc dev=vg values=[0.8] {
+  a263_3 sweep param=mag dev=vg values=[0] {
+  a263_2 sweep param=mag dev=vd values=[0] {
+  a263_1 sweep param=mag dev=vs values=[0] {
+  a263_0 sweep param=mag dev=vb values=[1] {
+  x263 ac values=[1000000]
+}
+}
+}
+}
+}
+a264_4 sweep param=dc dev=vg values=[0.85] {
+  a264_3 sweep param=mag dev=vg values=[1] {
+  a264_2 sweep param=mag dev=vd values=[0] {
+  a264_1 sweep param=mag dev=vs values=[0] {
+  a264_0 sweep param=mag dev=vb values=[0] {
+  x264 ac values=[1000]
+}
+}
+}
+}
+}
+a265_4 sweep param=dc dev=vg values=[0.85] {
+  a265_3 sweep param=mag dev=vg values=[1] {
+  a265_2 sweep param=mag dev=vd values=[0] {
+  a265_1 sweep param=mag dev=vs values=[0] {
+  a265_0 sweep param=mag dev=vb values=[0] {
+  x265 ac values=[10000]
+}
+}
+}
+}
+}
+a266_4 sweep param=dc dev=vg values=[0.85] {
+  a266_3 sweep param=mag dev=vg values=[1] {
+  a266_2 sweep param=mag dev=vd values=[0] {
+  a266_1 sweep param=mag dev=vs values=[0] {
+  a266_0 sweep param=mag dev=vb values=[0] {
+  x266 ac values=[100000]
+}
+}
+}
+}
+}
+a267_4 sweep param=dc dev=vg values=[0.85] {
+  a267_3 sweep param=mag dev=vg values=[1] {
+  a267_2 sweep param=mag dev=vd values=[0] {
+  a267_1 sweep param=mag dev=vs values=[0] {
+  a267_0 sweep param=mag dev=vb values=[0] {
+  x267 ac values=[1000000]
+}
+}
+}
+}
+}
+a268_4 sweep param=dc dev=vg values=[0.85] {
+  a268_3 sweep param=mag dev=vg values=[1] {
+  a268_2 sweep param=mag dev=vd values=[0] {
+  a268_1 sweep param=mag dev=vs values=[0] {
+  a268_0 sweep param=mag dev=vb values=[0] {
+  x268 ac values=[1000000]
+}
+}
+}
+}
+}
+a269_4 sweep param=dc dev=vg values=[0.85] {
+  a269_3 sweep param=mag dev=vg values=[0] {
+  a269_2 sweep param=mag dev=vd values=[1] {
+  a269_1 sweep param=mag dev=vs values=[0] {
+  a269_0 sweep param=mag dev=vb values=[0] {
+  x269 ac values=[1000000]
+}
+}
+}
+}
+}
+a270_4 sweep param=dc dev=vg values=[0.85] {
+  a270_3 sweep param=mag dev=vg values=[0] {
+  a270_2 sweep param=mag dev=vd values=[0] {
+  a270_1 sweep param=mag dev=vs values=[1] {
+  a270_0 sweep param=mag dev=vb values=[0] {
+  x270 ac values=[1000000]
+}
+}
+}
+}
+}
+a271_4 sweep param=dc dev=vg values=[0.85] {
+  a271_3 sweep param=mag dev=vg values=[0] {
+  a271_2 sweep param=mag dev=vd values=[0] {
+  a271_1 sweep param=mag dev=vs values=[0] {
+  a271_0 sweep param=mag dev=vb values=[1] {
+  x271 ac values=[1000000]
+}
+}
+}
+}
+}
+a272_4 sweep param=dc dev=vg values=[0.9] {
+  a272_3 sweep param=mag dev=vg values=[1] {
+  a272_2 sweep param=mag dev=vd values=[0] {
+  a272_1 sweep param=mag dev=vs values=[0] {
+  a272_0 sweep param=mag dev=vb values=[0] {
+  x272 ac values=[1000]
+}
+}
+}
+}
+}
+a273_4 sweep param=dc dev=vg values=[0.9] {
+  a273_3 sweep param=mag dev=vg values=[1] {
+  a273_2 sweep param=mag dev=vd values=[0] {
+  a273_1 sweep param=mag dev=vs values=[0] {
+  a273_0 sweep param=mag dev=vb values=[0] {
+  x273 ac values=[10000]
+}
+}
+}
+}
+}
+a274_4 sweep param=dc dev=vg values=[0.9] {
+  a274_3 sweep param=mag dev=vg values=[1] {
+  a274_2 sweep param=mag dev=vd values=[0] {
+  a274_1 sweep param=mag dev=vs values=[0] {
+  a274_0 sweep param=mag dev=vb values=[0] {
+  x274 ac values=[100000]
+}
+}
+}
+}
+}
+a275_4 sweep param=dc dev=vg values=[0.9] {
+  a275_3 sweep param=mag dev=vg values=[1] {
+  a275_2 sweep param=mag dev=vd values=[0] {
+  a275_1 sweep param=mag dev=vs values=[0] {
+  a275_0 sweep param=mag dev=vb values=[0] {
+  x275 ac values=[1000000]
+}
+}
+}
+}
+}
+a276_4 sweep param=dc dev=vg values=[0.9] {
+  a276_3 sweep param=mag dev=vg values=[1] {
+  a276_2 sweep param=mag dev=vd values=[0] {
+  a276_1 sweep param=mag dev=vs values=[0] {
+  a276_0 sweep param=mag dev=vb values=[0] {
+  x276 ac values=[1000000]
+}
+}
+}
+}
+}
+a277_4 sweep param=dc dev=vg values=[0.9] {
+  a277_3 sweep param=mag dev=vg values=[0] {
+  a277_2 sweep param=mag dev=vd values=[1] {
+  a277_1 sweep param=mag dev=vs values=[0] {
+  a277_0 sweep param=mag dev=vb values=[0] {
+  x277 ac values=[1000000]
+}
+}
+}
+}
+}
+a278_4 sweep param=dc dev=vg values=[0.9] {
+  a278_3 sweep param=mag dev=vg values=[0] {
+  a278_2 sweep param=mag dev=vd values=[0] {
+  a278_1 sweep param=mag dev=vs values=[1] {
+  a278_0 sweep param=mag dev=vb values=[0] {
+  x278 ac values=[1000000]
+}
+}
+}
+}
+}
+a279_4 sweep param=dc dev=vg values=[0.9] {
+  a279_3 sweep param=mag dev=vg values=[0] {
+  a279_2 sweep param=mag dev=vd values=[0] {
+  a279_1 sweep param=mag dev=vs values=[0] {
+  a279_0 sweep param=mag dev=vb values=[1] {
+  x279 ac values=[1000000]
+}
+}
+}
+}
+}
+a280_4 sweep param=dc dev=vg values=[0.95] {
+  a280_3 sweep param=mag dev=vg values=[1] {
+  a280_2 sweep param=mag dev=vd values=[0] {
+  a280_1 sweep param=mag dev=vs values=[0] {
+  a280_0 sweep param=mag dev=vb values=[0] {
+  x280 ac values=[1000]
+}
+}
+}
+}
+}
+a281_4 sweep param=dc dev=vg values=[0.95] {
+  a281_3 sweep param=mag dev=vg values=[1] {
+  a281_2 sweep param=mag dev=vd values=[0] {
+  a281_1 sweep param=mag dev=vs values=[0] {
+  a281_0 sweep param=mag dev=vb values=[0] {
+  x281 ac values=[10000]
+}
+}
+}
+}
+}
+a282_4 sweep param=dc dev=vg values=[0.95] {
+  a282_3 sweep param=mag dev=vg values=[1] {
+  a282_2 sweep param=mag dev=vd values=[0] {
+  a282_1 sweep param=mag dev=vs values=[0] {
+  a282_0 sweep param=mag dev=vb values=[0] {
+  x282 ac values=[100000]
+}
+}
+}
+}
+}
+a283_4 sweep param=dc dev=vg values=[0.95] {
+  a283_3 sweep param=mag dev=vg values=[1] {
+  a283_2 sweep param=mag dev=vd values=[0] {
+  a283_1 sweep param=mag dev=vs values=[0] {
+  a283_0 sweep param=mag dev=vb values=[0] {
+  x283 ac values=[1000000]
+}
+}
+}
+}
+}
+a284_4 sweep param=dc dev=vg values=[0.95] {
+  a284_3 sweep param=mag dev=vg values=[1] {
+  a284_2 sweep param=mag dev=vd values=[0] {
+  a284_1 sweep param=mag dev=vs values=[0] {
+  a284_0 sweep param=mag dev=vb values=[0] {
+  x284 ac values=[1000000]
+}
+}
+}
+}
+}
+a285_4 sweep param=dc dev=vg values=[0.95] {
+  a285_3 sweep param=mag dev=vg values=[0] {
+  a285_2 sweep param=mag dev=vd values=[1] {
+  a285_1 sweep param=mag dev=vs values=[0] {
+  a285_0 sweep param=mag dev=vb values=[0] {
+  x285 ac values=[1000000]
+}
+}
+}
+}
+}
+a286_4 sweep param=dc dev=vg values=[0.95] {
+  a286_3 sweep param=mag dev=vg values=[0] {
+  a286_2 sweep param=mag dev=vd values=[0] {
+  a286_1 sweep param=mag dev=vs values=[1] {
+  a286_0 sweep param=mag dev=vb values=[0] {
+  x286 ac values=[1000000]
+}
+}
+}
+}
+}
+a287_4 sweep param=dc dev=vg values=[0.95] {
+  a287_3 sweep param=mag dev=vg values=[0] {
+  a287_2 sweep param=mag dev=vd values=[0] {
+  a287_1 sweep param=mag dev=vs values=[0] {
+  a287_0 sweep param=mag dev=vb values=[1] {
+  x287 ac values=[1000000]
+}
+}
+}
+}
+}
+a288_4 sweep param=dc dev=vg values=[1] {
+  a288_3 sweep param=mag dev=vg values=[1] {
+  a288_2 sweep param=mag dev=vd values=[0] {
+  a288_1 sweep param=mag dev=vs values=[0] {
+  a288_0 sweep param=mag dev=vb values=[0] {
+  x288 ac values=[1000]
+}
+}
+}
+}
+}
+a289_4 sweep param=dc dev=vg values=[1] {
+  a289_3 sweep param=mag dev=vg values=[1] {
+  a289_2 sweep param=mag dev=vd values=[0] {
+  a289_1 sweep param=mag dev=vs values=[0] {
+  a289_0 sweep param=mag dev=vb values=[0] {
+  x289 ac values=[10000]
+}
+}
+}
+}
+}
+a290_4 sweep param=dc dev=vg values=[1] {
+  a290_3 sweep param=mag dev=vg values=[1] {
+  a290_2 sweep param=mag dev=vd values=[0] {
+  a290_1 sweep param=mag dev=vs values=[0] {
+  a290_0 sweep param=mag dev=vb values=[0] {
+  x290 ac values=[100000]
+}
+}
+}
+}
+}
+a291_4 sweep param=dc dev=vg values=[1] {
+  a291_3 sweep param=mag dev=vg values=[1] {
+  a291_2 sweep param=mag dev=vd values=[0] {
+  a291_1 sweep param=mag dev=vs values=[0] {
+  a291_0 sweep param=mag dev=vb values=[0] {
+  x291 ac values=[1000000]
+}
+}
+}
+}
+}
+a292_4 sweep param=dc dev=vg values=[1] {
+  a292_3 sweep param=mag dev=vg values=[1] {
+  a292_2 sweep param=mag dev=vd values=[0] {
+  a292_1 sweep param=mag dev=vs values=[0] {
+  a292_0 sweep param=mag dev=vb values=[0] {
+  x292 ac values=[1000000]
+}
+}
+}
+}
+}
+a293_4 sweep param=dc dev=vg values=[1] {
+  a293_3 sweep param=mag dev=vg values=[0] {
+  a293_2 sweep param=mag dev=vd values=[1] {
+  a293_1 sweep param=mag dev=vs values=[0] {
+  a293_0 sweep param=mag dev=vb values=[0] {
+  x293 ac values=[1000000]
+}
+}
+}
+}
+}
+a294_4 sweep param=dc dev=vg values=[1] {
+  a294_3 sweep param=mag dev=vg values=[0] {
+  a294_2 sweep param=mag dev=vd values=[0] {
+  a294_1 sweep param=mag dev=vs values=[1] {
+  a294_0 sweep param=mag dev=vb values=[0] {
+  x294 ac values=[1000000]
+}
+}
+}
+}
+}
+a295_4 sweep param=dc dev=vg values=[1] {
+  a295_3 sweep param=mag dev=vg values=[0] {
+  a295_2 sweep param=mag dev=vd values=[0] {
+  a295_1 sweep param=mag dev=vs values=[0] {
+  a295_0 sweep param=mag dev=vb values=[1] {
+  x295 ac values=[1000000]
+}
+}
+}
+}
+}
+a296_4 sweep param=dc dev=vg values=[1.05] {
+  a296_3 sweep param=mag dev=vg values=[1] {
+  a296_2 sweep param=mag dev=vd values=[0] {
+  a296_1 sweep param=mag dev=vs values=[0] {
+  a296_0 sweep param=mag dev=vb values=[0] {
+  x296 ac values=[1000]
+}
+}
+}
+}
+}
+a297_4 sweep param=dc dev=vg values=[1.05] {
+  a297_3 sweep param=mag dev=vg values=[1] {
+  a297_2 sweep param=mag dev=vd values=[0] {
+  a297_1 sweep param=mag dev=vs values=[0] {
+  a297_0 sweep param=mag dev=vb values=[0] {
+  x297 ac values=[10000]
+}
+}
+}
+}
+}
+a298_4 sweep param=dc dev=vg values=[1.05] {
+  a298_3 sweep param=mag dev=vg values=[1] {
+  a298_2 sweep param=mag dev=vd values=[0] {
+  a298_1 sweep param=mag dev=vs values=[0] {
+  a298_0 sweep param=mag dev=vb values=[0] {
+  x298 ac values=[100000]
+}
+}
+}
+}
+}
+a299_4 sweep param=dc dev=vg values=[1.05] {
+  a299_3 sweep param=mag dev=vg values=[1] {
+  a299_2 sweep param=mag dev=vd values=[0] {
+  a299_1 sweep param=mag dev=vs values=[0] {
+  a299_0 sweep param=mag dev=vb values=[0] {
+  x299 ac values=[1000000]
+}
+}
+}
+}
+}
+a300_4 sweep param=dc dev=vg values=[1.05] {
+  a300_3 sweep param=mag dev=vg values=[1] {
+  a300_2 sweep param=mag dev=vd values=[0] {
+  a300_1 sweep param=mag dev=vs values=[0] {
+  a300_0 sweep param=mag dev=vb values=[0] {
+  x300 ac values=[1000000]
+}
+}
+}
+}
+}
+a301_4 sweep param=dc dev=vg values=[1.05] {
+  a301_3 sweep param=mag dev=vg values=[0] {
+  a301_2 sweep param=mag dev=vd values=[1] {
+  a301_1 sweep param=mag dev=vs values=[0] {
+  a301_0 sweep param=mag dev=vb values=[0] {
+  x301 ac values=[1000000]
+}
+}
+}
+}
+}
+a302_4 sweep param=dc dev=vg values=[1.05] {
+  a302_3 sweep param=mag dev=vg values=[0] {
+  a302_2 sweep param=mag dev=vd values=[0] {
+  a302_1 sweep param=mag dev=vs values=[1] {
+  a302_0 sweep param=mag dev=vb values=[0] {
+  x302 ac values=[1000000]
+}
+}
+}
+}
+}
+a303_4 sweep param=dc dev=vg values=[1.05] {
+  a303_3 sweep param=mag dev=vg values=[0] {
+  a303_2 sweep param=mag dev=vd values=[0] {
+  a303_1 sweep param=mag dev=vs values=[0] {
+  a303_0 sweep param=mag dev=vb values=[1] {
+  x303 ac values=[1000000]
+}
+}
+}
+}
+}
+a304_4 sweep param=dc dev=vg values=[1.1] {
+  a304_3 sweep param=mag dev=vg values=[1] {
+  a304_2 sweep param=mag dev=vd values=[0] {
+  a304_1 sweep param=mag dev=vs values=[0] {
+  a304_0 sweep param=mag dev=vb values=[0] {
+  x304 ac values=[1000]
+}
+}
+}
+}
+}
+a305_4 sweep param=dc dev=vg values=[1.1] {
+  a305_3 sweep param=mag dev=vg values=[1] {
+  a305_2 sweep param=mag dev=vd values=[0] {
+  a305_1 sweep param=mag dev=vs values=[0] {
+  a305_0 sweep param=mag dev=vb values=[0] {
+  x305 ac values=[10000]
+}
+}
+}
+}
+}
+a306_4 sweep param=dc dev=vg values=[1.1] {
+  a306_3 sweep param=mag dev=vg values=[1] {
+  a306_2 sweep param=mag dev=vd values=[0] {
+  a306_1 sweep param=mag dev=vs values=[0] {
+  a306_0 sweep param=mag dev=vb values=[0] {
+  x306 ac values=[100000]
+}
+}
+}
+}
+}
+a307_4 sweep param=dc dev=vg values=[1.1] {
+  a307_3 sweep param=mag dev=vg values=[1] {
+  a307_2 sweep param=mag dev=vd values=[0] {
+  a307_1 sweep param=mag dev=vs values=[0] {
+  a307_0 sweep param=mag dev=vb values=[0] {
+  x307 ac values=[1000000]
+}
+}
+}
+}
+}
+a308_4 sweep param=dc dev=vg values=[1.1] {
+  a308_3 sweep param=mag dev=vg values=[1] {
+  a308_2 sweep param=mag dev=vd values=[0] {
+  a308_1 sweep param=mag dev=vs values=[0] {
+  a308_0 sweep param=mag dev=vb values=[0] {
+  x308 ac values=[1000000]
+}
+}
+}
+}
+}
+a309_4 sweep param=dc dev=vg values=[1.1] {
+  a309_3 sweep param=mag dev=vg values=[0] {
+  a309_2 sweep param=mag dev=vd values=[1] {
+  a309_1 sweep param=mag dev=vs values=[0] {
+  a309_0 sweep param=mag dev=vb values=[0] {
+  x309 ac values=[1000000]
+}
+}
+}
+}
+}
+a310_4 sweep param=dc dev=vg values=[1.1] {
+  a310_3 sweep param=mag dev=vg values=[0] {
+  a310_2 sweep param=mag dev=vd values=[0] {
+  a310_1 sweep param=mag dev=vs values=[1] {
+  a310_0 sweep param=mag dev=vb values=[0] {
+  x310 ac values=[1000000]
+}
+}
+}
+}
+}
+a311_4 sweep param=dc dev=vg values=[1.1] {
+  a311_3 sweep param=mag dev=vg values=[0] {
+  a311_2 sweep param=mag dev=vd values=[0] {
+  a311_1 sweep param=mag dev=vs values=[0] {
+  a311_0 sweep param=mag dev=vb values=[1] {
+  x311 ac values=[1000000]
+}
+}
+}
+}
+}
+a312_4 sweep param=dc dev=vg values=[1.15] {
+  a312_3 sweep param=mag dev=vg values=[1] {
+  a312_2 sweep param=mag dev=vd values=[0] {
+  a312_1 sweep param=mag dev=vs values=[0] {
+  a312_0 sweep param=mag dev=vb values=[0] {
+  x312 ac values=[1000]
+}
+}
+}
+}
+}
+a313_4 sweep param=dc dev=vg values=[1.15] {
+  a313_3 sweep param=mag dev=vg values=[1] {
+  a313_2 sweep param=mag dev=vd values=[0] {
+  a313_1 sweep param=mag dev=vs values=[0] {
+  a313_0 sweep param=mag dev=vb values=[0] {
+  x313 ac values=[10000]
+}
+}
+}
+}
+}
+a314_4 sweep param=dc dev=vg values=[1.15] {
+  a314_3 sweep param=mag dev=vg values=[1] {
+  a314_2 sweep param=mag dev=vd values=[0] {
+  a314_1 sweep param=mag dev=vs values=[0] {
+  a314_0 sweep param=mag dev=vb values=[0] {
+  x314 ac values=[100000]
+}
+}
+}
+}
+}
+a315_4 sweep param=dc dev=vg values=[1.15] {
+  a315_3 sweep param=mag dev=vg values=[1] {
+  a315_2 sweep param=mag dev=vd values=[0] {
+  a315_1 sweep param=mag dev=vs values=[0] {
+  a315_0 sweep param=mag dev=vb values=[0] {
+  x315 ac values=[1000000]
+}
+}
+}
+}
+}
+a316_4 sweep param=dc dev=vg values=[1.15] {
+  a316_3 sweep param=mag dev=vg values=[1] {
+  a316_2 sweep param=mag dev=vd values=[0] {
+  a316_1 sweep param=mag dev=vs values=[0] {
+  a316_0 sweep param=mag dev=vb values=[0] {
+  x316 ac values=[1000000]
+}
+}
+}
+}
+}
+a317_4 sweep param=dc dev=vg values=[1.15] {
+  a317_3 sweep param=mag dev=vg values=[0] {
+  a317_2 sweep param=mag dev=vd values=[1] {
+  a317_1 sweep param=mag dev=vs values=[0] {
+  a317_0 sweep param=mag dev=vb values=[0] {
+  x317 ac values=[1000000]
+}
+}
+}
+}
+}
+a318_4 sweep param=dc dev=vg values=[1.15] {
+  a318_3 sweep param=mag dev=vg values=[0] {
+  a318_2 sweep param=mag dev=vd values=[0] {
+  a318_1 sweep param=mag dev=vs values=[1] {
+  a318_0 sweep param=mag dev=vb values=[0] {
+  x318 ac values=[1000000]
+}
+}
+}
+}
+}
+a319_4 sweep param=dc dev=vg values=[1.15] {
+  a319_3 sweep param=mag dev=vg values=[0] {
+  a319_2 sweep param=mag dev=vd values=[0] {
+  a319_1 sweep param=mag dev=vs values=[0] {
+  a319_0 sweep param=mag dev=vb values=[1] {
+  x319 ac values=[1000000]
+}
+}
+}
+}
+}
+a320_4 sweep param=dc dev=vg values=[1.2] {
+  a320_3 sweep param=mag dev=vg values=[1] {
+  a320_2 sweep param=mag dev=vd values=[0] {
+  a320_1 sweep param=mag dev=vs values=[0] {
+  a320_0 sweep param=mag dev=vb values=[0] {
+  x320 ac values=[1000]
+}
+}
+}
+}
+}
+a321_4 sweep param=dc dev=vg values=[1.2] {
+  a321_3 sweep param=mag dev=vg values=[1] {
+  a321_2 sweep param=mag dev=vd values=[0] {
+  a321_1 sweep param=mag dev=vs values=[0] {
+  a321_0 sweep param=mag dev=vb values=[0] {
+  x321 ac values=[10000]
+}
+}
+}
+}
+}
+a322_4 sweep param=dc dev=vg values=[1.2] {
+  a322_3 sweep param=mag dev=vg values=[1] {
+  a322_2 sweep param=mag dev=vd values=[0] {
+  a322_1 sweep param=mag dev=vs values=[0] {
+  a322_0 sweep param=mag dev=vb values=[0] {
+  x322 ac values=[100000]
+}
+}
+}
+}
+}
+a323_4 sweep param=dc dev=vg values=[1.2] {
+  a323_3 sweep param=mag dev=vg values=[1] {
+  a323_2 sweep param=mag dev=vd values=[0] {
+  a323_1 sweep param=mag dev=vs values=[0] {
+  a323_0 sweep param=mag dev=vb values=[0] {
+  x323 ac values=[1000000]
+}
+}
+}
+}
+}
+a324_4 sweep param=dc dev=vg values=[1.2] {
+  a324_3 sweep param=mag dev=vg values=[1] {
+  a324_2 sweep param=mag dev=vd values=[0] {
+  a324_1 sweep param=mag dev=vs values=[0] {
+  a324_0 sweep param=mag dev=vb values=[0] {
+  x324 ac values=[1000000]
+}
+}
+}
+}
+}
+a325_4 sweep param=dc dev=vg values=[1.2] {
+  a325_3 sweep param=mag dev=vg values=[0] {
+  a325_2 sweep param=mag dev=vd values=[1] {
+  a325_1 sweep param=mag dev=vs values=[0] {
+  a325_0 sweep param=mag dev=vb values=[0] {
+  x325 ac values=[1000000]
+}
+}
+}
+}
+}
+a326_4 sweep param=dc dev=vg values=[1.2] {
+  a326_3 sweep param=mag dev=vg values=[0] {
+  a326_2 sweep param=mag dev=vd values=[0] {
+  a326_1 sweep param=mag dev=vs values=[1] {
+  a326_0 sweep param=mag dev=vb values=[0] {
+  x326 ac values=[1000000]
+}
+}
+}
+}
+}
+a327_4 sweep param=dc dev=vg values=[1.2] {
+  a327_3 sweep param=mag dev=vg values=[0] {
+  a327_2 sweep param=mag dev=vd values=[0] {
+  a327_1 sweep param=mag dev=vs values=[0] {
+  a327_0 sweep param=mag dev=vb values=[1] {
+  x327 ac values=[1000000]
+}
+}
+}
+}
+}
+a328_8 sweep param=dc dev=vg values=[1.2] {
+  a328_7 sweep param=mag dev=vg values=[1] {
+  a328_6 sweep param=mag dev=vd values=[0] {
+  a328_5 sweep param=mag dev=vs values=[0] {
+  a328_4 sweep param=mag dev=vb values=[0] {
+  a328_3 sweep param=dc dev=vgs values=[0.8] {
+  a328_2 sweep param=dc dev=vds values=[1.0] {
+  a328_1 sweep param=mag dev=vgs values=[1] {
+  a328_0 sweep param=mag dev=vds values=[0] {
+  x328 ac values=[1000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a329_8 sweep param=dc dev=vg values=[1.2] {
+  a329_7 sweep param=mag dev=vg values=[1] {
+  a329_6 sweep param=mag dev=vd values=[0] {
+  a329_5 sweep param=mag dev=vs values=[0] {
+  a329_4 sweep param=mag dev=vb values=[0] {
+  a329_3 sweep param=dc dev=vgs values=[0.8] {
+  a329_2 sweep param=dc dev=vds values=[1.0] {
+  a329_1 sweep param=mag dev=vgs values=[0] {
+  a329_0 sweep param=mag dev=vds values=[1] {
+  x329 ac values=[1000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a330_8 sweep param=dc dev=vg values=[1.2] {
+  a330_7 sweep param=mag dev=vg values=[1] {
+  a330_6 sweep param=mag dev=vd values=[0] {
+  a330_5 sweep param=mag dev=vs values=[0] {
+  a330_4 sweep param=mag dev=vb values=[0] {
+  a330_3 sweep param=dc dev=vgs values=[0.8] {
+  a330_2 sweep param=dc dev=vds values=[1.0] {
+  a330_1 sweep param=mag dev=vgs values=[1] {
+  a330_0 sweep param=mag dev=vds values=[0] {
+  x330 ac values=[10000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a331_8 sweep param=dc dev=vg values=[1.2] {
+  a331_7 sweep param=mag dev=vg values=[1] {
+  a331_6 sweep param=mag dev=vd values=[0] {
+  a331_5 sweep param=mag dev=vs values=[0] {
+  a331_4 sweep param=mag dev=vb values=[0] {
+  a331_3 sweep param=dc dev=vgs values=[0.8] {
+  a331_2 sweep param=dc dev=vds values=[1.0] {
+  a331_1 sweep param=mag dev=vgs values=[0] {
+  a331_0 sweep param=mag dev=vds values=[1] {
+  x331 ac values=[10000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a332_8 sweep param=dc dev=vg values=[1.2] {
+  a332_7 sweep param=mag dev=vg values=[1] {
+  a332_6 sweep param=mag dev=vd values=[0] {
+  a332_5 sweep param=mag dev=vs values=[0] {
+  a332_4 sweep param=mag dev=vb values=[0] {
+  a332_3 sweep param=dc dev=vgs values=[0.8] {
+  a332_2 sweep param=dc dev=vds values=[1.0] {
+  a332_1 sweep param=mag dev=vgs values=[1] {
+  a332_0 sweep param=mag dev=vds values=[0] {
+  x332 ac values=[100000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a333_8 sweep param=dc dev=vg values=[1.2] {
+  a333_7 sweep param=mag dev=vg values=[1] {
+  a333_6 sweep param=mag dev=vd values=[0] {
+  a333_5 sweep param=mag dev=vs values=[0] {
+  a333_4 sweep param=mag dev=vb values=[0] {
+  a333_3 sweep param=dc dev=vgs values=[0.8] {
+  a333_2 sweep param=dc dev=vds values=[1.0] {
+  a333_1 sweep param=mag dev=vgs values=[0] {
+  a333_0 sweep param=mag dev=vds values=[1] {
+  x333 ac values=[100000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a334_8 sweep param=dc dev=vg values=[1.2] {
+  a334_7 sweep param=mag dev=vg values=[1] {
+  a334_6 sweep param=mag dev=vd values=[0] {
+  a334_5 sweep param=mag dev=vs values=[0] {
+  a334_4 sweep param=mag dev=vb values=[0] {
+  a334_3 sweep param=dc dev=vgs values=[0.8] {
+  a334_2 sweep param=dc dev=vds values=[1.0] {
+  a334_1 sweep param=mag dev=vgs values=[1] {
+  a334_0 sweep param=mag dev=vds values=[0] {
+  x334 ac values=[1000000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a335_8 sweep param=dc dev=vg values=[1.2] {
+  a335_7 sweep param=mag dev=vg values=[1] {
+  a335_6 sweep param=mag dev=vd values=[0] {
+  a335_5 sweep param=mag dev=vs values=[0] {
+  a335_4 sweep param=mag dev=vb values=[0] {
+  a335_3 sweep param=dc dev=vgs values=[0.8] {
+  a335_2 sweep param=dc dev=vds values=[1.0] {
+  a335_1 sweep param=mag dev=vgs values=[0] {
+  a335_0 sweep param=mag dev=vds values=[1] {
+  x335 ac values=[1000000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a336_9 sweep param=dc dev=vg values=[0.8] {
+  a336_8 sweep param=mag dev=vg values=[1] {
+  a336_7 sweep param=mag dev=vd values=[0] {
+  a336_6 sweep param=mag dev=vs values=[0] {
+  a336_5 sweep param=mag dev=vb values=[0] {
+  a336_4 sweep param=dc dev=vgs values=[0.8] {
+  a336_3 sweep param=dc dev=vds values=[1.0] {
+  a336_2 sweep param=mag dev=vgs values=[0] {
+  a336_1 sweep param=mag dev=vds values=[1] {
+  a336_0 sweep param=dc dev=vd values=[1.0] {
+  x336 ac values=[10000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a337_9 sweep param=dc dev=vg values=[0.8] {
+  a337_8 sweep param=mag dev=vg values=[1] {
+  a337_7 sweep param=mag dev=vd values=[0] {
+  a337_6 sweep param=mag dev=vs values=[0] {
+  a337_5 sweep param=mag dev=vb values=[0] {
+  a337_4 sweep param=dc dev=vgs values=[0.8] {
+  a337_3 sweep param=dc dev=vds values=[1.0] {
+  a337_2 sweep param=mag dev=vgs values=[0] {
+  a337_1 sweep param=mag dev=vds values=[1] {
+  a337_0 sweep param=dc dev=vd values=[1.0] {
+  x337 ac values=[100000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a338_9 sweep param=dc dev=vg values=[0.8] {
+  a338_8 sweep param=mag dev=vg values=[1] {
+  a338_7 sweep param=mag dev=vd values=[0] {
+  a338_6 sweep param=mag dev=vs values=[0] {
+  a338_5 sweep param=mag dev=vb values=[0] {
+  a338_4 sweep param=dc dev=vgs values=[0.8] {
+  a338_3 sweep param=dc dev=vds values=[1.0] {
+  a338_2 sweep param=mag dev=vgs values=[0] {
+  a338_1 sweep param=mag dev=vds values=[1] {
+  a338_0 sweep param=dc dev=vd values=[1.0] {
+  x338 ac values=[1000000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a339_9 sweep param=dc dev=vg values=[0.8] {
+  a339_8 sweep param=mag dev=vg values=[1] {
+  a339_7 sweep param=mag dev=vd values=[0] {
+  a339_6 sweep param=mag dev=vs values=[0] {
+  a339_5 sweep param=mag dev=vb values=[0] {
+  a339_4 sweep param=dc dev=vgs values=[0.8] {
+  a339_3 sweep param=dc dev=vds values=[1.0] {
+  a339_2 sweep param=mag dev=vgs values=[0] {
+  a339_1 sweep param=mag dev=vds values=[1] {
+  a339_0 sweep param=dc dev=vd values=[1.0] {
+  x339 ac values=[10000000000]
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+a340_9 sweep param=dc dev=vg values=[0.8] {
+  a340_8 sweep param=mag dev=vg values=[1] {
+  a340_7 sweep param=mag dev=vd values=[0] {
+  a340_6 sweep param=mag dev=vs values=[0] {
+  a340_5 sweep param=mag dev=vb values=[0] {
+  a340_4 sweep param=dc dev=vgs values=[0.8] {
+  a340_3 sweep param=dc dev=vds values=[1.0] {
+  a340_2 sweep param=mag dev=vgs values=[0] {
+  a340_1 sweep param=mag dev=vds values=[1] {
+  a340_0 sweep param=dc dev=vd values=[1.0] {
+  x340 tran step=1e-11 stop=5e-09 start=0 errpreset=conservative method=gear2only maxiters=50 minstep=1e-18 cmin=1e-18
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
