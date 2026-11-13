@@ -4,6 +4,7 @@ import type { JsonObject, StructuredJobErrorV1 } from "../../../shared/contracts
 import type { EdaDatabase } from "../../app/db/database.ts";
 import type { DtcoRepository } from "./repository.ts";
 import { ApiError } from "../../app/api/errors.ts";
+import { DTCO_FREQUENCY_PROTOCOL_VERSION, SUPERSEDED_FREQUENCY_REASON } from "./frequencyRead.ts";
 import { candidateKey, experimentDefinition, initialCandidate, initialState, nextCandidate, objectiveScore, type SearchState } from "./optimizationAlgorithm.ts";
 type Row = Record<string, unknown>;
 const now = () => new Date().toISOString();
@@ -26,24 +27,38 @@ export class DtcoOptimizationRepository {
   get(id: string): DtcoOptimization | null {
     const row = this.row(id); if (!row) return null;
     const experiment = this.dtco.get(String(row.experiment_id))!;
+    const definition=JSON.parse(String(row.definition_json)) as DtcoOptimizationDefinition;
+    const frequencyObjective=definition.objective.metric==="maxFrequencyHz";
     const points = new Map(experiment.revisions.flatMap(revision=>revision.points).map(point=>[point.id,point]));
     const iterations = (this.db.sqlite.prepare("SELECT * FROM dtco_optimization_iterations WHERE optimization_id=? ORDER BY number").all(id) as Row[]).map(item=>{
       const point = points.get(String(item.point_id))!;
       const evaluation = item.evaluation_json ? JSON.parse(String(item.evaluation_json)) as Evaluation : null;
+      const superseded=evaluation ? evaluation.provenance.frequencyProtocolVersion!==DTCO_FREQUENCY_PROTOCOL_VERSION&&(frequencyObjective||evaluation.metrics.maxFrequencyHz!==undefined) : frequencyObjective&&point.metrics?.frequencyStatus==="superseded_protocol";
+      const invalidObjective=frequencyObjective&&superseded;
+      const diagnostics:JsonObject={status:"superseded_protocol",reason:SUPERSEDED_FREQUENCY_REASON,
+        protocolVersion:evaluation?.provenance.frequencyProtocolVersion??null,reportedScore:evaluation?.score??null,
+        reportedAccepted:evaluation?.accepted??null,reportedRelativeImprovement:evaluation?.relativeImprovement??null,
+        reportedSignificantImprovement:evaluation?.significantImprovement??null,
+        reportedMetricMaxFrequencyHz:evaluation?.metrics.maxFrequencyHz??null,
+        reportedBestIterationId:row.best_iteration_id===null?null:String(row.best_iteration_id),
+        reportedBestScore:row.best_score===null?null:Number(row.best_score),evidencePath:"output/dtco/frequency.json"};
       return { id:String(item.id),number:Number(item.number),revision:Number(item.revision),pointId:point.id,
         candidate:JSON.parse(String(item.candidate_json)) as DtcoOptimizationCandidate,baseIterationId:item.base_iteration_id ? String(item.base_iteration_id):null,rationale:String(item.rationale),
         status:point.status,progress:point.progress,jobId:point.jobId,resultId:point.resultId,attemptId:point.attempts.at(-1)?.id||null,
-        metrics:evaluation?.metrics||null,score:evaluation?.score??null,relativeImprovement:evaluation?.relativeImprovement??null,
-        accepted:evaluation?.accepted??null,significantImprovement:evaluation?.significantImprovement??null,feasible:evaluation?.feasible??(item.error_json?false:null),
-        provenance:evaluation?.provenance||null,error:item.error_json ? JSON.parse(String(item.error_json)) as StructuredJobErrorV1 : point.error,
+        metrics:evaluation?(superseded?{...evaluation.metrics,maxFrequencyHz:null}:evaluation.metrics):null,
+        score:invalidObjective?null:evaluation?.score??null,relativeImprovement:invalidObjective?null:evaluation?.relativeImprovement??null,
+        accepted:invalidObjective?null:evaluation?.accepted??null,significantImprovement:invalidObjective?null:evaluation?.significantImprovement??null,feasible:invalidObjective?false:evaluation?.feasible??(item.error_json?false:null),
+        provenance:superseded?{...evaluation?.provenance,frequencyProtocolDiagnostics:diagnostics}:evaluation?.provenance||null,
+        error:invalidObjective?{type:"configuration",code:"DTCO_FREQUENCY_SUPERSEDED_PROTOCOL",message:SUPERSEDED_FREQUENCY_REASON,stepId:null,retryable:false,details:null}:item.error_json ? JSON.parse(String(item.error_json)) as StructuredJobErrorV1 : point.error,
         attempts:point.attempts,createdAt:String(item.created_at),evaluatedAt:item.evaluated_at ? String(item.evaluated_at):null } satisfies DtcoOptimizationIteration;
     });
     const status = row.status as DtcoOptimization["status"], stopReason = row.stop_reason as DtcoOptimizationStopReason;
     const latest = iterations.at(-1);
+    const invalidBest=frequencyObjective&&iterations.some(iteration=>Boolean(iteration.provenance?.frequencyProtocolDiagnostics));
     return {id,ownerId:String(row.owner_id),version:Number(row.version),status,
       allowedActions:status==="draft"?["start"]:status==="running"?["stop"]:status==="paused"&&stopReason!=="environment_changed"&&latest?.attemptId&&retryable.has(latest.status)?["resume"]:[],
-      definition:JSON.parse(String(row.definition_json)) as DtcoOptimizationDefinition,experimentId:experiment.id,environmentHash:String(row.environment_hash),
-      bestIterationId:row.best_iteration_id?String(row.best_iteration_id):null,bestScore:row.best_score===null?null:Number(row.best_score),stopReason,
+      definition,experimentId:experiment.id,environmentHash:String(row.environment_hash),
+      bestIterationId:invalidBest?null:row.best_iteration_id?String(row.best_iteration_id):null,bestScore:invalidBest||row.best_score===null?null:Number(row.best_score),stopReason,
       iterations,createdAt:String(row.created_at),updatedAt:String(row.updated_at)};
   }
   create(ownerId: string, clientRequestId: string, definition: DtcoOptimizationDefinition, environmentHash: string): DtcoOptimization {
@@ -113,7 +128,8 @@ export class DtcoOptimizationRepository {
       const score=objectiveScore(run.definition,metrics,baseline);
       if(!Number.isFinite(score)||score<=0)throw new Error("objective score must be finite and positive");
       const accepted=run.bestScore===null||score<run.bestScore;
-      const relative=run.bestScore===null?null:(run.bestScore-score)/run.bestScore;
+      const previousBest=run.iterations.find(item=>item.id===run.bestIterationId)?.metrics;
+      const relative=run.bestScore===null?null:run.definition.objective.metric==="maxFrequencyHz"?(metrics.maxFrequencyHz!-previousBest!.maxFrequencyHz!)/previousBest!.maxFrequencyHz!:(run.bestScore-score)/run.bestScore;
       const significant=run.bestScore===null||(accepted&&relative!>=run.definition.minRelativeImprovement);
       const evaluation:Evaluation={metrics,score,relativeImprovement:relative,accepted,significantImprovement:significant,feasible:true,provenance};
       const at=now();
@@ -123,7 +139,11 @@ export class DtcoOptimizationRepository {
       this.db.sqlite.prepare("UPDATE dtco_optimizations SET best_iteration_id=?,best_score=?,no_improvement=?,state_json=?,version=version+1,updated_at=? WHERE id=?")
         .run(accepted?iterationId:run.bestIterationId,accepted?score:run.bestScore,noImprovement,JSON.stringify(state),at,id);
       if(run.status==="stopping"){this.finish(id,"cancelled","user_stopped");return;}
-      if(run.definition.objective.target!==undefined&&(accepted?score:run.bestScore)!<=run.definition.objective.target){this.finish(id,"completed","target_reached");return;}
+      if(run.definition.objective.target!==undefined) {
+        const bestMetrics=accepted?metrics:run.iterations.find(item=>item.id===run.bestIterationId)!.metrics!;
+        const reached=run.definition.objective.metric==="maxFrequencyHz"?(bestMetrics.maxFrequencyHz??0)>=run.definition.objective.target:(accepted?score:run.bestScore)!<=run.definition.objective.target;
+        if(reached){this.finish(id,"completed","target_reached");return;}
+      }
       if(run.iterations.length>=run.definition.maxIterations){this.finish(id,"completed","max_iterations");return;}
       if(noImprovement>=run.definition.patience){this.finish(id,"completed","patience");return;}
       const best=accepted?iteration:run.iterations.find(item=>item.id===run.bestIterationId)!;

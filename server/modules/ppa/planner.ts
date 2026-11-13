@@ -1,3 +1,4 @@
+import { buildCharacterizationPlan } from "./characterization.ts";
 import type { DraftValidationContextV1, JobPlanV1, JsonObject, PlannedStepV1, ToolConfigurationSnapshotV1 } from "../../../shared/contracts/v1.ts";
 import { ppaFlowAdapters } from "./adapters/index.ts";
 import { parserStep, requireFlowTool, requireParser, step } from "./adapters/base.ts";
@@ -13,6 +14,7 @@ function prefixStep(pointIndex: number, item: PlannedStepV1): PlannedStepV1 {
 }
 
 export function buildPpaPlan(context: DraftValidationContextV1): JobPlanV1 {
+  if (context.job.parameters.flow === "libcharx") return buildCharacterizationPlan(context);
   const parameters = normalizeParameters(context.job.parameters); const adapter = ppaFlowAdapters[parameters.flow];
   const runtime = context as DraftValidationContextV1 & PpaRuntimeBindings;
   const maxRunCount = runtime.maxSweepJobs ?? 256; const sweep = expandSweep(context.job.parameters, adapter.parameters, maxRunCount);
@@ -41,6 +43,7 @@ export function buildPpaPlan(context: DraftValidationContextV1): JobPlanV1 {
 }
 
 export function buildPpaSweepChildPlans(context: DraftValidationContextV1): Array<{ parameters: JsonObject; plan: JobPlanV1 }> {
+  if (context.job.parameters.flow === "libcharx") return [{ parameters: context.job.parameters, plan: buildCharacterizationPlan(context) }];
   const parameters = normalizeParameters(context.job.parameters); const adapter = ppaFlowAdapters[parameters.flow]; const runtime = context as DraftValidationContextV1 & PpaRuntimeBindings;
   const sweep = expandSweep(context.job.parameters, adapter.parameters, runtime.maxSweepJobs ?? 256);
   return sweep.points.map((point) => {

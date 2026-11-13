@@ -2,7 +2,6 @@ import type { ReactElement } from "react";
 import { lazy, Suspense } from "react";
 import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import { ThemeToggle } from "./components/ThemeToggle";
-import { HomePage } from "./pages/HomePage";
 import { useAuth } from "./auth/AuthContext";
 
 const PlotlyPage = lazy(async () => ({
@@ -51,13 +50,6 @@ export default function App(): ReactElement {
       </header>
       <nav>
         <NavLink
-          to="/"
-          end
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          Home
-        </NavLink>
-        <NavLink
           to="/benchmark"
           className={({ isActive }) => (isActive ? "active" : "")}
         >
@@ -95,8 +87,8 @@ export default function App(): ReactElement {
           }
         >
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/flow" element={<Navigate to="/" replace />} />
+            <Route path="/" element={<Navigate to="/benchmark" replace />} />
+            <Route path="/flow" element={<Navigate to="/benchmark" replace />} />
             <Route path="/benchmark" element={<SpiceBenchmarkPage />} />
             <Route path="/digital" element={<PlotlyPage />} />
             <Route path="/plotly" element={<Navigate to="/digital" replace />} />

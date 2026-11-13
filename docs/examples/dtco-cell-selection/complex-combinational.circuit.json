@@ -1,0 +1,186 @@
+{
+  "name": "large_graph",
+  "inputs": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j"
+  ],
+  "outputs": [
+    "y"
+  ],
+  "clock": null,
+  "instances": [
+    {
+      "id": "g0",
+      "family": "NAND",
+      "inputs": [
+        "a",
+        "b"
+      ],
+      "output": "net0",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g1",
+      "family": "NOR",
+      "inputs": [
+        "net0",
+        "c"
+      ],
+      "output": "net1",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g2",
+      "family": "INV",
+      "inputs": [
+        "net1"
+      ],
+      "output": "net2",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g3",
+      "family": "AND",
+      "inputs": [
+        "net2",
+        "d"
+      ],
+      "output": "net3",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g4",
+      "family": "NAND",
+      "inputs": [
+        "net3",
+        "e"
+      ],
+      "output": "net4",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g5",
+      "family": "NOR",
+      "inputs": [
+        "net4",
+        "f"
+      ],
+      "output": "net5",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g6",
+      "family": "INV",
+      "inputs": [
+        "net5"
+      ],
+      "output": "net6",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g7",
+      "family": "AND",
+      "inputs": [
+        "net6",
+        "g"
+      ],
+      "output": "net7",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g8",
+      "family": "NAND",
+      "inputs": [
+        "net7",
+        "h"
+      ],
+      "output": "net8",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g9",
+      "family": "NOR",
+      "inputs": [
+        "net8",
+        "i"
+      ],
+      "output": "net9",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g10",
+      "family": "INV",
+      "inputs": [
+        "net9"
+      ],
+      "output": "net10",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "g11",
+      "family": "AND",
+      "inputs": [
+        "net10",
+        "j"
+      ],
+      "output": "y",
+      "allowedDrives": [
+        1,
+        2
+      ],
+      "initialDrive": 1
+    }
+  ]
+}

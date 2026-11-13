@@ -3,6 +3,7 @@ import type { DtcoAttempt, DtcoExperiment, DtcoExperimentDefinition, DtcoPoint, 
 import type { InputManifestV1, JsonObject, StructuredJobErrorV1 } from "../../../shared/contracts/v1.ts";
 import type { EdaDatabase } from "../../app/db/database.ts";
 import type { JobRepository, ResultRepository } from "../../app/db/repositories.ts";
+import { readPipelineSummary } from "./pipelineRepository.ts";
 const now = () => new Date().toISOString();
 type Row = Record<string, unknown>;
 export const preparationError = (message: string, code = "DTCO_PREPARATION_FAILED"): StructuredJobErrorV1 => ({ type: "configuration", code, message, stepId: null, retryable: true, details: null });
@@ -36,9 +37,12 @@ export class DtcoRepository {
     if (!current) this.db.sqlite.prepare("INSERT INTO dtco_experiments(id,owner_id,revision,created_at,updated_at) VALUES (?,?,?,?,?)").run(experimentId, ownerId, revision, at, at);
     else this.db.sqlite.prepare("UPDATE dtco_experiments SET revision=?,updated_at=? WHERE id=?").run(revision, at, experimentId);
     this.db.sqlite.prepare("INSERT INTO dtco_revisions(experiment_id,revision,definition_json,environment_hash,created_at) VALUES (?,?,?,?,?)").run(experimentId, revision, JSON.stringify(definition), environmentHash, at);
-    for (const temperatureC of definition.temperaturesC) for (const voltageV of definition.voltagesV) for (const layoutId of definition.layoutIds) {
-      const coordinates = { temperatureC, voltageV, layoutId };
-      const identity = { ...definition, name: undefined, temperaturesC: undefined, voltagesV: undefined, layoutIds: undefined, ...coordinates, environmentHash, version: "dtco.point.v1" };
+    for (const temperatureC of definition.temperaturesC) for (const voltageV of definition.voltagesV) for (const layoutId of definition.layoutIds)
+      for(const groundVoltageV of definition.groundVoltagesV??[0])for(const processCorner of definition.processCorners??["tt"]) {
+      // Omit effective legacy defaults so old and explicitly selected 0 V / TT points reuse their attempts.
+      const coordinates:DtcoPointCoordinates = { temperatureC, voltageV, layoutId,...(groundVoltageV!==0?{groundVoltageV}:{}),...(processCorner!=="tt"?{processCorner}:{}) };
+      const {groundVoltagesV:_grounds,processCorners:_corners,...legacyDefinition}=definition;
+      const identity = { ...legacyDefinition, name: undefined, temperaturesC: undefined, voltagesV: undefined, layoutIds: undefined, ...coordinates, environmentHash, version: "dtco.point.v1" };
       const key = createHash("sha256").update(JSON.stringify(identity)).digest("hex");
       this.db.sqlite.prepare("INSERT INTO dtco_points(id,experiment_id,revision,point_key,coordinates_json) VALUES (?,?,?,?,?)").run(randomUUID(), experimentId, revision, key, JSON.stringify(coordinates));
     }
@@ -92,11 +96,14 @@ export class DtcoRepository {
   }
   private attempt(row: Row): DtcoAttempt {
     const job = this.repositories.jobs.get(String(row.job_id))!;
-    const status = row.preparation_status === "prepared" ? job.status : row.preparation_status as "preparing" | "preparation_failed";
-    const result = job.resultId ? this.repositories.results.get("dtco", job.resultId, job.ownerId, true) : null;
+    const pipeline=readPipelineSummary(this.db,String(row.id));
+    const status = pipeline?.status ?? (row.preparation_status === "prepared" ? job.status : row.preparation_status as "preparing" | "preparation_failed");
+    const resultId=(!pipeline||pipeline.status==="succeeded")?job.resultId:null;
+    const result = resultId ? this.repositories.results.get("dtco", resultId, job.ownerId, true) : null;
     const dtco = result?.data.dtco as JsonObject | undefined;
     const metrics = dtco?.metrics as JsonObject | undefined;
-    return { id: String(row.id), number: Number(row.number), jobId: job.id, resultId: job.resultId, status, progress: job.progress, currentStepId: job.currentStepId,
-      error: row.error_json ? JSON.parse(String(row.error_json)) as StructuredJobErrorV1 : job.error, metrics: metrics || result?.summary || null, createdAt: String(row.created_at), updatedAt: job.updatedAt > String(row.updated_at) ? job.updatedAt : String(row.updated_at) };
+    const currentNode=pipeline?.nodes.find(node=>node.id===pipeline.currentNodeId);
+    return { id: String(row.id), number: Number(row.number), jobId: job.id, resultId, status, progress: pipeline?.progress??job.progress, currentStepId: currentNode?.currentStepId??job.currentStepId,
+      ...(pipeline?{pipeline}:{}),error: pipeline?.error??(row.error_json ? JSON.parse(String(row.error_json)) as StructuredJobErrorV1 : job.error), metrics: metrics || result?.summary || null, createdAt: String(row.created_at), updatedAt: pipeline?.updatedAt??(job.updatedAt > String(row.updated_at) ? job.updatedAt : String(row.updated_at)) };
   }
 }

@@ -56,7 +56,7 @@ export function registerModuleRoutes(app: FastifyInstance, repositories: Reposit
     const jobId = String((request.params as { jobId?: string }).jobId || ""); const job = repositories.jobs.get(jobId);
     if (!job || job.ownerId !== request.edaUser!.id && request.edaUser!.role !== "admin") throw new ApiError(404, "NOT_FOUND", "job not found");
     if (request.edaUser!.role !== "admin" && !request.edaUser!.allowedModules.includes(job.moduleId)) throw new ApiError(403, "MODULE_FORBIDDEN", "this user is no longer allowed to run this module");
-    if (job.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "prepare DTCO jobs through the experiment API");
+    if (job.moduleId === "dtco" || repositories.database.sqlite.prepare("SELECT id FROM dtco_pipeline_nodes WHERE job_id=?").get(job.id)) throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "prepare integrated DTCO children through the experiment API");
     if (job.status !== "draft") throw new ApiError(409, "DRAFT_IMMUTABLE", "only draft jobs may be validated");
     const body = (request.body || {}) as { fileRoles?: Record<string, string>; parameters?: JsonObject; technologyLibraryId?: string | null };
     const manifest = structuredClone(job.inputManifest);

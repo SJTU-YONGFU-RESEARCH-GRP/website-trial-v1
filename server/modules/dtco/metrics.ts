@@ -4,10 +4,12 @@ import { AcgError, regular } from "../acg/types.ts";
 export async function readDtcoMetrics(root:string):Promise<JsonObject> {
  const data=JSON.parse(await fs.readFile(await regular(root,"output/dtco/metrics.json"),"utf8")) as JsonObject;
  if(data.schemaVersion!=="dtco.measurements.v1")throw new AcgError("DTCO_METRICS_SCHEMA","Invalid measurement schema","parser");
- for(const key of ["delayPs","delayRisePs","delayFallPs","averagePowerW","energyPerCycleJ","areaUm2"]) {
+ for(const key of ["delayPs","delayRisePs","delayFallPs","averagePowerW","energyPerCycleJ"]) {
   if(typeof data[key]!=="number"||!Number.isFinite(data[key])||data[key]<=0)throw new AcgError("DTCO_METRICS_NONFINITE","Missing, nonfinite or nonpositive metric "+key,"parser");
  }
- if(typeof data.selectedGdsPath!=="string"||typeof data.selectedGdsSha256!=="string"||!/^[a-f0-9]{64}$/.test(data.selectedGdsSha256))throw new AcgError("DTCO_GDS_EVIDENCE","Selected GDS evidence missing","parser");
+ if(data.areaUm2!==null&&(typeof data.areaUm2!=="number"||!Number.isFinite(data.areaUm2)||data.areaUm2<=0))throw new AcgError("DTCO_AREA_INVALID","Invalid physical area","parser");
+ if(data.areaUm2===null&&(data.areaStatus!=="unavailable"||data.selectedGdsPath!==null||data.selectedGdsSha256!==null||data.electricalMode==="extracted"))throw new AcgError("DTCO_AREA_SCOPE","Missing area is allowed only for explicit schematic-only evidence","parser");
+ if(data.areaUm2!==null&&(typeof data.selectedGdsPath!=="string"||typeof data.selectedGdsSha256!=="string"||!/^[a-f0-9]{64}$/.test(data.selectedGdsSha256)))throw new AcgError("DTCO_GDS_EVIDENCE","Selected GDS evidence missing","parser");
  if(data.electricalMode==="extracted"){
   const proof=data.extraction as JsonObject|null;
   const devices=proof?.devices;

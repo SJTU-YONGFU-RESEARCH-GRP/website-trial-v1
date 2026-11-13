@@ -171,6 +171,8 @@ export interface PlannedProcessV1 {
   environmentNames: string[];
   timeoutSeconds: number;
   expectedOutputs?: string[];
+  /** Other frozen native tools used by this trusted process, reserved for its lifetime. */
+  additionalToolConfigurationIds?: Id[];
 }
 
 export interface PlannedStepV1 {

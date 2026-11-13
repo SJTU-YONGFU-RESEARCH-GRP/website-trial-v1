@@ -25,6 +25,8 @@ import { registerResultRoutes } from "./api/resultRoutes.ts";
 import { registerAdminRoutes } from "./api/adminRoutes.ts";
 import { success } from "./api/http.ts";
 import { registerDtcoRoutes } from "../modules/dtco/routes.ts";
+import { configureDtcoPipeline } from "../modules/dtco/pipeline.ts";
+import { registerDtcoSelectionRoutes } from "../modules/dtco/selectionRoutes.ts";
 import { registerDtcoOptimizationRoutes } from "../modules/dtco/optimizationRoutes.ts";
 import { registerBenchmarkExplorerRoutes } from "../modules/benchmark/explorerRoutes.ts";
 
@@ -47,6 +49,7 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   }
   bootLog("storage initialized");
   const registry = options.registry || new ModuleRegistry(); const runner = new SafeProcessRunner(config.cancelGraceMs);
+  configureDtcoPipeline(repositories, registry);
   const probeRoot = storage.resolve("work-probes"); await fs.promises.mkdir(probeRoot, { recursive: true, mode: 0o750 });
   const health = new ToolHealthService(repositories.tools, runner, probeRoot);
   const workers = options.startWorkers ? new WorkerSupervisor(repositories, registry, storage, config.queueConcurrency, config.cancelGraceMs, config.maxLogBytes) : null;
@@ -87,6 +90,7 @@ export async function createEdaApp(options: EdaAppOptions = {}): Promise<Fastify
   registerBenchmarkExplorerRoutes(app, repositories, storage);
   registerDtcoRoutes(app, repositories, storage);
   registerDtcoOptimizationRoutes(app, repositories, storage);
+  registerDtcoSelectionRoutes(app, repositories, storage);
 
   const frontendRoot = path.resolve(process.cwd(), "dist");
   if (options.serveFrontend !== false && fs.existsSync(frontendRoot)) {

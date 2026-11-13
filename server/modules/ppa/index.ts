@@ -23,7 +23,7 @@ export const ppaModuleAdapter: ModuleAdapterV1 = {
   async publishResult(_context: StepExecutionContextV1, result: ParsedModuleResultV1) { validatePpaParsedResult(result); },
   async collectArtifacts(context: StepExecutionContextV1) {
     const files = await findNativeArtifacts(context.workspacePath);
-    return files.filter((file) => file.startsWith("output/") || file.startsWith("work/") || file.startsWith("logs/") || /^run-\d+\/(?:output|work|logs)\//.test(file)).map((relativePath): CollectedArtifactV1 => ({ role: relativePath.endsWith("output/ppa-result.json") ? "normalized-result" : relativePath.includes("parse-native.stdout") ? "parser-log" : "native-run", relativePath, mediaType: mediaType(relativePath), required: relativePath.endsWith("output/ppa-result.json"), publish: true }));
+    return files.filter((file) => file.startsWith("output/") || file.startsWith("work/") || file.startsWith("logs/") || /^run-\d+\/(?:output|work|logs)\//.test(file)).map((relativePath): CollectedArtifactV1 => ({ role: relativePath.endsWith("output/ppa-result.json") ? "normalized-result" : relativePath.endsWith("output/libcharx/characterized.lib") ? "characterized-liberty" : relativePath.includes("parse-native.stdout") ? "parser-log" : "native-run", relativePath, mediaType: mediaType(relativePath), required: relativePath.endsWith("output/ppa-result.json"), publish: true }));
   },
 };
 

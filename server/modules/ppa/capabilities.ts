@@ -1,3 +1,4 @@
+import { characterizationCapability } from "./characterization.ts";
 import type { InputRoleDefinitionV1, PlannedStepV1, ToolCapabilityV1, ToolHealthStatus } from "../../../shared/contracts/v1.ts";
 import { CAPABILITY_SCHEMA_VERSION } from "../../../shared/contracts/v1.ts";
 import { ppaFlowAdapters } from "./adapters/index.ts";
@@ -27,7 +28,7 @@ function templates(flow: PpaFlowId): PlannedStepV1[] {
 
 export function ppaCapabilities(context: PpaModuleContext): ToolCapabilityV1[] {
   const parser = state(context, "ppa-result-parser");
-  return PPA_FLOW_IDS.map((flow) => {
+  return [...PPA_FLOW_IDS.map((flow): ToolCapabilityV1 => {
     const adapter = ppaFlowAdapters[flow]; const flowState = state(context, flow);
     const health: ToolHealthStatus = flowState.health === "healthy" && parser.health === "healthy" ? "healthy" : flowState.health === "healthy" ? parser.health : flowState.health;
     const reason = flowState.health !== "healthy" ? flowState.reason : parser.health !== "healthy" ? `PPA result parser: ${parser.reason}` : null;
@@ -47,5 +48,5 @@ export function ppaCapabilities(context: PpaModuleContext): ToolCapabilityV1[] {
       plannedStepTemplates: templates(flow),
       limits: { shell: false, arbitraryScripts: false, maxSweepJobs: context.maxSweepJobs ?? 256, parserRequired: true, parserHealth: parser.health },
     };
-  });
+  }), characterizationCapability(context)];
 }

@@ -1,3 +1,4 @@
+import { executeCharacterizationStep } from "./characterization.ts";
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import { createReadStream } from "node:fs";
@@ -117,6 +118,7 @@ function parserLog(context: PpaExecutionContext): string {
 }
 
 export async function executePpaStep(context: PpaExecutionContext): Promise<{ exitCode: number; outputs: JsonObject }> {
+  if (context.job.parameters.flow === "libcharx") return executeCharacterizationStep(context);
   await Promise.all(["work", "output", "artifacts"].map((dir) => fs.mkdir(pathFor(context, dir), { recursive: true, mode: 0o750 })));
   switch (baseStepKey(context.step.stepKey)) {
     case "validate-input": await validateWorkspace(context); return { exitCode: 0, outputs: { validated: true } };

@@ -1,0 +1,187 @@
+{
+  "name": "branched_sequential",
+  "inputs": [
+    "da",
+    "db",
+    "clk"
+  ],
+  "outputs": [
+    "q1",
+    "q2"
+  ],
+  "clock": "clk",
+  "instances": [
+    {
+      "id": "launch_a",
+      "family": "DFF",
+      "inputs": [
+        "da"
+      ],
+      "output": "la",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "launch_b",
+      "family": "DFF",
+      "inputs": [
+        "db"
+      ],
+      "output": "lb",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "branch_a",
+      "family": "NAND",
+      "inputs": [
+        "la",
+        "lb"
+      ],
+      "output": "a1",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "branch_b",
+      "family": "NOR",
+      "inputs": [
+        "la",
+        "lb"
+      ],
+      "output": "b1",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "invert_a",
+      "family": "INV",
+      "inputs": [
+        "a1"
+      ],
+      "output": "a2",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "invert_b",
+      "family": "INV",
+      "inputs": [
+        "b1"
+      ],
+      "output": "b2",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "merge_a",
+      "family": "AND",
+      "inputs": [
+        "a2",
+        "b2"
+      ],
+      "output": "a3",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "merge_b",
+      "family": "NAND",
+      "inputs": [
+        "b2",
+        "la"
+      ],
+      "output": "b3",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "buffer_a",
+      "family": "INV",
+      "inputs": [
+        "a3"
+      ],
+      "output": "a4",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "buffer_b",
+      "family": "INV",
+      "inputs": [
+        "b3"
+      ],
+      "output": "b4",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "capture_a",
+      "family": "DFF",
+      "inputs": [
+        "a4"
+      ],
+      "output": "q1",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    },
+    {
+      "id": "capture_b",
+      "family": "DFF",
+      "inputs": [
+        "b4"
+      ],
+      "output": "q2",
+      "allowedDrives": [
+        1,
+        2,
+        4
+      ],
+      "initialDrive": 1
+    }
+  ]
+}

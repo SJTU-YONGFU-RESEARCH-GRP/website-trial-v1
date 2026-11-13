@@ -54,7 +54,9 @@ test("counts combinations, saves configuration, and restores it from server afte
   const api = await setup(page);
   await page.goto("/dtco");
   await page.getByLabel("Experiment name").fill("Saved server sweep");
+  await page.getByLabel("Temperatures (°C) mode", { exact: true }).selectOption("sweep");
   await page.getByLabel("Temperatures (°C)", { exact: true }).fill("25, 85");
+  await page.getByLabel("Supply voltages (V) mode", { exact: true }).selectOption("sweep");
   await page.getByLabel("Supply voltages (V)", { exact: true }).fill("2.7, 3.3");
   await page.getByLabel("mr-sa-12t", { exact: true }).check();
   await expect(page.locator(".dtco-count")).toContainText("8 combinations");
@@ -67,7 +69,7 @@ test("counts combinations, saves configuration, and restores it from server afte
   await expect(page.getByText("Public runner:", { exact: false })).toBeVisible();
 });
 
-test("retries one failed attempt, keeps successful jobs, and defaults comparison to all real results", async ({ page }) => {
+test("retries one failed attempt, keeps successful jobs, and explicitly selects measured results", async ({ page }) => {
   const failed = point("failed", "failed", { error: { code: "SPICE_EXIT", message: "ngspice exited 1", type: "tool_exit", stepId: null, retryable: true, details: null } });
   const api = await setup(page, [experiment("exp-1", [point("ok"), failed, point("ok2", "succeeded", { temperatureC: 85, metrics: { delayPs: 25, averagePowerW: 2e-6, areaUm2: 4 } })])]);
   await page.goto("/dtco?experiment=exp-1");
@@ -77,10 +79,15 @@ test("retries one failed attempt, keeps successful jobs, and defaults comparison
   await expect(page.getByRole("button", { name: "Retry this combination" })).toHaveCount(0);
   expect(api.calls.filter(call => call.path.endsWith("/retry"))).toEqual([{ path: "/api/dtco/points/failed/retry", method: "POST", body: { attemptId: "attempt-failed" } }]);
   expect(api.records.get("exp-1")!.points[0].jobId).toBe("job-ok");
-  await expect(page.locator("#dtco-comparison")).toContainText("2 selected for comparison");
-  await page.getByLabel("Temperature", { exact: true }).selectOption("85");
-  await expect(page.locator("#dtco-comparison")).toContainText("1 selected for comparison");
-  await page.getByLabel("Baseline (optional)").selectOption("ok2");
+  await expect(page.locator("#dtco-input-panel #dtco-comparison")).toHaveCount(0);
+  await page.getByRole("tab", { name: "Results", exact: true }).click();
+  await expect(page.locator("#dtco-comparison")).toHaveCount(0);
+  await page.getByRole("button", { name: "Select results…", exact: true }).click();
+  await page.getByRole("checkbox", { name: /result-ok\)/ }).check();
+  await page.getByRole("checkbox", { name: /result-ok2\)/ }).check();
+  await page.getByRole("button", { name: "2 results selected", exact: true }).click();
+  await expect(page.locator("#dtco-comparison")).toContainText("2 saved results selected");
+  await page.getByLabel("Baseline (optional)").selectOption("result-ok2");
   await expect(page.locator("#dtco-comparison")).toContainText("0.0% vs baseline");
 });
 
@@ -88,6 +95,7 @@ test("save-and-run persists unsaved configuration first and prevents duplicate s
   const api = await setup(page, [experiment("exp-1", [point("p1", "unsubmitted", { jobId: null, attempts: [] })])]);
   await page.goto("/dtco?experiment=exp-1");
   await page.getByLabel("Experiment name").fill("Edited before submit");
+  await page.getByLabel("Temperatures (°C) mode", { exact: true }).selectOption("sweep");
   await page.getByLabel("Temperatures (°C)", { exact: true }).fill("25, 85");
   const button = page.getByRole("button", { name: "Save & run combinations", exact: true });
   await button.evaluate(element => { (element as HTMLButtonElement).click(); (element as HTMLButtonElement).click(); });
@@ -101,6 +109,7 @@ test("save-and-run persists unsaved configuration first and prevents duplicate s
 test("late polling response cannot overwrite unsaved edits or the newly selected experiment", async ({ page }) => {
   const api = await setup(page, [experiment("exp-1", [point("p1", "running")]), experiment("exp-2", [], { ...definition, name: "Second experiment" })]);
   await page.goto("/dtco?experiment=exp-1");
+  await expect(page.locator("#dtco-progress tbody")).toContainText("running");
   await expect(page.getByLabel("Experiment name")).toHaveValue(definition.name);
   await page.getByLabel("Experiment name").fill("Unsaved typed name");
   let release = () => {};
@@ -123,15 +132,33 @@ test("late polling response cannot overwrite unsaved edits or the newly selected
 test("transient polling error keeps last status, recovers results, and stops polling terminal runs", async ({ page }) => {
   const api = await setup(page, [experiment("exp-1", [point("p1", "running")])]);
   await page.goto("/dtco?experiment=exp-1");
+  await expect(page.locator("#dtco-progress tbody")).toContainText("running");
   await expect(page.getByLabel("Experiment name")).toHaveValue(definition.name);
   api.failNextGet();
   await expect(page.getByRole("alert")).toContainText("Progress refresh failed: Service restarting");
   await expect(page.locator("#dtco-progress tbody")).toContainText("running");
   await expect(page.locator("#dtco-progress tbody")).not.toContainText("failed");
   api.records.get("exp-1")!.points = [point("p1")];
-  await expect(page.locator("#dtco-comparison")).toContainText("1 selected for comparison");
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "View experiment results" })).toBeEnabled();
+  await page.getByRole("button", { name: "View experiment results" }).click();
+  await expect(page.locator("#dtco-comparison")).toContainText("1 saved results selected");
+  await expect(page.locator("#dtco-input-panel [role=alert]")).toHaveCount(0);
   const completedCalls = api.calls.filter(call => call.path === "/api/dtco/experiments/exp-1" && call.method === "GET").length;
   await page.waitForTimeout(2300);
   expect(api.calls.filter(call => call.path === "/api/dtco/experiments/exp-1" && call.method === "GET")).toHaveLength(completedCalls);
+});
+
+test("active progress keeps polling across tabs while preserving the unsaved sweep draft", async ({ page }) => {
+  const api = await setup(page, [experiment("exp-1", [point("active", "running")])]);
+  await page.goto("/dtco?experiment=exp-1");
+  await page.getByLabel("Experiment name", { exact: true }).fill("Keep this unsaved draft");
+  const calls = () => api.calls.filter(call => call.path === "/api/dtco/experiments/exp-1" && call.method === "GET").length;
+  const before = calls();
+  await page.getByRole("tab", { name: "Results", exact: true }).click();
+  await expect.poll(calls, { timeout: 6000 }).toBeGreaterThan(before);
+  await expect(page.locator("#dtco-comparison")).toHaveCount(0);
+  await page.getByRole("tab", { name: "Input", exact: true }).click();
+  await expect(page.getByLabel("Experiment name", { exact: true })).toHaveValue("Keep this unsaved draft");
+  await expect(page.locator("#dtco-progress tbody")).toContainText("running");
+  expect(api.calls.filter(call => call.method !== "GET")).toHaveLength(0);
 });

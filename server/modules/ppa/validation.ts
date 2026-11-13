@@ -1,3 +1,4 @@
+import { validateCharacterizationDraft } from "./characterization.ts";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { DraftValidationContextV1, InputFileV1, StructuredJobErrorV1, TechnologyLibraryV1 } from "../../../shared/contracts/v1.ts";
@@ -49,6 +50,7 @@ export function selectedTechnology(context: DraftValidationContextV1): Technolog
 }
 
 export async function validatePpaDraft(context: DraftValidationContextV1): Promise<{ valid: boolean; errors: StructuredJobErrorV1[]; warnings: string[] }> {
+  if (context.job.parameters.flow === "libcharx") return validateCharacterizationDraft(context);
   const errors: StructuredJobErrorV1[] = []; const warnings: string[] = []; const mapping = mapPpaInputs(context.files);
   try {
     const parameters = normalizeParameters(context.job.parameters); const adapter = ppaFlowAdapters[parameters.flow];

@@ -71,3 +71,14 @@ it("resolves publisher paths only inside the current DTCO result prefix", () => 
   expect(dtcoLayoutArtifacts(data, [artifact("wrong-result-record", valid[0].relativePath, "image/png", "other-result")], resultId).preview).toBeUndefined();
   expect(dtcoLayoutArtifacts({ dtco: { artifacts: { completedPreviewPath: "../" + workspacePath } } }, valid, resultId).preview).toBeUndefined();
 });
+
+it("binds native previews to the selected GDS path, source hash and result publisher", () => {
+  const resultId = "native-result";
+  const artifact = (id: string, relativePath: string, mediaType: string) => ({ id, relativePath: `results/dtco/${resultId}/${relativePath}`, mediaType, resultId, sha256: "native-hash" }) as ArtifactRecordV1;
+  const files = [artifact("gds", "output/native/cell.gds", "application/octet-stream"), artifact("preview", "output/previews/cell.png", "image/png")];
+  const data = (gdsPath = "output/native/cell.gds", sourceSha256 = "native-hash") => ({ dtco: { artifacts: { selectedGdsPath: "output/native/cell.gds" } }, acg: { previewDiagnostics: { results: [{ status: "available", gdsPath, sourceSha256, previewPath: "output/previews/cell.png" }] } } });
+  expect(dtcoLayoutArtifacts(data(), files, resultId).preview?.id).toBe("preview");
+  expect(dtcoLayoutArtifacts(data("output/native/other.gds"), files, resultId).preview).toBeUndefined();
+  expect(dtcoLayoutArtifacts(data(undefined, "other-hash"), files, resultId).preview).toBeUndefined();
+  expect(dtcoLayoutArtifacts(data(), files, "other-result").preview).toBeUndefined();
+});

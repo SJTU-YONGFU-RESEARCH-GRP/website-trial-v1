@@ -39,7 +39,7 @@ export function useDtcoWorkspace() {
     void Promise.all([getDtcoOptions(controller.signal), listDtcoExperiments(controller.signal)]).then(([nextOptions, nextHistory]) => {
       if (controller.signal.aborted) return;
       setOptions(nextOptions); setHistory(nextHistory);
-      setForm(definitionToForm(nextOptions.defaults));
+      setForm(definitionToForm({ ...nextOptions.defaults, workflow: "integrated" }));
     }).catch(reason => { if (!controller.signal.aborted) setError(message(reason)); })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => { controller.abort(); mutation.current?.abort(); pollRequest.current?.abort(); selectionRequest.current?.abort(); generation.current++; };
@@ -52,7 +52,7 @@ export function useDtcoWorkspace() {
     mutation.current?.abort(); lock.current = false; setBusy(false);
     generation.current++; pollRequest.current?.abort();
     if (!selectedId) {
-      acceptedId.current = null; setExperiment(null); setForm(definitionToForm(options.defaults)); return;
+      acceptedId.current = null; setExperiment(null); setForm(definitionToForm({ ...options.defaults, workflow: "integrated" })); return;
     }
     setLoading(true); setError(null);
     void getDtcoExperiment(selectedId, controller.signal).then(next => {
@@ -87,7 +87,7 @@ export function useDtcoWorkspace() {
   }, [experiment?.id, active, busy, loading]);
 
   const validation = form && options ? parseDtcoForm(form, options) : null;
-  const dirty = Boolean(form && options && JSON.stringify(form) !== JSON.stringify(definitionToForm(experiment?.definition ?? options.defaults)));
+  const dirty = Boolean(form && options && JSON.stringify(form) !== JSON.stringify(definitionToForm(experiment?.definition ?? { ...options.defaults, workflow: "integrated" })));
   async function perform(action: "save" | "submit" | "retry" | "select" | "new", target?: string) {
     if (lock.current) return;
     lock.current = true; setBusy(true); setError(null); setNotice(null);
@@ -123,7 +123,7 @@ export function useDtcoWorkspace() {
         if (controller.signal.aborted) return;
         remember(next); setForm(definitionToForm(next.definition)); chooseUrl(next.id);
       } else if (action === "new" && options) {
-        setExperiment(null); setForm(definitionToForm(options.defaults)); chooseUrl(null);
+        setExperiment(null); setForm(definitionToForm({ ...options.defaults, workflow: "integrated" })); chooseUrl(null);
       } else if (action === "save") setNotice("Experiment saved on the server.");
     } catch (reason) { if (!controller.signal.aborted) setError(message(reason)); }
     finally { if (!controller.signal.aborted) { lock.current = false; setBusy(false); } }

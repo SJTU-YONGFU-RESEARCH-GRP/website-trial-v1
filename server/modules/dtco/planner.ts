@@ -1,6 +1,7 @@
 import type { JobPlanV1, JsonObject, PlannedStepV1 } from "../../../shared/contracts/v1.ts";
 import { buildNativeAcgPlan } from "../acg/planner.ts";
 import type { ValidationContext } from "../acg/types.ts";
+import { buildFrequencySteps } from "./frequencyRuntime.ts";
 import { DTCO_VERSION, dtcoError, hash, type DtcoSnapshot } from "./environment.ts";
 export function frozenSnapshot(job:{parameters:JsonObject}):DtcoSnapshot {
  const value=job.parameters.dtcoSnapshot as unknown as DtcoSnapshot;
@@ -14,18 +15,23 @@ export function acgFacade<T extends {job:any;files?:any[]}>(context:T):T {
  return {...context,...(context.files?{files}:{}),job:{...context.job,operation:"run",parameters:{engine:"mr",mode:"routed",presetId:null,verification:"none",configOverrides:{}},inputManifest:{...context.job.inputManifest,files}}};
 }
 export async function buildDtcoPlan(context:ValidationContext):Promise<JobPlanV1> {
- const snapshot=frozenSnapshot(context.job),plan=await buildNativeAcgPlan(acgFacade(context));
+ const snapshot=frozenSnapshot(context.job);
+ const plan:JobPlanV1=snapshot.layoutMode&&snapshot.layoutMode!=="native"?{schemaVersion:"eda.job-plan.v1",capabilityVersion:DTCO_VERSION,steps:[],sweep:null,warnings:[]}:await buildNativeAcgPlan(acgFacade(context));
  const step=(id:string,name:string):PlannedStepV1=>({id,name,description:name,required:true,weight:1,process:null,inputRoles:["dtco-resource"],outputRoles:["dtco-evidence"]});
  plan.steps.unshift(step("dtco-prepare","Verify and stage frozen model, tools and measurement inputs"));
  const spice=context.job.toolConfigurations.find(t=>t.toolId==="dtco-ngspice"),analysis=context.job.toolConfigurations.find(t=>t.toolId==="dtco-analysis");
  if(!spice||!analysis)dtcoError("DTCO_TOOLS","DTCO native tools are not configured");
- const dc=step("model-dc","Simulate the frozen-model inverter DC transfer curve");
+ const dc=step("model-dc","Simulate the frozen-model sensitized circuit DC transfer curve");
  dc.process={toolConfigurationId:spice.id,executableDisplay:"dtco-ngspice",argv:["-b","-o","model-dc.log","model-dc.cir"],cwdRelative:"output/dtco",environmentNames:spice.environmentNames,timeoutSeconds:spice.timeoutSeconds,expectedOutputs:["output/dtco/model-dc.txt"]};
- const dcAnalyze=step("model-analysis","Measure inverter switching voltage from the actual DC curve");
+ const dcAnalyze=step("model-analysis","Analyze the actual sensitized circuit DC curve");
  dcAnalyze.process={toolConfigurationId:analysis.id,executableDisplay:"dtco-analysis",argv:["--workspace",".","--measurement","input/measurement.json","--dc-only"],cwdRelative:".",environmentNames:analysis.environmentNames,timeoutSeconds:analysis.timeoutSeconds,expectedOutputs:["output/dtco/model-analysis.json"]};
  plan.steps.splice(1,0,dc,dcAnalyze);
- const characterize=step("characterize",snapshot.definition.electricalMode==="extracted"?"Simulate the validated extracted inverter":"Simulate schematic inverter transient with frozen GF180 model");
- characterize.process={toolConfigurationId:spice.id,executableDisplay:"dtco-ngspice",argv:["-b","-o","ngspice.log","characterize.cir"],cwdRelative:"output/dtco",environmentNames:spice.environmentNames,timeoutSeconds:spice.timeoutSeconds,expectedOutputs:["output/dtco/waveforms.txt","output/dtco/ngspice.log"]};
+ const characterize=(snapshot.characterization??[{id:"legacy",deckPath:"output/dtco/characterize.cir",logPath:"output/dtco/ngspice.log",waveformPath:"output/dtco/waveforms.txt"}]).map((arc,index)=>{
+  const item=step(index?"characterize-"+index:"characterize","Simulate frozen circuit timing arc "+arc.id);
+  item.process={toolConfigurationId:spice.id,executableDisplay:"dtco-ngspice",argv:["-b","-o",arc.logPath.split("/").at(-1)!,arc.deckPath.split("/").at(-1)!],cwdRelative:"output/dtco",environmentNames:spice.environmentNames,timeoutSeconds:spice.timeoutSeconds,expectedOutputs:[arc.waveformPath,arc.logPath]};return item;
+ });
+ const truth=step("truth-table","Verify all catalog truth-table input combinations using real transient simulation");
+ truth.process={toolConfigurationId:spice.id,executableDisplay:"dtco-ngspice",argv:["-b","-o","truth.log","truth.cir"],cwdRelative:"output/dtco",environmentNames:spice.environmentNames,timeoutSeconds:spice.timeoutSeconds,expectedOutputs:["output/dtco/truth-waveforms.txt"]};
  const measure=step("measure","Measure settled delay, supply energy and GDS boundary area");
  measure.process={toolConfigurationId:analysis.id,executableDisplay:"dtco-analysis",argv:["--workspace",".","--measurement","input/measurement.json"],cwdRelative:".",environmentNames:analysis.environmentNames,timeoutSeconds:analysis.timeoutSeconds,expectedOutputs:["output/dtco/metrics.json"]};
  if(snapshot.definition.electricalMode==="extracted") {
@@ -38,7 +44,7 @@ export async function buildDtcoPlan(context:ValidationContext):Promise<JobPlanV1
    plan.steps.push(item);
   }
  }
- plan.steps.push(characterize,measure,step("dtco-summary","Bind all measurement and generated-layout artifacts by SHA256"));
+ plan.steps.push(...characterize,...(snapshot.resolvedInputs?[truth]:[]),...buildFrequencySteps(context,snapshot),measure,step("dtco-summary","Bind all measurement and generated-layout artifacts by SHA256"));
  plan.capabilityVersion=DTCO_VERSION;plan.warnings.push(snapshot.metricScope,"SA routing can vary between runs; retained GDS checksum identifies the actual measured layout.",snapshot.definition.electricalMode==="extracted"?"Extracted mode requires final GDS round-trip topology, dimensions, finite capacitance and zero Magic DRC; this remains research verification, without extracted wire resistance or foundry signoff.":"Schematic mode does not characterize generated-layout parasitics or certify physical connectivity.");
  return plan;
 }

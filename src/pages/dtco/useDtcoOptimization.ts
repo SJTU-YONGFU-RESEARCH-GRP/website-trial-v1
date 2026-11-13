@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { DtcoOptimization, DtcoOptimizationDefinition, DtcoOptimizationOptions } from "../../../shared/contracts/dtco";
+import type { DtcoOptimization, DtcoOptimizationDefinition, DtcoOptimizationOptions, DtcoOptions } from "../../../shared/contracts/dtco";
 import { controlDtcoOptimization, createDtcoOptimization, getDtcoOptimization, listDtcoOptimizations } from "../../api/dtco/optimization";
+import { initializeParameterAxes } from "./DtcoSearchAxes";
 import { isOptimizationActive, resumableIteration, validateOptimization } from "./optimizationHelpers";
 
-export function useDtcoOptimization(options: DtcoOptimizationOptions | undefined) {
+function draftDefaults(options: DtcoOptimizationOptions, catalog?: DtcoOptions): DtcoOptimizationDefinition {
+  const definition = { ...structuredClone(options.defaults), workflow: "integrated" as const, processCorners: options.defaults.processCorners ?? ["tt" as const] };
+  return catalog ? initializeParameterAxes(definition, catalog) : definition;
+}
+export function useDtcoOptimization(options: DtcoOptimizationOptions | undefined, catalog?: DtcoOptions) {
   const [query, setQuery] = useSearchParams();
   const selectedId = query.get("optimization");
   const [run, setRun] = useState<DtcoOptimization | null>(null);
@@ -26,7 +31,7 @@ export function useDtcoOptimization(options: DtcoOptimizationOptions | undefined
   useEffect(() => {
     if (!options) return;
     const controller = new AbortController();
-    setForm(current => current ?? structuredClone(options.defaults));
+    setForm(current => current ?? draftDefaults(options, catalog));
     void listDtcoOptimizations(controller.signal).then(next => { if (!controller.signal.aborted) setHistory(next); })
       .catch(reason => { if (!controller.signal.aborted) setError(String(reason instanceof Error ? reason.message : reason)); });
     return () => { controller.abort(); request.current?.abort(); pollRequest.current?.abort(); generation.current++; };
@@ -34,7 +39,7 @@ export function useDtcoOptimization(options: DtcoOptimizationOptions | undefined
   useEffect(() => {
     if (!options || selectedId === accepted.current) return;
     request.current?.abort(); pollRequest.current?.abort(); generation.current++; lock.current = false; setBusy(false);
-    if (!selectedId) { setLoading(false); setRun(null); setForm(structuredClone(options.defaults)); accepted.current = null; return; }
+    if (!selectedId) { setLoading(false); setRun(null); setForm(draftDefaults(options, catalog)); accepted.current = null; return; }
     const controller = new AbortController(); request.current = controller;
     setLoading(true); setError(null);
     void getDtcoOptimization(selectedId, controller.signal).then(next => {
@@ -65,7 +70,7 @@ export function useDtcoOptimization(options: DtcoOptimizationOptions | undefined
     timer = setTimeout(() => { void poll(); }, 2000);
     return () => { stopped = true; clearTimeout(timer); pollRequest.current?.abort(); };
   }, [run?.id, active, busy, loading]);
-  const validation = form && options ? validateOptimization(form, options) : null;
+  const validation = form && options ? validateOptimization(form, options, catalog) : null;
   async function perform(action: "create" | "start" | "stop" | "resume" | "select" | "new", target?: string) {
     if (lock.current || !options) return;
     lock.current = true; setBusy(true); setError(null); generation.current++;
@@ -78,12 +83,12 @@ export function useDtcoOptimization(options: DtcoOptimizationOptions | undefined
         if (createKey.current?.json !== json) createKey.current = { json, id: crypto.randomUUID() };
         return createDtcoOptimization({ clientRequestId: createKey.current.id, definition: form }, controller.signal);
       };
-      if ((action === "new" || action === "select") && !run && form && JSON.stringify(form) !== JSON.stringify(options.defaults)) {
+      if ((action === "new" || action === "select") && !run && form && JSON.stringify(form) !== JSON.stringify(draftDefaults(options, catalog))) {
         const saved = await saveDraft();
         if (controller.signal.aborted) return;
         remember(saved); url(saved.id);
       }
-      if (action === "new") { setRun(null); setForm(structuredClone(options.defaults)); createKey.current = null; url(null); return; }
+      if (action === "new") { setRun(null); setForm(draftDefaults(options, catalog)); createKey.current = null; url(null); return; }
       let next: DtcoOptimization;
       if (action === "select" && target) next = await getDtcoOptimization(target, controller.signal);
       else if (action === "create") next = await saveDraft();

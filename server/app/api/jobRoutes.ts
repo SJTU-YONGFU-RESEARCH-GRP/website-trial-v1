@@ -8,6 +8,7 @@ import type { DraftValidationContextV1, JobPlanV1, JobRecordV1, JobStatus, JsonO
 import type { Repositories } from "../db/repositories.ts";
 import { StorageService } from "../storage/storage.ts";
 import type { WorkerSupervisor } from "../../worker/index.ts";
+import { DtcoPipelineRepository } from "../../modules/dtco/pipelineRepository.ts";
 import { allowPublicRunner, assertOwnerOrAdmin, csrfGuardOrPublicRunner } from "../auth/guards.ts";
 import { ApiError } from "./errors.ts";
 import { sendList, success } from "./http.ts";
@@ -17,7 +18,7 @@ const TERMINAL = new Set<JobStatus>(["succeeded", "failed", "cancelled", "interr
 
 export function registerJobRoutes(app: FastifyInstance, repositories: Repositories, storage: StorageService, workers: WorkerSupervisor | null): void {
   app.post("/api/jobs/:jobId/start", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request) => {
-    const job = ownedJob(request, repositories); assertModuleAllowed(request, job); if (job.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "start DTCO points through the experiment API"); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
+    const job = ownedJob(request, repositories); assertModuleAllowed(request, job); assertNotPipelineChild(repositories,job.id); if (job.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "start DTCO points through the experiment API"); if (job.status !== "ready") throw new ApiError(409, "JOB_NOT_READY", "job must pass preflight before Start");
     if (job.plan.sweep) {
       const sweepJobs = await materializeSweepJobs(job, repositories, storage, app);
       for (const sweepJob of sweepJobs) repositories.jobs.appendEvent(sweepJob.id, null, "info", "system", `Sweep point queued (${sweepJobs.indexOf(sweepJob) + 1}/${sweepJobs.length})`, { sweepParentJobId: job.id });
@@ -61,14 +62,15 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
 
   app.post("/api/jobs/:jobId/cancel", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request) => {
     const job = ownedJob(request, repositories);
-    if (job.status === "queued" || job.status === "running") { repositories.jobs.requestCancel(job.id); workers?.cancel(job.id); }
+    if (new DtcoPipelineRepository(repositories).requestCancel(job.id)) { workers?.cancel(job.id); }
+    else if (job.status === "queued" || job.status === "running") { repositories.jobs.requestCancel(job.id); workers?.cancel(job.id); }
     else throw new ApiError(409, "JOB_NOT_CANCELLABLE", `job in ${job.status} state cannot be cancelled`);
     repositories.jobs.appendEvent(job.id, null, "warning", "system", "Cancellation requested"); repositories.audit.write(request.edaUser!.id, "job.cancel", "job", job.id);
     return success(repositories.jobs.get(job.id));
   });
 
   app.post("/api/jobs/:jobId/retry", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); if (old.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "use the DTCO experiment point retry route to preserve attempt history"); if (!TERMINAL.has(old.status)) throw new ApiError(409, "JOB_NOT_RETRYABLE", "only terminal jobs can be retried");
+    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); assertNotPipelineChild(repositories,old.id); if (old.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "use the DTCO experiment point retry route to preserve attempt history"); if (!TERMINAL.has(old.status)) throw new ApiError(409, "JOB_NOT_RETRYABLE", "only terminal jobs can be retried");
     const retry = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
     const workspace = await storage.createWorkspace(retry.id); await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });
     await fsp.rm(path.join(workspace, "input"), { recursive: true }); await fsp.rename(path.join(workspace, "input-copy"), path.join(workspace, "input"));
@@ -79,7 +81,7 @@ export function registerJobRoutes(app: FastifyInstance, repositories: Repositori
   });
 
   app.post("/api/jobs/:jobId/clone", { preHandler: [allowPublicRunner(repositories), csrfGuardOrPublicRunner(repositories)], schema: { tags: ["jobs"] } }, async (request, reply) => {
-    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); if (old.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "use the DTCO experiment point retry route to preserve attempt history");
+    const old = ownedJob(request, repositories); assertModuleAllowed(request, old); assertNotPipelineChild(repositories,old.id); if (old.moduleId === "dtco") throw new ApiError(409, "DTCO_ROUTE_REQUIRED", "use the DTCO experiment point retry route to preserve attempt history");
     const clone = repositories.jobs.createDraft(old.ownerId, old.moduleId, old.operation, old.workflow, old.inputManifest);
     const workspace = await storage.createWorkspace(clone.id);
     await fsp.cp(await storage.resolveExisting(`${old.workspaceRelativePath}/input`), path.join(workspace, "input-copy"), { recursive: true, errorOnExist: true });
@@ -164,6 +166,10 @@ function cartesianPoints(dimensions: Record<string, JsonPrimitive[]>): JsonObjec
 function ownedJob(request: Parameters<typeof assertOwnerOrAdmin>[0], repositories: Repositories) {
   const id = String((request.params as { jobId?: string }).jobId || ""); const job = repositories.jobs.get(id);
   if (!job) throw new ApiError(404, "NOT_FOUND", "job not found"); assertOwnerOrAdmin(request, job.ownerId); return job;
+}
+
+function assertNotPipelineChild(repositories:Repositories,jobId:string):void {
+ if(repositories.database.sqlite.prepare("SELECT id FROM dtco_pipeline_nodes WHERE job_id=?").get(jobId))throw new ApiError(409,"DTCO_ROUTE_REQUIRED","use the DTCO point API; integrated children are immutable and retry with the whole point");
 }
 
 function assertModuleAllowed(request: Parameters<typeof assertOwnerOrAdmin>[0], job: JobRecordV1): void {

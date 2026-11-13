@@ -5,8 +5,10 @@ import { allowPublicRunner, assertOwnerOrAdmin, csrfGuardOrPublicRunner, PUBLIC_
 import { ApiError } from "../../app/api/errors.ts";
 import { success } from "../../app/api/http.ts";
 import { DtcoOptimizationService } from "./optimizationService.ts";
+import { registerDtcoPreviewRoutes } from "./previewRoutes.ts";
 
 export function registerDtcoRoutes(app: FastifyInstance, repositories: Repositories, storage: StorageService): void {
+  registerDtcoPreviewRoutes(app, repositories, storage);
   const optimization = new DtcoOptimizationService(repositories,storage);
   const service = optimization.dtco;
   const editable = (experimentId: string): void => { if (repositories.dtcoOptimizations.managedExperiment(experimentId)) throw new ApiError(409,"DTCO_OPTIMIZATION_MANAGED","use the optimization controls for this managed experiment"); };

@@ -54,14 +54,21 @@ test("retains historical best after a worse measured round and supports comparis
   const best = iteration(1), worse = iteration(2, { accepted: false, score: 30, metrics: { delayPs: 30, averagePowerW: 2e-6, areaUm2: 4 }, relativeImprovement: -.5 });
   await setup(page, [optimization({ status: "completed", allowedActions: [], stopReason: "patience", iterations: [best,worse], bestIterationId: best.id, bestScore: best.score })]);
   await page.goto("/dtco?optimization=opt-1");
-  const panel = page.locator("#dtco-optimization");
+  await expect(page.locator("#dtco-optimization")).toContainText("Stop reason: patience");
+  await expect(page.locator("#dtco-input-panel .dtco-optimization-context")).toHaveCount(0);
+  await page.getByRole("button", { name: "View optimization results" }).click();
+  const panel = page.locator("#dtco-results-panel");
+  await page.locator(".dtco-combined-details > summary").click();
+  await page.getByText("Full optimization history · Real inverter optimization", { exact: true }).click();
   await expect(panel.getByText("Retained best: round 1", { exact: true })).toBeVisible();
-  await expect(panel).toContainText("Stop reason: patience");
-  await expect(panel).toContainText("2 / 2 measured rounds selected");
-  await page.getByLabel("Compare optimization round 2").uncheck();
-  await expect(panel).toContainText("1 / 2 measured rounds selected");
-  await page.getByLabel("Optimization baseline").selectOption(best.id);
+  await expect(panel).toContainText("2 saved results selected");
+  await page.getByRole("button", { name: "2 results selected", exact: true }).click();
+  await page.getByRole("checkbox", { name: /result-2\)/ }).uncheck();
+  await page.getByRole("button", { name: "1 result selected", exact: true }).click();
+  await expect(panel).toContainText("1 saved results selected");
+  await page.getByLabel("Baseline (optional)").selectOption("result-1");
   await expect(panel).toContainText("0.0% vs baseline");
+  await expect(panel).toContainText("Candidate not improved; best retained");
   await expect(page.getByRole("img", { name: "Measured objective and best-so-far trajectory" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Resume failed round" })).toHaveCount(0);
 });
@@ -119,14 +126,75 @@ test("inspects actual process and uses completed measured preview rather than na
     latestEvents: [], artifacts: [artifact("native", "native.gds", "application/octet-stream"), artifact("measured", "completed.gds", "application/octet-stream"), artifact("preview", "completed.png", "image/png")],
   } } }));
   await page.route("**/api/results/dtco/result-1", route => route.fulfill({ json: { schemaVersion: "eda.api.v1", data: {
-    data: { dtco: { metricScope: "Post-layout: extracted devices and capacitance; no wire resistance", artifacts: { selectedGdsPath: "completed.gds", nativeGdsPath: "native.gds", completedPreviewPath: "completed.png" } } },
+    id: "result-1", data: { dtco: { metricScope: "Post-layout: extracted devices and capacitance; no wire resistance", artifacts: { selectedGdsPath: "completed.gds", nativeGdsPath: "native.gds", completedPreviewPath: "completed.png" } } },
   } } }));
   await page.route("**/api/artifacts/preview/download", route => route.fulfill({ contentType: "image/png", body: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a7xQAAAAASUVORK5CYII=", "base64") }));
   await page.goto("/dtco?optimization=opt-1");
-  await page.getByRole("button", { name: "Inspect round 1", exact: true }).click();
-  await expect(page.getByText("Validate completed-layout extraction", { exact: true })).toBeVisible();
-  await expect(page.getByRole("img", { name: "Completed GDS layout used for extracted measurements" })).toHaveAttribute("src", "/api/artifacts/preview/download");
-  await expect(page.getByRole("link", { name: "Download measured GDS", exact: true })).toHaveAttribute("href", "/api/artifacts/measured/download");
-  await expect(page.getByRole("link", { name: "Download native intermediate GDS", exact: true })).toHaveAttribute("href", "/api/artifacts/native/download");
-  await expect(page.getByLabel("Measured layout and scope")).toContainText("no wire resistance");
+  await page.getByRole("button", { name: "View optimization results" }).click();
+  await expect(page.locator(".dtco-combined-details")).not.toHaveAttribute("open", "");
+  await page.locator(".dtco-combined-details > summary").click();
+  await page.getByText("Saved native evidence and provenance", { exact: true }).click();
+  await expect(page.getByRole("table", { name: "Selected result detailed comparison" })).toContainText("Validate completed-layout extraction");
+  await expect(page.getByRole("img", { name: /^GDS layout preview for/ })).toHaveAttribute("src", "/api/artifacts/preview/download");
+  await expect(page.getByRole("link", { name: "completed.gds", exact: true })).toHaveAttribute("href", "/api/artifacts/measured/download");
+  await expect(page.getByRole("link", { name: "native.gds", exact: true })).toHaveAttribute("href", "/api/artifacts/native/download");
+  await expect(page.getByRole("table", { name: "Selected result detailed comparison" })).toContainText("no wire resistance");
+});
+
+test("tabs preserve both drafts, results start empty, and Clear resets reports and baseline without creating jobs", async ({ page }) => {
+  const api = await setup(page, [optimization({ status: "completed", allowedActions: [], iterations: [iteration(1), iteration(2)], bestIterationId: "round-1", bestScore: 20 })]);
+  await page.goto("/dtco");
+  await page.getByLabel("Optimization name", { exact: true }).fill("Unsaved optimizer draft");
+  await page.getByLabel("Experiment name", { exact: true }).fill("Unsaved sweep draft");
+  await expect(page.locator("#dtco-input-panel #dtco-comparison")).toHaveCount(0);
+  await expect(page.locator("#dtco-input-panel .dtco-layout-preview")).toHaveCount(0);
+  await page.getByRole("tab", { name: "Results", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Select results above");
+  await expect(page.locator("#dtco-comparison")).toHaveCount(0);
+  await page.getByLabel("Search DTCO results").fill("Round 2");
+  await page.getByRole("checkbox", { name: /result-2\)/ }).check();
+  await page.getByRole("button", { name: "1 result selected", exact: true }).click();
+  await expect(page.locator("#dtco-comparison tbody tr")).toHaveCount(1);
+  await page.getByLabel("Baseline (optional)").selectOption("result-2");
+  await expect(page.locator("#dtco-comparison")).toContainText("0.0% vs baseline");
+  await page.getByRole("button", { name: "Clear", exact: true }).click();
+  await expect(page.locator("#dtco-comparison")).toHaveCount(0);
+  await expect(page.locator(".dtco-optimization-context")).toHaveCount(0);
+  await page.getByRole("button", { name: "Select results…", exact: true }).click();
+  await page.getByRole("checkbox", { name: /result-2\)/ }).check();
+  await page.getByRole("button", { name: "1 result selected", exact: true }).click();
+  await expect(page.getByLabel("Baseline (optional)")).toHaveValue("");
+  await page.getByRole("tab", { name: "Input", exact: true }).click();
+  await expect(page.getByLabel("Optimization name", { exact: true })).toHaveValue("Unsaved optimizer draft");
+  await expect(page.getByLabel("Experiment name", { exact: true })).toHaveValue("Unsaved sweep draft");
+  expect(api.calls.filter(call => call.method !== "GET")).toHaveLength(0);
+  expect(api.calls.filter(call => call.path.startsWith("/api/jobs/") || call.path.startsWith("/api/results/")).every(call => /(?:job-2|result-2)$/.test(call.path))).toBe(true);
+});
+
+test("each checked result loads its own layout and expanded details, and Clear removes them", async ({ page }) => {
+  const api = await setup(page, [optimization({ status: "completed", allowedActions: [], iterations: [iteration(1), iteration(2)] })]);
+  const detailCalls: string[] = [];
+  await page.route(/\/api\/(jobs\/job-[12]|results\/dtco\/result-[12])$/, async route => {
+    const path = new URL(route.request().url()).pathname; detailCalls.push(path);
+    const number = path.endsWith("1") ? "1" : "2";
+    const data = path.includes("/jobs/") ? { job: { id: "job-" + number, status: "succeeded", resultId: "result-" + number, progress: 1, workflow: "dtco", operation: "run" }, steps: [], latestEvents: [], artifacts: [] } : { id: "result-" + number, data: { dtco: { metricScope: "Measured selected result " + number } } };
+    await route.fulfill({ json: { schemaVersion: "eda.api.v1", data } });
+  });
+  await page.goto("/dtco?optimization=opt-1");
+  await page.getByRole("button", { name: "View optimization results" }).click();
+  await expect.poll(() => new Set(detailCalls).size).toBe(4);
+  await page.locator(".dtco-combined-details > summary").click();
+  await expect(page.getByRole("table", { name: "Selected result detailed comparison" }).locator("thead th")).toHaveCount(3);
+  await expect(page.getByText("Saved native evidence and provenance", { exact: true })).toHaveCount(2);
+  // Development StrictMode replays mount effects; every request must still belong to a selected measurement.
+  await expect.poll(() => new Set(detailCalls).size).toBe(4);
+  expect(new Set(detailCalls)).toEqual(new Set(["/api/jobs/job-1", "/api/results/dtco/result-1", "/api/jobs/job-2", "/api/results/dtco/result-2"]));
+  await page.waitForLoadState("networkidle");
+  const callsBeforeClear = detailCalls.length;
+  await page.getByRole("button", { name: "Clear", exact: true }).click();
+  await expect(page.getByRole("table", { name: "Selected result detailed comparison" })).toHaveCount(0);
+  await expect(page.locator(".dtco-selected-result")).toHaveCount(0);
+  await page.waitForTimeout(2100);
+  expect(detailCalls).toHaveLength(callsBeforeClear);
+  expect(api.calls.filter(call => call.method !== "GET")).toHaveLength(0);
 });

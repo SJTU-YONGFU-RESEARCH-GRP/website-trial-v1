@@ -1,3 +1,4 @@
+import { validateCharacterizationResult } from "./characterization.ts";
 import fs from "node:fs/promises";
 import type { JsonObject, ParsedModuleResultV1 } from "../../../shared/contracts/v1.ts";
 import { objectValue } from "./helpers.ts";
@@ -18,6 +19,7 @@ export async function parseParserOutput(filename: string): Promise<ParsedModuleR
 }
 
 export function validatePpaParsedResult(result: unknown): asserts result is ParsedModuleResultV1 {
+  if (objectValue(objectValue(result).data).flow === "libcharx") { validateCharacterizationResult(result); return; }
   const value = objectValue(result); if (typeof value.title !== "string" || !value.title.trim()) throw new Error("PPA result title is missing");
   const data = objectValue(value.data); if (data.schemaVersion !== PPA_RESULT_DATA_VERSION) throw new Error("PPA result data schema is invalid");
   if (!["openroad-orfs", "openlane1", "librelane"].includes(String(data.flow))) throw new Error("PPA result flow is invalid");

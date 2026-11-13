@@ -61,8 +61,13 @@ export class JobRunner {
         lastContext = context;
         await context.emit({ jobId: job.id, stepId: step.id, at: context.now(), level: "info", stream: "progress", message: `Starting ${step.name}`, payload: { progress: 0 } });
         const planned = job.plan.steps.find((candidate) => candidate.id === step.stepKey);
-        const toolSnapshot = planned?.process ? job.toolConfigurations.find((candidate) => candidate.id === planned.process!.toolConfigurationId) : null;
-        const release = toolSnapshot ? await this.toolConcurrency.acquire(toolSnapshot.toolId, toolSnapshot.maxConcurrency, controller.signal) : null;
+        const reservedIds = planned?.process ? [planned.process.toolConfigurationId, ...(planned.process.additionalToolConfigurationIds ?? [])] : [];
+        const reservedTools = [...new Set(reservedIds)].map(id => {
+          const snapshot = job.toolConfigurations.find(candidate => candidate.id === id);
+          if (!snapshot) throw new Error("Planned native reservation has no frozen configuration: " + id);
+          return snapshot;
+        });
+        const release = await this.toolConcurrency.acquireMany(reservedTools, controller.signal);
         let result: Awaited<ReturnType<typeof adapter.executeStep>>;
         let releaseNative:(()=>void)|null=null;
         try {
@@ -117,7 +122,8 @@ export class JobRunner {
 
   private async publish(job: JobRecordV1, parsed: { title: string; summary: JsonObject; data: JsonObject; artifactRoles: string[]; parserId: string; parserVersion: string }, declarations: CollectedArtifactV1[], workspacePath: string, checkCancellation: () => void): Promise<void> {
     checkCancellation();
-    const artifactLimit=job.moduleId==="acg" && ["algorithm-matrix","algorithm-report","known-feasible","unified"].includes(job.operation) ? 32768 : 4096;
+    const selectionV2=job.moduleId==="dtco" && (job.parameters.dtcoSelectionSnapshot as any)?.schemaVersion==="dtco.cell-selection.v2";
+    const artifactLimit=selectionV2 ? 16384 : job.moduleId==="acg" && ["algorithm-matrix","algorithm-report","known-feasible","unified"].includes(job.operation) ? 32768 : 4096;
     if (declarations.length > artifactLimit) throw { type: "storage", code: "ARTIFACT_COUNT_LIMIT", message: "result declares more than "+artifactLimit+" artifacts", stepId: job.currentStepId, retryable: false, details: null };
     const resultId = randomUUID(); const staging = await this.storage.beginPublication(job.moduleId, resultId); const artifacts: ArtifactRecordV1[] = []; let databaseCommitted = false;
     try {
@@ -167,6 +173,20 @@ export class JobRunner {
 
 export class ToolConcurrencyGate {
   private readonly active = new Map<string, number>();
+  async acquireMany(tools: Array<{ toolId: string; maxConcurrency: number }>, signal: AbortSignal): Promise<() => void> {
+    // A stable order avoids circular waits between helpers sharing native tools.
+    const limits = new Map<string, number>();
+    for (const tool of tools) {
+      if (!Number.isSafeInteger(tool.maxConcurrency) || tool.maxConcurrency < 1) throw new Error("invalid native tool concurrency limit");
+      limits.set(tool.toolId, Math.min(limits.get(tool.toolId) ?? tool.maxConcurrency, tool.maxConcurrency));
+    }
+    const releases: Array<() => void> = [];
+    const release = () => { for (const done of releases.splice(0).reverse()) done(); };
+    try {
+      for (const [id, limit] of [...limits].sort(([a], [b]) => a.localeCompare(b))) releases.push(await this.acquire(id, limit, signal));
+      return release;
+    } catch (error) { release(); throw error; }
+  }
   async acquire(toolId: string, limit: number, signal: AbortSignal, slots=1): Promise<() => void> {
     if(!Number.isSafeInteger(slots)||slots<1||slots>Math.max(1,limit))throw new Error("invalid native tool concurrency reservation");
     while ((this.active.get(toolId) || 0)+slots > Math.max(1, limit)) {

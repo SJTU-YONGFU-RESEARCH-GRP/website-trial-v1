@@ -1,5 +1,6 @@
 import { DtcoRepository } from "../../modules/dtco/repository.ts";
 import { DtcoOptimizationRepository } from "../../modules/dtco/optimizationRepository.ts";
+import { normalizeDtcoFrequencyResult } from "../../modules/dtco/frequencyRead.ts";
 import { MODULE_IDS, isModuleId } from "../../../shared/contracts/v1.ts";
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import type {
@@ -397,12 +398,12 @@ export class ResultRepository {
   }
   get(moduleId: ModuleId, id: string, viewerId: string | null, admin: boolean): ResultRecordV1 | null {
     const row = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE id=? AND (lifecycle!='deleted' OR ?=1) AND (lifecycle='published' OR owner_id=? OR ?=1)`).get(id, Number(admin), viewerId, Number(admin)) as { record_json?: unknown } | undefined;
-    return row ? parsed(row.record_json) : null;
+    return row ? normalizeDtcoFrequencyResult(parsed<ResultRecordV1>(row.record_json)) : null;
   }
   list(moduleId: ModuleId, viewerId: string | null, admin: boolean, lifecycle?: ResultLifecycle, limit = 100, ownerId?: string): ResultRecordV1[] {
     const rows = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE (lifecycle!='deleted' OR ?=1) AND (lifecycle='published' OR owner_id=? OR ?=1) AND (? IS NULL OR lifecycle=?) AND (? IS NULL OR owner_id=?) ORDER BY updated_at DESC LIMIT ?`)
       .all(Number(admin), viewerId, Number(admin), lifecycle || null, lifecycle || null, ownerId || null, ownerId || null, Math.min(limit, 500)) as { record_json: unknown }[];
-    return rows.map((row) => parsed(row.record_json));
+    return rows.map((row) => normalizeDtcoFrequencyResult(parsed<ResultRecordV1>(row.record_json)));
   }
   query(moduleId: ModuleId, viewerId: string | null, admin: boolean, input: { lifecycle?: ResultLifecycle; ownerId?: string; cursor?: string; search?: string; filters?: Record<string, Array<string | number | boolean | null>>; limit?: number }): ResultRecordV1[] {
     const clauses = ["lifecycle!='deleted'", "(lifecycle='published' OR owner_id=? OR ?=1)"];
@@ -414,7 +415,7 @@ export class ResultRepository {
     const requested = Math.min(Math.max(input.limit || 100, 1), 500);
     values.push(input.filters && Object.keys(input.filters).length ? 2_000 : requested);
     const rows = this.db.sqlite.prepare(`SELECT record_json FROM ${this.table(moduleId)} WHERE ${clauses.join(" AND ")} ORDER BY updated_at DESC,id DESC LIMIT ?`).all(...values) as { record_json: unknown }[];
-    const records = rows.map((row) => parsed<ResultRecordV1>(row.record_json));
+    const records = rows.map((row) => normalizeDtcoFrequencyResult(parsed<ResultRecordV1>(row.record_json)));
     return records.filter((record) => matchesResultFilters(record, input.filters)).slice(0, requested);
   }
   patchLifecycle(moduleId: ModuleId, id: string, lifecycle: ResultLifecycle): void {
@@ -516,6 +517,6 @@ export function makeRepositories(db: EdaDatabase) {
   const jobs = new JobRepository(db); const results = new ResultRepository(db);
   const dtco = new DtcoRepository(db, { jobs, results });
   const dtcoOptimizations = new DtcoOptimizationRepository(db,dtco);
-  return { dtcoOptimizations, dtco, users, sessions: new SessionRepository(db, users), jobs, audit: new AuditRepository(db), artifacts: new ArtifactRepository(db), results, tools: new ToolRepository(db), technologies: new TechnologyRepository(db) };
+  return { database: db, dtcoOptimizations, dtco, users, sessions: new SessionRepository(db, users), jobs, audit: new AuditRepository(db), artifacts: new ArtifactRepository(db), results, tools: new ToolRepository(db), technologies: new TechnologyRepository(db) };
 }
 export type Repositories = ReturnType<typeof makeRepositories>;

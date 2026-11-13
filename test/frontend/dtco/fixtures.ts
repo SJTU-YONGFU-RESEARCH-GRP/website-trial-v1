@@ -8,7 +8,7 @@ export const options: DtcoOptions = {
   circuits: [option(definition.circuitId)], technologies: [option(definition.technologyId)],
   models: [{ ...option(definition.modelVersion), technologyId: definition.technologyId, sourceHash: "real-model-hash" }],
   layouts: [option("mr-dp-9t"), option("mr-sa-12t")], available: true, unavailableReason: null, tools: [],
-  defaults: definition, maxPoints: 64, environmentHash: "real-environment-hash", metricScope: "schematic",
+  integrations: { available: true, reasons: [] }, defaults: definition, maxPoints: 64, environmentHash: "real-environment-hash", metricScope: "schematic",
 };
 export function point(id: string, status: DtcoPoint["status"] = "succeeded", extra: Partial<DtcoPoint> = {}): DtcoPoint {
   return { id, revision: 1, key: id, temperatureC: 25, voltageV: 3.3, layoutId: "mr-dp-9t", status, progress: status === "succeeded" ? 1 : 0,

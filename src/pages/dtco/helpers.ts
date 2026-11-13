@@ -1,16 +1,19 @@
-import type { DtcoExperimentDefinition, DtcoOptions, DtcoPoint } from "../../../shared/contracts/dtco";
+import type { DtcoExperimentDefinition, DtcoOptions, DtcoPoint, DtcoProcessCorner } from "../../../shared/contracts/dtco";
+
+import { availableCorners, catalogProfiles, operatingBounds, validateCatalogDimensions } from "./catalogHelpers";
 
 export const DTCO_SCOPE = "Schematic SPICE delay/power + generated layout area; no extracted parasitics or foundry signoff. Layout differences affect area only in this mode.";
 export const dtcoScope = (definition?: Pick<DtcoExperimentDefinition, "electricalMode">) => definition?.electricalMode === "extracted" ? "Post-layout transient with extracted device geometry and capacitance estimates. Check measured result provenance for extraction checks and limitations; no extracted wire resistance or foundry signoff." : DTCO_SCOPE;
 export interface DtcoForm {
   name: string; circuitId: string; technologyId: string; modelVersion: string;
-  temperatures: string; voltages: string; layoutIds: string[];
+  temperatures: string; voltages: string; groundVoltages?: string; processCorners?: DtcoProcessCorner[]; layoutIds: string[];
+  sizingMode?: DtcoExperimentDefinition["sizingMode"]; deviceOverrides?: DtcoExperimentDefinition["deviceOverrides"]; groupOverrides?: DtcoExperimentDefinition["groupOverrides"]; characterizationArcId?: string; workflow?: DtcoExperimentDefinition["workflow"];
   loadFf: string; inputSlewPs: string; periodNs: string;
   design?: DtcoExperimentDefinition["design"]; electricalMode?: DtcoExperimentDefinition["electricalMode"];
 }
 export function definitionToForm(definition: DtcoExperimentDefinition): DtcoForm {
   return { ...definition, temperatures: definition.temperaturesC.join(", "), voltages: definition.voltagesV.join(", "),
-    layoutIds: [...definition.layoutIds], loadFf: String(definition.loadFf),
+    groundVoltages: (definition.groundVoltagesV ?? [0]).join(", "), processCorners: [...(definition.processCorners ?? ["tt"])], layoutIds: [...definition.layoutIds], loadFf: String(definition.loadFf),
     inputSlewPs: String(definition.inputSlewPs), periodNs: String(definition.periodNs) };
 }
 function numbers(text: string, label: string): number[] {
@@ -23,8 +26,11 @@ export function parseDtcoForm(form: DtcoForm, options: DtcoOptions): { definitio
   try {
     const temperaturesC = numbers(form.temperatures, "temperature");
     const voltagesV = numbers(form.voltages, "voltage");
+    const groundVoltagesV = numbers(form.groundVoltages ?? "0", "ground voltage");
+    const processCorners: DtcoProcessCorner[] = [...new Set<DtcoProcessCorner>(form.processCorners ?? ["tt"])];
+    const { circuit } = catalogProfiles(options, form);
     const layoutIds = [...new Set(form.layoutIds)];
-    const count = temperaturesC.length * voltagesV.length * layoutIds.length;
+    const count = temperaturesC.length * voltagesV.length * layoutIds.length * groundVoltagesV.length * processCorners.length;
     if (!layoutIds.length) throw new Error("Select at least one layout.");
     if (count > options.maxPoints) return { definition: null, count, error: `Choose at most ${options.maxPoints} combinations.` };
     if (!form.name.trim()) return { definition: null, count, error: "Enter an experiment name." };
@@ -34,8 +40,16 @@ export function parseDtcoForm(form: DtcoForm, options: DtcoOptions): { definitio
       || !layoutIds.every(layout => supported(options.layouts, layout))) {
       return { definition: null, count, error: "This configuration contains an unavailable circuit, technology, model, or layout." };
     }
-    if (temperaturesC.some(value => value < -40 || value > 125)) return { definition: null, count, error: "Temperature must be between −40 and 125 °C." };
-    if (voltagesV.some(value => value < 2.7 || value > 3.6)) return { definition: null, count, error: "Voltage must be between 2.7 and 3.6 V." };
+    const operating = operatingBounds(options, form);
+    const temperatureBounds = operating?.temperatureC ?? { min: -40, max: 125 };
+    if (temperaturesC.some(value => value < temperatureBounds.min || value > temperatureBounds.max)) throw new Error(`Temperature must be between ${temperatureBounds.min} and ${temperatureBounds.max} °C.`);
+    const supplyBounds = operating?.supplyVoltageV ?? { min: 2.7, max: 3.6 };
+    if (groundVoltagesV.some(value => operating?.groundVoltageV && (value < operating.groundVoltageV.min || value > operating.groundVoltageV.max))) throw new Error("VSS is outside the technology ground-voltage bounds.");
+    if (voltagesV.some(voltage => groundVoltagesV.some(ground => voltage - ground < supplyBounds.min || voltage - ground > supplyBounds.max))) throw new Error(`VDD minus VSS must be between ${supplyBounds.min} and ${supplyBounds.max} V.`);
+    if (!processCorners.length || processCorners.some(corner => !availableCorners(options, form).includes(corner))) throw new Error("Select process corners provided by this model.");
+    if (circuit && layoutIds.some(id => !circuit.layoutIds.includes(id))) throw new Error("Select a layout compatible with this circuit.");
+    const dimensionError = validateCatalogDimensions(options, form);
+    if (dimensionError) throw new Error(dimensionError);
     const loadFf = Number(form.loadFf), inputSlewPs = Number(form.inputSlewPs), periodNs = Number(form.periodNs);
     if (![form.loadFf, form.inputSlewPs, form.periodNs].every(value => value.trim()) || ![loadFf, inputSlewPs, periodNs].every(value => Number.isFinite(value) && value > 0)) {
       return { definition: null, count, error: "Load, input slew, and period must be positive finite numbers." };
@@ -45,21 +59,22 @@ export function parseDtcoForm(form: DtcoForm, options: DtcoOptions): { definitio
     const transientSteps = 4 * periodNs / Math.min(inputSlewPs / 20000, periodNs / 10000);
     if (transientSteps > 1_000_000) return { definition: null, count, error: "This period and slew require more than 1,000,000 transient steps. Increase input slew or shorten the period." };
     return { count, error: null, definition: { name: form.name.trim(), circuitId: form.circuitId, technologyId: form.technologyId, modelVersion: form.modelVersion,
-      temperaturesC, voltagesV, layoutIds, loadFf, inputSlewPs, periodNs, ...(form.design ? { design: form.design } : {}), ...(form.electricalMode ? { electricalMode: form.electricalMode } : {}) } };
+      temperaturesC, voltagesV, groundVoltagesV, processCorners, layoutIds, loadFf, inputSlewPs, periodNs,
+      ...(form.workflow ? { workflow: form.workflow } : {}), ...(form.sizingMode ? { sizingMode: form.sizingMode } : {}), ...(form.deviceOverrides ? { deviceOverrides: form.deviceOverrides } : {}), ...(form.groupOverrides ? { groupOverrides: form.groupOverrides } : {}), ...(form.characterizationArcId ? { characterizationArcId: form.characterizationArcId } : {}), ...(form.design ? { design: form.design } : {}), ...(form.electricalMode ? { electricalMode: form.electricalMode } : {}) } };
   } catch (error) { return { definition: null, count: 0, error: error instanceof Error ? error.message : String(error) }; }
 }
 export const isActivePoint = (point: Pick<DtcoPoint, "status">): boolean => ["preparing", "draft", "validating", "ready", "queued", "running"].includes(point.status);
 export const canRetryPoint = (point: Pick<DtcoPoint, "status">): boolean => ["failed", "interrupted", "cancelled", "preparation_failed"].includes(point.status);
-export function pointLabel(point: Pick<DtcoPoint, "temperatureC" | "voltageV" | "layoutId">): string {
-  return `${point.temperatureC} °C / ${point.voltageV} V / ${point.layoutId}`;
+export function pointLabel(point: Pick<DtcoPoint, "temperatureC" | "voltageV" | "layoutId" | "groundVoltageV" | "processCorner">): string {
+  return `${point.temperatureC} °C / VDD ${point.voltageV} V / VSS ${point.groundVoltageV ?? 0} V / ${(point.processCorner ?? "tt").toUpperCase()} / ${point.layoutId}`;
 }
-export interface DtcoMeasuredPoint { point: DtcoPoint; delayPs: number; powerUw: number; areaUm2: number; }
+export interface DtcoMeasuredPoint { point: DtcoPoint; delayPs: number; powerUw: number; areaUm2: number | null; }
 export function measuredPoints(points: readonly DtcoPoint[]): DtcoMeasuredPoint[] {
   return points.flatMap(point => {
     if (point.status !== "succeeded" || !point.metrics) return [];
     const { delayPs, averagePowerW, areaUm2 } = point.metrics;
-    if (![delayPs, averagePowerW, areaUm2].every(value => typeof value === "number" && Number.isFinite(value) && value > 0)) return [];
-    return [{ point, delayPs: delayPs as number, powerUw: (averagePowerW as number) * 1e6, areaUm2: areaUm2 as number }];
+    if (![delayPs, averagePowerW].every(value => typeof value === "number" && Number.isFinite(value) && value > 0) || areaUm2 !== null && !(typeof areaUm2 === "number" && Number.isFinite(areaUm2) && areaUm2 > 0)) return [];
+    return [{ point, delayPs: delayPs as number, powerUw: (averagePowerW as number) * 1e6, areaUm2: areaUm2 as number | null }];
   });
 }
 export function selectedMeasurements(points: readonly DtcoMeasuredPoint[], omitted: ReadonlySet<string>, filters: { temperature: string; voltage: string; layout: string }): DtcoMeasuredPoint[] {

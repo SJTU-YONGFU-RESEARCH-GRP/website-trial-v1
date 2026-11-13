@@ -1,3 +1,5 @@
+import { buildSelectionPhysicalSelfTest } from "../../modules/dtco/selectionPhysicalSelftest.ts";
+import { buildSelectionSelfTest } from "../../modules/dtco/selectionSelftest.ts";
 import { buildAcgSelfTest } from "../../modules/acg/selftest.ts";
 import { createHash, randomUUID } from "node:crypto";
 import fsp from "node:fs/promises";
@@ -105,6 +107,9 @@ function safeName(value: string): string { return value.replace(/[^A-Za-z0-9_.-]
 interface SelfTestSpecification { argv: string[]; requiredFiles: string[]; verifyOutput?: (stdout: string, stderr: string) => void | Promise<void>; }
 
 async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools: ToolRepository, runner: SafeProcessRunner): Promise<SelfTestSpecification> {
+  if (tool.toolId === "dtco-selection-physical") return buildSelectionPhysicalSelfTest(tool,directory,tools,runner);
+  if (tool.toolId === "dtco-openroad") { await fsp.writeFile(path.join(directory,"selftest.tcl"),"puts DTCO_OPENROAD_OK\nexit\n"); return {argv:["-exit","-no_init",path.join(directory,"selftest.tcl")],requiredFiles:[],verifyOutput(stdout){if(!stdout.includes("DTCO_OPENROAD_OK"))throw new Error("Native OpenROAD self-test failed");}}; }
+  if (tool.toolId === "dtco-selection") return buildSelectionSelfTest(tool, directory, tools);
   if (tool.moduleId === "acg") return buildAcgSelfTest(tool, directory);
   if (tool.toolId === "yosys") {
     const source = path.join(directory, "selftest.v");
@@ -134,6 +139,12 @@ async function selfTestSpec(tool: ToolConfigurationV1, directory: string, tools:
     const source = path.join(directory, "selftest.cir");
     await fsp.writeFile(source, "EDA platform self-test\nV1 in 0 1\nR1 in 0 1k\n.op\n.end\n", { mode: 0o600 });
     return { argv: ["-b", "-o", path.join(directory, "ngspice.log"), source], requiredFiles: ["ngspice.log"] };
+  }
+  if (tool.toolId === "libcharx") {
+    return { argv: ["--self-test"], requiredFiles: [], verifyOutput(stdout) {
+      const evidence = JSON.parse(stdout) as { schemaVersion?: string; passed?: boolean; spiceBacked?: boolean; computedTimingValues?: number; ngspiceInvocations?: number };
+      if (evidence.schemaVersion !== "ppa.libcharx-self-test.v1" || evidence.passed !== true || evidence.spiceBacked !== true || !Number.isInteger(evidence.computedTimingValues) || Number(evidence.computedTimingValues) <= 0 || !Number.isInteger(evidence.ngspiceInvocations) || Number(evidence.ngspiceInvocations) <= 0) throw new Error("LibCharX self-test must run ngspice and produce finite characterized timing tables");
+    } };
   }
   if (tool.toolId === "dtco-analysis") {
     return { argv: ["--self-test"], requiredFiles: [], verifyOutput(stdout) {

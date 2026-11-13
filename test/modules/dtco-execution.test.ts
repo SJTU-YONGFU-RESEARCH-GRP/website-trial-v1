@@ -2,8 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { buildDeck, getDtcoOptions, hash, modelClosure, pointCoordinates, validatePoint, type DtcoSnapshot } from "../../server/modules/dtco/environment.ts";
-import { buildDcDeck, buildNetlist, resolveDesign } from "../../server/modules/dtco/circuit.ts";
+import { buildDeck, dtcoRuntimeResources, getDtcoOptions, hash, modelClosure, pointCoordinates, validatePoint, type DtcoSnapshot } from "../../server/modules/dtco/environment.ts";
+import { arcFileId, buildArcDeck, buildSimulationNetlist, selectedArcs, buildDcDeck, buildNetlist, resolveDesign } from "../../server/modules/dtco/circuit.ts";
+import { listDtcoProfiles, resolveDtcoProfile } from "../../server/modules/dtco/catalog.ts";
+import { profileRuntime } from "../../server/modules/dtco/environment.ts";
 import { acgFacade, frozenSnapshot } from "../../server/modules/dtco/planner.ts";
 import { verifyFrozenResources } from "../../server/modules/dtco/executor.ts";
 import { readDtcoMetrics } from "../../server/modules/dtco/metrics.ts";
@@ -45,7 +47,7 @@ describe("DTCO immutable native execution",()=>{
   const repositories={tools:{active:(moduleId:string)=>moduleId==="dtco"?[configuration]:[],latestHealth:()=>null}} as unknown as Parameters<typeof getDtcoOptions>[0];
   const options=await getDtcoOptions(repositories,{} as Parameters<typeof getDtcoOptions>[1]);
   expect(options.available).toBe(false);expect(options.models[0]!.sourceHash).toMatch(/^[a-f0-9]{64}$/);
-  expect(options.models[0]!.id).toBe(options.defaults.modelVersion);expect(options.defaults.modelVersion).not.toContain("unconfigured");
+  expect(options.models[0]!.id).toBe(options.defaults.modelVersion);expect(options.modelProfiles!.some(m=>m.id===options.defaults.modelVersion)).toBe(true);expect(options.defaults.modelVersion).not.toContain("unconfigured");
  });
  it("rejects include traversal and symlink escape from administrator model root",async()=>{
   const root=await temp(),outside=await temp();
@@ -63,6 +65,20 @@ describe("DTCO immutable native execution",()=>{
   await expect(verifyFrozenResources(snapshot)).resolves.toBeUndefined();
   await fs.writeFile(source,"changed");
   await expect(verifyFrozenResources(snapshot)).rejects.toMatchObject({code:"DTCO_RESOURCE_CHANGED"});
+ });
+ it("freezes frequency runtime protocol bytes and rejects changed protocol after preflight",async()=>{
+  const root=await temp(),source=path.join(root,"frequencyRuntime.ts");
+  const original="const precision=15; const stopCycles=8;\n",corrected="const precision=17; const stopCycles=8.25;\n";
+  await fs.writeFile(source,original);
+  const before=await dtcoRuntimeResources(root);
+  expect(before).toEqual([{source,relativePath:"runtime/frequencyRuntime.ts",sha256:hash(original)}]);
+  await expect(verifyFrozenResources({trusted:before} as DtcoSnapshot)).resolves.toBeUndefined();
+  await fs.writeFile(source,corrected);
+  const after=await dtcoRuntimeResources(root);
+  expect(after[0]!.sha256).toBe(hash(corrected));expect(after[0]!.sha256).not.toBe(before[0]!.sha256);
+  await expect(verifyFrozenResources({trusted:before} as DtcoSnapshot)).rejects.toMatchObject({code:"DTCO_RESOURCE_CHANGED"});
+  const actual=await dtcoRuntimeResources();
+  expect(actual[0]!.sha256).toBe(hash(await fs.readFile(actual[0]!.source)));
  });
  it("preserves real composite plan and runner closure when adapting ACG input roles",()=>{
   const process=()=>{},plan={steps:[{id:"generate"}]},job={operation:"run-dtco",parameters:{voltageV:3.3},plan,inputManifest:{files:[{role:"netlist"},{role:"config"},{role:"rules"},{role:"dtco-resource"}]}};
@@ -112,4 +128,39 @@ describe("DTCO immutable native execution",()=>{
    await expect(readDtcoMetrics(root)).rejects.toThrow(/extraction evidence/);
   }
  });
+ it("renders absolute rails, real selected corners and every sensitized NAND arc",()=>{
+  const profile=resolveDtcoProfile({technologyId:"gf180mcuA",circuitId:"gf180-nand2"});
+  const def={...definition,circuitId:profile.circuit.id,modelVersion:profile.model.id,layoutIds:["mr-sa-12t"]};
+  const runtime=profileRuntime(def,profile),arcs=selectedArcs(def,runtime),coordinates={...point,voltageV:3.1,groundVoltageV:-0.2,processCorner:"ss" as const,layoutId:"mr-sa-12t"};
+  expect(arcs).toHaveLength(2);expect(new Set(arcs.map(a=>arcFileId(a.id))).size).toBe(2);
+  for(const arc of arcs){const deck=buildArcDeck(def,coordinates,profile.modelEntry,runtime,arc,"samples.txt");
+   expect(deck).toContain("VSS VSS 0 -0.2");expect(deck).toContain("VDD VDD 0 3.1");
+   expect(deck).toContain("PULSE(-0.2 3.1");expect(deck).toContain("CLOAD "+arc.output+" VSS");
+   expect(deck).toContain('" '+profile.model.cornerSections.ss);expect(deck).toContain("VFIX");
+  }
+  expect(()=>validatePoint(def,coordinates)).not.toThrow();
+ });
+ it("retains original fixed-cell SPICE and SKY micron semantics while native internal nets are safe",()=>{
+  const profiles=listDtcoProfiles();
+  const fixed=profiles.circuitProfiles.find(c=>c.technologyIds.includes("sky130A")&&c.id.includes("nand2")&&c.sizingModes.length===1&&c.sizingModes[0]==="fixed")!;
+  const profile=resolveDtcoProfile({technologyId:"sky130A",circuitId:fixed.id});
+  const def={...definition,technologyId:"sky130A",circuitId:fixed.id,modelVersion:profile.model.id,sizingMode:"fixed" as const};
+  expect(buildSimulationNetlist(def,profileRuntime(def,profile))).toBe(profile.simulationSource);
+  const custom=profiles.circuitProfiles.find(c=>c.id.startsWith("custom-from-library:")&&c.technologyIds.includes("sky130A")&&c.id.includes("nand2"))!;
+  const clone=resolveDtcoProfile({technologyId:"sky130A",circuitId:custom.id});
+  const cloneDef={...def,circuitId:custom.id,sizingMode:"custom" as const};
+  const runtime=profileRuntime(cloneDef,clone),native=buildNetlist(cloneDef,runtime);
+  expect(native).not.toContain("#");expect(native).not.toMatch(/\b(?:VGND|VPWR|VNB|VPB)\b/);
+  const deck=buildDcDeck(cloneDef,{...point,voltageV:1.8},clone.modelEntry,runtime);
+  expect(deck).toContain(".option scale=1u");expect(deck).toContain('.include "simulation.sp"');
+  expect(runtime.devices.every(d=>d.widthUm>0&&d.lengthUm>0)).toBe(true);
+ });
+ it("encodes semantic arc IDs without filename collisions or traversal",()=>{
+  expect(arcFileId("A-Y")).toBe("A-Y");
+  expect(arcFileId("A->Y")).toMatch(/^[A-Za-z0-9_.-]+$/);
+  expect(arcFileId("A->Y")).not.toBe(arcFileId("A__Y"));
+  expect(arcFileId("../../A/Y")).not.toContain("/");
+  expect(()=>arcFileId("")).toThrow();
+ });
+
 });
